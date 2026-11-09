@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kasb Pro</title>
+<meta name="description" content="Бесплатные уроки по рабочим профессиям: схемы, тесты, калькуляторы. Русский и узбекский.">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a warm "live wire" amber accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#f2a516; --accent-ink:#2a1c00; --navy:#123047; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wL:#8a4b1f; --wN:#1e6fd0; --wPE1:#e3c400; --wPE2:#2f9e44;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f5b331; --accent-ink:#2a1c00; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wL:#b06a34; --wN:#4a90e8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f5b331; --accent-ink:#2a1c00; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wL:#b06a34; --wN:#4a90e8; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrapx{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:var(--navy);color:var(--navy-fg);padding-block:20px 36px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:20px}
+.logo i{width:36px;height:36px;border-radius:9px;background:var(--accent);display:grid;place-items:center;font-style:normal;color:var(--accent-ink)}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+h1{font-family:var(--display);font-size:clamp(26px,6vw,38px);line-height:1.15;margin:28px 0 10px;text-wrap:balance}
+.lead{margin:0;opacity:.85;max-width:52ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.facts span{font-size:13px;padding:5px 10px;border-radius:99px;background:color-mix(in srgb,var(--navy-fg) 12%,transparent)}
+main{padding-block:24px 48px;display:flex;flex-direction:column;gap:14px}
+h2{font-family:var(--display);font-size:15px;text-transform:uppercase;letter-spacing:.06em;margin:8px 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px}
+.card{display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:16px;background:var(--surface);border:1px solid var(--line);color:inherit;text-decoration:none}
+a.card:hover{border-color:var(--accent)}
+a.card:focus-visible,.lang button:focus-visible,.bot:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 20%,var(--surface))}
+.card b{font-size:18px}
+.card p{margin:0;font-size:14px;color:var(--muted);flex:1}
+.go{font-weight:700;color:var(--fg)}
+.soon .ico{background:var(--bg)}
+.soon{opacity:.75}
+.tag{align-self:flex-start;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--bg);color:var(--muted)}
+.bot{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-weight:700;text-decoration:none}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+</style>
+</head>
+<body>
+<header><div class="wrapx">
+ <div class="top"><div class="logo"><i>K</i>Kasb Pro</div>
+ <div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru">RU</button><button type="button" data-l="uz">UZ</button></div></div>
+ <h1 data-t="h1"></h1><p class="lead" data-t="lead"></p>
+ <div class="facts"><span data-t="f1"></span><span data-t="f2"></span><span data-t="f3"></span></div>
+</div></header>
+<main class="wrapx">
+ <h2 data-t="choose"></h2>
+ <div class="grid">
+  <a class="card" href="elektrik/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="var(--fg)"/></svg></div><b data-t="el"></b><p data-t="eld"></p><span class="go" data-t="open"></span></a>
+  <div class="card soon"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z" fill="none" stroke="var(--fg)" stroke-width="2"/></svg></div><b data-t="pl"></b><p data-t="pld"></p><span class="tag" data-t="soon"></span></div>
+  <div class="card soon"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="none" stroke="var(--fg)" stroke-width="2"/></svg></div><b data-t="md"></b><p data-t="mdd"></p><span class="tag" data-t="soon"></span></div>
+ </div>
+ <a class="bot" href="https://t.me/elektrikpro_uz_bot" data-t="bot"></a>
+ <p class="note" data-t="note"></p>
+</main>
+<script>
+const T={ru:{h1:'Бесплатные уроки по рабочим профессиям',lead:'Схемы, пошаговые инструкции, тесты и калькуляторы. Учитесь с телефона, когда удобно.',f1:'Русский и узбекский',f2:'Работает в Telegram',f3:'Бесплатно',choose:'Выберите профессию',
+ el:'Электрик',eld:'13 уроков: розетки, автоматы и УЗО, щиток, три фазы, двигатели. Калькулятор кабеля.',open:'Открыть ›',
+ pl:'Сантехник',pld:'Смесители, унитаз, трубы, тёплый пол, бойлер.',md:'Медсестра / медбрат',mdd:'Уход за больным, первая помощь, санитарные правила.',soon:'Скоро',
+ bot:'Открыть в Telegram',note:'Kasb Pro — от новичка до мастера. Уроки не заменяют обучение и допуск к работе.'},
+uz:{h1:'Ishchi kasblar bo\'yicha bepul darslar',lead:'Sxemalar, bosqichma-bosqich ko\'rsatmalar, testlar va kalkulyatorlar. Telefondan qulay vaqtda o\'rganing.',f1:'O\'zbek va rus tillari',f2:'Telegramda ishlaydi',f3:'Bepul',choose:'Kasbni tanlang',
+ el:'Elektrik',eld:'13 ta dars: rozetka, avtomat va UZO, shit, uch faza, dvigatellar. Kabel kalkulyatori.',open:'Ochish ›',
+ pl:'Santexnik',pld:'Smesitel, unitaz, quvurlar, issiq pol, boyler.',md:'Hamshira',mdd:'Bemorni parvarish qilish, birinchi yordam, sanitariya qoidalari.',soon:'Tez kunda',
+ bot:'Telegramda ochish',note:'Kasb Pro — yangi boshlovchidan ustagacha. Darslar o\'qish va ishga ruxsatni almashtirmaydi.'}};
+let lang='ru';try{const v=localStorage.getItem('ep_lang');if(v)lang=JSON.parse(v)}catch(e){}
+function render(){document.documentElement.lang=lang;document.querySelectorAll('[data-t]').forEach(e=>e.textContent=T[lang][e.dataset.t]);document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===lang))}
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;try{localStorage.setItem('ep_lang',JSON.stringify(lang))}catch(e){}render()});
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+render();
+</script>
+</body>
+</html>
