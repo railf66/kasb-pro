@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<title>Сантехник Pro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a clear "water" cyan accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#29b0d6; --accent-ink:#002330; --navy:#123047; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#4cc3e4; --accent-ink:#002330; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#4cc3e4; --accent-ink:#002330; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Сантехник Pro. Each text is {ru, uz}. Quiz: a = index of the right option.
+const W={H:'var(--wH)',C:'var(--wC)',S:'var(--wS)',F:'var(--wF)'};
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}">${s}</text>`;
+const pipe=(d,c,w=7,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const valve=(x,y,r=0)=>`<g transform="translate(${x} ${y}) rotate(${r})"><path d="M-9 -7L9 7V-7L-9 7Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/><path d="M0 0V-13M-6 -13H6" stroke="var(--fg)" stroke-width="2"/></g>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="12" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2)=>`${box(x,y,w,h)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const arrow=(x1,y1,x2,y2)=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>`;
+const wall=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="var(--line)"/>`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:5,nowarn:true,
+ t:{ru:"Инструменты и материалы",uz:"Asbob va materiallar"},s:{ru:"Ключи, лента, лён, герметик",uz:"Kalitlar, lenta, zig'ir, germetik"},
+ table:{head:{ru:["Что","Зачем нужно"],uz:["Nima","Nima uchun kerak"]},rows:{
+  ru:[["Разводной ключ","Гайки подводок, смесителей, кранов"],["Газовый (трубный) ключ","Держать и крутить трубы, муфты, фитинги"],["Ключ для смесителя (сантехнический)","Гайки под раковиной, где не пролезает рука"],["ФУМ-лента","Уплотнить небольшую резьбу (½″, ¾″)"],["Лён + паста","Надёжно уплотнить резьбу, особенно металлическую"],["Силиконовый герметик","Шов вокруг ванны, раковины, унитаза"],["Ножницы для ПП-труб","Ровно отрезать полипропиленовую трубу"],["Тряпка, ведро, фонарик","Без них не начинайте ни одну работу"]],
+  uz:[["Razvodnoy kalit","Shlang, smesitel, jo'mrak gaykalari"],["Gaz (quvur) kaliti","Quvur, mufta, fitinglarni ushlash va burash"],["Smesitel kaliti (santexnik)","Qo'l sig'maydigan rakovina ostidagi gaykalar"],["FUM-lenta","Kichik rezbani zichlash (½″, ¾″)"],["Zig'ir + pasta","Rezbani ishonchli zichlash, ayniqsa metall"],["Silikon germetik","Vanna, rakovina, unitaz atrofidagi chok"],["PP quvur qaychisi","Polipropilen quvurni tekis kesish"],["Latta, chelak, fonar","Ularsiz hech bir ishni boshlamang"]]}},
+ steps:{ru:["ФУМ-ленту и лён мотают <b>по ходу резьбы</b>: если смотреть на торец трубы, по часовой стрелке. Иначе при закручивании они слезут.","Лён: тонкая прядь, 5–8 витков, сверху паста. Слишком много льна может порвать латунную гайку.","Гибкие подводки с резиновой прокладкой ничем не мотают: прокладка уже уплотняет.","Затягивайте рукой до упора, потом ключом на ¼–½ оборота. Перетянутая гайка трескается через месяц."],
+       uz:["FUM-lenta va zig'ir <b>rezba yo'nalishida</b> o'raladi: quvur uchiga qaraganda soat mili bo'yicha. Aks holda burashda ular sirg'alib chiqadi.","Zig'ir: ingichka tola, 5–8 o'ram, ustidan pasta. Zig'ir ko'p bo'lsa latun gaykani yorib yuborishi mumkin.","Rezina prokladkali egiluvchan shlanglarga hech narsa o'ralmaydi: prokladka o'zi zichlaydi.","Qo'l bilan oxirigacha buring, keyin kalit bilan ¼–½ aylanish. Ortiqcha tortilgan gayka bir oyda yoriladi."]},
+ tip:{ru:"Не берите самые дешёвые подводки и краны с «силуминовыми» гайками. Они лопаются, и вы затопите соседей. Латунь тяжелее и надёжнее.",uz:"Eng arzon «siluminli» gaykali shlang va jo'mraklarni olmang. Ular yoriladi va qo'shnilarni suv bosadi. Latun og'irroq va ishonchliroq."},
+ quiz:[
+  {a:1,ru:{q:"В какую сторону мотать ФУМ-ленту?",o:["Против хода резьбы","По ходу резьбы (по часовой, если смотреть на торец)","Неважно"],e:"По ходу резьбы, иначе лента сойдёт при закручивании."},uz:{q:"FUM-lentani qaysi tomonga o'rash kerak?",o:["Rezbaga qarshi","Rezba yo'nalishida (uchiga qaraganda soat mili bo'yicha)","Farqi yo'q"],e:"Rezba yo'nalishida, aks holda burashda lenta chiqib ketadi."}},
+  {a:2,ru:{q:"Нужно ли мотать что-то на гибкую подводку с прокладкой?",o:["Да, много льна","Да, 10 слоёв ФУМ","Нет, уплотняет прокладка"],e:"Резиновая прокладка уже уплотняет соединение."},uz:{q:"Prokladkali egiluvchan shlangga biror narsa o'rash kerakmi?",o:["Ha, ko'p zig'ir","Ha, 10 qavat FUM","Yo'q, prokladka zichlaydi"],e:"Rezina prokladka ulanishni o'zi zichlaydi."}},
+  {a:0,ru:{q:"Как правильно затянуть гайку подводки?",o:["Рукой до упора, потом ключом на ¼–½ оборота","Ключом изо всех сил","Только рукой, слегка"],e:"Перетяжка ломает гайку, недотяжка даёт течь."},uz:{q:"Shlang gaykasini qanday to'g'ri qotirish kerak?",o:["Qo'l bilan oxirigacha, keyin kalit bilan ¼–½ aylanish","Kalit bilan bor kuch bilan","Faqat qo'l bilan, sal"],e:"Ortiqcha tortish gaykani sindiradi, kam tortish oqizadi."}},
+  {a:1,ru:{q:"Чем уплотнить шов вокруг ванны?",o:["ФУМ-лентой","Силиконовым герметиком","Льном"],e:"Для швов у стены нужен санитарный силикон."},uz:{q:"Vanna atrofidagi chokni nima bilan zichlash kerak?",o:["FUM-lenta","Silikon germetik","Zig'ir"],e:"Devor yonidagi choklar uchun santexnik silikon kerak."}}]},
+
+{id:'b2',lv:0,min:5,
+ t:{ru:"Перекрыть воду",uz:"Suvni yopish"},s:{ru:"Краны, стояк и сброс давления",uz:"Jo'mraklar, stoyak va bosimni tushirish"},legend:['H','C'],
+ svg:l=>svg(
+  pipe('M40 20V230',W.C,9)+pipe('M72 20V230',W.H,9)+
+  tx(40,14,R(l,'ХВС','Sovuq'),{w:700,c:'var(--wC)'})+tx(76,14,R(l,'ГВС','Issiq'),{w:700,c:'var(--wH)',a:'start'})+
+  pipe('M40 90H290',W.C)+pipe('M72 150H290',W.H)+
+  valve(130,90)+valve(130,150)+
+  tx(130,66,R(l,'1. Закройте краны','1. Jo\'mraklarni yoping'),{w:700})+
+  tx(215,82,R(l,'холодная','sovuq'),{c:'var(--muted)'})+tx(215,142,R(l,'горячая','issiq'),{c:'var(--muted)'})+
+  box(290,70,52,100)+tx(316,124,R(l,'Смеситель','Smesitel'),{s:9,w:600})+
+  tx(195,200,R(l,'2. Откройте смеситель:','2. Smesitelni oching:'),{w:700})+tx(195,216,R(l,'вытечет остаток, давление уйдёт','qolgan suv oqib, bosim tushadi'),{c:'var(--muted)'})+
+  tx(56,246,R(l,'стояк — общий, его не трогаем','stoyak umumiy, unga tegmaymiz'),{a:'start',s:10,c:'var(--muted)'}),
+  R(l,'Схема: от стояков холодной и горячей воды идут трубы с кранами к смесителю','Sxema: sovuq va issiq suv stoyaklaridan jo\'mrakli quvurlar smesitelga boradi')),
+ steps:{ru:["Найдите краны на вводе в квартиру: обычно в санузле у стояка или в нише за унитазом. Их два: холодная и горячая вода.","Закройте оба: рычаг шарового крана <b>поперёк трубы</b> значит «закрыто».","Откройте смеситель. Вода немного потечёт и остановится: давление ушло, можно работать.","Подставьте ведро и тряпку под место работы: в трубах всегда остаётся вода.","Если кран на вводе не закрывается или течёт, не крутите силой. Звоните в управляющую компанию, чтобы перекрыли стояк."],
+       uz:["Kvartiraga kirishdagi jo'mraklarni toping: odatda hojatxonada stoyak yonida yoki unitaz orqasidagi tokchada. Ular ikkita: sovuq va issiq suv.","Ikkalasini yoping: sharli jo'mrak dastasi <b>quvurga ko'ndalang</b> bo'lsa, «yopiq».","Smesitelni oching. Suv biroz oqib to'xtaydi: bosim tushdi, ishlash mumkin.","Ish joyi ostiga chelak va latta qo'ying: quvurlarda doim suv qoladi.","Kirish jo'mragi yopilmasa yoki oqsa, kuch bilan buramang. Stoyakni yopish uchun boshqaruv kompaniyasiga qo'ng'iroq qiling."]},
+ tip:{ru:"Старые вентили (с «барашком») годами не крутили. Закрывайте плавно. Если капает из-под штока, подтяните гайку штока на пол-оборота.",uz:"Eski ventillar («barashka»li) yillab buralmagan. Asta yoping. Shtok ostidan tomsa, shtok gaykasini yarim aylanishga torting."},
+ quiz:[
+  {a:1,ru:{q:"Рычаг шарового крана поперёк трубы. Кран…",o:["Открыт","Закрыт","Наполовину открыт"],e:"Поперёк значит закрыт, вдоль трубы значит открыт."},uz:{q:"Sharli jo'mrak dastasi quvurga ko'ndalang. Jo'mrak…",o:["Ochiq","Yopiq","Yarim ochiq"],e:"Ko'ndalang — yopiq, quvur bo'ylab — ochiq."}},
+  {a:2,ru:{q:"Зачем открывать смеситель после закрытия кранов?",o:["Чтобы проверить напор","Так красивее","Чтобы сбросить давление и остаток воды"],e:"Без давления гайки откручиваются без фонтана."},uz:{q:"Jo'mraklarni yopgandan keyin smesitel nima uchun ochiladi?",o:["Bosimni tekshirish uchun","Shunchaki","Bosim va qolgan suvni tushirish uchun"],e:"Bosimsiz gaykalar favvorasiz buraladi."}},
+  {a:0,ru:{q:"Кран на вводе не закрывается. Что делать?",o:["Звонить в управляющую компанию, перекрыть стояк","Бить молотком","Работать под давлением"],e:"Стояк перекрывают только через управляющую компанию."},uz:{q:"Kirish jo'mragi yopilmayapti. Nima qilish kerak?",o:["Boshqaruv kompaniyasiga qo'ng'iroq qilib, stoyakni yopish","Bolg'a bilan urish","Bosim ostida ishlash"],e:"Stoyakni faqat boshqaruv kompaniyasi orqali yopishadi."}},
+  {a:1,ru:{q:"Сколько кранов обычно на вводе в квартиру?",o:["Один","Два: холодная и горячая","Ни одного"],e:"Отдельно на холодную и на горячую воду."},uz:{q:"Kvartiraga kirishda odatda nechta jo'mrak bor?",o:["Bitta","Ikkita: sovuq va issiq","Birorta ham yo'q"],e:"Sovuq va issiq suvga alohida."}}]},
+
+{id:'b3',lv:0,min:7,
+ t:{ru:"Замена смесителя",uz:"Smesitelni almashtirish"},s:{ru:"Кухонный смеситель на гибких подводках",uz:"Egiluvchan shlangli oshxona smesiteli"},legend:['H','C'],
+ svg:l=>svg(
+  pipe('M174 70C174 170 90 150 90 196',W.H,5)+pipe('M186 70C186 170 270 150 270 196',W.C,5)+
+  `<path d="M50 60H310L290 120H70Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<rect x="170" y="28" width="20" height="32" rx="4" fill="var(--muted)"/><path d="M180 30Q180 8 214 12" fill="none" stroke="var(--muted)" stroke-width="7" stroke-linecap="round"/><rect x="186" y="22" width="22" height="6" rx="3" fill="var(--fg)"/>`+
+  tx(110,92,R(l,'Мойка','Moyka'),{c:'var(--muted)'})+
+  wall(0,238,360,8)+pipe('M90 210V238',W.H,8)+pipe('M270 210V238',W.C,8)+valve(90,205)+valve(270,205)+
+  tx(232,150,R(l,'гибкие подводки','egiluvchan shlanglar'),{a:'start',s:10,c:'var(--muted)'})+
+  tx(284,214,R(l,'кран ½″','jo\'mrak ½″'),{a:'start',s:10})+
+  tx(90,262,R(l,'Горячая — слева','Issiq — chapda'),{w:700,c:'var(--wH)'})+tx(270,262,R(l,'Холодная — справа','Sovuq — o\'ngda'),{w:700,c:'var(--wC)'}),
+  R(l,'Смеситель на мойке, две гибкие подводки идут вниз к кранам: горячая слева, холодная справа','Moykadagi smesitel, ikki shlang pastga jo\'mraklarga boradi: issiq chapda, sovuq o\'ngda'),270),
+ steps:{ru:["Перекройте воду (урок 2). Под мойкой закройте краны подводок, если они есть.","Открутите гайки подводок от кранов. Снимите крепёжную гайку или шпильку снизу и выньте старый смеситель.","В новый смеситель вкрутите подводки <b>рукой</b> (резьба M10, тонкая: ключом сорвёте). Проденьте их в отверстие мойки.","Поставьте прокладку, закрепите смеситель снизу шпилькой с полукольцом. Носик ровно по центру мойки.","Подключите подводки: горячую слева, холодную справа. Рукой и ключом на ¼ оборота.","Откройте воду медленно. Подержите под гайками сухую салфетку 10 минут: она покажет даже каплю."],
+       uz:["Suvni yoping (2-dars). Moyka ostida shlang jo'mraklari bo'lsa, ularni ham yoping.","Shlang gaykalarini jo'mraklardan bo'shating. Pastdan mahkamlash gaykasi yoki shpilkani yechib, eski smesitelni oling.","Yangi smesitelga shlanglarni <b>qo'l bilan</b> buring (M10 rezba, ingichka: kalit bilan buzasiz). Ularni moyka teshigidan o'tkazing.","Prokladka qo'yib, smesitelni pastdan yarim halqali shpilka bilan mahkamlang. Jo'mrak burni moyka markazida.","Shlanglarni ulang: issiqni chapga, sovuqni o'ngga. Qo'l bilan va kalit bilan ¼ aylanish.","Suvni asta oching. Gaykalar ostida 10 daqiqa quruq salfetka tuting: u bir tomchini ham ko'rsatadi."]},
+ tip:{ru:"Подводки не должны быть натянуты струной или перекручены. Если не хватает длины, купите длиннее. Удлинять переходниками нельзя.",uz:"Shlanglar tarang tortilgan yoki buralgan bo'lmasligi kerak. Uzunligi yetmasa, uzunrog'ini oling. Perexodniklar bilan uzaytirish mumkin emas."},
+ quiz:[
+  {a:0,ru:{q:"С какой стороны подключают горячую воду?",o:["Слева","Справа","Без разницы"],e:"Стандарт: горячая слева, холодная справа."},uz:{q:"Issiq suv qaysi tomondan ulanadi?",o:["Chapdan","O'ngdan","Farqi yo'q"],e:"Standart: issiq chapda, sovuq o'ngda."}},
+  {a:1,ru:{q:"Как вкручивать подводки в корпус смесителя?",o:["Газовым ключом","Рукой, резьба тонкая","Молотком"],e:"Резьба M10 мягкая, ключом её легко сорвать."},uz:{q:"Shlanglar smesitel korpusiga qanday buraladi?",o:["Gaz kaliti bilan","Qo'l bilan, rezba ingichka","Bolg'a bilan"],e:"M10 rezba yumshoq, kalit bilan oson buziladi."}},
+  {a:2,ru:{q:"Подводки не достают до кранов. Что делать?",o:["Натянуть посильнее","Нарастить переходником","Купить подводки длиннее"],e:"Натяжение и лишние соединения — частые причины потопа."},uz:{q:"Shlanglar jo'mraklarga yetmayapti. Nima qilish kerak?",o:["Qattiqroq tortish","Perexodnik bilan uzaytirish","Uzunroq shlang olish"],e:"Taranglik va ortiqcha ulanishlar suv toshqinining tez-tez sababi."}},
+  {a:1,ru:{q:"Как проверить, что ничего не течёт?",o:["Посмотреть через день","Сухой салфеткой под гайками","Не проверять"],e:"Салфетка за 10 минут покажет даже маленькую течь."},uz:{q:"Hech narsa oqmayotganini qanday tekshirish mumkin?",o:["Bir kundan keyin qarash","Gaykalar ostida quruq salfetka bilan","Tekshirmaslik"],e:"Salfetka 10 daqiqada kichik oqishni ham ko'rsatadi."}}]},
+
+{id:'b4',lv:0,min:6,
+ t:{ru:"Протечки",uz:"Oqishlar"},s:{ru:"Капает кран, течёт гайка, бежит бачок",uz:"Jo'mrak tomadi, gayka oqadi, bachok oqadi"},
+ table:{head:{ru:["Что течёт","Причина","Что делать"],uz:["Nima oqadi","Sabab","Nima qilish kerak"]},rows:{
+  ru:[["Капает из носика (рычаг)","Износ картриджа","Заменить картридж того же диаметра (35 или 40 мм)"],["Капает из носика (вентили)","Износ кран-буксы или прокладки","Заменить кран-буксу или резинку"],["Течёт гайка подводки","Слабо затянута или лопнула прокладка","Подтянуть на ¼ оборота; не помогло — новая подводка"],["Течёт резьба трубы","Мало или неверно намотан лён/ФУМ","Разобрать, намотать заново по ходу резьбы"],["Вода бежит в унитаз","Сбит поплавок или износ клапана","Отрегулировать поплавок, заменить прокладку клапана"]],
+  uz:[["Jo'mrak burnidan tomadi (dastali)","Kartrij yeyilgan","Shu diametrdagi kartrijni almashtirish (35 yoki 40 mm)"],["Burnidan tomadi (ventilli)","Kran-buksa yoki prokladka yeyilgan","Kran-buksa yoki rezinani almashtirish"],["Shlang gaykasi oqadi","Kam tortilgan yoki prokladka yorilgan","¼ aylanish torting; foyda bermasa — yangi shlang"],["Quvur rezbasi oqadi","Zig'ir/FUM kam yoki noto'g'ri o'ralgan","Ochib, rezba yo'nalishida qaytadan o'rash"],["Unitazga suv oqib turadi","Poplavok joyidan siljigan yoki klapan yeyilgan","Poplavokni sozlash, klapan prokladkasini almashtirish"]]}},
+ steps:{ru:["Сначала найдите, <b>откуда именно</b> течёт: вытрите всё насухо и смотрите, где появится первая капля.","Перекройте воду и сбросьте давление.","Снимите старую деталь (картридж, кран-буксу) и возьмите её с собой в магазин: так не ошибётесь с размером.","Поставьте новую, затяните без фанатизма, откройте воду медленно и проверьте салфеткой."],
+       uz:["Avval <b>aynan qayerdan</b> oqayotganini toping: hammasini quruq arting va birinchi tomchi qayerda chiqishini kuzating.","Suvni yopib, bosimni tushiring.","Eski detalni (kartrij, kran-buksa) yechib, do'konga o'zingiz bilan oling: o'lchamda adashmaysiz.","Yangisini qo'ying, me'yorida qotiring, suvni asta oching va salfetka bilan tekshiring."]},
+ tip:{ru:"Течь в бачке незаметна, но за месяц уходит несколько кубов воды. Проверка: капните в бачок немного краски или марганцовки. Если через 15 минут цветная вода в унитазе — клапан пропускает.",uz:"Bachokdagi oqish ko'rinmaydi, lekin bir oyda bir necha kub suv ketadi. Tekshirish: bachokka ozgina bo'yoq yoki margansovka tomizing. 15 daqiqadan keyin unitazda rangli suv bo'lsa — klapan o'tkazyapti."},
+ quiz:[
+  {a:1,ru:{q:"Однорычажный смеситель капает из носика. Что менять?",o:["Подводки","Картридж","Весь смеситель сразу"],e:"В рычажном смесителе за закрытие отвечает картридж."},uz:{q:"Bir dastali smesitel burnidan tomyapti. Nimani almashtirish kerak?",o:["Shlanglarni","Kartrijni","Butun smesitelni"],e:"Dastali smesitelda yopilish uchun kartrij javob beradi."}},
+  {a:0,ru:{q:"Как не ошибиться с размером картриджа?",o:["Взять старый с собой в магазин","Купить самый большой","Спросить соседа"],e:"Картриджи бывают 35 и 40 мм и разной высоты."},uz:{q:"Kartrij o'lchamida qanday adashmaslik mumkin?",o:["Eskisini do'konga olib borish","Eng kattasini olish","Qo'shnidan so'rash"],e:"Kartrijlar 35 va 40 mm va turli balandlikda bo'ladi."}},
+  {a:2,ru:{q:"Как проверить, пропускает ли клапан бачка?",o:["Послушать","Нажать кнопку 10 раз","Капнуть краску в бачок и подождать"],e:"Цветная вода в унитазе покажет течь клапана."},uz:{q:"Bachok klapani o'tkazayotganini qanday tekshirish mumkin?",o:["Quloq solish","Tugmani 10 marta bosish","Bachokka bo'yoq tomizib kutish"],e:"Unitazdagi rangli suv klapan oqishini ko'rsatadi."}},
+  {a:1,ru:{q:"С чего начать поиск протечки?",o:["Сразу менять всё подряд","Вытереть насухо и найти первую каплю","Позвать соседей"],e:"Вода стекает вниз, и мокрое место часто ниже настоящей течи."},uz:{q:"Oqishni qidirishni nimadan boshlash kerak?",o:["Hammasini birdan almashtirish","Quruq artib, birinchi tomchini topish","Qo'shnilarni chaqirish"],e:"Suv pastga oqadi, ho'l joy ko'pincha haqiqiy oqishdan pastda."}}]},
+
+{id:'b5',lv:0,min:6,
+ t:{ru:"Засор и сифон",uz:"Tiqilish va sifon"},s:{ru:"Прочистить раковину без химии",uz:"Rakovinani kimyosiz tozalash"},legend:['S'],
+ svg:l=>svg(
+  `<path d="M60 20H300L280 60H80Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  pipe('M180 60V102',W.S,12)+wall(326,20,12,220)+pipe('M205 128H326',W.S,12)+
+  `<rect x="155" y="100" width="50" height="92" rx="12" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/><rect x="161" y="160" width="38" height="26" rx="6" fill="var(--muted)" opacity=".45"/><path d="M162 138H198" stroke="var(--wW)" stroke-width="3"/>`+
+  tx(150,86,R(l,'выпуск','chiqish'),{a:'end',s:10})+tx(270,118,R(l,'в канализацию','kanalizatsiyaga'),{s:10,c:'var(--muted)'})+
+  tx(212,178,R(l,'здесь оседает грязь','bu yerda kir yig\'iladi'),{a:'start',s:10})+
+  tx(180,210,R(l,'колба: откручивается вниз','kolba: pastga buraladi'),{w:600})+
+  tx(180,232,R(l,'вода в сифоне не пускает запах','sifondagi suv hidni o\'tkazmaydi'),{s:10,c:'var(--muted)'}),
+  R(l,'Бутылочный сифон под раковиной: колба внизу собирает грязь','Rakovina ostidagi shishasimon sifon: pastdagi kolba kirni yig\'adi'),245),
+ steps:{ru:["Начните с вантуза: налейте немного воды, закройте мокрой тряпкой перелив (отверстие сверху раковины) и сделайте 10–15 резких качков.","Не помогло — поставьте ведро и открутите колбу сифона рукой. Выньте грязь, промойте колбу.","Проверьте прокладки колбы и закрутите её обратно рукой, без ключа.","Засор дальше, в трубе — нужен сантехнический трос: вращайте его по часовой и проталкивайте.","Откройте горячую воду на 2–3 минуты и проверьте, нет ли капель под сифоном."],
+       uz:["Vantuzdan boshlang: ozgina suv quying, perelivni (rakovina tepasidagi teshik) ho'l latta bilan yoping va 10–15 marta keskin bosing.","Yordam bermasa — chelak qo'yib, sifon kolbasini qo'l bilan bo'shating. Kirni oling, kolbani yuving.","Kolba prokladkalarini tekshirib, qaytadan qo'l bilan, kalitsiz buring.","Tiqilish quvurning ichkarisida bo'lsa — santexnik tros kerak: uni soat mili bo'yicha aylantirib, ichkariga suring.","Issiq suvni 2–3 daqiqa oching va sifon ostida tomchi yo'qligini tekshiring."]},
+ tip:{ru:"Не смешивайте разные химические средства для труб: может быть опасная реакция. И не лейте химию, если потом будете разбирать сифон руками.",uz:"Quvurlar uchun turli kimyoviy vositalarni aralashtirmang: xavfli reaksiya bo'lishi mumkin. Keyin sifonni qo'l bilan ochmoqchi bo'lsangiz, kimyo quymang."},
+ quiz:[
+  {a:2,ru:{q:"Зачем закрывать перелив при работе вантузом?",o:["Чтобы не брызгало","Так положено","Иначе давление уходит через перелив"],e:"Открытый перелив «съедает» удар вантуза."},uz:{q:"Vantuz bilan ishlaganda pereliv nima uchun yopiladi?",o:["Sachramasligi uchun","Shunday qoida","Aks holda bosim perelivdan chiqib ketadi"],e:"Ochiq pereliv vantuz zarbasini «yeb qo'yadi»."}},
+  {a:0,ru:{q:"Где в бутылочном сифоне собирается грязь?",o:["В колбе внизу","В смесителе","В стояке"],e:"Колба специально сделана отстойником, её легко открутить."},uz:{q:"Shishasimon sifonda kir qayerda yig'iladi?",o:["Pastdagi kolbada","Smesitelda","Stoyakda"],e:"Kolba maxsus cho'kma idishi qilib yasalgan, uni oson burab olish mumkin."}},
+  {a:1,ru:{q:"Зачем в сифоне всегда стоит вода?",o:["Чтобы мыть посуду","Не пускает запах из канализации","Для давления"],e:"Это гидрозатвор. Сухой сифон — запах в квартире."},uz:{q:"Sifonda nima uchun doim suv turadi?",o:["Idish yuvish uchun","Kanalizatsiya hidini o'tkazmaydi","Bosim uchun"],e:"Bu gidrozatvor. Quruq sifon — kvartirada hid."}},
+  {a:1,ru:{q:"Можно ли смешивать разные средства для прочистки?",o:["Да, так сильнее","Нет, может быть опасная реакция","Только с кипятком"],e:"Разная химия при смешивании может дать вредный газ."},uz:{q:"Tozalash uchun turli vositalarni aralashtirish mumkinmi?",o:["Ha, kuchliroq bo'ladi","Yo'q, xavfli reaksiya bo'lishi mumkin","Faqat qaynoq suv bilan"],e:"Turli kimyo aralashganda zararli gaz chiqishi mumkin."}}]},
+
+/* ---------- INTERMEDIATE ---------- */
+{id:'m1',lv:1,min:9,
+ t:{ru:"Установка унитаза",uz:"Unitaz o'rnatish"},s:{ru:"Гофра, крепление, подводка, бачок",uz:"Gofra, mahkamlash, shlang, bachok"},legend:['C','S'],
+ svg:l=>svg(
+  wall(0,230,360,8)+wall(330,0,30,230)+
+  pipe('M250 140H330',W.S,16,'5 3')+
+  `<rect x="105" y="160" width="80" height="70" rx="8" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/><path d="M45 108H255Q255 168 185 174H112Q45 168 45 108Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/><rect x="205" y="38" width="76" height="68" rx="6" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/><rect x="232" y="30" width="22" height="8" rx="3" fill="var(--fg)"/>`+
+  pipe('M281 92H300',W.C,4)+pipe('M314 92H330',W.C,7)+valve(307,92)+
+  tx(243,76,R(l,'бачок','bachok'),{c:'var(--muted)'})+tx(150,140,R(l,'чаша','kosa'),{c:'var(--muted)'})+
+  tx(307,72,R(l,'кран','jo\'mrak'),{s:10})+
+  tx(290,168,R(l,'гофра Ø110','gofra Ø110'),{s:10,w:600})+tx(300,182,R(l,'→ в канализацию','→ kanalizatsiyaga'),{s:10,c:'var(--muted)'})+
+  tx(145,250,R(l,'к полу: дюбели + силикон','polga: dyubel + silikon'),{w:600}),
+  R(l,'Унитаз сбоку: выпуск через гофру в канализацию 110 мм, бачок подключён к крану холодной воды','Unitaz yon tomondan: chiqishi gofra orqali 110 mm kanalizatsiyaga, bachok sovuq suv jo\'mragiga ulangan'),260),
+ steps:{ru:["Заткните трубу канализации тряпкой, чтобы не шёл запах и ничего не упало. Тряпку потом не забудьте!","Наденьте гофру на выпуск унитаза, примерьте унитаз на место и наметьте карандашом отверстия под крепёж.","Отодвиньте унитаз, просверлите пол (по плитке — сначала сверлом по стеклу/плитке, без удара), вставьте дюбели.","Вставьте гофру в канализацию на всю глубину манжеты, поставьте унитаз и прикрутите винтами через пластиковые шайбы. Не перетягивайте: фаянс лопнет.","Подключите гибкую подводку к бачку и крану, откройте воду, слейте 5–6 раз и проверьте все стыки салфеткой.","Пройдите силиконом шов между унитазом и полом."],
+       uz:["Hid kelmasligi va hech narsa tushmasligi uchun kanalizatsiya quvurini latta bilan berkiting. Keyin lattani unutmang!","Gofrani unitaz chiqishiga kiydiring, unitazni joyiga qo'yib ko'ring va mahkamlash teshiklarini qalam bilan belgilang.","Unitazni suring, polni teshing (kafelda — avval shisha/kafel parmasi bilan, zarbasiz), dyubellarni kiriting.","Gofrani kanalizatsiyaga manjetaning butun chuqurligigacha kiriting, unitazni qo'yib, plastik shaybalar orqali vintlar bilan mahkamlang. Ortiqcha tortmang: fayans yoriladi.","Egiluvchan shlangni bachok va jo'mrakka ulang, suvni oching, 5–6 marta suv tushiring va barcha ulanishlarni salfetka bilan tekshiring.","Unitaz va pol orasidagi chokni silikon bilan yuring."]},
+ tip:{ru:"Гофра должна идти с небольшим уклоном вниз к канализации, без провисания посередине. Если унитаз стоит близко к трубе, лучше жёсткий пластиковый отвод вместо гофры.",uz:"Gofra kanalizatsiyaga qarab biroz pastga qiyalikda, o'rtasida osilmasdan ketishi kerak. Unitaz quvurga yaqin tursa, gofra o'rniga qattiq plastik otvod yaxshiroq."},
+ quiz:[
+  {a:1,ru:{q:"Какой диаметр канализации у унитаза?",o:["50 мм","110 мм","32 мм"],e:"Унитаз всегда подключают к трубе 110 мм."},uz:{q:"Unitaz kanalizatsiyasining diametri qancha?",o:["50 mm","110 mm","32 mm"],e:"Unitaz doim 110 mm quvurga ulanadi."}},
+  {a:0,ru:{q:"Как сверлить плитку под крепёж?",o:["Сверлом по плитке, без удара","Перфоратором с ударом сразу","Гвоздём"],e:"Удар колет плитку. Сначала плитку без удара, потом бетон."},uz:{q:"Mahkamlash uchun kafelni qanday teshish kerak?",o:["Kafel parmasi bilan, zarbasiz","Darhol zarbali perforator bilan","Mix bilan"],e:"Zarba kafelni yoradi. Avval kafelni zarbasiz, keyin betonni."}},
+  {a:2,ru:{q:"Почему нельзя сильно перетягивать винты унитаза?",o:["Винты дорогие","Неважно","Фаянс может треснуть"],e:"Используйте пластиковые шайбы и затягивайте умеренно."},uz:{q:"Unitaz vintlarini nima uchun qattiq tortib bo'lmaydi?",o:["Vintlar qimmat","Farqi yo'q","Fayans yorilishi mumkin"],e:"Plastik shaybalardan foydalaning va me'yorida torting."}},
+  {a:1,ru:{q:"Как должна лежать гофра?",o:["С провисом посередине","С уклоном к канализации, без провиса","Вверх к трубе"],e:"В провисе застаивается вода и грязь."},uz:{q:"Gofra qanday yotishi kerak?",o:["O'rtasida osilib","Kanalizatsiyaga qiyalikda, osilmasdan","Quvurga qarab yuqoriga"],e:"Osilgan joyda suv va kir turib qoladi."}}]},
+
+{id:'m2',lv:1,min:8,calc:'slope',
+ t:{ru:"Канализация: уклон",uz:"Kanalizatsiya: qiyalik"},s:{ru:"Диаметры труб и правильный уклон",uz:"Quvur diametrlari va to'g'ri qiyalik"},legend:['S'],
+ svg:l=>svg(
+  box(30,30,70,18)+tx(65,24,R(l,'раковина','rakovina'),{s:10,c:'var(--muted)'})+
+  pipe('M65 48V80L296 128',W.S,9)+pipe('M312 10V220',W.S,16)+
+  `<path d="M65 80H296" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 4"/>`+arrow(280,84,280,121)+
+  tx(272,108,R(l,'перепад','farq'),{a:'end',s:10})+
+  tx(170,72,'Ø50',{w:700})+
+  tx(160,150,R(l,'уклон 3 см на каждый 1 м','har 1 m ga 3 sm qiyalik'),{w:700})+
+  tx(160,168,R(l,'(для Ø110 — 2 см на 1 м)','(Ø110 uchun — 1 m ga 2 sm)'),{s:10,c:'var(--muted)'})+
+  tx(300,236,R(l,'стояк Ø110','stoyak Ø110'),{a:'end',s:10,w:600}),
+  R(l,'Труба 50 мм от раковины идёт к стояку с уклоном 3 см на метр','Rakovinadan 50 mm quvur stoyakka 1 m ga 3 sm qiyalikda boradi'),245),
+ table:{head:{ru:["Прибор","Труба","Уклон"],uz:["Asbob","Quvur","Qiyalik"]},rows:{
+  ru:[["Раковина, мойка","40–50 мм","3 см/м"],["Ванна, душ","50 мм","3 см/м"],["Стиральная машина","50 мм","3 см/м"],["Унитаз","110 мм","2 см/м"],["Стояк","110 мм","вертикально"]],
+  uz:[["Rakovina, moyka","40–50 mm","3 sm/m"],["Vanna, dush","50 mm","3 sm/m"],["Kir yuvish mashinasi","50 mm","3 sm/m"],["Unitaz","110 mm","2 sm/m"],["Stoyak","110 mm","vertikal"]]}},
+ steps:{ru:["Трубы ставят <b>раструбом против течения</b>: вода втекает в раструб, а не вытекает из него.","Уклон проверяйте уровнем на каждом метре. Слишком маленький — грязь застаивается. Слишком большой (больше 15 см на метр) — вода убегает, а грязь остаётся.","Повороты делайте двумя отводами по 45°, а не одним 90°: так меньше засоров.","Трубу крепите хомутами примерно через каждые 10 диаметров (для Ø50 — около 50 см).","Перед подключением в раструбы ставят резиновые кольца и смазывают силиконовой смазкой или мылом."],
+       uz:["Quvurlar <b>rastrub oqimga qarshi</b> qo'yiladi: suv rastrubga kiradi, undan chiqmaydi.","Qiyalikni har metrda daraja (uroven) bilan tekshiring. Juda kam — kir to'xtaydi. Juda katta (1 m ga 15 sm dan ortiq) — suv qochadi, kir qoladi.","Burilishlarni bitta 90° emas, ikkita 45° otvod bilan qiling: tiqilish kamroq.","Quvurni taxminan har 10 diametrda xomut bilan mahkamlang (Ø50 uchun — taxminan 50 sm).","Ulashdan oldin rastrublarga rezina halqa qo'yiladi va silikon moy yoki sovun bilan moylanadi."]},
+ tip:{ru:"Труба от прибора к стояку не должна быть уже, чем выход прибора. И нельзя подключать трубу 50 мм так, чтобы в неё сливался унитаз.",uz:"Asbobdan stoyakkacha quvur asbob chiqishidan tor bo'lmasligi kerak. Unitaz quyiladigan qilib 50 mm quvur ulash mumkin emas."},
+ quiz:[
+  {a:1,ru:{q:"Какой уклон у трубы 50 мм?",o:["0,5 см на метр","3 см на метр","20 см на метр"],e:"Для 40–50 мм норма около 3 см на метр."},uz:{q:"50 mm quvurning qiyaligi qancha?",o:["1 m ga 0,5 sm","1 m ga 3 sm","1 m ga 20 sm"],e:"40–50 mm uchun me'yor 1 m ga taxminan 3 sm."}},
+  {a:0,ru:{q:"Куда смотрит раструб трубы?",o:["Против течения, навстречу воде","По течению","Вверх"],e:"Вода должна втекать в раструб, иначе стык будет течь."},uz:{q:"Quvur rastrubi qayerga qaraydi?",o:["Oqimga qarshi, suvga qarab","Oqim bo'yicha","Yuqoriga"],e:"Suv rastrubga oqib kirishi kerak, aks holda ulanish oqadi."}},
+  {a:2,ru:{q:"Почему плохо делать уклон слишком большим?",o:["Дорого","Шумно, и всё","Вода убегает, а грязь остаётся"],e:"Уклон больше 15 см/м — частая причина засоров."},uz:{q:"Nima uchun qiyalikni juda katta qilish yomon?",o:["Qimmat","Faqat shovqinli","Suv qochadi, kir qoladi"],e:"1 m ga 15 sm dan ortiq qiyalik — tiqilishning tez-tez sababi."}},
+  {a:1,ru:{q:"Как лучше сделать поворот на 90°?",o:["Одним отводом 90°","Двумя отводами по 45°","Согнуть трубу"],e:"Плавный поворот меньше засоряется."},uz:{q:"90° burilishni qanday qilish yaxshiroq?",o:["Bitta 90° otvod bilan","Ikkita 45° otvod bilan","Quvurni egish"],e:"Silliq burilish kamroq tiqiladi."}}]},
+
+{id:'m3',lv:1,min:9,
+ t:{ru:"Пайка полипропилена",uz:"Polipropilen payvandlash"},s:{ru:"ПП-трубы: время, глубина, ошибки",uz:"PP quvurlar: vaqt, chuqurlik, xatolar"},
+ svg:l=>svg(
+  flow(60,8,240,34,R(l,'1. Отрезать ровно, под 90°','1. To\'g\'ri, 90° da kesish'))+arrow(180,42,180,52)+
+  flow(60,54,240,34,R(l,'2. Зачистить армирование','2. Armaturani tozalash'),R(l,'для труб с алюминием','alyuminiyli quvurlar uchun'))+arrow(180,88,180,98)+
+  flow(60,100,240,34,R(l,'3. Отметить глубину маркером','3. Chuqurlikni marker bilan belgilash'))+arrow(180,134,180,144)+
+  flow(60,146,240,34,R(l,'4. Греть трубу и фитинг вместе','4. Quvur va fitingni birga qizdirish'),'260 °C')+arrow(180,180,180,190)+
+  flow(60,192,240,34,R(l,'5. Соединить прямо, не крутить','5. To\'g\'ri ulash, buramaslik'),R(l,'держать неподвижно','qimirlatmay ushlash')),
+  R(l,'Пять шагов пайки полипропиленовой трубы','Polipropilen quvurni payvandlashning besh bosqichi'),232),
+ table:{head:{ru:["Ø трубы","Глубина","Нагрев","Остывание"],uz:["Quvur Ø","Chuqurlik","Qizdirish","Sovish"]},rows:{
+  ru:[["20 мм","14 мм","6 с","2 мин"],["25 мм","15 мм","7 с","2 мин"],["32 мм","16,5 мм","8 с","4 мин"],["40 мм","18 мм","12 с","4 мин"]],
+  uz:[["20 mm","14 mm","6 s","2 daq"],["25 mm","15 mm","7 s","2 daq"],["32 mm","16,5 mm","8 s","4 daq"],["40 mm","18 mm","12 s","4 daq"]]}},
+ steps:{ru:["Включите паяльник и подождите 10–15 минут после того, как погаснет лампа: насадки должны прогреться до 260 °C.","Для горячей воды берите трубу PN20/PN25 <b>с армированием</b> (алюминий или стекловолокно). Без армирования её поведёт от тепла.","Наденьте трубу и фитинг на насадки одновременно, без поворота. Считайте секунды по таблице.","Снимите и сразу соедините до метки, тоже без поворота. Несколько секунд можно поправить угол, потом не трогайте.","Давайте остыть по таблице. Воду подавайте не раньше чем через 1 час после последней пайки."],
+       uz:["Payvandlagichni yoqing va chiroq o'chgandan keyin 10–15 daqiqa kuting: nasadkalar 260 °C gacha qizishi kerak.","Issiq suv uchun <b>armaturali</b> PN20/PN25 quvur oling (alyuminiy yoki shisha tola). Armaturasiz quvur issiqdan qiyshayadi.","Quvur va fitingni nasadkalarga bir vaqtda, burmasdan kiydiring. Soniyalarni jadval bo'yicha sanang.","Yechib, darhol belgigacha ulang, burmasdan. Bir necha soniya burchakni to'g'rilash mumkin, keyin tegmang.","Jadval bo'yicha sovishini kuting. Oxirgi payvanddan kamida 1 soat o'tib suv bering."]},
+ tip:{ru:"Перегрев так же плох, как недогрев: пластик наплывает внутрь и сужает трубу. Держите время по таблице, а не «на глаз».",uz:"Ortiqcha qizdirish ham kam qizdirish kabi yomon: plastik ichkariga oqib, quvurni toraytiradi. Vaqtni «ko'z bilan» emas, jadval bo'yicha tuting."},
+ quiz:[
+  {a:1,ru:{q:"Какая температура паяльника для ПП-труб?",o:["100 °C","260 °C","500 °C"],e:"Рабочая температура около 260 °C."},uz:{q:"PP quvurlar uchun payvandlagich harorati qancha?",o:["100 °C","260 °C","500 °C"],e:"Ish harorati taxminan 260 °C."}},
+  {a:0,ru:{q:"Можно ли поворачивать трубу при соединении?",o:["Нет, только прямо","Да, на пол-оборота","Да, чем больше, тем лучше"],e:"Поворот рвёт расплавленный слой, стык будет течь."},uz:{q:"Ulashda quvurni burash mumkinmi?",o:["Yo'q, faqat to'g'ri","Ha, yarim aylanish","Ha, qancha ko'p bo'lsa shuncha yaxshi"],e:"Burash erigan qatlamni buzadi, ulanish oqadi."}},
+  {a:2,ru:{q:"Какую трубу брать на горячую воду?",o:["Любую тонкую","PN10 без армирования","Армированную PN20/PN25"],e:"Армирование не даёт трубе удлиняться и провисать от тепла."},uz:{q:"Issiq suvga qaysi quvur olinadi?",o:["Istalgan ingichka","Armaturasiz PN10","Armaturali PN20/PN25"],e:"Armatura quvurni issiqdan uzayib, osilishdan saqlaydi."}},
+  {a:1,ru:{q:"Сколько греть трубу 20 мм?",o:["1 секунду","6 секунд","1 минуту"],e:"По таблице: 20 мм — 6 секунд."},uz:{q:"20 mm quvur qancha qizdiriladi?",o:["1 soniya","6 soniya","1 daqiqa"],e:"Jadval bo'yicha: 20 mm — 6 soniya."}}]},
+
+{id:'m4',lv:1,min:6,
+ t:{ru:"Стиральная машина",uz:"Kir yuvish mashinasi"},s:{ru:"Подключить воду и слив",uz:"Suv va to'kishni ulash"},legend:['C','S'],
+ svg:l=>svg(
+  wall(0,230,360,8)+wall(342,0,18,230)+
+  `<rect x="30" y="90" width="120" height="140" rx="10" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/><circle cx="90" cy="165" r="38" fill="var(--bg)" stroke="var(--fg)" stroke-width="1.5"/><path d="M40 108H140" stroke="var(--line)" stroke-width="2"/>`+
+  pipe('M309 60H342',W.C,7)+pipe('M140 100C180 60 250 60 300 60',W.C,4)+valve(305,60)+
+  pipe('M150 205C220 205 230 112 270 112C300 112 306 140 312 152',W.S,5)+pipe('M312 152H342',W.S,9)+
+  arrow(326,226,326,116)+tx(320,186,R(l,'60–90 см','60–90 sm'),{a:'end',w:700})+
+  tx(305,38,R(l,'отдельный кран','alohida jo\'mrak'),{s:10})+
+  tx(258,97,R(l,'шланг слива — петлёй вверх','to\'kish shlangi — tepaga halqa'),{s:10})+
+  tx(250,170,R(l,'в сифон','sifonga'),{s:10,c:'var(--muted)'}),
+  R(l,'Стиральная машина: шланг воды от отдельного крана, шланг слива поднят петлёй на 60–90 см','Kir yuvish mashinasi: alohida jo\'mrakdan suv shlangi, to\'kish shlangi 60–90 sm balandlikda halqa'),245),
+ steps:{ru:["Холодную воду берите от <b>отдельного крана</b> для машины: уезжаете — закрываете.","Шланг набора вкрутите рукой. Он с прокладкой, ничего не мотайте.","Слив: в сифон раковины со штуцером или в отдельный сифон в стене. Шланг поднимите петлёй на высоту, указанную в инструкции (обычно 60–90 см).","Если слив ниже этой высоты, ставьте обратный клапан, иначе вода из канализации будет затекать в машину.","Выставьте машину по уровню, выкрутив ножки. Снимите <b>транспортировочные болты</b> сзади, иначе машина разобьётся на отжиме."],
+       uz:["Sovuq suvni mashina uchun <b>alohida jo'mrakdan</b> oling: ketayotganda — yopasiz.","Suv olish shlangini qo'l bilan buring. U prokladkali, hech narsa o'ramang.","To'kish: shtutserli rakovina sifoniga yoki devordagi alohida sifonga. Shlangni yo'riqnomada ko'rsatilgan balandlikka (odatda 60–90 sm) halqa qilib ko'taring.","To'kish bu balandlikdan past bo'lsa, qaytarish klapani qo'ying, aks holda kanalizatsiyadan suv mashinaga oqib kiradi.","Oyoqlarini burab, mashinani daraja bo'yicha to'g'rilang. Orqadagi <b>transport boltlarini</b> yeching, aks holda siqishda mashina buziladi."]},
+ tip:{ru:"Розетка для машины — с заземлением и через УЗО 30 мА, не ближе 60 см от воды. Это работа электрика, если сами не умеете.",uz:"Mashina rozetkasi — yerga ulangan va 30 mA UZO orqali, suvdan 60 sm dan yaqin emas. O'zingiz bilmasangiz, bu elektrik ishi."},
+ quiz:[
+  {a:2,ru:{q:"Зачем снимать транспортировочные болты?",o:["Для красоты","Чтобы не было течи","Иначе машина разобьётся на отжиме"],e:"Болты держат барабан при перевозке, в работе они ломают машину."},uz:{q:"Transport boltlari nima uchun yechiladi?",o:["Chiroyli bo'lishi uchun","Oqmasligi uchun","Aks holda siqishda mashina buziladi"],e:"Boltlar tashishda barabanni ushlaydi, ishlaganda mashinani buzadi."}},
+  {a:0,ru:{q:"Зачем поднимать шланг слива петлёй?",o:["Чтобы вода из канализации не затекала обратно","Так короче","Для напора"],e:"Петля на нужной высоте работает как затвор."},uz:{q:"To'kish shlangi nima uchun halqa qilib ko'tariladi?",o:["Kanalizatsiyadan suv qaytib kirmasligi uchun","Qisqaroq bo'ladi","Bosim uchun"],e:"Kerakli balandlikdagi halqa zatvor vazifasini bajaradi."}},
+  {a:1,ru:{q:"Слив подключён низко. Что поставить?",o:["Ещё один шланг","Обратный клапан","Ничего"],e:"Обратный клапан не даст стокам вернуться в машину."},uz:{q:"To'kish past ulangan. Nima qo'yish kerak?",o:["Yana bitta shlang","Qaytarish klapani","Hech narsa"],e:"Qaytarish klapani oqova suvni mashinaga qaytarmaydi."}},
+  {a:1,ru:{q:"Какой должна быть розетка для машины?",o:["Любая с удлинителем","С заземлением и через УЗО","Без заземления"],e:"Вода и ток рядом: заземление и УЗО обязательны."},uz:{q:"Mashina rozetkasi qanday bo'lishi kerak?",o:["Uzaytirgichli istalgani","Yerga ulangan va UZO orqali","Yerga ulanmagan"],e:"Suv va tok yonma-yon: yerga ulash va UZO majburiy."}}]},
+
+/* ---------- ADVANCED ---------- */
+{id:'a1',lv:2,min:8,
+ t:{ru:"Разводка воды",uz:"Suv tarmog'ini taqsimlash"},s:{ru:"Тройниковая или коллекторная",uz:"Troynikli yoki kollektorli"},legend:['C'],
+ svg:l=>svg(
+  tx(14,24,R(l,'Тройниковая','Troynikli'),{a:'start',w:700})+
+  pipe('M14 50H300',W.C)+pipe('M110 50V72M200 50V72M290 50V72',W.C,5)+
+  flow(75,72,70,24,R(l,'Кухня','Oshxona'))+flow(165,72,70,24,R(l,'Ванна','Vanna'))+flow(255,72,70,24,R(l,'Унитаз','Unitaz'))+
+  tx(14,118,R(l,'Открыли кухню — в душе упал напор','Oshxona ochildi — dushda bosim tushdi'),{a:'start',s:10,c:'var(--muted)'})+
+  tx(14,150,R(l,'Коллекторная','Kollektorli'),{a:'start',w:700})+
+  pipe('M10 205H30',W.C)+`<rect x="30" y="165" width="24" height="82" rx="4" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  pipe('M54 177H255M54 205H255M54 233H255',W.C,5)+valve(100,177)+valve(100,205)+valve(100,233)+
+  flow(255,166,80,22,R(l,'Кухня','Oshxona'))+flow(255,194,80,22,R(l,'Ванна','Vanna'))+flow(255,222,80,22,R(l,'Унитаз','Unitaz'))+
+  tx(42,262,R(l,'коллектор','kollektor'),{s:10,c:'var(--muted)'})+tx(180,262,R(l,'у каждой точки свой кран','har bir nuqtaning o\'z jo\'mragi'),{s:10,c:'var(--muted)'}),
+  R(l,'Сравнение: тройниковая разводка одной трубой и коллекторная, где к каждому прибору своя труба с краном','Taqqoslash: bitta quvurli troynikli va har bir asbobga alohida jo\'mrakli quvur boradigan kollektorli'),270),
+ table:{head:{ru:["","Тройниковая","Коллекторная"],uz:["","Troynikli","Kollektorli"]},rows:{
+  ru:[["Цена","Дешевле","Дороже: больше трубы"],["Напор","Падает, если открыто несколько кранов","Ровный на всех точках"],["Ремонт","Перекрывают всю квартиру","Перекрывают одну точку"],["Где","Маленькая квартира, 1 санузел","2 санузла, дом"]],
+  uz:[["Narx","Arzonroq","Qimmatroq: quvur ko'p"],["Bosim","Bir nechta jo'mrak ochilsa tushadi","Barcha nuqtalarda bir xil"],["Ta'mir","Butun kvartira yopiladi","Bitta nuqta yopiladi"],["Qayerda","Kichik kvartira, 1 hojatxona","2 hojatxona, uy"]]}},
+ steps:{ru:["Нарисуйте план: где стоят все приборы и где ввод воды. Посчитайте точки отдельно для холодной и горячей.","Магистраль до коллектора делайте трубой на размер больше, чем отводы к приборам (например, 25 мм, а к приборам 20 мм).","Трубы в стене прячьте целиком, без резьбовых соединений: резьбу в стене не замуровывают.","Каждый выход подпишите: «кухня», «ванна». Через год вы забудете, где что.","Перед тем как закрыть стену, сделайте опрессовку: дайте давление и оставьте на сутки."],
+       uz:["Reja chizing: barcha asboblar va suv kirishi qayerda. Sovuq va issiq uchun nuqtalarni alohida sanang.","Kollektorgacha magistralni asbob tarmoqlaridan bir o'lcham katta quvur bilan qiling (masalan, 25 mm, asboblarga 20 mm).","Devordagi quvurlarni rezbali ulanishsiz, butunlay yashiring: rezba devorga suvalmaydi.","Har bir chiqishga yozing: «oshxona», «vanna». Bir yildan keyin nima qayerdaligini unutasiz.","Devorni yopishdan oldin opressovka qiling: bosim bering va bir sutkaga qoldiring."]},
+ tip:{ru:"Опрессовку делают давлением в 1,5 раза выше рабочего. Упало давление на манометре — ищите течь, пока стена открыта.",uz:"Opressovka ishchi bosimdan 1,5 baravar yuqori bosim bilan qilinadi. Manometrda bosim tushsa — devor ochiqligida oqishni qidiring."},
+ quiz:[
+  {a:1,ru:{q:"Главный плюс коллекторной разводки?",o:["Дешевле","Ровный напор и свой кран у каждой точки","Меньше труб"],e:"Каждый прибор получает свою трубу от коллектора."},uz:{q:"Kollektorli tarmoqning asosiy afzalligi?",o:["Arzonroq","Bir xil bosim va har nuqtada o'z jo'mragi","Quvur kamroq"],e:"Har bir asbob kollektordan o'z quvurini oladi."}},
+  {a:0,ru:{q:"Можно ли замуровать резьбовое соединение в стену?",o:["Нет","Да, если с ФУМ","Да, всегда"],e:"Резьба со временем может потечь. В стене только цельная труба или пайка."},uz:{q:"Rezbali ulanishni devorga suvash mumkinmi?",o:["Yo'q","Ha, FUM bilan bo'lsa","Ha, doim"],e:"Rezba vaqt o'tib oqishi mumkin. Devorda faqat butun quvur yoki payvand."}},
+  {a:2,ru:{q:"Когда делают опрессовку?",o:["Через год","Не делают","До того, как закрыть стену"],e:"Течь легко найти и исправить, пока трубы открыты."},uz:{q:"Opressovka qachon qilinadi?",o:["Bir yildan keyin","Qilinmaydi","Devor yopilishidan oldin"],e:"Quvurlar ochiqligida oqishni topish va tuzatish oson."}},
+  {a:1,ru:{q:"Какой трубой делать магистраль до коллектора?",o:["Тоньше отводов","На размер больше отводов","Любой"],e:"Магистраль несёт воду на все точки сразу."},uz:{q:"Kollektorgacha magistral qaysi quvur bilan qilinadi?",o:["Tarmoqlardan ingichka","Tarmoqlardan bir o'lcham katta","Istalgan"],e:"Magistral barcha nuqtalarga birdaniga suv olib boradi."}}]},
+
+{id:'a2',lv:2,min:9,calc:'boiler',
+ warn:{ru:"Работайте только при выключенном бойлере (вилка из розетки, автомат выключен) и закрытой воде. Бойлер без воды не включайте: сгорит ТЭН.",uz:"Faqat boyler o'chirilganda (vilka rozetkadan chiqarilgan, avtomat o'chiq) va suv yopiq bo'lganda ishlang. Suvsiz boylerni yoqmang: TEN kuyadi."},
+ t:{ru:"Подключение бойлера",uz:"Boylerni ulash"},s:{ru:"Предохранительный клапан и порядок",uz:"Saqlash klapani va tartib"},legend:['H','C'],
+ svg:l=>svg(
+  `<rect x="200" y="14" width="100" height="196" rx="34" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  tx(250,100,R(l,'Бойлер','Boyler'),{w:700,s:13})+tx(250,118,R(l,'розетка с землёй','yerga ulangan'),{s:9,c:'var(--muted)'})+tx(250,130,R(l,'+ УЗО','rozetka + UZO'),{s:9,c:'var(--muted)'})+
+  pipe('M10 240H230V210',W.C)+pipe('M270 210V240H350',W.H)+
+  valve(50,240)+`<rect x="138" y="228" width="26" height="24" rx="4" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  pipe('M151 252V282',W.S,3,'4 3')+
+  tx(50,220,R(l,'кран','jo\'mrak'),{s:10})+
+  tx(151,198,R(l,'предохранительный','saqlash'),{s:10,w:600})+tx(151,212,R(l,'клапан 6–7 бар','klapani 6–7 bar'),{s:10,w:600})+
+  tx(170,268,R(l,'здесь кранов нет!','bu yerda jo\'mrak yo\'q!'),{a:'start',s:10,w:700,c:'var(--bad)'})+
+  tx(144,290,R(l,'капли → в канализацию','tomchilar → kanalizatsiyaga'),{a:'end',s:10,c:'var(--muted)'})+
+  tx(14,262,R(l,'холодная','sovuq'),{a:'start',s:10,c:'var(--wC)',w:600})+tx(346,262,R(l,'горячая','issiq'),{a:'end',s:10,c:'var(--wH)',w:600}),
+  R(l,'Бойлер: холодная вода через кран и предохранительный клапан снизу, горячая выходит к смесителям','Boyler: sovuq suv jo\'mrak va saqlash klapani orqali pastdan kiradi, issiq smesitellarga chiqadi'),300),
+ steps:{ru:["Повесьте бойлер на анкеры в капитальную стену. Полный бойлер на 80 л весит больше 100 кг.","На вход холодной воды (синее кольцо) поставьте <b>предохранительный клапан</b> стрелкой к бойлеру. Между клапаном и бойлером не должно быть кранов.","Перед клапаном поставьте кран. Если давление в доме выше 4–5 бар, добавьте редуктор давления.","Выход горячей (красное кольцо) ведите к смесителям.","Откройте горячий кран на смесителе и откройте воду. Когда из крана пойдёт ровная струя без воздуха, бойлер полный. Только теперь включайте в розетку."],
+       uz:["Boylerni kapital devorga ankerlar bilan osing. To'la 80 l boyler 100 kg dan og'ir.","Sovuq suv kirishiga (ko'k halqa) <b>saqlash klapanini</b> strelkasi boylerga qarab qo'ying. Klapan va boyler orasida jo'mrak bo'lmasligi kerak.","Klapandan oldin jo'mrak qo'ying. Uydagi bosim 4–5 bar dan yuqori bo'lsa, bosim reduktorini qo'shing.","Issiq suv chiqishini (qizil halqa) smesitellarga olib boring.","Smesitelda issiq jo'mrakni oching va suvni oching. Jo'mrakdan havosiz tekis oqim kelsa, boyler to'ldi. Faqat endi rozetkaga ulang."]},
+ tip:{ru:"Из предохранительного клапана при нагреве капает вода: это нормально, вода расширяется. Отведите трубку в канализацию. Затыкать клапан нельзя — бак может разорвать.",uz:"Qizdirishda saqlash klapanidan suv tomadi: bu normal, suv kengayadi. Trubkani kanalizatsiyaga olib boring. Klapanni berkitish mumkin emas — bak yorilishi mumkin."},
+ quiz:[
+  {a:2,ru:{q:"Что нельзя ставить между предохранительным клапаном и бойлером?",o:["Трубу","Прокладку","Кран"],e:"Закрытый кран отрежет клапан, и бак может разорвать давлением."},uz:{q:"Saqlash klapani va boyler orasiga nima qo'yib bo'lmaydi?",o:["Quvur","Prokladka","Jo'mrak"],e:"Yopiq jo'mrak klapanni uzib qo'yadi va bak bosimdan yorilishi mumkin."}},
+  {a:0,ru:{q:"Из клапана капает вода при нагреве. Это…",o:["Нормально, вода расширяется","Поломка, менять бойлер","Надо заткнуть клапан"],e:"Капли — работа клапана. Отведите их в канализацию."},uz:{q:"Qizdirishda klapandan suv tomyapti. Bu…",o:["Normal, suv kengayadi","Buzilish, boylerni almashtirish kerak","Klapanni berkitish kerak"],e:"Tomchilar — klapan ishi. Ularni kanalizatsiyaga olib boring."}},
+  {a:1,ru:{q:"Когда можно включать бойлер в розетку?",o:["Сразу после монтажа","Когда он полностью заполнен водой","До подключения воды"],e:"Без воды ТЭН перегревается и сгорает за минуты."},uz:{q:"Boylerni rozetkaga qachon ulash mumkin?",o:["O'rnatgandan darhol","U suvga to'liq to'lganda","Suv ulanishidan oldin"],e:"Suvsiz TEN bir necha daqiqada qizib kuyadi."}},
+  {a:1,ru:{q:"Давление в доме 6 бар. Что добавить?",o:["Ещё один бойлер","Редуктор давления","Ничего"],e:"Редуктор снизит давление и защитит бойлер и подводки."},uz:{q:"Uydagi bosim 6 bar. Nima qo'shish kerak?",o:["Yana bitta boyler","Bosim reduktori","Hech narsa"],e:"Reduktor bosimni pasaytirib, boyler va shlanglarni himoya qiladi."}}]},
+
+{id:'a3',lv:2,min:10,
+ t:{ru:"Водяной тёплый пол",uz:"Suvli issiq pol"},s:{ru:"Петли, шаг укладки, температура",uz:"Halqalar, yotqizish qadami, harorat"},legend:['F','R'],
+ svg:l=>svg(
+  `<rect x="10" y="20" width="56" height="28" rx="5" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(38,14,R(l,'коллектор','kollektor'),{s:10,c:'var(--muted)'})+
+  pipe('M50 48V70H330V100H74V130H330V160H74V190H330V216',W.F,5)+pipe('M330 216V236H24V48',W.C,5)+
+  tx(200,62,R(l,'подача 35–45 °C','berish 35–45 °C'),{s:10,w:600})+
+  arrow(250,103,250,127)+tx(244,119,R(l,'шаг 15–20 см','qadam 15–20 sm'),{a:'end',s:10,w:600})+
+  tx(200,252,R(l,'обратка → назад в коллектор · петля до 80 м','qaytish → kollektorga · halqa 80 m gacha'),{s:10,c:'var(--muted)'}),
+  R(l,'Одна петля тёплого пола змейкой от коллектора и обратно','Kollektordan ilon izi bo\'lib chiqib qaytadigan bitta issiq pol halqasi'),262),
+ steps:{ru:["Узнайте, можно ли: в многоэтажке подключать тёплый пол к центральному отоплению или стояку горячей воды часто <b>запрещено</b>. От своего котла — можно.","Слои снизу вверх: ровное основание → утеплитель (ЭППС 3–5 см) → демпферная лента по стенам → сетка → труба 16 мм → стяжка.","Одна петля — не длиннее 80 м трубы 16 мм. Большую комнату делите на 2 петли одинаковой длины.","Трубу укладывайте целым куском, без соединений под стяжкой. Шаг 15–20 см, у холодной стены (окна) чаще.","Перед стяжкой опрессовка: давление 6 бар на сутки. Стяжку заливают, когда трубы под давлением.","Стяжка над трубой минимум 3 см. Включать пол можно только когда стяжка высохнет (около 28 дней), плавно поднимая температуру."],
+       uz:["Mumkinligini bilib oling: ko'p qavatli uyda issiq polni markaziy isitish yoki issiq suv stoyagiga ulash ko'pincha <b>taqiqlangan</b>. O'z qozoningizdan — mumkin.","Qatlamlar pastdan yuqoriga: tekis asos → issiqlik izolyatsiyasi (EPPS 3–5 sm) → devorlar bo'ylab dempfer lenta → setka → 16 mm quvur → styajka.","Bitta halqa — 16 mm quvurdan 80 m dan uzun emas. Katta xonani bir xil uzunlikdagi 2 halqaga bo'ling.","Quvurni bir butun bo'lak qilib, styajka ostida ulanishsiz yotqizing. Qadam 15–20 sm, sovuq devor (deraza) yonida zichroq.","Styajkadan oldin opressovka: bir sutka 6 bar bosim. Styajka quvurlar bosim ostida bo'lganda quyiladi.","Quvur ustidagi styajka kamida 3 sm. Polni faqat styajka qurigandan keyin (taxminan 28 kun), haroratni asta ko'tarib yoqish mumkin."]},
+ tip:{ru:"Подача в пол 35–45 °C, а не 70–80 °C, как в радиаторы. Нужен смесительный узел. Горячий пол без узла трескает стяжку и неприятен для ног.",uz:"Polga berish 35–45 °C, radiatorlardagidek 70–80 °C emas. Aralashtirish uzeli kerak. Uzelsiz issiq pol styajkani yoradi va oyoqqa noqulay."},
+ quiz:[
+  {a:1,ru:{q:"Максимальная длина одной петли трубы 16 мм?",o:["20 м","Около 80 м","300 м"],e:"Длиннее — вода остывает и насос не продавит петлю."},uz:{q:"16 mm quvurdan bitta halqaning eng katta uzunligi?",o:["20 m","Taxminan 80 m","300 m"],e:"Uzunroq bo'lsa — suv soviydi va nasos halqani o'tkaza olmaydi."}},
+  {a:0,ru:{q:"Какая температура подачи в тёплый пол?",o:["35–45 °C","70–80 °C","100 °C"],e:"Пол греют низкой температурой через смесительный узел."},uz:{q:"Issiq polga berish harorati qancha?",o:["35–45 °C","70–80 °C","100 °C"],e:"Pol aralashtirish uzeli orqali past harorat bilan isitiladi."}},
+  {a:2,ru:{q:"Можно ли делать соединения трубы под стяжкой?",o:["Да, любые","Да, на резьбе","Нет, только целая труба"],e:"Течь под стяжкой — это вскрывать пол."},uz:{q:"Styajka ostida quvur ulanishlari qilish mumkinmi?",o:["Ha, istalgan","Ha, rezbali","Yo'q, faqat butun quvur"],e:"Styajka ostidagi oqish — polni buzish degani."}},
+  {a:1,ru:{q:"Когда можно включать пол после заливки стяжки?",o:["На следующий день","Когда стяжка высохнет, около 28 дней","Сразу, чтобы быстрее сохла"],e:"Ранний нагрев трескает стяжку."},uz:{q:"Styajka quyilgandan keyin polni qachon yoqish mumkin?",o:["Ertasi kuni","Styajka qurigandan keyin, taxminan 28 kun","Darhol, tezroq qurishi uchun"],e:"Erta qizdirish styajkani yoradi."}}]},
+
+{id:'a4',lv:2,min:8,
+ t:{ru:"Узел ввода и счётчики",uz:"Kirish uzeli va hisoblagichlar"},s:{ru:"Кран, фильтр, счётчик, клапан, редуктор",uz:"Jo'mrak, filtr, hisoblagich, klapan, reduktor"},legend:['C'],
+ svg:l=>svg(
+  pipe('M60 14V246',W.C,9)+tx(76,14,R(l,'↓ из стояка','↓ stoyakdan'),{a:'start',s:10,c:'var(--muted)'})+
+  num(60,40,'1')+num(60,85,'2')+num(60,130,'3')+num(60,175,'4')+num(60,220,'5')+
+  tx(84,44,R(l,'Шаровой кран','Sharli jo\'mrak'),{a:'start',w:700,s:12})+
+  tx(84,82,R(l,'Фильтр грубой очистки','Dag\'al tozalash filtri'),{a:'start',w:700,s:12})+tx(84,96,R(l,'отстойником вниз','cho\'kmasi pastga'),{a:'start',s:10,c:'var(--muted)'})+
+  tx(84,127,R(l,'Счётчик','Hisoblagich'),{a:'start',w:700,s:12})+tx(84,141,R(l,'стрелка по ходу воды','strelka suv oqimi bo\'yicha'),{a:'start',s:10,c:'var(--muted)'})+
+  tx(84,179,R(l,'Обратный клапан','Qaytarish klapani'),{a:'start',w:700,s:12})+
+  tx(84,217,R(l,'Редуктор давления','Bosim reduktori'),{a:'start',w:700,s:12})+tx(84,231,R(l,'если больше 4–5 бар','4–5 bar dan ortiq bo\'lsa'),{a:'start',s:10,c:'var(--muted)'})+
+  tx(60,262,R(l,'→ в квартиру','→ kvartiraga'),{s:10,c:'var(--muted)'}),
+  R(l,'Порядок узла ввода сверху вниз: кран, фильтр, счётчик, обратный клапан, редуктор','Kirish uzeli tartibi yuqoridan pastga: jo\'mrak, filtr, hisoblagich, qaytarish klapani, reduktor'),268),
+ steps:{ru:["Порядок по ходу воды: <b>кран → фильтр → счётчик → обратный клапан → редуктор</b> (если нужен), дальше разводка.","Счётчик ставят строго по стрелке на корпусе. Холодный и горячий отличаются (синий и красный), не путайте.","Фильтр грубой очистки — отстойником вниз или вбок, чтобы его можно было промыть.","Замена или новый счётчик — это пломба водоканала. Узнайте порядок у своей управляющей компании до работы.","Оставьте доступ к узлу: не замуровывайте его, сделайте лючок."],
+       uz:["Suv oqimi bo'yicha tartib: <b>jo'mrak → filtr → hisoblagich → qaytarish klapani → reduktor</b> (kerak bo'lsa), keyin tarmoq.","Hisoblagich korpusdagi strelka bo'yicha qat'iy qo'yiladi. Sovuq va issiq farq qiladi (ko'k va qizil), adashtirmang.","Dag'al tozalash filtri — yuvish mumkin bo'lishi uchun cho'kmasi pastga yoki yonga.","Hisoblagichni almashtirish yoki yangisi — bu vodokanal plombasi. Ishdan oldin boshqaruv kompaniyangizdan tartibni bilib oling.","Uzelga kirish joyini qoldiring: suvamang, lyuk qiling."]},
+ tip:{ru:"Фильтр стоит до счётчика, чтобы ржавчина и песок из стояка не забили и не испортили счётчик.",uz:"Filtr hisoblagichdan oldin turadi, shunda stoyakdagi zang va qum hisoblagichni tiqib, buzmaydi."},
+ quiz:[
+  {a:0,ru:{q:"Что идёт сразу после крана на вводе?",o:["Фильтр грубой очистки","Счётчик","Редуктор"],e:"Фильтр защищает счётчик от песка и ржавчины."},uz:{q:"Kirish jo'mragidan keyin darhol nima turadi?",o:["Dag'al tozalash filtri","Hisoblagich","Reduktor"],e:"Filtr hisoblagichni qum va zangdan himoya qiladi."}},
+  {a:2,ru:{q:"Как ставить счётчик?",o:["Как удобно","Стрелкой против воды","Стрелкой по ходу воды"],e:"Иначе счётчик не будет считать или будет считать неверно."},uz:{q:"Hisoblagich qanday qo'yiladi?",o:["Qulay bo'lganidek","Strelkasi suvga qarshi","Strelkasi suv oqimi bo'yicha"],e:"Aks holda hisoblagich sanamaydi yoki noto'g'ri sanaydi."}},
+  {a:1,ru:{q:"Когда нужен редуктор давления?",o:["Всегда, на каждом кране","Если давление выше 4–5 бар","Никогда"],e:"Высокое давление разрушает подводки и бойлер."},uz:{q:"Bosim reduktori qachon kerak?",o:["Doim, har bir jo'mrakda","Bosim 4–5 bar dan yuqori bo'lsa","Hech qachon"],e:"Yuqori bosim shlanglar va boylerni buzadi."}},
+  {a:1,ru:{q:"Что нужно сделать перед заменой счётчика?",o:["Ничего","Узнать порядок опломбировки у управляющей компании","Снять пломбу самому"],e:"Счётчик без пломбы не примут к расчёту."},uz:{q:"Hisoblagichni almashtirishdan oldin nima qilish kerak?",o:["Hech narsa","Boshqaruv kompaniyasidan plombalash tartibini bilish","Plombani o'zi olib tashlash"],e:"Plombasiz hisoblagich hisobga qabul qilinmaydi."}}]}
+];
+
+// UI for Сантехник Pro. Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Сантехник Pro',tag:'От новичка до мастера · 13 уроков со схемами',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Начальный','Средний','Продвинутый'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} уровень · урок ${n} · ~${m} мин`,
+ leg:{H:'Горячая вода',C:'Холодная вода',S:'Канализация',F:'Подача в тёплый пол',R:'Обратка (остывшая вода)'},
+ warnB:'Сначала перекройте воду.',warn:'Закройте краны и откройте смеситель, чтобы ушло давление. Подставьте ведро и тряпку.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ calcT:'Калькулятор',slT:'Уклон канализации',slSub:'На сколько сантиметров опустить трубу',dia:'Диаметр трубы',len:'Длина трубы, м',slope:'Уклон',drop:'Перепад',cmm:'см/м',cm:'см',slNote:'Не делайте уклон больше 15 см на метр: вода убежит, а грязь останется.',
+ blT:'Нагрев бойлера',blSub:'Сколько ждать горячую воду',vol:'Объём бака, л',pkw:'Мощность ТЭНа, кВт',tin:'Вода из крана, °C',tout:'Нагреть до, °C',time:'Время нагрева',hr:'ч',mn:'мин',kwh:'Расход',kwhU:'кВт·ч',blNote:'Без учёта потерь тепла: на практике на 10–15% дольше.',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Santexnik Pro',tag:'Yangi boshlovchidan ustagacha · sxemali 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Boshlang\'ich','O\'rta','Yuqori'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} daraja · ${n}-dars · ~${m} daq`,
+ leg:{H:'Issiq suv',C:'Sovuq suv',S:'Kanalizatsiya',F:'Issiq polga berish',R:'Qaytish (sovigan suv)'},
+ warnB:'Avval suvni yoping.',warn:'Jo\'mraklarni yoping va bosim tushishi uchun smesitelni oching. Chelak va latta qo\'ying.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ calcT:'Kalkulyator',slT:'Kanalizatsiya qiyaligi',slSub:'Quvurni necha santimetr pastlatish kerak',dia:'Quvur diametri',len:'Quvur uzunligi, m',slope:'Qiyalik',drop:'Farq',cmm:'sm/m',cm:'sm',slNote:'Qiyalikni 1 m ga 15 sm dan oshirmang: suv qochadi, kir qoladi.',
+ blT:'Boyler qizishi',blSub:'Issiq suvni qancha kutish kerak',vol:'Bak hajmi, l',pkw:'TEN quvvati, kVt',tin:'Jo\'mrakdagi suv, °C',tout:'Qizdirish, °C gacha',time:'Qizish vaqti',hr:'soat',mn:'daq',kwh:'Sarf',kwhU:'kVt·soat',blNote:'Issiqlik yo\'qotilishisiz: amalda 10–15% uzoqroq.',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (sp_)
+const pk=k=>(k==='lang'?'ep_':'sp_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{d:50,len:3,v:80,p:2,t1:15,t2:60}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c3.2 4.3 6.5 8 6.5 11.8a6.5 6.5 0 0 1-13 0C5.5 10.5 8.8 6.8 12 2.5z" fill="var(--accent-ink)"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+const swatch={H:'var(--wH)',C:'var(--wC)',S:'var(--wS)',F:'var(--wF)',R:'var(--wC)'};
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    if(x.legend)h+=`<div class="legend">${x.legend.map(k=>`<span><i class="sw" style="background:${swatch[k]}"></i>${L.leg[k]}</span>`).join('')}</div>`;h+='</div>'}
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warn?(lang==='ru'?'Опасно: вода и ток.':'Xavfli: suv va tok.'):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* calculators: sewer slope and boiler heating */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',');
+const numv=v=>+String(v).replace(',','.')||0;
+function calcBlock(){const L=U();const c=S.calc;const mm=lang==='ru'?'мм':'mm';
+  return `<div class="card stack"><div><h3>${L.slT}</h3><p class="expl">${L.slSub}</p></div>
+  <div class="fld"><span>${L.dia}</span><div class="seg" role="group"><button type="button" data-d="50" aria-pressed="${c.d===50}">40–50 ${mm}</button><button type="button" data-d="110" aria-pressed="${c.d===110}">110 ${mm}</button></div></div>
+  <label class="fld" for="cl">${L.len}<input id="cl" type="number" inputmode="decimal" min="0" step="0.5" value="${c.len}"></label>
+  <div class="out two" id="out1"></div><p class="expl">${L.slNote}</p></div>
+  <div class="card stack"><div><h3>${L.blT}</h3><p class="expl">${L.blSub}</p></div>
+  <label class="fld" for="bv">${L.vol}<input id="bv" type="number" inputmode="numeric" min="0" step="10" value="${c.v}"></label>
+  <label class="fld" for="bp">${L.pkw}<input id="bp" type="number" inputmode="decimal" min="0" step="0.5" value="${c.p}"></label>
+  <div class="pair"><label class="fld" for="b1">${L.tin}<input id="b1" type="number" inputmode="numeric" step="1" value="${c.t1}"></label>
+  <label class="fld" for="b2">${L.tout}<input id="b2" type="number" inputmode="numeric" step="1" value="${c.t2}"></label></div>
+  <div class="out two" id="out2"></div><p class="expl">${L.blNote}</p></div>`}
+function paintCalc(){const L=U();const c=S.calc;
+  const k=c.d===110?2:3;const len=Math.max(0,numv(c.len));const dr=len*k;
+  $('#out1').innerHTML=`<div><span>${L.slope}</span><b>${k} ${L.cmm}</b></div><div><span>${L.drop}</span><b>${fmt(dr,dr%1?1:0)} ${L.cm}</b></div>`;
+  const V=numv(c.v),P=numv(c.p),dT=Math.max(0,numv(c.t2)-numv(c.t1));
+  const e=V*1.163*dT/1000; // kWh to heat V litres by dT degrees
+  let t='—';if(P>0&&e>0){const m=Math.round(e/P*60);t=m>=60?`${Math.floor(m/60)} ${L.hr} ${m%60} ${L.mn}`:`${m} ${L.mn}`}
+  $('#out2').innerHTML=`<div><span>${L.time}</span><b>${t}</b></div><div><span>${L.kwh}</span><b>${fmt(e,1)} ${L.kwhU}</b></div>`}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  on('#cl','len');on('#bv','v');on('#bp','p');on('#b1','t1');on('#b2','t2');
+  document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{S.calc.d=+b.dataset.d;document.querySelectorAll('[data-d]').forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>
