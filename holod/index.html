@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<title>Холод Pro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a icy blue "cold" accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#5aaef5; --accent-ink:#04203a; --navy:#0f2a47; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#7cc0ff; --accent-ink:#04203a; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#7cc0ff; --accent-ink:#04203a; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select:focus,.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Холод Pro (air conditioner and refrigerator technician). Each text is {ru, uz}. Quiz: a = index of the right option.
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}">${s}</text>`;
+const line=(d,c,w=3,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const circ=(x,y,r,f,st='var(--fg)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st}" stroke-width="1.5"/>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="11" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2)=>`${box(x,y,w,h)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const arrow=(x1,y1,x2,y2)=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+const H='var(--wH)',LQ='var(--wF)',CL='var(--wC)';
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:6,
+ t:{ru:"Техника безопасности",uz:"Xavfsizlik texnikasi"},s:{ru:"Ток, фреон, баллоны, высота",uz:"Tok, freon, ballonlar, balandlik"},
+ table:{head:{ru:["Опасность","Как защититься"],uz:["Xavf","Qanday himoyalanish"]},rows:{
+  ru:[["Ток 220 В","Выключить автомат, проверить индикатором. Конденсатор компрессора разрядить"],["Фреон на коже и в глазах","Перчатки и очки. Жидкий фреон кипит при −40 °C и вызывает обморожение"],["Фреон в закрытой комнате","Проветривать. Фреон тяжелее воздуха и вытесняет кислород"],["Горючие фреоны R32, R290, R600a","Не курить, не паять рядом, проветрить перед работой"],["Баллоны","Не греть огнём, не оставлять на солнце, не заправлять «на глаз»"],["Высота (наружный блок)","Страховочный пояс, крепление к надёжной точке, работать вдвоём"]],
+  uz:[["220 V tok","Avtomatni o'chiring, indikator bilan tekshiring. Kompressor kondensatorini razryad qiling"],["Teri va ko'zga freon","Qo'lqop va ko'zoynak. Suyuq freon −40 °C da qaynaydi va sovuq urishiga olib keladi"],["Yopiq xonada freon","Shamollating. Freon havodan og'ir va kislorodni siqib chiqaradi"],["Yonuvchi freonlar R32, R290, R600a","Chekmang, yonida kavsharlamang, ishdan oldin shamollating"],["Ballonlar","Olovda isitmang, quyoshda qoldirmang, «ko'z bilan» to'ldirmang"],["Balandlik (tashqi blok)","Himoya kamari, ishonchli nuqtaga mahkamlash, ikki kishi bo'lib ishlang"]]}},
+ steps:{ru:["Перед любой работой выключите кондиционер пультом, потом <b>автомат</b> в щитке. Проверьте индикатором, что напряжения нет.","В наружном блоке стоит большой <b>конденсатор</b>. Он держит заряд даже после отключения. Подождите 5 минут или разрядите его через резистор.","Работайте в перчатках и очках. Струя фреона из шланга может обморозить кожу и глаза за секунду.","Если фреон вышел в комнате, откройте окна и выйдите. В подвале и маленькой комнате фреон опасен для дыхания.","Наружный блок на высоте — только со страховкой. Инструмент привязывайте: падающий ключ с 5 этажа убивает."],
+       uz:["Har qanday ishdan oldin konditsionerni pult bilan, keyin shchitdagi <b>avtomatni</b> o'chiring. Indikator bilan kuchlanish yo'qligini tekshiring.","Tashqi blokda katta <b>kondensator</b> bor. U o'chirilgandan keyin ham zaryadni ushlab turadi. 5 daqiqa kuting yoki rezistor orqali razryad qiling.","Qo'lqop va ko'zoynakda ishlang. Shlangdan chiqqan freon oqimi teri va ko'zni bir soniyada sovuq urishi mumkin.","Agar xonada freon chiqib ketsa, derazalarni oching va chiqing. Yerto'la va kichik xonada freon nafas uchun xavfli.","Balandlikdagi tashqi blok — faqat himoya bilan. Asbobni bog'lab qo'ying: 5-qavatdan tushgan kalit odamni o'ldiradi."]},
+ tip:{ru:"Никогда не паяйте трубку, в которой есть фреон. При нагреве он разлагается на ядовитые газы, а горючие фреоны вспыхивают.",uz:"Hech qachon ichida freon bor trubkani kavsharlamang. Qizdirilganda u zaharli gazlarga parchalanadi, yonuvchi freonlar esa alangalanadi."},
+ quiz:[
+  {a:1,ru:{q:"Что сделать первым делом перед ремонтом кондиционера?",o:["Снять крышку","Выключить автомат и проверить, что нет напряжения","Открыть краны"],e:"Сначала отключить питание и проверить индикатором."},uz:{q:"Konditsionerni ta'mirlashdan oldin birinchi navbatda nima qilish kerak?",o:["Qopqoqni olish","Avtomatni o'chirib, kuchlanish yo'qligini tekshirish","Kranlarni ochish"],e:"Avval tokni o'chirib, indikator bilan tekshirish kerak."}},
+  {a:2,ru:{q:"Почему опасен конденсатор в наружном блоке?",o:["Он горячий","Он тяжёлый","Держит заряд после отключения"],e:"Подождите или разрядите его, прежде чем трогать клеммы."},uz:{q:"Nima uchun tashqi blokdagi kondensator xavfli?",o:["U issiq","U og'ir","O'chirilgandan keyin ham zaryadni ushlaydi"],e:"Klemmalarga tegishdan oldin kuting yoki uni razryad qiling."}},
+  {a:0,ru:{q:"Что делать, если фреон вышел в маленькой комнате?",o:["Проветрить и выйти","Продолжать работу","Закрыть окна"],e:"Фреон тяжелее воздуха и вытесняет кислород."},uz:{q:"Kichik xonada freon chiqib ketsa nima qilish kerak?",o:["Shamollatib chiqib ketish","Ishni davom ettirish","Derazalarni yopish"],e:"Freon havodan og'ir va kislorodni siqib chiqaradi."}},
+  {a:1,ru:{q:"Можно ли паять трубку с фреоном внутри?",o:["Да, если быстро","Нет, никогда","Только летом"],e:"Фреон разлагается на ядовитые газы, а горючие вспыхивают."},uz:{q:"Ichida freon bor trubkani kavsharlash mumkinmi?",o:["Ha, tez qilsa","Yo'q, hech qachon","Faqat yozda"],e:"Freon zaharli gazlarga parchalanadi, yonuvchilari esa alangalanadi."}}]},
+
+{id:'b2',lv:0,min:7,nowarn:true,legend:['H','L','C'],
+ t:{ru:"Как работает холодильный цикл",uz:"Sovutish sikli qanday ishlaydi"},s:{ru:"Компрессор, конденсатор, капилляр, испаритель",uz:"Kompressor, kondensator, kapillyar, bug'latgich"},
+ svg:l=>svg(
+  line('M115 66V236','var(--muted)',1.5,'5 5')+tx(60,248,R(l,"КОМНАТА","XONA"),{w:700,s:10,c:'var(--muted)'})+tx(250,248,R(l,"УЛИЦА","KO'CHA"),{w:700,s:10,c:'var(--muted)'})+
+  line('M206 205H310V162',H,4)+line('M310 80V38H232',LQ,4)+line('M130 38H50V80',CL,4,'7 4')+line('M50 162V205H154',CL,4)+
+  flow(10,80,80,82,R(l,"Испаритель","Bug'latgich"),R(l,"забирает","issiqlikni"))+tx(50,148,R(l,"тепло","oladi"),{s:10,c:'var(--muted)'})+
+  flow(270,80,80,82,R(l,"Конденсатор","Kondensator"),R(l,"отдаёт","issiqlikni"))+tx(310,148,R(l,"тепло","beradi"),{s:10,c:'var(--muted)'})+
+  flow(130,20,102,36,R(l,"Капилляр / ТРВ","Kapillyar / TRV"),R(l,"давление падает","bosim tushadi"))+
+  circ(180,205,26,'var(--surface)')+tx(180,202,R(l,"Компрес-","Kompres-"),{w:600,s:10})+tx(180,214,R(l,"сор","sor"),{w:600,s:10})+
+  num(250,195,1)+num(325,60,2)+num(90,28,3)+num(100,195,4),
+  R(l,"Цикл: компрессор сжимает газ, конденсатор отдаёт тепло на улицу, капилляр снижает давление, испаритель забирает тепло из комнаты","Sikl: kompressor gazni siqadi, kondensator issiqlikni ko'chaga beradi, kapillyar bosimni tushiradi, bug'latgich xonadan issiqlikni oladi")),
+ steps:{ru:["<b>1. Компрессор</b> сжимает холодный газ. Газ становится горячим (70–90 °C) и идёт под большим давлением.","<b>2. Конденсатор</b> (радиатор наружного блока) обдувается вентилятором. Газ остывает и превращается в жидкость.","<b>3. Капилляр или ТРВ</b> — узкое место. Давление резко падает, жидкость становится очень холодной.","<b>4. Испаритель</b> (радиатор внутреннего блока). Фреон кипит, забирает тепло из воздуха комнаты и снова становится газом.","Газ возвращается в компрессор по толстой трубке, и круг повторяется. Фреон не расходуется: если его стало меньше, значит, есть утечка."],
+       uz:["<b>1. Kompressor</b> sovuq gazni siqadi. Gaz qiziydi (70–90 °C) va yuqori bosim ostida yuradi.","<b>2. Kondensator</b> (tashqi blok radiatori) ventilyator bilan puflanadi. Gaz soviydi va suyuqlikka aylanadi.","<b>3. Kapillyar yoki TRV</b> — tor joy. Bosim keskin tushadi, suyuqlik juda sovuq bo'ladi.","<b>4. Bug'latgich</b> (ichki blok radiatori). Freon qaynaydi, xona havosidan issiqlikni oladi va yana gazga aylanadi.","Gaz yo'g'on trubka orqali kompressorga qaytadi va aylana takrorlanadi. Freon sarflanmaydi: kamaygan bo'lsa, demak, oqish bor."]},
+ tip:{ru:"Тонкая трубка — жидкостная (тёплая), толстая — газовая (холодная). Если толстая трубка у наружного блока холодная и потеет, цикл работает.",uz:"Ingichka trubka — suyuqlik trubkasi (iliq), yo'g'oni — gaz trubkasi (sovuq). Tashqi blok yonidagi yo'g'on trubka sovuq va terlagan bo'lsa, sikl ishlayapti."},
+ quiz:[
+  {a:0,ru:{q:"Что делает компрессор?",o:["Сжимает газ, газ нагревается","Охлаждает воздух","Сушит воздух"],e:"Компрессор качает фреон по кругу и сжимает его."},uz:{q:"Kompressor nima qiladi?",o:["Gazni siqadi, gaz qiziydi","Havoni sovutadi","Havoni quritadi"],e:"Kompressor freonni aylantiradi va siqadi."}},
+  {a:2,ru:{q:"Где фреон забирает тепло из комнаты?",o:["В компрессоре","В конденсаторе","В испарителе"],e:"В испарителе фреон кипит и забирает тепло."},uz:{q:"Freon xonadan issiqlikni qayerda oladi?",o:["Kompressorda","Kondensatorda","Bug'latgichda"],e:"Bug'latgichda freon qaynaydi va issiqlikni oladi."}},
+  {a:1,ru:{q:"Фреона стало меньше. Что это значит?",o:["Он израсходовался, так и должно быть","Где-то утечка","Кондиционер новый"],e:"Цикл закрытый, фреон не расходуется."},uz:{q:"Freon kamaydi. Bu nimani anglatadi?",o:["Sarflandi, shunday bo'lishi kerak","Qayerdadir oqish bor","Konditsioner yangi"],e:"Sikl yopiq, freon sarflanmaydi."}},
+  {a:1,ru:{q:"Какая трубка холодная при охлаждении?",o:["Тонкая","Толстая","Обе горячие"],e:"По толстой трубке холодный газ идёт в компрессор."},uz:{q:"Sovutishda qaysi trubka sovuq bo'ladi?",o:["Ingichka","Yo'g'on","Ikkalasi issiq"],e:"Yo'g'on trubka orqali sovuq gaz kompressorga boradi."}}]},
+
+{id:'b3',lv:0,min:6,nowarn:true,
+ t:{ru:"Виды фреона",uz:"Freon turlari"},s:{ru:"R22, R410A, R32, R134a, R600a",uz:"R22, R410A, R32, R134a, R600a"},
+ table:{head:{ru:["Фреон","Где","Особенность"],uz:["Freon","Qayerda","Xususiyati"]},rows:{
+  ru:[["R22","Старые кондиционеры","Снят с производства. Только для ремонта старых"],["R410A","Кондиционеры 2008–2020","Давление выше в 1,6 раза. Заправлять только жидкостью"],["R32","Новые кондиционеры","Слабо горючий. Давление как у R410A"],["R134a","Старые холодильники, авто","Низкое давление, не горит"],["R600a (изобутан)","Почти все новые холодильники","Горючий! Заправка 20–80 г строго по весу"],["R290 (пропан)","Новые мобильные кондиционеры, витрины","Сильно горючий"]],
+  uz:[["R22","Eski konditsionerlar","Ishlab chiqarilmaydi. Faqat eskilarini ta'mirlash uchun"],["R410A","2008–2020 konditsionerlari","Bosimi 1,6 marta yuqori. Faqat suyuq holda to'ldiriladi"],["R32","Yangi konditsionerlar","Kuchsiz yonuvchi. Bosimi R410A kabi"],["R134a","Eski muzlatgichlar, avto","Bosimi past, yonmaydi"],["R600a (izobutan)","Deyarli barcha yangi muzlatgichlar","Yonuvchi! 20–80 g, qat'iy tarozi bilan"],["R290 (propan)","Yangi mobil konditsionerlar, vitrinalar","Kuchli yonuvchi"]]}},
+ steps:{ru:["Тип фреона и его количество написаны на <b>шильдике</b> — наклейке на наружном блоке или на задней стенке холодильника.","Нельзя смешивать фреоны и нельзя заправлять другой фреон «похожий». Система работает только на своём.","Для R410A и R32 нужны свой манометр и шланги: давление у них выше, старые приборы для R22 не подходят.","Смеси (R410A, R407C) заправляют <b>только жидкостью</b>: баллон переворачивают. Иначе состав смеси изменится.","Цвет баллона — только подсказка. Всегда читайте надпись на баллоне."],
+       uz:["Freon turi va miqdori <b>shildikda</b> — tashqi blokdagi yoki muzlatgich orqa devoridagi yorliqda yozilgan.","Freonlarni aralashtirish va boshqa «o'xshash» freon to'ldirish mumkin emas. Tizim faqat o'z freonida ishlaydi.","R410A va R32 uchun alohida manometr va shlanglar kerak: ularning bosimi yuqori, R22 uchun eski asboblar to'g'ri kelmaydi.","Aralashmalar (R410A, R407C) <b>faqat suyuq holda</b> to'ldiriladi: ballon to'ntariladi. Aks holda aralashma tarkibi o'zgaradi.","Ballon rangi — faqat ishora. Doim ballondagi yozuvni o'qing."]},
+ tip:{ru:"Если в холодильнике R600a, никакой открытой горелки рядом с системой. Это бытовой газ, как в зажигалке.",uz:"Muzlatgichda R600a bo'lsa, tizim yonida ochiq gorelka bo'lmasin. Bu zajigalkadagi kabi maishiy gaz."},
+ quiz:[
+  {a:1,ru:{q:"Где узнать, какой фреон в кондиционере?",o:["По цвету трубок","На шильдике наружного блока","Спросить соседа"],e:"Тип и вес фреона указаны на шильдике."},uz:{q:"Konditsionerda qaysi freon borligini qayerdan bilish mumkin?",o:["Trubka rangidan","Tashqi blok shildigidan","Qo'shnidan so'rab"],e:"Freon turi va og'irligi shildikda ko'rsatilgan."}},
+  {a:2,ru:{q:"Как заправляют R410A?",o:["Газом из баллона","Любым способом","Только жидкостью, баллон перевёрнут"],e:"Это смесь: газом заправлять нельзя, состав изменится."},uz:{q:"R410A qanday to'ldiriladi?",o:["Ballondan gaz holida","Istalgan usulda","Faqat suyuq holda, ballon to'ntarilgan"],e:"Bu aralashma: gaz holida to'ldirib bo'lmaydi, tarkibi o'zgaradi."}},
+  {a:0,ru:{q:"Какой фреон в большинстве новых холодильников?",o:["R600a","R22","R410A"],e:"Изобутан R600a. Он горючий и заправляется по весу."},uz:{q:"Ko'pchilik yangi muzlatgichlarda qaysi freon?",o:["R600a","R22","R410A"],e:"Izobutan R600a. U yonuvchi va tarozi bilan to'ldiriladi."}},
+  {a:1,ru:{q:"Можно ли в систему с R410A добавить R22?",o:["Да, если R410A нет","Нет, фреоны не смешивают","Да, половину"],e:"Система работает только на своём фреоне."},uz:{q:"R410A li tizimga R22 qo'shish mumkinmi?",o:["Ha, R410A bo'lmasa","Yo'q, freonlar aralashtirilmaydi","Ha, yarmini"],e:"Tizim faqat o'z freonida ishlaydi."}}]},
+
+{id:'b4',lv:0,min:5,nowarn:true,
+ t:{ru:"Инструменты мастера",uz:"Usta asboblari"},s:{ru:"Манометры, вакуумный насос, вальцовка",uz:"Manometrlar, vakuum nasos, valsovka"},
+ table:{head:{ru:["Инструмент","Зачем"],uz:["Asbob","Nima uchun"]},rows:{
+  ru:[["Манометрический коллектор","Видеть давление, вакуумировать, заправлять"],["Вакуумный насос","Убрать воздух и влагу из трассы"],["Вакуумметр (микроны)","Точно проверить глубину вакуума"],["Труборез и риммер","Ровно отрезать медь и снять заусенцы"],["Вальцовка","Сделать конус на трубке под гайку"],["Трубогиб","Гнуть трубку без заломов"],["Динамометрический ключ","Затянуть гайки с нужной силой"],["Весы для заправки","Заправлять фреон по весу"],["Течеискатель","Найти утечку фреона"],["Мультиметр и клещи","Проверить ток, обмотки, конденсатор"]],
+  uz:[["Manometrik kollektor","Bosimni ko'rish, vakuum qilish, to'ldirish"],["Vakuum nasos","Trassadan havo va namlikni chiqarish"],["Vakuummetr (mikron)","Vakuum chuqurligini aniq tekshirish"],["Truborez va rimmer","Misni tekis kesish va qirralarni tozalash"],["Valsovka","Trubkada gayka uchun konus qilish"],["Trubogib","Trubkani sinmasdan egish"],["Dinamometrik kalit","Gaykalarni kerakli kuch bilan tortish"],["To'ldirish tarozisi","Freonni og'irlik bo'yicha to'ldirish"],["Techeiskatel","Freon oqishini topish"],["Multimetr va kleshchi","Tok, chulg'am, kondensatorni tekshirish"]]}},
+ steps:{ru:["Начните с минимума: коллектор, шланги, вакуумный насос, труборез, вальцовка, набор ключей, мультиметр.","Медь режьте <b>только труборезом</b>. Ножовка оставляет стружку, а стружка убивает компрессор.","Вакуумный насос лучше двухступенчатый. Масло в нём меняйте после 10–20 вакуумирований, мутное масло плохо тянет.","Динамометрический ключ спасает от двух бед: слабая гайка травит фреон, перетянутая — трескается.","Храните шланги с заглушками, чтобы внутрь не попадали пыль и влага."],
+       uz:["Minimumdan boshlang: kollektor, shlanglar, vakuum nasos, truborez, valsovka, kalitlar to'plami, multimetr.","Misni <b>faqat truborez bilan</b> kesing. Arra qirindi qoldiradi, qirindi esa kompressorni o'ldiradi.","Vakuum nasosning ikki bosqichlisi yaxshi. Undagi moyni 10–20 marta vakuum qilgandan keyin almashtiring, loyqa moy yomon tortadi.","Dinamometrik kalit ikki muammodan saqlaydi: bo'sh gayka freon chiqaradi, ortiqcha tortilgani yoriladi.","Shlanglarni tiqinlar bilan saqlang, ichiga chang va namlik kirmasin."]},
+ tip:{ru:"Для R410A и R32 нужен коллектор на давление до 50–60 бар. Старый коллектор от R22 может не выдержать.",uz:"R410A va R32 uchun 50–60 bargacha bosimga mo'ljallangan kollektor kerak. R22 dan qolgan eski kollektor chidamasligi mumkin."},
+ quiz:[
+  {a:0,ru:{q:"Чем правильно резать медную трубку?",o:["Труборезом","Ножовкой","Болгаркой"],e:"Стружка от ножовки и болгарки попадёт в систему."},uz:{q:"Mis trubkani nima bilan to'g'ri kesish kerak?",o:["Truborez bilan","Arra bilan","Bolgarka bilan"],e:"Arra va bolgarka qirindisi tizimga tushadi."}},
+  {a:2,ru:{q:"Зачем динамометрический ключ?",o:["Чтобы быстрее крутить","Он не нужен","Затянуть гайку с нужной силой"],e:"Слабая гайка травит, перетянутая трескается."},uz:{q:"Dinamometrik kalit nima uchun?",o:["Tezroq burash uchun","U kerak emas","Gaykani kerakli kuch bilan tortish uchun"],e:"Bo'shi freon chiqaradi, ortiqcha tortilgani yoriladi."}},
+  {a:1,ru:{q:"Что убирает вакуумный насос?",o:["Масло","Воздух и влагу","Фреон из баллона"],e:"Влага и воздух в системе портят компрессор и масло."},uz:{q:"Vakuum nasos nimani chiqaradi?",o:["Moyni","Havo va namlikni","Ballondagi freonni"],e:"Tizimdagi namlik va havo kompressor va moyni buzadi."}},
+  {a:1,ru:{q:"Чем заправлять фреон точнее всего?",o:["На глаз","По весу, на весах","По звуку"],e:"Весы показывают, сколько граммов зашло."},uz:{q:"Freonni eng aniq nima bilan to'ldirish mumkin?",o:["Ko'z bilan","Og'irlik bo'yicha, tarozida","Ovoz bo'yicha"],e:"Tarozi necha gramm kirganini ko'rsatadi."}}]},
+
+{id:'b5',lv:0,min:7,
+ t:{ru:"Чистка сплит-системы",uz:"Split-tizimni tozalash"},s:{ru:"Фильтры, испаритель, турбина, дренаж",uz:"Filtrlar, bug'latgich, turbina, drenaj"},
+ svg:l=>svg(
+  `<rect x="20" y="40" width="320" height="130" rx="16" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  line('M36 58H324','var(--muted)',2,'3 3')+
+  line('M40 78L60 98L80 78L100 98L120 78L140 98L160 78L180 98L200 78L220 98L240 78L260 98L280 78L300 98L320 78',CL,2)+
+  circ(180,132,22,'color-mix(in srgb,var(--accent) 20%,var(--surface))')+line('M168 120L192 144M192 120L168 144M180 110V154M158 132H202','var(--muted)',1.5)+
+  box(40,150,110,10,'color-mix(in srgb,var(--wC) 30%,var(--surface))')+line('M60 160V215H110','var(--wC)',3)+
+  num(30,30,1)+tx(46,34,R(l,"Сетчатые фильтры","To'rli filtrlar"),{a:'start',w:600})+
+  num(332,90,2)+tx(322,118,R(l,"Испаритель","Bug'latgich"),{a:'end',w:600})+
+  num(225,132,3)+tx(242,136,R(l,"Турбина","Turbina"),{a:'start',w:600})+
+  num(165,155,4)+tx(165,186,R(l,"Поддон","Poddon"),{w:600})+
+  num(125,215,5)+tx(142,219,R(l,"Дренажный шланг","Drenaj shlangi"),{a:'start',w:600}),
+  R(l,"Внутренний блок в разрезе: фильтры, испаритель, турбина, поддон, дренаж","Ichki blok kesimda: filtrlar, bug'latgich, turbina, poddon, drenaj"),240),
+ warnB:{ru:"Отключите питание.",uz:"Tokni o'chiring."},warn:{ru:"Выключите автомат и накройте плату внутреннего блока плёнкой, чтобы вода не попала на электрику.",uz:"Avtomatni o'chiring va suv elektrikaga tushmasligi uchun ichki blok platasini plyonka bilan yoping."},
+ steps:{ru:["<b>Фильтры (1).</b> Поднимите крышку, вытащите сетки, промойте тёплой водой, высушите в тени. Дома — раз в 2–4 недели летом.","<b>Испаритель (2).</b> Нанесите пенку-очиститель для кондиционеров, через 10–15 минут смойте водой из распылителя. Пластины не гните.","<b>Турбина (3).</b> Чёрная слизь на лопастях — это плесень. Чистят щёткой или аппаратом с паром, подставив чехол-воронку.","<b>Поддон и дренаж (4–5).</b> Налейте в поддон стакан воды. Она должна быстро уйти в шланг. Засор продуйте или промойте.","<b>Наружный блок.</b> Радиатор снаружи забит пылью и пухом — промойте его водой изнутри наружу, не сильным напором."],
+       uz:["<b>Filtrlar (1).</b> Qopqoqni ko'taring, to'rlarni chiqaring, iliq suvda yuving, soyada quriting. Uyda — yozda 2–4 haftada bir marta.","<b>Bug'latgich (2).</b> Konditsioner tozalovchi ko'pikni surting, 10–15 daqiqadan keyin purkagichdan suv bilan yuving. Plastinalarni egmang.","<b>Turbina (3).</b> Parraklardagi qora shilimshiq — bu mog'or. Voronka-g'ilof qo'yib, cho'tka yoki bug' apparati bilan tozalanadi.","<b>Poddon va drenaj (4–5).</b> Poddonga bir stakan suv quying. U tezda shlangga ketishi kerak. Tiqilib qolgan bo'lsa, puflang yoki yuving.","<b>Tashqi blok.</b> Tashqi radiatorga chang va paxmoq to'lib qoladi — uni ichkaridan tashqariga, kuchsiz bosim bilan suvda yuving."]},
+ tip:{ru:"Неприятный запах при включении — почти всегда грязная турбина и испаритель. Одной чистки фильтров тут мало.",uz:"Yoqilganda yoqimsiz hid — deyarli doim kir turbina va bug'latgich. Bu holda faqat filtrlarni tozalash yetmaydi."},
+ quiz:[
+  {a:1,ru:{q:"Как часто чистить фильтры летом дома?",o:["Раз в год","Раз в 2–4 недели","Никогда"],e:"Грязный фильтр снижает холод и портит воздух."},uz:{q:"Yozda uyda filtrlarni qanchalik tez-tez tozalash kerak?",o:["Yilda bir marta","2–4 haftada bir marta","Hech qachon"],e:"Kir filtr sovuqni kamaytiradi va havoni buzadi."}},
+  {a:0,ru:{q:"Чёрная слизь на турбине — это…",o:["Плесень","Масло","Краска"],e:"Её чистят щёткой или паром, отсюда и запах."},uz:{q:"Turbinadagi qora shilimshiq — bu…",o:["Mog'or","Moy","Bo'yoq"],e:"U cho'tka yoki bug' bilan tozalanadi, hid ham shundan."}},
+  {a:2,ru:{q:"Как проверить дренаж?",o:["Посмотреть на пульт","Включить на обогрев","Налить воды в поддон"],e:"Вода должна быстро уйти в шланг."},uz:{q:"Drenajni qanday tekshirish mumkin?",o:["Pultga qarash","Isitishga yoqish","Poddonga suv quyish"],e:"Suv tezda shlangga ketishi kerak."}},
+  {a:1,ru:{q:"Что сделать с платой перед мойкой?",o:["Ничего","Накрыть плёнкой","Снять и помыть"],e:"Вода на плате — короткое замыкание."},uz:{q:"Yuvishdan oldin plata bilan nima qilish kerak?",o:["Hech narsa","Plyonka bilan yopish","Olib yuvish"],e:"Platadagi suv — qisqa tutashuv."}}]},
+
+/* ---------- MIDDLE ---------- */
+{id:'m1',lv:1,min:9,nowarn:true,calc:'power',
+ t:{ru:"Монтаж сплит-системы",uz:"Split-tizimni o'rnatish"},s:{ru:"Место, кронштейны, отверстие, дренаж",uz:"Joy, kronshteynlar, teshik, drenaj"},
+ svg:l=>svg(
+  line('M10 14H170','var(--fg)',2)+`<rect x="170" y="14" width="22" height="226" fill="color-mix(in srgb,var(--muted) 30%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`+
+  box(24,44,124,40)+tx(86,68,R(l,"Внутренний блок","Ichki blok"),{w:600})+
+  line('M86 16V42','var(--muted)',1,'2 2')+tx(92,34,R(l,"≥15 см","≥15 sm"),{a:'start',s:10,c:'var(--muted)'})+
+  line('M148 70L170 74L192 80H262V150',H,3)+line('M148 78L170 82L192 88H254V150',LQ,3)+
+  line('M148 84L170 90L192 98L230 112',CL,2,'5 3')+tx(234,118,R(l,"дренаж","drenaj"),{a:'start',s:10,c:'var(--wC)',w:600})+
+  box(222,150,124,70)+circ(262,185,24,'var(--surface)')+tx(318,190,R(l,"Нар.","Tashqi"),{s:10,w:600})+tx(318,202,R(l,"блок","blok"),{s:10,w:600})+
+  line('M192 222H346','var(--fg)',3)+tx(270,236,R(l,"кронштейн","kronshteyn"),{s:10,c:'var(--muted)'})+
+  line('M192 160H222','var(--muted)',1,'2 2')+tx(207,154,R(l,"≥10 см","≥10 sm"),{s:10,c:'var(--muted)'})+
+  tx(86,110,R(l,"Отверстие с уклоном","Teshik tashqariga"),{s:10,c:'var(--muted)'})+tx(86,124,R(l,"наружу 5–10°","5–10° qiyalikda"),{s:10,c:'var(--muted)'})+
+  tx(86,170,R(l,"КОМНАТА","XONA"),{w:700,s:10,c:'var(--muted)'})+tx(270,40,R(l,"УЛИЦА","KO'CHA"),{w:700,s:10,c:'var(--muted)'}),
+  R(l,"Схема монтажа: внутренний блок под потолком, трасса через отверстие с уклоном наружу, наружный блок на кронштейне","O'rnatish sxemasi: ichki blok shift ostida, trassa tashqariga qiya teshik orqali, tashqi blok kronshteynda")),
+ steps:{ru:["<b>Мощность.</b> Сначала посчитайте, подходит ли модель к комнате. Слабый кондиционер работает без остановки и не холодит.","<b>Внутренний блок.</b> Не над кроватью и не над рабочим местом. До потолка не меньше 15 см, иначе блок не забирает воздух. Пластину крепите строго по уровню.","<b>Отверстие</b> 55–65 мм сверлите с уклоном наружу, чтобы вода не текла в стену. Вставьте гильзу.","<b>Наружный блок</b> — на кронштейны под его вес, с отступом от стены не меньше 10 см. Под ножки — резиновые подушки от вибрации.","<b>Трасса.</b> Медь в утеплителе, кабель и дренаж связывают вместе. Дренаж всегда идёт <b>вниз</b>, без горбов, уклон не меньше 1 см на метр.","Длину трассы держите в пределах инструкции (обычно 3–15 м). Если длиннее 5–7 м — нужна дозаправка."],
+       uz:["<b>Quvvat.</b> Avval model xonaga mosmi, hisoblang. Kuchsiz konditsioner to'xtovsiz ishlaydi va sovutmaydi.","<b>Ichki blok.</b> Karavot va ish joyi ustida emas. Shiftgacha kamida 15 sm, aks holda blok havoni olmaydi. Plastinani qat'iy daraja bo'yicha mahkamlang.","<b>Teshikni</b> 55–65 mm qilib, suv devorga oqmasligi uchun tashqariga qiya parmalang. Gilza qo'ying.","<b>Tashqi blok</b> — uning og'irligiga mos kronshteynlarga, devordan kamida 10 sm masofada. Oyoqlari ostiga tebranishdan rezina yostiqchalar.","<b>Trassa.</b> Mis issiqlik izolyatsiyasida, kabel va drenaj birga bog'lanadi. Drenaj doim <b>pastga</b> boradi, do'ngsiz, qiyalik metriga kamida 1 sm.","Trassa uzunligini yo'riqnoma doirasida saqlang (odatda 3–15 m). 5–7 m dan uzun bo'lsa — qo'shimcha to'ldirish kerak."]},
+ tip:{ru:"Наружный блок не ставьте в закрытую нишу или под самое солнце без проветривания. Горячий воздух будет кружиться, и блок уйдёт в защиту.",uz:"Tashqi blokni yopiq tokchaga yoki shamollatilmaydigan joyda to'g'ridan-to'g'ri quyosh ostiga qo'ymang. Issiq havo aylanib qoladi va blok himoyaga o'tadi."},
+ quiz:[
+  {a:1,ru:{q:"Сколько оставить от внутреннего блока до потолка?",o:["2 см","Не меньше 15 см","1 метр"],e:"Блок забирает воздух сверху."},uz:{q:"Ichki blokdan shiftgacha qancha masofa qoldirish kerak?",o:["2 sm","Kamida 15 sm","1 metr"],e:"Blok havoni yuqoridan oladi."}},
+  {a:0,ru:{q:"Как сверлить отверстие в стене?",o:["С уклоном наружу","С уклоном в комнату","Строго ровно вверх"],e:"Чтобы вода не стекала в стену и комнату."},uz:{q:"Devordagi teshikni qanday parmalash kerak?",o:["Tashqariga qiya","Xonaga qiya","Qat'iy tepaga"],e:"Suv devor va xonaga oqmasligi uchun."}},
+  {a:2,ru:{q:"Как должен идти дренажный шланг?",o:["С горбом вверх","Как удобно","Всегда вниз, без подъёмов"],e:"На подъёме вода застаивается и течёт из блока."},uz:{q:"Drenaj shlangi qanday borishi kerak?",o:["Tepaga do'ng bilan","Qanday qulay bo'lsa","Doim pastga, ko'tarilishsiz"],e:"Ko'tarilishda suv to'xtab qoladi va blokdan oqadi."}},
+  {a:1,ru:{q:"Зачем считать мощность до монтажа?",o:["Для красоты","Слабый блок не охладит комнату","Это не нужно"],e:"Пользуйтесь калькулятором в приложении."},uz:{q:"Nima uchun o'rnatishdan oldin quvvatni hisoblash kerak?",o:["Chiroy uchun","Kuchsiz blok xonani sovutmaydi","Bu kerak emas"],e:"Ilovadagi kalkulyatordan foydalaning."}}]},
+
+{id:'m2',lv:1,min:8,
+ t:{ru:"Медная трасса и вальцовка",uz:"Mis trassa va valsovka"},s:{ru:"Резка, конус, затяжка гаек",uz:"Kesish, konus, gaykalarni tortish"},
+ svg:l=>svg(
+  `<rect x="30" y="88" width="196" height="24" fill="color-mix(in srgb,var(--wF) 55%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<path d="M226 88L262 70V130L226 112Z" fill="color-mix(in srgb,var(--wF) 70%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<path d="M150 74H214L236 84V116L214 126H150Z" fill="color-mix(in srgb,var(--muted) 35%,var(--surface))" stroke="var(--fg)" stroke-width="1.5" opacity=".9"/>`+
+  line('M168 74V126M186 74V126M204 74V126','var(--muted)',1)+
+  tx(80,80,R(l,"медная трубка","mis trubka"),{s:10,c:'var(--muted)'})+
+  tx(182,148,R(l,"гайку надеть ДО вальцовки","gaykani valsovkadan OLDIN kiyg'izing"),{s:10,w:600})+
+  tx(300,92,R(l,"конус:","konus:"),{s:10,w:600})+tx(300,106,R(l,"ровный,","tekis,"),{s:10,c:'var(--muted)'})+tx(300,120,R(l,"без трещин","yoriqsiz"),{s:10,c:'var(--muted)'})+
+  num(40,180,1)+tx(56,184,R(l,"труборез","truborez"),{a:'start',s:10})+num(130,180,2)+tx(146,184,R(l,"риммер","rimmer"),{a:'start',s:10})+
+  num(220,180,3)+tx(236,184,R(l,"гайка","gayka"),{a:'start',s:10})+num(300,180,4)+tx(316,184,R(l,"конус","konus"),{a:'start',s:10}),
+  R(l,"Вальцовка: медная трубка с конусом на конце, гайка надета до вальцовки","Valsovka: uchida konusli mis trubka, gayka valsovkadan oldin kiyg'izilgan"),200),
+ warnB:{ru:"Без стружки и влаги.",uz:"Qirindi va namliksiz."},warn:{ru:"Концы трубок держите закрытыми заглушками или изолентой. Стружку снимайте, держа трубку концом вниз.",uz:"Trubka uchlarini tiqin yoki izolenta bilan yopiq saqlang. Qirindini trubka uchini pastga qaratib oling."},
+ table:{head:{ru:["Трубка","Момент затяжки"],uz:["Trubka","Tortish momenti"]},rows:{
+  ru:[["1/4\" (6,35 мм)","15–20 Н·м"],["3/8\" (9,52 мм)","35–42 Н·м"],["1/2\" (12,7 мм)","50–60 Н·м"],["5/8\" (15,9 мм)","65–75 Н·м"]],
+  uz:[["1/4\" (6,35 mm)","15–20 N·m"],["3/8\" (9,52 mm)","35–42 N·m"],["1/2\" (12,7 mm)","50–60 N·m"],["5/8\" (15,9 mm)","65–75 N·m"]]}},
+ steps:{ru:["Разматывайте бухту по полу, не тяните за конец. Гните трубогибом, радиус не меньше 10 см. Залом — это брак.","Отрежьте <b>труборезом</b>, понемногу затягивая ролик. Срез должен быть ровным, под прямым углом.","Снимите заусенец риммером, держа трубку <b>концом вниз</b>, чтобы стружка выпала наружу.","Наденьте гайку, затем сделайте конус вальцовкой. Капля фреонового масла на конус — и он сядет мягче.","Проверьте конус: ровный, блестящий, без трещин, по размеру как посадочное место. Затяните гайку динамометрическим ключом по таблице."],
+       uz:["Buxtani pol bo'ylab yoying, uchidan tortmang. Trubogib bilan eging, radius kamida 10 sm. Sinish — bu brak.","<b>Truborez</b> bilan, rolikni asta-sekin tortib kesing. Kesim tekis, to'g'ri burchak ostida bo'lishi kerak.","Qirrani rimmer bilan trubka <b>uchini pastga</b> qaratib oling, qirindi tashqariga tushsin.","Gaykani kiyg'izing, keyin valsovka bilan konus qiling. Konusga bir tomchi freon moyi — u yumshoqroq o'tiradi.","Konusni tekshiring: tekis, yaltiroq, yoriqsiz, o'rindiq o'lchamiga mos. Gaykani jadval bo'yicha dinamometrik kalit bilan torting."]},
+ tip:{ru:"Большинство утечек на новом кондиционере — это плохой конус или гайка, затянутая «от души». Лучше переделать конус, чем потом искать утечку.",uz:"Yangi konditsionerdagi ko'p oqishlar — yomon konus yoki «jon-dildan» tortilgan gayka. Keyin oqish qidirgandan ko'ra konusni qayta qilgan yaxshi."},
+ quiz:[
+  {a:2,ru:{q:"Когда надевают гайку на трубку?",o:["После вальцовки","Не надевают","До вальцовки"],e:"После вальцовки гайка уже не наденется."},uz:{q:"Gayka trubkaga qachon kiyg'iziladi?",o:["Valsovkadan keyin","Kiyg'izilmaydi","Valsovkadan oldin"],e:"Valsovkadan keyin gayka kirmaydi."}},
+  {a:0,ru:{q:"Как держать трубку, когда снимаешь заусенец?",o:["Концом вниз","Концом вверх","Неважно"],e:"Стружка должна выпасть, а не уйти внутрь."},uz:{q:"Qirrani olayotganda trubkani qanday ushlash kerak?",o:["Uchini pastga","Uchini tepaga","Farqi yo'q"],e:"Qirindi ichkariga emas, tashqariga tushishi kerak."}},
+  {a:1,ru:{q:"С какой силой затягивать гайку 1/4\"?",o:["Как можно сильнее","15–20 Н·м","2 Н·м"],e:"Перетянутая гайка трескается, конус сминается."},uz:{q:"1/4\" gaykani qanday kuch bilan tortish kerak?",o:["Iloji boricha kuchli","15–20 N·m","2 N·m"],e:"Ortiqcha tortilgan gayka yoriladi, konus eziladi."}},
+  {a:1,ru:{q:"Трубку заломили при монтаже. Что делать?",o:["Оставить","Заменить участок","Заклеить"],e:"Залом сужает трубку и мешает фреону."},uz:{q:"O'rnatishda trubka sinib qoldi. Nima qilish kerak?",o:["Qoldirish","Uchastkani almashtirish","Yopishtirish"],e:"Sinish trubkani toraytiradi va freonga xalaqit beradi."}}]},
+
+{id:'m3',lv:1,min:9,nowarn:true,
+ t:{ru:"Опрессовка и вакуумирование",uz:"Opressovka va vakuum qilish"},s:{ru:"Азот, вакуум, открытие кранов",uz:"Azot, vakuum, kranlarni ochish"},
+ svg:l=>svg(
+  box(110,24,140,62)+circ(148,50,17,'var(--surface)',CL)+circ(212,50,17,'var(--surface)',H)+
+  line('M148 50L156 40',CL,2)+line('M212 50L220 40',H,2)+tx(148,80,R(l,"низкое","past"),{s:9,c:'var(--muted)'})+tx(212,80,R(l,"высокое","yuqori"),{s:9,c:'var(--muted)'})+
+  tx(180,16,R(l,"Манометрический коллектор","Manometrik kollektor"),{w:600,s:10})+
+  line('M135 86C135 150 290 120 290 168',CL,3)+line('M180 86V150C180 170 70 150 70 178','#d9b619',3)+
+  box(20,178,100,46)+tx(70,198,R(l,"Вакуумный","Vakuum"),{w:600,s:11})+tx(70,212,R(l,"насос","nasos"),{w:600,s:11})+
+  box(240,168,110,62)+tx(295,186,R(l,"Наружный блок","Tashqi blok"),{w:600,s:10})+
+  circ(290,206,8,'var(--surface)',CL)+tx(290,224,R(l,"газ","gaz"),{s:9,c:'var(--muted)'})+circ(326,206,6,'var(--surface)',LQ)+tx(326,224,R(l,"жидк.","suyuq"),{s:9,c:'var(--muted)'})+
+  line('M24 246H44',CL,3)+tx(50,250,R(l,"синий шланг → сервисный порт газового крана","ko'k shlang → gaz kranining servis porti"),{a:'start',s:10,c:'var(--muted)'})+
+  line('M24 264H44','#d9b619',3)+tx(50,268,R(l,"жёлтый шланг → вакуумный насос","sariq shlang → vakuum nasos"),{a:'start',s:10,c:'var(--muted)'}),
+  R(l,"Подключение для вакуума: синий шланг коллектора к сервисному порту газового крана, жёлтый шланг к вакуумному насосу","Vakuum uchun ulanish: kollektorning ko'k shlangi gaz kranining servis portiga, sariq shlang vakuum nasosga"),280),
+ steps:{ru:["<b>Опрессовка.</b> Подайте в трассу <b>азот</b> через коллектор до 30–40 бар (для R410A и R32). Подождите 15–30 минут: давление не должно падать.","Падает — ищите утечку мыльной пеной на гайках. Никогда не используйте кислород или воздух из компрессора.","Стравите азот. Подключите синий шланг к сервисному порту газового крана, жёлтый — к вакуумному насосу.","Включите насос, откройте кран коллектора. Тяните вакуум минимум 15–20 минут, лучше до <b>500 микрон</b> по вакуумметру.","Закройте коллектор, выключите насос и подождите 10 минут. Стрелка стоит на −1 бар — система герметична и сухая.","Откройте шестигранником сначала <b>жидкостный</b>, затем газовый кран до упора. Снимите шланг, наденьте колпачки."],
+       uz:["<b>Opressovka.</b> Kollektor orqali trassaga <b>azot</b>ni 30–40 bargacha bering (R410A va R32 uchun). 15–30 daqiqa kuting: bosim tushmasligi kerak.","Tushsa — gaykalarda sovun ko'pigi bilan oqishni qidiring. Hech qachon kislorod yoki kompressor havosidan foydalanmang.","Azotni chiqaring. Ko'k shlangni gaz kranining servis portiga, sariqni — vakuum nasosga ulang.","Nasosni yoqing, kollektor kranini oching. Vakuumni kamida 15–20 daqiqa, yaxshisi vakuummetr bo'yicha <b>500 mikron</b>gacha torting.","Kollektorni yoping, nasosni o'chiring va 10 daqiqa kuting. Strelka −1 barda turibdi — tizim germetik va quruq.","Olti qirrali kalit bilan avval <b>suyuqlik</b>, keyin gaz kranini oxirigacha oching. Shlangni oling, qalpoqchalarni kiyg'izing."]},
+ tip:{ru:"«Продувка фреоном» вместо вакуума — плохая практика. Влага остаётся в системе, превращается в кислоту и съедает компрессор за 1–2 года.",uz:"Vakuum o'rniga «freon bilan puflash» — yomon usul. Namlik tizimda qoladi, kislotaga aylanadi va kompressorni 1–2 yilda yeydi."},
+ quiz:[
+  {a:1,ru:{q:"Чем делают опрессовку трассы?",o:["Кислородом","Азотом","Водой"],e:"Азот сухой и не горит. Кислород с маслом взрывается."},uz:{q:"Trassa opressovkasi nima bilan qilinadi?",o:["Kislorod bilan","Azot bilan","Suv bilan"],e:"Azot quruq va yonmaydi. Kislorod moy bilan portlaydi."}},
+  {a:2,ru:{q:"Сколько тянуть вакуум как минимум?",o:["1 минуту","Не нужно","15–20 минут"],e:"Лучше по вакуумметру до 500 микрон."},uz:{q:"Vakuum kamida qancha tortiladi?",o:["1 daqiqa","Kerak emas","15–20 daqiqa"],e:"Yaxshisi vakuummetr bo'yicha 500 mikrongacha."}},
+  {a:0,ru:{q:"Стрелка после выключения насоса поползла вверх. Что это?",o:["Утечка или влага","Всё нормально","Сломан пульт"],e:"Ищите утечку или тяните вакуум дольше."},uz:{q:"Nasos o'chirilgandan keyin strelka tepaga sudraldi. Bu nima?",o:["Oqish yoki namlik","Hammasi joyida","Pult buzilgan"],e:"Oqishni qidiring yoki vakuumni uzoqroq torting."}},
+  {a:1,ru:{q:"Почему «продувка фреоном» плохая?",o:["Долго","Влага остаётся и губит компрессор","Это лучший способ"],e:"Только вакуум убирает влагу."},uz:{q:"Nima uchun «freon bilan puflash» yomon?",o:["Uzoq","Namlik qoladi va kompressorni buzadi","Bu eng yaxshi usul"],e:"Namlikni faqat vakuum chiqaradi."}}]},
+
+{id:'m4',lv:1,min:7,
+ t:{ru:"Электрика кондиционера",uz:"Konditsioner elektrikasi"},s:{ru:"Межблочный кабель, клеммы, автомат",uz:"Bloklararo kabel, klemmalar, avtomat"},
+ svg:l=>{const W=[['N','#1e6fd0'],['1(L)','#8a5a2b'],['2','#222'],['3','#7d8790'],['⏚','#1f9a4c']];return svg(
+  box(14,30,92,180)+tx(60,22,R(l,"Внутр. блок","Ichki blok"),{w:600,s:10})+box(254,30,92,180)+tx(300,22,R(l,"Нар. блок","Tashqi blok"),{w:600,s:10})+
+  W.map((w,i)=>{const y=58+i*34;return `<rect x="76" y="${y-11}" width="26" height="22" rx="3" fill="var(--bg)" stroke="var(--fg)" stroke-width="1"/><rect x="258" y="${y-11}" width="26" height="22" rx="3" fill="var(--bg)" stroke="var(--fg)" stroke-width="1"/>`+tx(56,y+4,w[0],{w:700,s:11})+tx(304,y+4,w[0],{w:700,s:11})+line(`M102 ${y}H258`,w[1],3,i===4?'6 3':'')}).join('')+
+  tx(180,232,R(l,"Кабель 5×1,5 мм², номер к номеру","Kabel 5×1,5 mm², raqamga raqam"),{s:10,c:'var(--muted)'}),
+  R(l,"Межблочное соединение: клеммы N, 1, 2, 3 и земля соединяются номер к номеру","Bloklararo ulanish: N, 1, 2, 3 klemmalari va yer raqamga raqam ulanadi"))},
+ warnB:{ru:"Работайте без напряжения.",uz:"Kuchlanishsiz ishlang."},warn:{ru:"Выключите автомат кондиционера и проверьте индикатором все клеммы.",uz:"Konditsioner avtomatini o'chiring va indikator bilan barcha klemmalarni tekshiring."},
+ table:{head:{ru:["Модель","Автомат","Питание"],uz:["Model","Avtomat","Ta'minot"]},rows:{
+  ru:[["07–09","10–16 А","3×1,5 мм²"],["12","16 А","3×1,5–2,5 мм²"],["18","20 А","3×2,5 мм²"],["24","25 А","3×2,5–4 мм²"]],
+  uz:[["07–09","10–16 A","3×1,5 mm²"],["12","16 A","3×1,5–2,5 mm²"],["18","20 A","3×2,5 mm²"],["24","25 A","3×2,5–4 mm²"]]}},
+ steps:{ru:["Схема подключения нарисована на крышке клемм или в инструкции. У разных марок питание подаётся на внутренний или на наружный блок — смотрите схему.","Межблочный кабель — медный, обычно 4–5 жил по 1,5 мм². Соединяйте строго <b>номер к номеру</b>: N к N, 1 к 1, 2 к 2.","Перепутали N и 1 — блок не запустится или сгорит плата. Перепутали 2 и 3 — ошибка связи.","Земля обязательна. Без неё корпус может оказаться под током, а плата ловит помехи.","Кондиционер подключайте на <b>отдельный автомат</b>, не на розетку с удлинителем. Зачищенные жилы зажимайте плотно, подтяните винты через 1–2 недели."],
+       uz:["Ulanish sxemasi klemma qopqog'ida yoki yo'riqnomada chizilgan. Turli markalarda ta'minot ichki yoki tashqi blokka beriladi — sxemaga qarang.","Bloklararo kabel — mis, odatda 1,5 mm² dan 4–5 tolali. Qat'iy <b>raqamga raqam</b> ulang: N ga N, 1 ga 1, 2 ga 2.","N va 1 ni adashtirsangiz — blok ishga tushmaydi yoki plata kuyadi. 2 va 3 ni adashtirsangiz — aloqa xatosi.","Yer majburiy. Usiz korpus tok ostida qolishi mumkin, plata esa xalaqitlarni ushlaydi.","Konditsionerni uzaytirgichli rozetkaga emas, <b>alohida avtomatga</b> ulang. Tozalangan tolalarni zich qisib qo'ying, 1–2 haftadan keyin vintlarni qayta torting."]},
+ tip:{ru:"Слабый контакт на клемме греется и плавит колодку. Если колодка потемнела — меняйте её, а не просто подтягивайте.",uz:"Klemmadagi bo'sh kontakt qiziydi va kolodkani eritadi. Kolodka qoraygan bo'lsa — shunchaki tortmang, almashtiring."},
+ quiz:[
+  {a:0,ru:{q:"Как соединять межблочный кабель?",o:["Номер к номеру","Как получится","Только N и 1"],e:"N к N, 1 к 1, 2 к 2, 3 к 3, земля к земле."},uz:{q:"Bloklararo kabel qanday ulanadi?",o:["Raqamga raqam","Qanday bo'lsa","Faqat N va 1"],e:"N ga N, 1 ga 1, 2 ga 2, 3 ga 3, yer yerga."}},
+  {a:1,ru:{q:"Нужна ли земля?",o:["Нет","Да, обязательно","Только зимой"],e:"Без земли корпус может быть под током."},uz:{q:"Yer kerakmi?",o:["Yo'q","Ha, majburiy","Faqat qishda"],e:"Yersiz korpus tok ostida qolishi mumkin."}},
+  {a:2,ru:{q:"Перепутали провода 2 и 3. Что будет?",o:["Будет лучше холодить","Ничего","Ошибка связи между блоками"],e:"По этим проводам блоки «разговаривают»."},uz:{q:"2 va 3 simlar adashtirildi. Nima bo'ladi?",o:["Yaxshiroq sovutadi","Hech narsa","Bloklar orasida aloqa xatosi"],e:"Bu simlar orqali bloklar «gaplashadi»."}},
+  {a:1,ru:{q:"Куда подключать кондиционер 12-ку?",o:["В удлинитель","На отдельный автомат 16 А","К люстре"],e:"Отдельная линия и автомат по таблице."},uz:{q:"12-lik konditsionerni qayerga ulash kerak?",o:["Uzaytirgichga","Alohida 16 A avtomatga","Qandilga"],e:"Alohida liniya va jadval bo'yicha avtomat."}}]},
+
+/* ---------- ADVANCED ---------- */
+{id:'a1',lv:2,min:9,calc:'charge',
+ t:{ru:"Заправка фреоном",uz:"Freon bilan to'ldirish"},s:{ru:"По весу, по давлению, перегрев",uz:"Og'irlik, bosim, qizib ketish bo'yicha"},
+ warnB:{ru:"Перчатки и очки.",uz:"Qo'lqop va ko'zoynak."},warn:{ru:"Шланг при отсоединении выпускает струю фреона. Держите его от лица.",uz:"Shlang ajratilganda freon oqimi chiqadi. Uni yuzdan uzoq tuting."},
+ table:{head:{ru:["Фреон","Низкое (жара)","Высокое (жара)"],uz:["Freon","Past (issiqda)","Yuqori (issiqda)"]},rows:{
+  ru:[["R22","4,5–5,5 бар","16–20 бар"],["R410A","8–10 бар","26–32 бар"],["R32","8,5–10,5 бар","27–34 бар"]],
+  uz:[["R22","4,5–5,5 bar","16–20 bar"],["R410A","8–10 bar","26–32 bar"],["R32","8,5–10,5 bar","27–34 bar"]]}},
+ steps:{ru:["<b>Лучший способ — по весу.</b> После вакуума заправьте столько, сколько написано на шильдике, плюс дозаправку за длинную трассу (калькулятор).","В наружном блоке с завода есть фреон на 5–7,5 м трассы. Дальше обычно +15–20 г на каждый метр (смотрите инструкцию).","Дозаправку работающего кондиционера делают по <b>низкому давлению</b> на газовом кране, в режиме холод, на максимальных оборотах. Цифры в таблице — для жары +30…+35 °C на улице.","Точнее — по <b>перегреву</b>: температура толстой трубки минус температура кипения по манометру. Норма 5–8 °C. Больше — фреона мало, меньше — много.","R410A и R32 добавляйте <b>жидкостью</b> маленькими порциями, давая 5 минут на установку давления.","Утечку сначала найдите и устраните. Дозаправить дырявую систему — значит вернуться через месяц."],
+       uz:["<b>Eng yaxshi usul — og'irlik bo'yicha.</b> Vakuumdan keyin shildikda yozilgancha, ustiga uzun trassa uchun qo'shimchani to'ldiring (kalkulyator).","Tashqi blokda zavoddan 5–7,5 m trassaga freon bor. Undan keyin odatda har metrga +15–20 g (yo'riqnomaga qarang).","Ishlayotgan konditsionerni to'ldirish gaz kranidagi <b>past bosim</b> bo'yicha, sovutish rejimida, maksimal aylanishda qilinadi. Jadvaldagi raqamlar — ko'chada +30…+35 °C issiq uchun.","Aniqrog'i — <b>qizib ketish</b> bo'yicha: yo'g'on trubka harorati minus manometrdagi qaynash harorati. Me'yor 5–8 °C. Ko'p bo'lsa — freon kam, kam bo'lsa — ko'p.","R410A va R32 ni <b>suyuq holda</b> kichik porsiyalarda qo'shing, bosim o'rnatilishi uchun 5 daqiqa bering.","Avval oqishni toping va bartaraf eting. Teshik tizimni to'ldirish — bir oydan keyin qaytish demak."]},
+ tip:{ru:"Перезаправка опаснее недозаправки: растёт давление и ток, компрессор перегревается. Лишний фреон стравливать нельзя в комнате — только на улице.",uz:"Ortiqcha to'ldirish kam to'ldirishdan xavfliroq: bosim va tok oshadi, kompressor qiziydi. Ortiqcha freonni xonada chiqarib bo'lmaydi — faqat ko'chada."},
+ quiz:[
+  {a:0,ru:{q:"Какой способ заправки самый точный?",o:["По весу","По звуку","По времени"],e:"Вес с шильдика плюс дозаправка за трассу."},uz:{q:"To'ldirishning qaysi usuli eng aniq?",o:["Og'irlik bo'yicha","Ovoz bo'yicha","Vaqt bo'yicha"],e:"Shildikdagi og'irlik ustiga trassa uchun qo'shimcha."}},
+  {a:1,ru:{q:"Перегрев 15 °C. Что это значит?",o:["Фреона много","Фреона мало","Всё в норме"],e:"Норма 5–8 °C. Большой перегрев — недостаток фреона."},uz:{q:"Qizib ketish 15 °C. Bu nimani anglatadi?",o:["Freon ko'p","Freon kam","Hammasi me'yorida"],e:"Me'yor 5–8 °C. Katta qizib ketish — freon yetishmasligi."}},
+  {a:2,ru:{q:"Примерное низкое давление R410A в жару?",o:["1–2 бар","40 бар","8–10 бар"],e:"Это давление на газовом кране в режиме холод."},uz:{q:"Issiqda R410A ning taxminiy past bosimi?",o:["1–2 bar","40 bar","8–10 bar"],e:"Bu sovutish rejimida gaz kranidagi bosim."}},
+  {a:1,ru:{q:"Система течёт. Что сделать сначала?",o:["Дозаправить","Найти и устранить утечку","Ничего"],e:"Иначе фреон снова уйдёт."},uz:{q:"Tizim oqyapti. Avval nima qilish kerak?",o:["To'ldirish","Oqishni topib bartaraf etish","Hech narsa"],e:"Aks holda freon yana chiqib ketadi."}}]},
+
+{id:'a2',lv:2,min:10,nowarn:true,
+ t:{ru:"Диагностика кондиционера",uz:"Konditsioner diagnostikasi"},s:{ru:"Не холодит, течёт, обмерзает, ошибки",uz:"Sovutmaydi, oqadi, muzlaydi, xatolar"},
+ table:{head:{ru:["Признак","Частая причина"],uz:["Belgi","Ko'p uchraydigan sabab"]},rows:{
+  ru:[["Дует, но не холодит, наружный вентилятор крутится","Мало фреона (утечка) или не запускается компрессор"],["Наружный блок молчит","Конденсатор компрессора, нет связи, контактор, плата"],["Течёт вода из внутреннего блока","Засор дренажа, блок висит криво"],["Иней на толстой трубке и испарителе","Грязный фильтр или испаритель, мало фреона"],["Включается и сразу выключается","Перегрев наружного блока, грязный конденсатор, перезаправка"],["Мигает лампочка или код ошибки","Смотрите таблицу кодов марки: датчик, связь, защита"]],
+  uz:[["Puflaydi, lekin sovutmaydi, tashqi ventilyator aylanyapti","Freon kam (oqish) yoki kompressor ishga tushmaydi"],["Tashqi blok jim","Kompressor kondensatori, aloqa yo'q, kontaktor, plata"],["Ichki blokdan suv oqyapti","Drenaj tiqilgan, blok qiyshiq osilgan"],["Yo'g'on trubka va bug'latgichda qirov","Kir filtr yoki bug'latgich, freon kam"],["Yoqiladi va darhol o'chadi","Tashqi blok qizib ketgan, kir kondensator, ortiqcha to'ldirilgan"],["Chiroq miltillaydi yoki xato kodi","Marka kodlari jadvaliga qarang: datchik, aloqa, himoya"]]}},
+ steps:{ru:["Начните с простого: пульт в режиме <b>Cool</b>, температура 18 °C, фильтры чистые, автомат включён.","Послушайте наружный блок. Гудит, но компрессор не стартует — проверьте <b>пусковой конденсатор</b> мультиметром (ёмкость в мкФ, как на корпусе).","Измерьте ток компрессора клещами. Ток намного меньше номинала — мало фреона. Больше — перегрев, грязный конденсатор или перезаправка.","Подключите манометр к газовому крану и сравните давление с нормой. Затем измерьте перегрев.","Обмотки компрессора: между клеммами C-S, C-R, S-R. Сумма C-S и C-R равна S-R. Обмотка на корпус — бесконечность, иначе компрессор пробит.","Код ошибки записывайте до сброса питания. После перезапуска он может пропасть."],
+       uz:["Oddiydan boshlang: pult <b>Cool</b> rejimida, harorat 18 °C, filtrlar toza, avtomat yoqilgan.","Tashqi blokni tinglang. G'uvillaydi, lekin kompressor ishga tushmaydi — <b>ishga tushirish kondensatorini</b> multimetr bilan tekshiring (sig'imi mkF da, korpusdagidek).","Kompressor tokini kleshchi bilan o'lchang. Tok nominaldan ancha kam — freon kam. Ko'p — qizib ketish, kir kondensator yoki ortiqcha to'ldirish.","Manometrni gaz kraniga ulang va bosimni me'yor bilan solishtiring. Keyin qizib ketishni o'lchang.","Kompressor chulg'amlari: C-S, C-R, S-R klemmalari orasida. C-S va C-R yig'indisi S-R ga teng. Chulg'amdan korpusga — cheksizlik, aks holda kompressor teshilgan.","Xato kodini tokni o'chirishdan oldin yozib oling. Qayta ishga tushirgandan keyin u yo'qolishi mumkin."]},
+ tip:{ru:"Половина вызовов «не холодит» решается чисткой и заменой конденсатора. Не спешите обещать клиенту замену компрессора.",uz:"«Sovutmaydi» chaqiruvlarining yarmi tozalash va kondensatorni almashtirish bilan hal bo'ladi. Mijozga kompressor almashtirishni va'da qilishga shoshilmang."},
+ quiz:[
+  {a:1,ru:{q:"Наружный блок гудит, компрессор не стартует. Что проверить первым?",o:["Пульт","Пусковой конденсатор","Фильтры"],e:"Высохший конденсатор — самая частая причина."},uz:{q:"Tashqi blok g'uvillaydi, kompressor ishga tushmaydi. Avval nimani tekshirish kerak?",o:["Pultni","Ishga tushirish kondensatorini","Filtrlarni"],e:"Qurigan kondensator — eng ko'p uchraydigan sabab."}},
+  {a:0,ru:{q:"Из внутреннего блока течёт вода. Причина?",o:["Засор дренажа","Мало фреона в баллоне","Слабый пульт"],e:"Почистите дренаж и проверьте уровень блока."},uz:{q:"Ichki blokdan suv oqyapti. Sababi?",o:["Drenaj tiqilgan","Ballonda freon kam","Pult kuchsiz"],e:"Drenajni tozalang va blok darajasini tekshiring."}},
+  {a:2,ru:{q:"Ток компрессора намного ниже номинала. Это…",o:["Перезаправка","Норма","Мало фреона"],e:"Компрессору нечего сжимать — ток падает."},uz:{q:"Kompressor toki nominaldan ancha past. Bu…",o:["Ortiqcha to'ldirish","Me'yor","Freon kam"],e:"Kompressorga siqadigan narsa yo'q — tok tushadi."}},
+  {a:1,ru:{q:"Обмотка компрессора звонится на корпус. Что это?",o:["Норма","Компрессор пробит","Нужно больше фреона"],e:"Такой компрессор под замену, иначе бьёт током."},uz:{q:"Kompressor chulg'ami korpusga tutashyapti. Bu nima?",o:["Me'yor","Kompressor teshilgan","Ko'proq freon kerak"],e:"Bunday kompressor almashtiriladi, aks holda tok uradi."}}]},
+
+{id:'a3',lv:2,min:8,nowarn:true,
+ t:{ru:"Как устроен холодильник",uz:"Muzlatgich qanday tuzilgan"},s:{ru:"Капилляр, фильтр-осушитель, No Frost, оттайка",uz:"Kapillyar, filtr-quritgich, No Frost, eritish"},
+ svg:l=>svg(
+  flow(10,30,100,52,R(l,"Компрессор","Kompressor"),R(l,"внизу сзади","pastda orqada"))+flow(130,30,100,52,R(l,"Конденсатор","Kondensator"),R(l,"сзади или в боках","orqada yoki yonlarda"))+flow(250,30,100,52,R(l,"Фильтр-","Filtr-"),R(l,"осушитель","quritgich"))+
+  flow(250,150,100,52,R(l,"Капилляр","Kapillyar"),R(l,"тонкая трубка","ingichka trubka"))+flow(130,150,100,52,R(l,"Испаритель","Bug'latgich"),R(l,"в морозилке","muzlatkichda"))+flow(10,150,100,52,R(l,"Обратная","Qaytish"),R(l,"трубка","trubkasi"))+
+  arrow(110,56,128,56)+arrow(230,56,248,56)+arrow(300,82,300,148)+arrow(250,176,232,176)+arrow(130,176,112,176)+arrow(60,150,60,84)+
+  tx(180,120,R(l,"Капилляр спаян с обратной трубкой","Kapillyar qaytish trubkasiga kavsharlangan"),{s:10,c:'var(--muted)'})+tx(180,226,R(l,"No Frost: + вентилятор, ТЭН оттайки, таймер или плата","No Frost: + ventilyator, eritish TENi, taymer yoki plata"),{s:10,c:'var(--muted)'}),
+  R(l,"Цикл холодильника: компрессор, конденсатор, фильтр-осушитель, капилляр, испаритель, обратная трубка","Muzlatgich sikli: kompressor, kondensator, filtr-quritgich, kapillyar, bug'latgich, qaytish trubkasi"),240),
+ table:{head:{ru:["Узел","Что делает"],uz:["Qism","Nima qiladi"]},rows:{
+  ru:[["Термостат или датчик","Включает и выключает компрессор по температуре"],["Пусковое реле","Помогает компрессору стартовать"],["Тепловая защита","Отключает компрессор при перегреве"],["ТЭН оттайки (No Frost)","Растапливает лёд на испарителе 2–4 раза в сутки"],["Таймер или плата","Переключает холод и оттайку"],["Дренаж","Отводит талую воду в поддон над компрессором"]],
+  uz:[["Termostat yoki datchik","Haroratga qarab kompressorni yoqadi va o'chiradi"],["Ishga tushirish relesi","Kompressorga ishga tushishga yordam beradi"],["Issiqlik himoyasi","Qizib ketganda kompressorni o'chiradi"],["Eritish TENi (No Frost)","Bug'latgichdagi muzni sutkada 2–4 marta eritadi"],["Taymer yoki plata","Sovutish va eritishni almashtiradi"],["Drenaj","Erigan suvni kompressor ustidagi poddonga olib ketadi"]]}},
+ steps:{ru:["Цикл тот же, что в кондиционере, только вместо ТРВ почти всегда стоит <b>капилляр</b>, а фреона очень мало: 20–150 г.","<b>Фильтр-осушитель</b> стоит перед капилляром. Он ловит влагу и грязь. При любом вскрытии системы его меняют на новый.","Капилляр очень тонкий. Влага в системе замерзает в нём ледяной пробкой, грязь — забивает навсегда.","В холодильнике с капельной системой испаритель на задней стенке плюсовой камеры оттаивает сам, вода стекает в отверстие.","В <b>No Frost</b> испаритель спрятан в морозилке, вентилятор гонит холод по каналам. Лёд снимает ТЭН по команде таймера или платы."],
+       uz:["Sikl konditsionerdagidek, faqat TRV o'rniga deyarli doim <b>kapillyar</b> turadi, freon esa juda kam: 20–150 g.","<b>Filtr-quritgich</b> kapillyardan oldin turadi. U namlik va kirni ushlaydi. Tizim har safar ochilganda u yangisiga almashtiriladi.","Kapillyar juda ingichka. Tizimdagi namlik unda muz tiqiniga aylanadi, kir esa uni butunlay to'sib qo'yadi.","Tomchili tizimli muzlatgichda plyus kamera orqa devoridagi bug'latgich o'zi eriydi, suv teshikka oqadi.","<b>No Frost</b> da bug'latgich muzlatkichda yashiringan, ventilyator sovuqni kanallar bo'ylab haydaydi. Muzni taymer yoki plata buyrug'i bilan TEN eritadi."]},
+ tip:{ru:"Морозилка No Frost холодит, а нижняя камера тёплая — чаще всего не работает оттайка: ТЭН, термопредохранитель, датчик или таймер. Испаритель забит льдом.",uz:"No Frost muzlatkichi sovutadi, pastki kamera esa iliq — ko'pincha eritish ishlamaydi: TEN, termosaqlagich, datchik yoki taymer. Bug'latgich muz bilan to'lgan."},
+ quiz:[
+  {a:1,ru:{q:"Что меняют при каждом вскрытии системы холодильника?",o:["Компрессор","Фильтр-осушитель","Термостат"],e:"Фильтр набирает влагу из воздуха за минуты."},uz:{q:"Muzlatgich tizimi har ochilganda nima almashtiriladi?",o:["Kompressor","Filtr-quritgich","Termostat"],e:"Filtr havodan namlikni bir necha daqiqada yig'adi."}},
+  {a:0,ru:{q:"Что в холодильнике снижает давление фреона?",o:["Капилляр","Компрессор","Конденсатор"],e:"Тонкая длинная трубка дросселирует фреон."},uz:{q:"Muzlatgichda freon bosimini nima tushiradi?",o:["Kapillyar","Kompressor","Kondensator"],e:"Ingichka uzun trubka freonni drossellaydi."}},
+  {a:2,ru:{q:"No Frost: морозилка холодная, низ тёплый. Что вероятнее?",o:["Мало фреона","Сломана лампочка","Не работает оттайка"],e:"Испаритель обмёрз и не пропускает воздух."},uz:{q:"No Frost: muzlatkich sovuq, pasti iliq. Ehtimoli ko'proq nima?",o:["Freon kam","Chiroq buzilgan","Eritish ishlamayapti"],e:"Bug'latgich muzlab, havoni o'tkazmayapti."}},
+  {a:1,ru:{q:"Сколько примерно фреона в бытовом холодильнике?",o:["2–3 кг","20–150 г","1 литр"],e:"Поэтому заправка только по весу."},uz:{q:"Maishiy muzlatgichda taxminan qancha freon bor?",o:["2–3 kg","20–150 g","1 litr"],e:"Shuning uchun faqat tarozi bilan to'ldiriladi."}}]},
+
+{id:'a4',lv:2,min:10,
+ t:{ru:"Ремонт холодильника",uz:"Muzlatgichni ta'mirlash"},s:{ru:"Неисправности, пайка, заправка R600a",uz:"Nosozliklar, kavsharlash, R600a to'ldirish"},
+ warnB:{ru:"R600a горит.",uz:"R600a yonadi."},warn:{ru:"Перед пайкой полностью уберите фреон, проветрите и продуйте систему азотом. Трубки вскрывайте труборезом, не горелкой.",uz:"Kavsharlashdan oldin freonni to'liq chiqaring, shamollating va tizimni azot bilan puflang. Trubkalarni gorelka bilan emas, truborez bilan oching."},
+ table:{head:{ru:["Признак","Что проверить"],uz:["Belgi","Nimani tekshirish"]},rows:{
+  ru:[["Не включается, тишина","Розетка, термостат или датчик, плата"],["Щёлкает, компрессор не запускается","Пусковое реле, тепловая защита, обмотки компрессора"],["Компрессор работает, но не холодит","Утечка фреона или засор капилляра"],["Работает без остановки","Уплотнитель двери, грязный конденсатор, мало фреона"],["Вода под овощными ящиками","Засор дренажного отверстия"],["Шуба льда в морозилке No Frost","Оттайка: ТЭН, термопредохранитель, таймер"]],
+  uz:[["Yoqilmaydi, jimjitlik","Rozetka, termostat yoki datchik, plata"],["Chiqillaydi, kompressor ishga tushmaydi","Ishga tushirish relesi, issiqlik himoyasi, kompressor chulg'amlari"],["Kompressor ishlaydi, lekin sovutmaydi","Freon oqishi yoki kapillyar tiqilishi"],["To'xtovsiz ishlaydi","Eshik zichlagichi, kir kondensator, freon kam"],["Sabzavot qutilari ostida suv","Drenaj teshigi tiqilgan"],["No Frost muzlatkichida qalin muz","Eritish: TEN, termosaqlagich, taymer"]]}},
+ steps:{ru:["Узнайте фреон на шильдике. Для R600a — проветриваемое помещение, никаких искр, работа без лишних людей.","Поставьте прокалывающий клапан на технологическую трубку компрессора, выпустите фреон на улицу. Продуйте систему азотом.","Найдите утечку: опрессовка азотом 8–10 бар и мыльная пена. Утечки часто в местах пайки и в испарителе.","Замените фильтр-осушитель. Паяйте медь медно-фосфорным припоем, при пайке пускайте слабый поток азота, чтобы внутри не было окалины.","Вакуум 20–30 минут. Заправляйте строго <b>по весу с шильдика</b> на электронных весах: ошибка в 5–10 г уже заметна.","Запустите и проверьте через 30–40 минут: обратная трубка у компрессора чуть прохладная, испаритель обмерзает равномерно."],
+       uz:["Shildikdan freonni bilib oling. R600a uchun — shamollatiladigan xona, uchqun yo'q, ortiqcha odamlarsiz ish.","Kompressorning texnologik trubkasiga teshuvchi klapan qo'ying, freonni ko'chaga chiqaring. Tizimni azot bilan puflang.","Oqishni toping: 8–10 bar azot bilan opressovka va sovun ko'pigi. Oqishlar ko'pincha kavshar joylarida va bug'latgichda.","Filtr-quritgichni almashtiring. Misni mis-fosforli kavshar bilan kavsharlang, kavsharlashda ichida qasmoq bo'lmasligi uchun azotning kuchsiz oqimini yuboring.","20–30 daqiqa vakuum. Qat'iy <b>shildikdagi og'irlik bo'yicha</b> elektron tarozida to'ldiring: 5–10 g xato ham sezilarli.","Ishga tushiring va 30–40 daqiqadan keyin tekshiring: kompressor yonidagi qaytish trubkasi biroz salqin, bug'latgich bir tekis muzlaydi."]},
+ tip:{ru:"Клиенту честно скажите цену: ремонт системы холодильника со старым компрессором иногда дороже, чем он стоит. Помогите решить, чинить или менять.",uz:"Mijozga narxni halol ayting: eski kompressorli muzlatgich tizimini ta'mirlash ba'zan uning narxidan qimmat. Ta'mirlash yoki almashtirishni hal qilishga yordam bering."},
+ quiz:[
+  {a:2,ru:{q:"Как вскрывать систему с R600a?",o:["Горелкой","Ножовкой","Прокалывающим клапаном и труборезом"],e:"R600a горит, огонь рядом недопустим."},uz:{q:"R600a li tizimni qanday ochish kerak?",o:["Gorelka bilan","Arra bilan","Teshuvchi klapan va truborez bilan"],e:"R600a yonadi, yonida olov bo'lishi mumkin emas."}},
+  {a:0,ru:{q:"Зачем пускать азот во время пайки?",o:["Чтобы внутри не было окалины","Для охлаждения рук","Не нужно"],e:"Окалина отслаивается и забивает капилляр."},uz:{q:"Kavsharlash paytida nima uchun azot yuboriladi?",o:["Ichida qasmoq bo'lmasligi uchun","Qo'lni sovutish uchun","Kerak emas"],e:"Qasmoq ko'chib, kapillyarni to'sib qo'yadi."}},
+  {a:1,ru:{q:"Холодильник щёлкает, компрессор не запускается. Что проверить?",o:["Лампочку","Пусковое реле и обмотки","Уплотнитель"],e:"Щелчки — это реле или защита пытается запустить мотор."},uz:{q:"Muzlatgich chiqillaydi, kompressor ishga tushmaydi. Nimani tekshirish kerak?",o:["Chiroqni","Ishga tushirish relesi va chulg'amlarni","Zichlagichni"],e:"Chiqillash — rele yoki himoya motorni ishga tushirishga urinmoqda."}},
+  {a:1,ru:{q:"Как заправлять холодильник R600a?",o:["По давлению на глаз","Строго по весу на весах","До инея на трубке"],e:"Фреона мало, ошибка в граммы уже важна."},uz:{q:"Muzlatgichni R600a bilan qanday to'ldirish kerak?",o:["Ko'z bilan bosim bo'yicha","Qat'iy tarozida og'irlik bo'yicha","Trubkada qirov paydo bo'lguncha"],e:"Freon kam, grammlik xato ham muhim."}}]}
+];
+
+// UI for Холод Pro (Sovutish Pro). Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Холод Pro',tag:'Кондиционеры и холодильники · 13 уроков',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Начальный','Средний','Продвинутый'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} уровень · урок ${n} · ~${m} мин`,
+ leg:{H:'Горячий газ',L:'Жидкость',C:'Холодный фреон'},
+ warnB:'Сначала отключите питание.',warn:'Выключите автомат и проверьте индикатором, что напряжения нет.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ pwT:'Мощность кондиционера',pwSub:'Какую модель ставить в комнату',area:'Площадь, м²',hgt:'Высота потолка, м',sun:'Солнце в окнах',sunO:['Мало','Среднее','Много'],ppl:'Людей в комнате',tech:'Компьютеров и ТВ',top:'Последний этаж или большие окна',no:'Нет',yes:'Да',
+ need:'Нужно',btu:'BTU/ч',model:'Модель',kw:'кВт',big:'Больше 36-ки: нужны два блока или канальная система',
+ pwNote:'Расчёт: 30–40 Вт на м³ объёма, +0,13 кВт на человека, +0,3 кВт на компьютер или ТВ. Для Узбекистана летом лучше брать с запасом.',
+ chT:'Дозаправка за длинную трассу',chSub:'Сколько фреона добавить',len:'Длина трассы, м',incl:'Заправлено с завода на, м',gpm:'Граммов на метр',add:'Добавить',g:'г',
+ chNote:'Точные цифры — в инструкции к наружному блоку. Обычно 5–7,5 м уже заправлено, дальше 15–20 г на метр.',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Sovutish Pro',tag:'Konditsionerlar va muzlatgichlar · 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Boshlang\'ich','O\'rta','Yuqori'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} daraja · ${n}-dars · ~${m} daq`,
+ leg:{H:'Issiq gaz',L:'Suyuqlik',C:'Sovuq freon'},
+ warnB:'Avval tokni o\'chiring.',warn:'Avtomatni o\'chiring va indikator bilan kuchlanish yo\'qligini tekshiring.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ pwT:'Konditsioner quvvati',pwSub:'Xonaga qaysi modelni qo\'yish kerak',area:'Maydon, m²',hgt:'Shift balandligi, m',sun:'Derazalarda quyosh',sunO:['Kam','O\'rtacha','Ko\'p'],ppl:'Xonadagi odamlar',tech:'Kompyuter, TV',top:'Oxirgi qavat yoki katta derazalar',no:'Yo\'q',yes:'Ha',
+ need:'Kerak',btu:'BTU/soat',model:'Model',kw:'kVt',big:'36-likdan katta: ikkita blok yoki kanalli tizim kerak',
+ pwNote:'Hisob: hajmning har m³ iga 30–40 Vt, har odamga +0,13 kVt, har kompyuter yoki televizorga +0,3 kVt. O\'zbekistonda yozda zaxira bilan olgan ma\'qul.',
+ chT:'Uzun trassa uchun qo\'shimcha freon',chSub:'Qancha freon qo\'shish kerak',len:'Trassa uzunligi, m',incl:'Zavodda to\'ldirilgan, m',gpm:'Metriga gramm',add:'Qo\'shish',g:'g',
+ chNote:'Aniq raqamlar — tashqi blok yo\'riqnomasida. Odatda 5–7,5 m to\'ldirilgan bo\'ladi, keyin metriga 15–20 g.',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (hp_)
+const pk=k=>(k==='lang'?'ep_':'hp_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{a:18,h:2.7,sun:1,p:2,t:1,top:0,len:7,inc:5,gpm:20}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+const swatch={H:'var(--wH)',L:'var(--wF)',C:'var(--wC)'};
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    if(x.legend)h+=`<div class="legend">${x.legend.map(k=>`<span><i class="sw" style="background:${swatch[k]}"></i>${L.leg[k]}</span>`).join('')}</div>`;h+='</div>'}
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warnB?tr(x.warnB):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* calculators: AC power by room and extra refrigerant charge for a long line */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',').replace('-','−');
+const numv=v=>+String(v).replace(',','.')||0;
+const MODELS=[['07',2.1],['09',2.6],['12',3.5],['18',5.3],['24',7.0],['30',8.8],['36',10.5]];
+const seg=(k,opts)=>`<div class="seg" role="group">${opts.map((o,i)=>`<button type="button" data-seg="${k}" data-v="${i}" aria-pressed="${S.calc[k]===i}">${o}</button>`).join('')}</div>`;
+function calcBlock(){const L=U();const c=S.calc;
+  return `<div class="card stack"><div><h3>${L.pwT}</h3><p class="expl">${L.pwSub}</p></div>
+  <div class="pair"><label class="fld" for="ca">${L.area}<input id="ca" type="number" inputmode="decimal" min="0" step="1" value="${c.a}"></label>
+  <label class="fld" for="ch">${L.hgt}<input id="ch" type="number" inputmode="decimal" min="0" step="0.1" value="${c.h}"></label></div>
+  <div class="fld">${L.sun}${seg('sun',L.sunO)}</div>
+  <div class="pair"><label class="fld" for="cp">${L.ppl}<input id="cp" type="number" inputmode="numeric" min="0" step="1" value="${c.p}"></label>
+  <label class="fld" for="ct">${L.tech}<input id="ct" type="number" inputmode="numeric" min="0" step="1" value="${c.t}"></label></div>
+  <div class="fld">${L.top}${seg('top',[L.no,L.yes])}</div>
+  <div class="out" id="out1"></div><p class="expl" id="verd"></p><p class="expl">${L.pwNote}</p></div>
+  <div class="card stack"><div><h3>${L.chT}</h3><p class="expl">${L.chSub}</p></div>
+  <div class="pair"><label class="fld" for="cl">${L.len}<input id="cl" type="number" inputmode="decimal" min="0" step="0.5" value="${c.len}"></label>
+  <label class="fld" for="ci">${L.incl}<input id="ci" type="number" inputmode="decimal" min="0" step="0.5" value="${c.inc}"></label></div>
+  <label class="fld" for="cg">${L.gpm}<input id="cg" type="number" inputmode="numeric" min="0" step="1" value="${c.gpm}"></label>
+  <div class="out two" id="out2"></div><p class="expl">${L.chNote}</p></div>`}
+function paintCalc(){const L=U();const c=S.calc;
+  const vol=Math.max(0,numv(c.a))*Math.max(0,numv(c.h));
+  let q=vol*[30,35,40][c.sun]/1000+Math.max(0,numv(c.p))*0.13+Math.max(0,numv(c.t))*0.3;
+  if(c.top)q*=1.15;
+  const m=MODELS.find(x=>x[1]>=q);
+  $('#out1').innerHTML=`<div><span>${L.need}</span><b>${fmt(q,1)} ${L.kw}</b></div><div><span>${L.btu}</span><b>${fmt(q*3412/1000,1)}k</b></div><div><span>${L.model}</span><b>${m?m[0]:'—'}</b></div>`;
+  const v=$('#verd');v.textContent=m?(lang==='ru'?`Подойдёт модель ${m[0]} (до ${fmt(m[1],1)} кВт холода).`:`${m[0]}-model mos keladi (${fmt(m[1],1)} kVt gacha sovuq).`):L.big;v.className='expl '+(m?'okc':'badc');
+  const add=Math.max(0,numv(c.len)-numv(c.inc))*Math.max(0,numv(c.gpm));
+  $('#out2').innerHTML=`<div><span>${L.add}</span><b>${fmt(add)} ${L.g}</b></div><div><span>${L.len}</span><b>${fmt(Math.max(0,numv(c.len)),1)}</b></div>`}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  on('#ca','a');on('#ch','h');on('#cp','p');on('#ct','t');on('#cl','len');on('#ci','inc');on('#cg','gpm');
+  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const k=b.dataset.seg;S.calc[k]=+b.dataset.v;document.querySelectorAll(`[data-seg="${k}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>
