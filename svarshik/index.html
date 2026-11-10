@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<title>Сварщик Pro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a orange "arc" accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#f08a24; --accent-ink:#2a1400; --navy:#1b1f45; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#ff9f43; --accent-ink:#2a1400; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#ff9f43; --accent-ink:#2a1400; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select:focus,.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Сварщик Pro (welder, manual arc + MIG/TIG basics). Each text is {ru, uz}. Quiz: a = index of the right option.
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}">${s}</text>`;
+const line=(d,c,w=3,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const circ=(x,y,r,f,st='var(--fg)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st}" stroke-width="1.5"/>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="12" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2)=>`${box(x,y,w,h)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const arrow=(x1,y1,x2,y2)=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+// drawing helpers: steel plate, electrode with arc, weld bead
+const MET='var(--wS)',SLAG='#8a5a2b';
+const plate=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="color-mix(in srgb,var(--wS) 45%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`;
+const bead=(d)=>`<path d="${d}" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.2"/>`;
+const spark=(x,y)=>`<g stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><path d="M${x} ${y}l-10 -6M${x} ${y}l10 -6M${x} ${y}l-12 4M${x} ${y}l12 4"/></g><circle cx="${x}" cy="${y}" r="5" fill="#fff6c8" stroke="var(--accent)" stroke-width="2"/>`;
+const rod=(x1,y1,x2,y2)=>line(`M${x1} ${y1}L${x2} ${y2}`,'var(--fg)',5)+line(`M${x1} ${y1}L${x1+(x2-x1)*0.25} ${y1+(y2-y1)*0.25}`,MET,5);
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:6,
+ warnB:{ru:"Дуга обжигает глаза за секунды.",uz:"Yoy ko'zni bir necha soniyada kuydiradi."},warn:{ru:"Ультрафиолет дуги даёт «зайчиков»: ожог глаз, который болит ночью. Смотреть на дугу без маски нельзя даже мельком, и людям рядом тоже.",uz:"Yoyning ultrabinafsha nuri «quyonchalar» beradi: kechasi og'riydigan ko'z kuyishi. Yoyga niqobsiz bir lahza ham qarab bo'lmaydi, yoningizdagilar ham."},
+ t:{ru:"Техника безопасности",uz:"Xavfsizlik texnikasi"},s:{ru:"Маска, одежда, ток, пожар, дым",uz:"Niqob, kiyim, tok, yong'in, tutun"},
+ table:{head:{ru:["Опасность","Как защититься"],uz:["Xavf","Qanday himoyalanish"]},rows:{
+  ru:[["Свет дуги","Маска-хамелеон (затемнение DIN 9–13), ширма для соседей"],["Искры и брызги","Брезентовая куртка, штаны поверх ботинок, краги, без синтетики"],["Электрический ток","Сухие перчатки и обувь, целые кабели, не стоять в воде"],["Пожар","Убрать горючее на 10 м, рядом огнетушитель и вода, проверить место через 30 мин"],["Сварочный дым","Проветривание или вытяжка, респиратор, не наклоняться над дымом"],["Горячий металл","Брать только клещами, мелом писать «горячо»"]],
+  uz:[["Yoy nuri","Xameleon niqob (qoraytirish DIN 9–13), qo'shnilar uchun to'siq"],["Uchqun va sachrash","Brezent kurtka, shim botinka ustidan, kragi, sintetikasiz"],["Elektr toki","Quruq qo'lqop va poyabzal, butun kabellar, suvda turmang"],["Yong'in","Yonuvchi narsalarni 10 m ga olib keting, yonida o't o'chirgich va suv, 30 daqiqadan keyin joyni tekshiring"],["Payvand tutuni","Shamollatish yoki so'rg'ich, respirator, tutun ustiga engashmang"],["Issiq metall","Faqat qisqich bilan oling, bo'r bilan «issiq» deb yozing"]]}},
+ svg:l=>svg(
+  `<circle cx="70" cy="70" r="34" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+`<rect x="44" y="58" width="52" height="22" rx="4" fill="var(--navy)"/>`+tx(70,124,R(l,"Маска","Niqob"),{w:600})+tx(70,138,"DIN 9–13",{s:10,c:'var(--muted)'})+
+  `<path d="M150 40h60l8 20v60h-76v-60z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(180,138,R(l,"Куртка","Kurtka"),{w:600})+tx(180,152,R(l,"брезент","brezent"),{s:10,c:'var(--muted)'})+
+  `<path d="M270 60h30v40l14 10v16h-44z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(290,140,R(l,"Краги","Kragi"),{w:600})+
+  `<rect x="20" y="170" width="320" height="64" rx="10" fill="color-mix(in srgb,var(--bad) 10%,var(--surface))" stroke="var(--bad)" stroke-width="1.5"/>`+
+  tx(180,196,R(l,"Нельзя: синтетика, открытая шея, мокрые перчатки","Mumkin emas: sintetika, ochiq bo'yin, ho'l qo'lqop"),{s:11,w:600,c:'var(--bad)'})+
+  tx(180,216,R(l,"Огнетушитель — в 3 шагах от вас","O't o'chirgich — 3 qadam narida"),{s:11}),
+  R(l,"Средства защиты сварщика: маска, куртка, краги","Payvandchining himoya vositalari: niqob, kurtka, kragi")),
+ steps:{ru:["Перед работой осмотрите кабели и держак: трещины в изоляции замотайте или замените кабель.","Уберите всё горючее (тряпки, бумагу, бензин, краску) на 10 метров. Щели в полу закройте листом железа.","Наденьте сухую брезентовую одежду без синтетики, застегнитесь до шеи. Штанины — поверх ботинок, чтобы капли не падали внутрь.","Поставьте ширму или предупредите людей рядом: «Глаза!». Чужие глаза тоже обжигаются.","Работайте с проветриванием. В закрытой ёмкости или подвале — только с напарником снаружи.","После работы ещё 30 минут проверяйте место: тлеющая искра может загореться позже."],
+       uz:["Ishdan oldin kabel va derjakni ko'zdan kechiring: izolyatsiyadagi yoriqni o'rang yoki kabelni almashtiring.","Barcha yonuvchi narsalarni (latta, qog'oz, benzin, bo'yoq) 10 metrga olib keting. Poldagi tirqishlarni temir list bilan yoping.","Sintetikasiz quruq brezent kiyim kiying, bo'yningizgacha tugmalang. Shim — botinka ustidan, tomchilar ichiga tushmasin.","To'siq qo'ying yoki yoningizdagilarni ogohlantiring: «Ko'z!». Boshqalarning ko'zi ham kuyadi.","Shamollatib ishlang. Yopiq idish yoki yerto'lada — faqat tashqarida sherik bilan.","Ishdan keyin yana 30 daqiqa joyni tekshiring: chala yonayotgan uchqun keyinroq yonib ketishi mumkin."]},
+ tip:{ru:"Глаза обожгло и ночью «песок»? Холодные компрессы, тёмная комната и к окулисту. Тереть глаза нельзя.",uz:"Ko'z kuyib, kechasi «qum» bormi? Sovuq kompress, qorong'i xona va okulistga boring. Ko'zni ishqalab bo'lmaydi."},
+ quiz:[
+  {a:1,ru:{q:"Можно ли мельком глянуть на дугу без маски?",o:["Можно, если секунду","Нельзя, глаза обжигаются быстро","Можно в солнечных очках"],e:"Ультрафиолет обжигает глаза за секунды, солнечные очки не защищают."},uz:{q:"Yoyga niqobsiz bir lahza qarash mumkinmi?",o:["Bir soniya bo'lsa mumkin","Mumkin emas, ko'z tez kuyadi","Quyosh ko'zoynagida mumkin"],e:"Ultrabinafsha ko'zni soniyalarda kuydiradi, quyosh ko'zoynagi himoya qilmaydi."}},
+  {a:2,ru:{q:"Какая одежда нужна сварщику?",o:["Синтетическая куртка","Футболка, чтобы не жарко","Брезентовая, застёгнутая до шеи"],e:"Синтетика плавится и прилипает к коже."},uz:{q:"Payvandchiga qanday kiyim kerak?",o:["Sintetik kurtka","Issiq bo'lmasligi uchun futbolka","Brezent, bo'yingacha tugmalangan"],e:"Sintetika eriydi va teriga yopishadi."}},
+  {a:0,ru:{q:"На какое расстояние убрать горючее?",o:["На 10 метров","На 1 метр","Не нужно"],e:"Искры летят далеко и могут тлеть долго."},uz:{q:"Yonuvchi narsalarni qancha masofaga olib ketish kerak?",o:["10 metrga","1 metrga","Shart emas"],e:"Uchqunlar uzoqqa uchadi va uzoq chala yonishi mumkin."}},
+  {a:1,ru:{q:"Сколько проверять место после работы?",o:["Не нужно","Около 30 минут","5 секунд"],e:"Тлеющая искра может загореться позже."},uz:{q:"Ishdan keyin joyni qancha tekshirish kerak?",o:["Shart emas","Taxminan 30 daqiqa","5 soniya"],e:"Chala yonayotgan uchqun keyinroq yonishi mumkin."}}]},
+
+{id:'b2',lv:0,min:6,nowarn:true,
+ t:{ru:"Аппарат и инструмент",uz:"Apparat va asboblar"},s:{ru:"Инвертор, держак, масса, кабели",uz:"Invertor, derjak, massa, kabellar"},
+ svg:l=>svg(
+  box(20,60,110,80)+tx(75,92,R(l,"Инвертор","Invertor"),{w:600,s:12})+`<rect x="40" y="104" width="40" height="18" rx="3" fill="var(--navy)"/>`+tx(60,117,"120A",{s:10,c:'var(--navy-fg)',w:700})+circ(105,113,8,'var(--surface)')+
+  circ(45,140,6,'var(--wH)')+circ(105,140,6,'var(--wC)')+
+  line('M45 146C45 200 160 200 200 180',"var(--wH)",4)+line('M105 146C110 220 220 230 250 222',"var(--wC)",4)+
+  `<rect x="196" y="168" width="44" height="18" rx="6" fill="var(--fg)"/>`+rod(240,177,300,150)+tx(220,160,R(l,"держак","derjak"),{s:10,w:600})+
+  plate(240,212,100,14)+`<path d="M246 222l-8 -10h20z" fill="var(--wC)"/>`+tx(290,244,R(l,"масса (−) на деталь","massa (−) detalga"),{s:10,w:600})+
+  tx(180,26,R(l,"Плюс и минус: для электродов чаще «+» на держак","Plyus va minus: elektrodlar uchun ko'pincha «+» derjakka"),{s:11,w:600})+
+  tx(75,48,"220 В",{s:10,c:'var(--muted)'}),
+  R(l,"Инвертор, кабель держака и кабель массы","Invertor, derjak kabeli va massa kabeli")),
+ table:{head:{ru:["Что","Зачем"],uz:["Nima","Nima uchun"]},rows:{
+  ru:[["Инвертор 160–200 А","Хватит для электродов 2–4 мм, работает от 220 В"],["Держак (электрододержатель)","Зажимает электрод, держать за ручку"],["Клемма массы","Крепится на деталь или стол, ближе к шву"],["Кабели 16–25 мм²","Чем длиннее кабель, тем толще он нужен"],["Молоток-шлакоотбойник и щётка","Сбить шлак и очистить шов"],["Болгарка (УШМ)","Зачистка, разделка кромок, резка"]],
+  uz:[["Invertor 160–200 A","2–4 mm elektrodlarga yetadi, 220 V da ishlaydi"],["Derjak (elektrod ushlagich)","Elektrodni qisadi, dastasidan ushlang"],["Massa qisqichi","Detal yoki stolga, chokka yaqinroq ulanadi"],["16–25 mm² kabellar","Kabel qanchalik uzun bo'lsa, shunchalik qalin kerak"],["Shlak bolg'asi va cho'tka","Shlakni urib tushirish va chokni tozalash"],["Bolgarka (BShM)","Tozalash, qirralarni ochish, kesish"]]}},
+ steps:{ru:["Поставьте аппарат на сухое место, вентиляционные решётки ничем не закрывайте: инвертор греется.","Подключите кабели. Для большинства электродов: держак в «+», масса в «−» (обратная полярность). Смотрите надпись на пачке электродов.","Зачистите место под клемму массы до блеска. Ржавчина и краска дают плохой контакт и «прыгающую» дугу.","Крепите массу как можно ближе к месту сварки, не через петли и подшипники.","Удлинитель для инвертора — сечение не меньше 2,5 мм², размотанный полностью. В смотанной катушке он греется.","Выставьте ток по диаметру электрода (смотрите калькулятор) и сделайте пробу на обрезке."],
+       uz:["Apparatni quruq joyga qo'ying, shamollatish panjaralarini yopmang: invertor qiziydi.","Kabellarni ulang. Ko'pchilik elektrodlar uchun: derjak «+», massa «−» ga (teskari qutblilik). Elektrod qutisidagi yozuvga qarang.","Massa qisqichi joyini yaltiraguncha tozalang. Zang va bo'yoq yomon kontakt va «sakrovchi» yoy beradi.","Massani payvand joyiga imkon qadar yaqin ulang, ilmoqlar va podshipniklar orqali emas.","Invertor uchun uzaytirgich — kesimi kamida 2,5 mm², to'liq yoyilgan. O'ralgan g'altakda u qiziydi.","Tokni elektrod diametriga qarab qo'ying (kalkulyatorga qarang) va qoldiq metallda sinab ko'ring."]},
+ tip:{ru:"Кабель массы, брошенный на трубу «где-то там», — частая причина плохой дуги. И ток может пойти через подшипники и чужое оборудование.",uz:"Massa kabelini quvurga «qayergadir» tashlab qo'yish — yomon yoyning tez-tez uchraydigan sababi. Tok podshipniklar va boshqa uskunalar orqali ham o'tishi mumkin."},
+ quiz:[
+  {a:0,ru:{q:"Куда обычно подключают держак для электродов УОНИ, МР-3?",o:["В «+» (обратная полярность)","В «−»","Без разницы всегда"],e:"Полярность указана на пачке. Чаще всего держак в плюс."},uz:{q:"UONI, MR-3 elektrodlari uchun derjak odatda qayerga ulanadi?",o:["«+» ga (teskari qutblilik)","«−» ga","Har doim farqi yo'q"],e:"Qutblilik qutida yozilgan. Ko'pincha derjak plyusga."}},
+  {a:1,ru:{q:"Где крепить клемму массы?",o:["Подальше от шва","На зачищенный металл, ближе к шву","На ржавчину"],e:"Чистый контакт рядом со швом даёт ровную дугу."},uz:{q:"Massa qisqichini qayerga ulash kerak?",o:["Chokdan uzoqroqqa","Tozalangan metallga, chokka yaqin","Zangga"],e:"Chokka yaqin toza kontakt tekis yoy beradi."}},
+  {a:2,ru:{q:"Почему удлинитель надо размотать полностью?",o:["Так красивее","Чтобы не путался","В катушке он сильно греется"],e:"Смотанный кабель под током нагревается и может оплавиться."},uz:{q:"Nima uchun uzaytirgichni to'liq yoyish kerak?",o:["Chiroyliroq","Chalkashmasligi uchun","G'altakda u kuchli qiziydi"],e:"O'ralgan kabel tok ostida qiziydi va erishi mumkin."}},
+  {a:1,ru:{q:"Какой инвертор хватит для электродов 3 мм?",o:["50 А","160–200 А","1000 А"],e:"Для 3 мм нужно примерно 80–120 А, запас по току не помешает."},uz:{q:"3 mm elektrodlar uchun qanday invertor yetadi?",o:["50 A","160–200 A","1000 A"],e:"3 mm uchun taxminan 80–120 A kerak, tok zaxirasi ortiqcha bo'lmaydi."}}]},
+
+{id:'b3',lv:0,min:7,nowarn:true,calc:'tok',
+ t:{ru:"Электроды: какие брать",uz:"Elektrodlar: qaysini olish kerak"},s:{ru:"Марки, диаметр, прокалка",uz:"Markalar, diametr, qizdirish"},
+ svg:l=>svg(
+  line('M30 70H300',MET,8)+line('M30 70H230','#c9a36b',14)+tx(130,74,R(l,"обмазка","qoplama"),{s:10,w:600,c:'#3b2a10'})+tx(268,58,R(l,"под держак","derjak uchun"),{s:10,c:'var(--muted)'})+
+  tx(30,40,R(l,"Длина 350–450 мм","Uzunligi 350–450 mm"),{a:'start',s:10,c:'var(--muted)'})+
+  `<path d="M30 90v14M230 90v14" stroke="var(--muted)" stroke-width="1"/>`+tx(130,108,R(l,"Ø — диаметр стержня: 2 · 2,5 · 3 · 4 · 5 мм","Ø — sterjen diametri: 2 · 2,5 · 3 · 4 · 5 mm"),{s:10})+
+  flow(20,140,100,50,R(l,"Рутиловые","Rutilli"),"АНО-21, МР-3")+flow(130,140,100,50,R(l,"Основные","Asosli"),"УОНИ-13/55")+flow(240,140,100,50,R(l,"Нержавейка","Zanglamas"),"ОЗЛ-8, ЦЛ-11")+
+  tx(70,212,R(l,"легко, для дома","oson, uy uchun"),{s:10,c:'var(--muted)'})+tx(180,212,R(l,"прочно, ответственно","mustahkam, mas'ul"),{s:10,c:'var(--muted)'})+tx(290,212,R(l,"для нерж. стали","zanglamas po'lat"),{s:10,c:'var(--muted)'}),
+  R(l,"Устройство электрода и основные группы марок","Elektrod tuzilishi va asosiy marka guruhlari")),
+ table:{head:{ru:["Толщина металла","Электрод Ø","Ток, А"],uz:["Metall qalinligi","Elektrod Ø","Tok, A"]},rows:{
+  ru:[["1,5–2 мм","2 мм","40–70"],["2–3 мм","2,5 мм","60–90"],["3–5 мм","3 мм (3,2)","80–120"],["5–10 мм","4 мм","120–170"],["больше 10 мм","5 мм","160–220"]],
+  uz:[["1,5–2 mm","2 mm","40–70"],["2–3 mm","2,5 mm","60–90"],["3–5 mm","3 mm (3,2)","80–120"],["5–10 mm","4 mm","120–170"],["10 mm dan ko'p","5 mm","160–220"]]}},
+ steps:{ru:["Для начала берите <b>рутиловые</b> электроды (АНО-21, МР-3, ОК-46): дуга зажигается легко, шлак отходит сам.","Для ответственных конструкций (несущие балки, котлы, трубы под давлением) берут <b>основные</b> УОНИ-13/55: шов прочнее, но зажигать труднее.","Диаметр электрода подбирайте по толщине металла по таблице. Толще электрод — больше ток и больше прогрев.","Электроды боятся сырости. Отсыревшие дают поры и «липнут». Перед работой их прокаливают: рутиловые ~100–150 °C, УОНИ ~250–350 °C, 1 час (смотрите пачку).","Храните пачки в сухом месте, открытую пачку — в пакете или пенале.","Обмазка отваливается, электрод погнут? Такой лучше не использовать для ответственного шва."],
+       uz:["Boshlash uchun <b>rutilli</b> elektrodlarni oling (ANO-21, MR-3, OK-46): yoy oson yonadi, shlak o'zi ko'chadi.","Mas'uliyatli konstruksiyalar uchun (yuk ko'taruvchi balkalar, qozonlar, bosimli quvurlar) <b>asosli</b> UONI-13/55 olinadi: chok mustahkamroq, lekin yoqish qiyinroq.","Elektrod diametrini metall qalinligiga qarab jadvaldan tanlang. Elektrod qalinroq — tok ko'proq va qizish kuchliroq.","Elektrodlar namdan qo'rqadi. Namlanganlari g'ovak beradi va «yopishadi». Ishdan oldin ular qizdiriladi: rutilli ~100–150 °C, UONI ~250–350 °C, 1 soat (qutiga qarang).","Qutilarni quruq joyda saqlang, ochilgan qutini — paket yoki penalda.","Qoplama ko'chgan, elektrod egilganmi? Bunisini mas'ul chok uchun ishlatmagan ma'qul."]},
+ tip:{ru:"Ток в таблице — для нижнего положения. Для вертикали и потолка ставьте на 10–20% меньше.",uz:"Jadvaldagi tok — pastki holat uchun. Vertikal va shift uchun 10–20% kamroq qo'ying."},
+ quiz:[
+  {a:0,ru:{q:"Какие электроды проще всего для новичка?",o:["Рутиловые (АНО-21, МР-3)","Основные УОНИ-13/55","Для нержавейки"],e:"Рутиловые легко зажигаются и дают ровный шов."},uz:{q:"Yangi boshlovchi uchun qaysi elektrodlar eng oson?",o:["Rutilli (ANO-21, MR-3)","Asosli UONI-13/55","Zanglamas po'lat uchun"],e:"Rutillilar oson yonadi va tekis chok beradi."}},
+  {a:2,ru:{q:"Металл 4 мм. Какой электрод?",o:["2 мм","5 мм","3 мм (3,2)"],e:"Для 3–5 мм обычно берут электрод 3 мм."},uz:{q:"Metall 4 mm. Qaysi elektrod?",o:["2 mm","5 mm","3 mm (3,2)"],e:"3–5 mm uchun odatda 3 mm elektrod olinadi."}},
+  {a:1,ru:{q:"Что будет от сырых электродов?",o:["Шов станет прочнее","Поры и залипание","Ничего"],e:"Влага даёт газ в шве — поры. Сырые электроды прокаливают."},uz:{q:"Nam elektrodlardan nima bo'ladi?",o:["Chok mustahkamroq bo'ladi","G'ovaklar va yopishish","Hech narsa"],e:"Namlik chokda gaz beradi — g'ovak. Nam elektrodlar qizdiriladi."}},
+  {a:1,ru:{q:"Вертикальный шов. Ток по сравнению с нижним?",o:["Больше на 50%","Меньше на 10–20%","Такой же"],e:"На вертикали металл стекает, ток уменьшают."},uz:{q:"Vertikal chok. Tok pastki holatga nisbatan qanday?",o:["50% ko'proq","10–20% kamroq","Xuddi shunday"],e:"Vertikalda metall oqib tushadi, tok kamaytiriladi."}}]},
+
+{id:'b4',lv:0,min:7,
+ t:{ru:"Зажигание и длина дуги",uz:"Yoyni yoqish va uzunligi"},s:{ru:"Чиркнуть, угол, короткая дуга",uz:"Chaqish, burchak, qisqa yoy"},
+ svg:l=>svg(
+  plate(20,150,320,22)+
+  rod(70,60,90,140)+spark(92,146)+line('M60 150C80 140 100 140 120 150','var(--muted)',1.5,'4 3')+tx(70,196,R(l,"1. Чиркнуть как спичкой","1. Gugurtdek chaqing"),{s:10,w:600})+
+  rod(180,60,186,138)+spark(187,146)+`<path d="M186 120v20" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>`+tx(185,196,R(l,"2. или постучать","2. yoki tiqillating"),{s:10,w:600})+
+  rod(300,64,280,140)+spark(279,146)+tx(318,100,"60–75°",{s:11,w:700})+`<path d="M300 150A30 30 0 0 0 290 122" fill="none" stroke="var(--accent)" stroke-width="1.5"/>`+tx(295,196,R(l,"3. угол «углом вперёд»","3. «burchak oldinga»"),{s:10,w:600})+
+  tx(180,226,R(l,"Длина дуги ≈ диаметр электрода (2–4 мм)","Yoy uzunligi ≈ elektrod diametri (2–4 mm)"),{s:11,w:700}),
+  R(l,"Два способа зажечь дугу и наклон электрода","Yoyni yoqishning ikki usuli va elektrod qiyaligi")),
+ warnB:{ru:"Маску опускать до касания.",uz:"Niqobni tegishdan oldin tushiring."},warn:{ru:"Сначала маска на лицо, потом касание металла. Хамелеон затемнится сам, но щиток надо опустить заранее.",uz:"Avval niqob yuzga, keyin metallga tegish. Xameleon o'zi qorayadi, lekin shitokni oldindan tushirish kerak."},
+ steps:{ru:["Поставьте электрод над началом шва на 1–2 см, опустите маску.","Чиркните концом электрода по металлу, как спичкой по коробку, и сразу приподнимите на 2–4 мм. Второй способ — коротко постучать концом.","Электрод прилип? Резко качните держак вбок, чтобы оторвать. Не держите долго — электрод раскалится.","Держите <b>короткую дугу</b>: расстояние до металла примерно равно диаметру электрода. Звук ровный, как жарка на сковородке.","Длинная дуга трещит, брызгает и даёт поры. Слишком короткая — электрод липнет.","Наклон электрода 60–75° к металлу, по мере сгорания электрод плавно опускайте, чтобы длина дуги не менялась."],
+       uz:["Elektrodni chok boshidan 1–2 sm tepada tuting, niqobni tushiring.","Elektrod uchini metallga gugurtni qutiga chaqqandek chaqing va darhol 2–4 mm ko'taring. Ikkinchi usul — uchi bilan qisqa tiqillatish.","Elektrod yopishib qoldimi? Uni ajratish uchun derjakni keskin yonga silkiting. Uzoq ushlab turmang — elektrod qizib ketadi.","<b>Qisqa yoy</b> ushlang: metallgacha masofa taxminan elektrod diametriga teng. Ovoz tekis, tovada qovurishdek.","Uzun yoy chirsillaydi, sachraydi va g'ovak beradi. Juda qisqasi — elektrod yopishadi.","Elektrod qiyaligi metallga 60–75°, elektrod yonishi bilan uni silliq pastga tushiring, yoy uzunligi o'zgarmasin."]},
+ tip:{ru:"Учитесь на обрезке: 20–30 зажиганий подряд, пока дуга не будет загораться с первого раза.",uz:"Qoldiq metallda o'rganing: ketma-ket 20–30 marta yoqing, yoy birinchi urinishda yonadigan bo'lguncha."},
+ quiz:[
+  {a:1,ru:{q:"Какой должна быть длина дуги?",o:["1–2 см","Примерно диаметр электрода","Чем длиннее, тем лучше"],e:"Короткая дуга ровная и без брызг."},uz:{q:"Yoy uzunligi qanday bo'lishi kerak?",o:["1–2 sm","Taxminan elektrod diametri","Qanchalik uzun bo'lsa, shuncha yaxshi"],e:"Qisqa yoy tekis va sachramasiz."}},
+  {a:0,ru:{q:"Электрод прилип. Что делать?",o:["Резко качнуть держак вбок","Ждать, пока отпадёт","Увеличить ток до максимума и держать"],e:"Долго прилипший электрод раскаляется и портится."},uz:{q:"Elektrod yopishib qoldi. Nima qilish kerak?",o:["Derjakni keskin yonga silkitish","O'zi tushguncha kutish","Tokni maksimumga ko'tarib ushlab turish"],e:"Uzoq yopishgan elektrod qizib, buziladi."}},
+  {a:2,ru:{q:"Дуга трещит и сильно брызгает. Причина?",o:["Слишком маленький ток","Новая маска","Слишком длинная дуга"],e:"Опустите электрод ближе к металлу."},uz:{q:"Yoy chirsillaydi va kuchli sachraydi. Sababi?",o:["Tok juda kichik","Yangi niqob","Yoy juda uzun"],e:"Elektrodni metallga yaqinroq tushiring."}},
+  {a:1,ru:{q:"Какой наклон электрода обычно?",o:["90°, строго вертикально","60–75°","10°, почти лёжа"],e:"Небольшой наклон помогает гнать шлак и видеть ванну."},uz:{q:"Elektrod qiyaligi odatda qanday?",o:["90°, qat'iy tik","60–75°","10°, deyarli yotiq"],e:"Ozgina qiyalik shlakni haydash va vannani ko'rishga yordam beradi."}}]},
+
+{id:'b5',lv:0,min:8,nowarn:true,
+ t:{ru:"Первый шов",uz:"Birinchi chok"},s:{ru:"Сварочная ванна, движения, шлак",uz:"Payvand vannasi, harakatlar, shlak"},
+ svg:l=>svg(
+  tx(20,30,R(l,"Движения конца электрода","Elektrod uchining harakatlari"),{a:'start',s:11,w:700})+
+  line('M30 60H150','var(--accent)',3)+tx(250,64,R(l,"ниточный — тонкий металл","ipsimon — yupqa metall"),{s:10})+
+  line('M30 100l10 -10 10 20 10 -20 10 20 10 -20 10 20 10 -20 10 20 10 -20 10 20 10 -20 10 10','var(--accent)',3)+tx(250,104,R(l,"зигзаг — шире шов","zigzag — kengroq chok"),{s:10})+
+  line('M30 140c5 -18 15 -18 20 0c5 -18 15 -18 20 0c5 -18 15 -18 20 0c5 -18 15 -18 20 0c5 -18 15 -18 20 0c5 -18 15 -18 20 0','var(--accent)',3)+tx(250,144,R(l,"полумесяц — угловые швы","yarim oy — burchak choklari"),{s:10})+
+  line('M30 180l12 -10 -4 20 12 -20 -4 20 12 -20 -4 20 12 -20 -4 20 12 -20 -4 20 12 -20 -4 20 12 -10','var(--accent)',3)+tx(250,184,R(l,"ёлочка — вертикаль","archa — vertikal"),{s:10})+
+  `<path d="M30 222H150" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>`+tx(250,226,R(l,"направление сварки","payvand yo'nalishi"),{s:10,c:'var(--muted)'}),
+  R(l,"Четыре вида движений электродом","Elektrod bilan to'rt xil harakat")),
+ steps:{ru:["Начните с наплавки валика на ровную пластину 4–5 мм, электрод 3 мм, ток около 100 А.","Смотрите не на дугу, а на <b>сварочную ванну</b> — яркое жидкое пятно. Ширина ванны должна быть ровной.","Ведите электрод с постоянной скоростью. Быстро — валик узкий и высокий, медленно — широкий и прожигает.","Шлак (тёмная корка) должен быть позади ванны. Если он забегает вперёд, увеличьте наклон или ток.","В конце шва не обрывайте дугу резко: задержитесь на секунду и уведите электрод назад на шов, чтобы не было кратера.","Дайте шву остыть 1–2 минуты, отбейте шлак молотком, отворачивая лицо, и почистите щёткой. Оцените шов: ровная «чешуя» без ям."],
+       uz:["4–5 mm tekis plastinaga valik eritib quyishdan boshlang, elektrod 3 mm, tok taxminan 100 A.","Yoyga emas, <b>payvand vannasiga</b> qarang — yorqin suyuq dog'. Vanna kengligi bir xil bo'lishi kerak.","Elektrodni bir xil tezlikda olib boring. Tez — valik ingichka va baland, sekin — keng va kuydiradi.","Shlak (qora qobiq) vannaning orqasida bo'lishi kerak. U oldinga o'tib ketsa, qiyalikni yoki tokni oshiring.","Chok oxirida yoyni keskin uzmang: bir soniya to'xtab, elektrodni chok ustiga orqaga olib boring, krater qolmasin.","Chokni 1–2 daqiqa sovishiga qo'ying, yuzingizni burib bolg'a bilan shlakni urib tushiring va cho'tka bilan tozalang. Chokni baholang: chuqurchasiz tekis «tangacha»."]},
+ tip:{ru:"Сделайте 10 валиков рядом друг с другом, каждый следующий перекрывает предыдущий на треть. Это лучшая тренировка руки.",uz:"Bir-birining yonida 10 ta valik qiling, har keyingisi oldingisini uchdan biriga yopsin. Bu qo'l uchun eng yaxshi mashq."},
+ quiz:[
+  {a:1,ru:{q:"Куда смотреть во время сварки?",o:["На яркую дугу","На сварочную ванну","На держак"],e:"Ванна показывает ширину и провар шва."},uz:{q:"Payvandlash paytida qayerga qarash kerak?",o:["Yorqin yoyga","Payvand vannasiga","Derjakka"],e:"Vanna chok kengligi va erishini ko'rsatadi."}},
+  {a:0,ru:{q:"Валик получился узкий и высокий. Почему?",o:["Электрод вели слишком быстро","Слишком медленно","Маска тёмная"],e:"Быстрое движение не даёт металлу растечься."},uz:{q:"Valik ingichka va baland chiqdi. Nima uchun?",o:["Elektrod juda tez olib borildi","Juda sekin","Niqob qorong'i"],e:"Tez harakat metallning yoyilishiga imkon bermaydi."}},
+  {a:2,ru:{q:"Как правильно закончить шов?",o:["Резко отдёрнуть электрод","Бросить держак","Задержаться и увести электрод назад на шов"],e:"Так заполняется кратер в конце шва."},uz:{q:"Chokni qanday to'g'ri tugatish kerak?",o:["Elektrodni keskin tortib olish","Derjakni tashlash","To'xtab, elektrodni chok ustiga orqaga olib borish"],e:"Shunda chok oxiridagi krater to'ladi."}},
+  {a:1,ru:{q:"Какое движение для тонкого металла?",o:["Широкий зигзаг","Ниточный, без колебаний","Ёлочка"],e:"Узкий шов меньше греет тонкий металл."},uz:{q:"Yupqa metall uchun qanday harakat?",o:["Keng zigzag","Ipsimon, tebranishsiz","Archa"],e:"Ingichka chok yupqa metallni kamroq qizdiradi."}}]},
+
+/* ---------- MIDDLE ---------- */
+{id:'m1',lv:1,min:8,nowarn:true,
+ t:{ru:"Соединения и подготовка",uz:"Birikmalar va tayyorgarlik"},s:{ru:"Стык, угол, тавр, нахлёст, разделка",uz:"Uchma-uch, burchak, tavr, ustma-ust, qirra ochish"},
+ svg:l=>svg(
+  plate(20,50,60,14)+plate(84,50,60,14)+bead('M78 50q4 -7 8 0z')+tx(82,90,R(l,"Стыковое","Uchma-uch"),{w:600})+tx(82,104,R(l,"зазор 1–2 мм","tirqish 1–2 mm"),{s:10,c:'var(--muted)'})+
+  plate(210,50,80,14)+plate(244,0+20,14,30)+bead('M236 50l8 -8v8z')+bead('M258 50v-8l8 8z')+tx(250,90,R(l,"Тавровое","Tavr"),{w:600})+tx(250,104,R(l,"«буква Т»","«T harfi»"),{s:10,c:'var(--muted)'})+
+  plate(30,150,90,14)+plate(30,136,14,14)+`<path d="M30 136h14v-50h-14z" fill="color-mix(in srgb,var(--wS) 45%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`+bead('M44 150l10 0l-10 -10z')+tx(78,196,R(l,"Угловое","Burchakli"),{w:600})+
+  plate(200,150,90,14)+plate(250,136,90,14)+bead('M250 150l-10 0l10 -10z')+tx(270,196,R(l,"Нахлёсточное","Ustma-ust"),{w:600})+tx(270,210,R(l,"перекрытие 3–5 толщин","3–5 qalinlik ustma-ust"),{s:10,c:'var(--muted)'})+
+  tx(180,238,R(l,"Толще 4–5 мм — снимите фаску (V-разделка 60°)","4–5 mm dan qalin — faska oling (V-ochish 60°)"),{s:11,w:700}),
+  R(l,"Четыре вида сварных соединений","Payvand birikmalarining to'rt turi")),
+ steps:{ru:["Зачистите кромки болгаркой на 2 см с каждой стороны до блеска: ржавчина, краска и масло дают поры.","Металл толще 4–5 мм в стык не проварится за один проход. Снимите <b>фаску</b> на кромках: вместе получится V-разделка около 60°.","Оставьте зазор 1–2 мм между деталями и притупление кромки 1–2 мм, чтобы корень проварился, но не прожёгся.","Поставьте <b>прихватки</b> — короткие точки шва по 1–2 см каждые 10–30 см. Начинайте с концов и середины.","Проверьте размеры и угол после прихваток: сейчас ещё можно поправить молотком.","Сварите шов полностью, отбейте шлак после каждого прохода."],
+       uz:["Qirralarni bolgarka bilan har tomondan 2 sm yaltiraguncha tozalang: zang, bo'yoq va moy g'ovak beradi.","4–5 mm dan qalin metall uchma-uch bir o'tishda erimaydi. Qirralardan <b>faska</b> oling: birga taxminan 60° li V-ochish chiqadi.","Detallar orasida 1–2 mm tirqish va 1–2 mm qirra o'tmasligi qoldiring, ildiz erisin, lekin kuymasin.","<b>Prixvatka</b> qo'ying — har 10–30 sm da 1–2 sm li qisqa nuqta choklar. Uchlari va o'rtasidan boshlang.","Prixvatkalardan keyin o'lcham va burchakni tekshiring: hozir hali bolg'a bilan to'g'rilash mumkin.","Chokni to'liq payvandlang, har o'tishdan keyin shlakni urib tushiring."]},
+ tip:{ru:"Шлак между проходами не отбили — внутри шва останутся шлаковые включения. Такой шов ломается.",uz:"O'tishlar orasida shlak urib tushirilmasa — chok ichida shlak qo'shimchalari qoladi. Bunday chok sinadi."},
+ quiz:[
+  {a:1,ru:{q:"Когда нужна V-разделка кромок?",o:["Всегда, даже на 1 мм","На металле толще 4–5 мм","Никогда"],e:"Толстый металл без разделки не проварится насквозь."},uz:{q:"Qachon qirralarni V-ochish kerak?",o:["Har doim, hatto 1 mm da","4–5 mm dan qalin metallda","Hech qachon"],e:"Qalin metall ochilmasa, oxirigacha erimaydi."}},
+  {a:0,ru:{q:"Зачем прихватки?",o:["Зафиксировать детали до сварки","Для красоты","Вместо шва"],e:"Прихватки держат размер и не дают деталям «уйти»."},uz:{q:"Prixvatka nima uchun kerak?",o:["Detallarni payvanddan oldin mahkamlash","Chiroy uchun","Chok o'rniga"],e:"Prixvatka o'lchamni ushlab turadi va detallar «siljib» ketmaydi."}},
+  {a:2,ru:{q:"Какой зазор оставляют в стыке?",o:["10 мм","Без зазора на толстом металле","1–2 мм"],e:"Зазор помогает проварить корень шва."},uz:{q:"Uchma-uch birikmada qanday tirqish qoldiriladi?",o:["10 mm","Qalin metallda tirqishsiz","1–2 mm"],e:"Tirqish chok ildizini eritishga yordam beradi."}},
+  {a:1,ru:{q:"Что будет, если не отбить шлак между проходами?",o:["Шов станет прочнее","Шлаковые включения внутри шва","Ничего"],e:"Шлак внутри ослабляет шов."},uz:{q:"O'tishlar orasida shlak urib tushirilmasa nima bo'ladi?",o:["Chok mustahkamroq bo'ladi","Chok ichida shlak qo'shimchalari","Hech narsa"],e:"Ichkaridagi shlak chokni kuchsizlantiradi."}}]},
+
+{id:'m2',lv:1,min:8,calc:'tok',
+ t:{ru:"Положения шва",uz:"Chok holatlari"},s:{ru:"Нижнее, вертикаль, горизонталь, потолок",uz:"Pastki, vertikal, gorizontal, shift"},
+ svg:l=>svg(
+  plate(20,70,70,10)+bead('M30 70h50v-4h-50z')+tx(55,100,R(l,"Нижнее","Pastki"),{w:600})+tx(55,114,"100%",{s:10,c:'var(--muted)'})+
+  plate(120,20,10,80)+bead('M130 30h4v60h-4z')+`<path d="M145 90V34" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>`+tx(135,124,R(l,"Вертикаль","Vertikal"),{w:600})+tx(135,138,R(l,"снизу вверх, −10–15%","pastdan tepaga, −10–15%"),{s:10,c:'var(--muted)'})+
+  plate(220,20,10,80)+bead('M230 58h60v4h-60z')+tx(260,124,R(l,"Горизонталь","Gorizontal"),{w:600})+tx(260,138,"−10%",{s:10,c:'var(--muted)'})+
+  plate(100,170,160,10)+bead('M120 180h120v4h-120z')+rod(180,236,186,190)+tx(180,160,R(l,"Потолок: −15–20%, короткая дуга","Shift: −15–20%, qisqa yoy"),{w:600}),
+  R(l,"Четыре положения шва и поправка тока","To'rtta chok holati va tok tuzatishi")),
+ warnB:{ru:"Капли летят вниз.",uz:"Tomchilar pastga uchadi."},warn:{ru:"На потолке и вертикали капли металла падают на вас. Застёгнутый ворот, головной убор, краги поверх рукавов.",uz:"Shift va vertikalda metall tomchilari ustingizga tushadi. Tugmalangan yoqa, bosh kiyim, yengdan ustiga kragi."},
+ steps:{ru:["<b>Нижнее</b> положение — самое лёгкое: металл не стекает. Если деталь можно повернуть — поверните и варите снизу.","<b>Вертикаль</b> варят снизу вверх, ток на 10–15% меньше. Движение «ёлочкой» или треугольником, с короткой задержкой по краям.","Если металл стекает каплями, уменьшите ток или делайте короткие отрывы дуги, давая ванне застыть.","<b>Горизонтальный</b> шов на стене: электрод чуть снизу вверх, чтобы ванна не стекала на нижнюю кромку.","<b>Потолок</b> — самое трудное. Ток на 15–20% меньше, дуга очень короткая, электрод 3 мм и тоньше, валики узкие.","Все положения тренируйте на обрезках, прежде чем варить конструкцию."],
+       uz:["<b>Pastki</b> holat — eng osoni: metall oqmaydi. Detalni burish mumkin bo'lsa — buring va pastdan payvandlang.","<b>Vertikal</b> pastdan tepaga payvandlanadi, tok 10–15% kam. «Archa» yoki uchburchak harakati, chetlarda qisqa to'xtash bilan.","Metall tomchilab oqsa, tokni kamaytiring yoki yoyni qisqa uzib turing, vanna qotsin.","Devordagi <b>gorizontal</b> chok: elektrod biroz pastdan tepaga, vanna pastki qirraga oqmasin.","<b>Shift</b> — eng qiyini. Tok 15–20% kam, yoy juda qisqa, elektrod 3 mm va ingichkaroq, valiklar ingichka.","Konstruksiyani payvandlashdan oldin barcha holatlarni qoldiq metallda mashq qiling."]},
+ tip:{ru:"Для вертикали и потолка удобны электроды, на пачке которых есть значок «все положения».",uz:"Vertikal va shift uchun qutisida «barcha holatlar» belgisi bor elektrodlar qulay."},
+ quiz:[
+  {a:0,ru:{q:"Как варят вертикальный шов электродом?",o:["Снизу вверх","Сверху вниз всегда","Как удобно"],e:"Снизу вверх ванна опирается на застывший металл."},uz:{q:"Elektrod bilan vertikal chok qanday payvandlanadi?",o:["Pastdan tepaga","Har doim tepadan pastga","Qanday qulay bo'lsa"],e:"Pastdan tepaga vanna qotgan metallga tayanadi."}},
+  {a:2,ru:{q:"Ток для потолочного шва?",o:["Больше на 30%","Как в нижнем","Меньше на 15–20%"],e:"Меньше ток — меньше ванна, она не капает."},uz:{q:"Shift choki uchun tok?",o:["30% ko'proq","Pastkidagidek","15–20% kamroq"],e:"Tok kam — vanna kichik, u tomizmaydi."}},
+  {a:1,ru:{q:"Металл на вертикали стекает каплями. Что делать?",o:["Увеличить ток","Уменьшить ток или делать короткие отрывы","Удлинить дугу"],e:"Ванне нужно время застыть."},uz:{q:"Vertikalda metall tomchilab oqyapti. Nima qilish kerak?",o:["Tokni oshirish","Tokni kamaytirish yoki qisqa uzib turish","Yoyni uzaytirish"],e:"Vannaga qotish uchun vaqt kerak."}},
+  {a:0,ru:{q:"Какое положение самое лёгкое?",o:["Нижнее","Потолочное","Вертикальное"],e:"Поэтому детали по возможности поворачивают."},uz:{q:"Qaysi holat eng oson?",o:["Pastki","Shift","Vertikal"],e:"Shuning uchun detallar imkon qadar buriladi."}}]},
+
+{id:'m3',lv:1,min:9,nowarn:true,
+ t:{ru:"Дефекты шва",uz:"Chok nuqsonlari"},s:{ru:"Поры, подрез, непровар, прожог",uz:"G'ovak, kesik, erimaslik, kuyish"},
+ svg:l=>svg(
+  plate(20,60,320,24)+bead('M20 60q40 -14 80 0z')+tx(60,104,R(l,"норма","norma"),{s:10,w:600,c:'var(--ok)'})+
+  bead('M110 60q40 -14 80 0z')+circ(130,55,2.5,'var(--surface)')+circ(145,53,2,'var(--surface)')+circ(160,55,3,'var(--surface)')+circ(172,56,2,'var(--surface)')+tx(150,104,R(l,"поры","g'ovaklar"),{s:10,w:600,c:'var(--bad)'})+
+  bead('M200 60q40 -16 80 0z')+`<path d="M196 60q4 6 8 0M276 60q4 6 8 0" fill="var(--bg)" stroke="var(--bad)" stroke-width="1.5"/>`+tx(240,104,R(l,"подрез","kesik"),{s:10,w:600,c:'var(--bad)'})+
+  plate(20,150,150,24)+plate(190,150,150,24)+bead('M80 150q15 -6 30 0z')+`<path d="M95 150v24" stroke="var(--bad)" stroke-width="2" stroke-dasharray="3 2"/>`+tx(95,196,R(l,"непровар корня","ildiz erimagan"),{s:10,w:600,c:'var(--bad)'})+
+  bead('M250 150q15 -6 30 0z')+`<path d="M258 174q7 14 14 0z" fill="var(--accent)" stroke="var(--bad)" stroke-width="1.5"/><rect x="262" y="160" width="6" height="14" fill="var(--bg)"/>`+tx(265,206,R(l,"прожог","kuyish"),{s:10,w:600,c:'var(--bad)'}),
+  R(l,"Нормальный шов и основные дефекты","Normal chok va asosiy nuqsonlar")),
+ table:{head:{ru:["Дефект","Причина","Что делать"],uz:["Nuqson","Sababi","Nima qilish"]},rows:{
+  ru:[["Поры","Сырые электроды, грязь, длинная дуга, ветер","Прокалить, зачистить, короткая дуга"],["Подрез","Большой ток, длинная дуга, неверный угол","Меньше ток, задержка по краям"],["Непровар","Мал ток, быстро, нет зазора/разделки","Больше ток, медленнее, разделка"],["Прожог","Большой ток, медленно, тонкий металл","Меньше ток, прерывистая дуга"],["Шлак в шве","Не отбили шлак, шлак бежит вперёд","Чистить каждый проход, наклон"],["Трещина","Резкое остывание, плохой металл, кратер","Заварить кратер, не охлаждать водой"]],
+  uz:[["G'ovak","Nam elektrod, kir, uzun yoy, shamol","Qizdirish, tozalash, qisqa yoy"],["Kesik","Katta tok, uzun yoy, noto'g'ri burchak","Kamroq tok, chetlarda to'xtash"],["Erimaslik","Tok kam, tez, tirqish/ochish yo'q","Ko'proq tok, sekinroq, ochish"],["Kuyish","Katta tok, sekin, yupqa metall","Kamroq tok, uzlukli yoy"],["Chokda shlak","Shlak urilmagan, shlak oldinga o'tadi","Har o'tishda tozalash, qiyalik"],["Yoriq","Keskin sovish, yomon metall, krater","Kraterni to'ldirish, suv bilan sovitmaslik"]]}},
+ steps:{ru:["Осмотрите шов после того, как отбили шлак: он должен быть ровной ширины, без ям, дыр и трещин.","Края шва должны плавно переходить в металл. Канавка вдоль края — это <b>подрез</b>, он ослабляет деталь.","Посмотрите обратную сторону стыка: должен быть небольшой валик. Нет валика — возможно, <b>непровар</b>.","Дефекты не замазывают сверху. Их вырезают болгаркой до чистого металла и заваривают заново.","Не охлаждайте шов водой: от резкого остывания появляются трещины."],
+       uz:["Shlakni urib tushirgandan keyin chokni ko'zdan kechiring: kengligi bir xil, chuqurcha, teshik va yoriqlarsiz bo'lishi kerak.","Chok chetlari metallga silliq o'tishi kerak. Chet bo'ylab ariqcha — bu <b>kesik</b>, u detalni kuchsizlantiradi.","Birikmaning orqa tomoniga qarang: kichik valik bo'lishi kerak. Valik yo'q — ehtimol <b>erimaslik</b>.","Nuqsonlar ustidan suvalmaydi. Ular bolgarka bilan toza metallgacha kesib olinadi va qayta payvandlanadi.","Chokni suv bilan sovitmang: keskin sovishdan yoriqlar paydo bo'ladi."]},
+ tip:{ru:"Красивый сверху шов ещё не значит прочный. Главное — провар корня и отсутствие пор внутри.",uz:"Ustidan chiroyli chok hali mustahkam degani emas. Asosiysi — ildiz erishi va ichida g'ovak yo'qligi."},
+ quiz:[
+  {a:2,ru:{q:"В шве поры. Самая частая причина?",o:["Слишком тёмная маска","Короткая дуга","Сырые электроды или грязный металл"],e:"Влага и грязь дают газ, он остаётся пузырями."},uz:{q:"Chokda g'ovaklar. Eng ko'p uchraydigan sabab?",o:["Juda qorong'i niqob","Qisqa yoy","Nam elektrod yoki kir metall"],e:"Namlik va kir gaz beradi, u pufakcha bo'lib qoladi."}},
+  {a:0,ru:{q:"Канавка вдоль края шва называется…",o:["Подрез","Прожог","Прихватка"],e:"Подрез бывает от большого тока и длинной дуги."},uz:{q:"Chok cheti bo'ylab ariqcha nima deb ataladi?",o:["Kesik","Kuyish","Prixvatka"],e:"Kesik katta tok va uzun yoydan bo'ladi."}},
+  {a:1,ru:{q:"Как исправить дефект шва?",o:["Замазать шпаклёвкой","Вырезать до чистого металла и переварить","Покрасить"],e:"Дефект внутри никуда не денется."},uz:{q:"Chok nuqsonini qanday tuzatish kerak?",o:["Shpaklyovka bilan suvash","Toza metallgacha kesib, qayta payvandlash","Bo'yash"],e:"Ichkaridagi nuqson hech qayerga ketmaydi."}},
+  {a:1,ru:{q:"Почему нельзя охлаждать шов водой?",o:["Будет ржаветь","Появятся трещины","Шлак не отобьётся"],e:"Резкое остывание делает металл хрупким."},uz:{q:"Nima uchun chokni suv bilan sovitib bo'lmaydi?",o:["Zanglaydi","Yoriqlar paydo bo'ladi","Shlak urilmaydi"],e:"Keskin sovish metallni mo'rt qiladi."}}]},
+
+{id:'m4',lv:1,min:9,nowarn:true,
+ t:{ru:"Полуавтомат (MIG/MAG)",uz:"Yarimavtomat (MIG/MAG)"},s:{ru:"Проволока, газ, вылет, подача",uz:"Sim, gaz, chiqish, uzatish"},
+ svg:l=>svg(
+  box(20,60,90,90)+circ(65,100,26,'var(--surface)')+circ(65,100,8,'var(--muted)')+tx(65,168,R(l,"катушка","g'altak"),{s:10,w:600})+
+  `<rect x="140" y="40" width="36" height="110" rx="14" fill="color-mix(in srgb,var(--wC) 25%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`+tx(158,168,R(l,"баллон","ballon"),{s:10,w:600})+tx(158,182,"CO₂ / Ar+CO₂",{s:10,c:'var(--muted)'})+
+  line('M110 100C180 100 200 70 250 120','var(--fg)',5)+`<path d="M246 116l30 30-8 8-30-30z" fill="var(--fg)"/>`+line('M276 150l10 12','var(--wS)',2)+spark(288,166)+plate(220,172,130,14)+
+  tx(300,120,R(l,"горелка","gorelka"),{s:10,w:600})+tx(318,150,R(l,"вылет 10–15 мм","chiqish 10–15 mm"),{s:10,c:'var(--muted)'})+
+  tx(180,226,R(l,"Без газа — только порошковая проволока","Gazsiz — faqat kukunli sim"),{s:11,w:700}),
+  R(l,"Полуавтомат: катушка проволоки, газ, горелка","Yarimavtomat: sim g'altagi, gaz, gorelka")),
+ steps:{ru:["Полуавтомат сам подаёт проволоку через горелку, а газ защищает ванну. Шлака почти нет, шов чистый — удобно для тонкого металла и кузовов.","Проволока 0,8 мм — для металла 0,8–4 мм, 1,0 мм — для толстого. Ролик подачи должен быть под этот диаметр.","Газ: углекислота (CO₂) дешевле, смесь Ar+CO₂ даёт меньше брызг. Расход 8–12 л/мин.","Вылет проволоки из сопла — 10–15 мм. Больше — дуга нестабильная, плохая защита газом.","Настройка: напряжение задаёт ширину шва, скорость подачи — ток. Правильный звук — ровное шипение, как жарка сала.","На ветру газ сдувает и появляются поры. На улице ставьте экран или используйте порошковую проволоку без газа (тогда полярность обычно меняют: горелка на «−»)."],
+       uz:["Yarimavtomat simni gorelka orqali o'zi uzatadi, gaz esa vannani himoya qiladi. Shlak deyarli yo'q, chok toza — yupqa metall va kuzovlar uchun qulay.","0,8 mm sim — 0,8–4 mm metall uchun, 1,0 mm — qalin metall uchun. Uzatish roligi shu diametrga mos bo'lishi kerak.","Gaz: karbonat angidrid (CO₂) arzonroq, Ar+CO₂ aralashmasi kamroq sachratadi. Sarfi 8–12 l/daq.","Simning sopladan chiqishi — 10–15 mm. Ko'proq bo'lsa — yoy beqaror, gaz himoyasi yomon.","Sozlash: kuchlanish chok kengligini, uzatish tezligi — tokni belgilaydi. To'g'ri ovoz — yog' qovurishdek tekis shivirlash.","Shamolda gazni puflab ketadi va g'ovaklar paydo bo'ladi. Ko'chada to'siq qo'ying yoki gazsiz kukunli simdan foydalaning (unda qutblilik odatda almashtiriladi: gorelka «−» ga)."]},
+ tip:{ru:"Сопло и наконечник забиваются брызгами. Чистите их и брызгайте антипригарным спреем — дуга будет ровнее.",uz:"Soplo va uchlik sachrashlar bilan to'lib qoladi. Ularni tozalang va kuyishga qarshi sprey seping — yoy tekisroq bo'ladi."},
+ quiz:[
+  {a:1,ru:{q:"Чем полуавтомат удобен для тонкого металла?",o:["Им можно резать","Чистый шов без шлака, тонкая проволока","Он не нужен"],e:"Тонкая проволока и малый ток меньше прожигают."},uz:{q:"Yarimavtomat yupqa metall uchun nimasi bilan qulay?",o:["U bilan kesish mumkin","Shlaksiz toza chok, ingichka sim","U kerak emas"],e:"Ingichka sim va kichik tok kamroq kuydiradi."}},
+  {a:0,ru:{q:"Какой вылет проволоки правильный?",o:["10–15 мм","50 мм","Проволока не должна торчать"],e:"Длинный вылет даёт нестабильную дугу."},uz:{q:"Simning qanday chiqishi to'g'ri?",o:["10–15 mm","50 mm","Sim chiqib turmasligi kerak"],e:"Uzun chiqish beqaror yoy beradi."}},
+  {a:2,ru:{q:"На улице в ветер появились поры. Почему?",o:["Проволока толстая","Слишком тихий звук","Ветер сдувает защитный газ"],e:"Нужен экран или порошковая проволока."},uz:{q:"Ko'chada shamolda g'ovaklar paydo bo'ldi. Nima uchun?",o:["Sim qalin","Ovoz juda past","Shamol himoya gazini puflab ketadi"],e:"To'siq yoki kukunli sim kerak."}},
+  {a:1,ru:{q:"Что регулирует скорость подачи проволоки?",o:["Цвет шва","Сварочный ток","Расход газа"],e:"Чем быстрее подача, тем больше ток."},uz:{q:"Sim uzatish tezligi nimani boshqaradi?",o:["Chok rangini","Payvand tokini","Gaz sarfini"],e:"Uzatish qanchalik tez bo'lsa, tok shunchalik katta."}}]},
+
+/* ---------- ADVANCED ---------- */
+{id:'a1',lv:2,min:10,nowarn:true,
+ t:{ru:"Сварка труб",uz:"Quvurlarni payvandlash"},s:{ru:"Корень, заполнение, облицовка",uz:"Ildiz, to'ldirish, qoplama"},
+ svg:l=>svg(
+  `<path d="M40 150L180 60l140 90" fill="none" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<path d="M60 150L180 74l120 76z" fill="color-mix(in srgb,var(--wS) 30%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<path d="M168 150l12 -30 12 30z" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.2"/>`+tx(180,170,R(l,"1. корень","1. ildiz"),{s:10,w:600})+
+  `<path d="M150 112h60l8 -14h-76z" fill="color-mix(in srgb,var(--accent) 60%,var(--surface))" stroke="var(--fg)" stroke-width="1.2"/>`+tx(268,118,R(l,"2. заполнение","2. to'ldirish"),{s:10,w:600,a:'start'})+
+  `<path d="M140 92q40 -24 80 0z" fill="color-mix(in srgb,var(--accent) 35%,var(--surface))" stroke="var(--fg)" stroke-width="1.2"/>`+tx(230,80,R(l,"3. облицовка","3. qoplama"),{s:10,w:600,a:'start'})+
+  circ(60,214,20,'none')+circ(60,214,14,'none')+tx(60,248,R(l,"поворотный","buriladigan"),{s:10})+
+  circ(180,214,20,'none')+`<path d="M180 194a20 20 0 0 1 0 40" stroke="var(--accent)" stroke-width="3" fill="none"/>`+tx(180,248,R(l,"снизу вверх","pastdan tepaga"),{s:10})+
+  circ(300,214,20,'none')+`<path d="M300 234a20 20 0 0 1 0 -40" stroke="var(--accent)" stroke-width="3" fill="none"/>`+tx(300,248,R(l,"вторая половина","ikkinchi yarmi"),{s:10}),
+  R(l,"Многопроходный шов трубы: корень, заполнение, облицовка","Quvurning ko'p o'tishli choki: ildiz, to'ldirish, qoplama"),260),
+ steps:{ru:["Снимите фаску на обеих трубах (около 30° на каждой), притупление 1–1,5 мм. Зачистите внутри и снаружи на 2 см.","Выставьте трубы соосно с зазором 2–3 мм, поставьте 3–4 прихватки по кругу. Прихватки зачистите на конус.","<b>Корневой</b> проход — электрод 2,5–3 мм, малый ток. Цель — провар насквозь с маленьким валиком внутри трубы.","Неповоротный стык варят двумя половинами: каждую <b>снизу вверх</b>, от нижней точки («6 часов») к верхней («12 часов»). Замки половин сдвигайте на 1–2 см.","После корня отбейте шлак, зачистите. Затем <b>заполняющий</b> проход электродом 3 мм и <b>облицовочный</b> — чуть шире разделки, на 1–2 мм выше трубы.","Для газа и отопления после сварки проверьте давлением или мыльным раствором. Утечки не допускаются."],
+       uz:["Ikkala quvurdan faska oling (har birida taxminan 30°), o'tmaslik 1–1,5 mm. Ichi va tashqarisini 2 sm tozalang.","Quvurlarni 2–3 mm tirqish bilan bir o'qda o'rnating, aylana bo'ylab 3–4 ta prixvatka qo'ying. Prixvatkalarni konus shaklida tozalang.","<b>Ildiz</b> o'tishi — elektrod 2,5–3 mm, kichik tok. Maqsad — quvur ichida kichik valik bilan oxirigacha erish.","Buriladigan bo'lmagan birikma ikki yarim bo'lib payvandlanadi: har biri <b>pastdan tepaga</b>, pastki nuqtadan («soat 6») tepaga («soat 12»). Yarimlarning qulflarini 1–2 sm suring.","Ildizdan keyin shlakni urib, tozalang. So'ng 3 mm elektrod bilan <b>to'ldiruvchi</b> o'tish va <b>qoplama</b> — ochishdan biroz kengroq, quvurdan 1–2 mm balandroq.","Gaz va isitish uchun payvanddan keyin bosim yoki sovunli suv bilan tekshiring. Oqish bo'lmasligi kerak."]},
+ tip:{ru:"Газопроводы под давлением варят только аттестованные сварщики с допуском. Без допуска такую работу не берите.",uz:"Bosim ostidagi gaz quvurlarini faqat ruxsatnomasi bor attestatsiyadan o'tgan payvandchilar payvandlaydi. Ruxsatnomasiz bunday ishni olmang."},
+ quiz:[
+  {a:1,ru:{q:"Как варят неповоротный стык трубы?",o:["Сверху вниз одним проходом","Двумя половинами снизу вверх","Только с одной стороны"],e:"От «6 часов» к «12 часам» с каждой стороны."},uz:{q:"Buriladigan bo'lmagan quvur birikmasi qanday payvandlanadi?",o:["Bir o'tishda tepadan pastga","Ikki yarim bo'lib pastdan tepaga","Faqat bir tomondan"],e:"Har tomondan «soat 6» dan «soat 12» ga."}},
+  {a:0,ru:{q:"Зачем корневой проход?",o:["Проварить стык насквозь","Для красоты","Чтобы закрыть ржавчину"],e:"Корень — основа прочности стыка."},uz:{q:"Ildiz o'tishi nima uchun?",o:["Birikmani oxirigacha eritish","Chiroy uchun","Zangni yopish uchun"],e:"Ildiz — birikma mustahkamligining asosi."}},
+  {a:2,ru:{q:"Какой зазор между трубами перед сваркой?",o:["0 мм","10 мм","2–3 мм"],e:"Зазор нужен для провара корня."},uz:{q:"Payvanddan oldin quvurlar orasida qanday tirqish?",o:["0 mm","10 mm","2–3 mm"],e:"Tirqish ildizni eritish uchun kerak."}},
+  {a:1,ru:{q:"Кто может варить газопровод под давлением?",o:["Любой","Только аттестованный сварщик с допуском","Ученик"],e:"Это требование безопасности."},uz:{q:"Bosim ostidagi gaz quvurini kim payvandlay oladi?",o:["Har kim","Faqat ruxsatnomali attestatsiyalangan payvandchi","Shogird"],e:"Bu xavfsizlik talabi."}}]},
+
+{id:'a2',lv:2,min:8,nowarn:true,calc:'tok',
+ t:{ru:"Тонкий металл без прожогов",uz:"Yupqa metallni kuydirmasdan"},s:{ru:"Профтруба, жесть, прерывистая дуга",uz:"Profil quvur, tunuka, uzlukli yoy"},
+ svg:l=>svg(
+  plate(20,90,320,8)+
+  [40,90,140,190,240,290].map((x,i)=>bead(`M${x} 90q12 -9 24 0z`)+tx(x+12,76,String([1,4,2,5,3,6][i]),{s:11,w:700})).join('')+
+  tx(180,40,R(l,"Шахматный порядок: короткие швы вразброс","Shaxmat tartibi: qisqa choklar sochma"),{s:11,w:700})+
+  `<rect x="40" y="150" width="280" height="20" fill="#c97b3d" stroke="var(--fg)" stroke-width="1.5"/>`+plate(40,142,280,8)+
+  tx(180,164,R(l,"медная подкладка снизу","pastdan mis taglik"),{s:10,w:600,c:'#fff'})+
+  tx(180,206,R(l,"Электрод 2 мм, ток 40–60 А, «точка — пауза»","Elektrod 2 mm, tok 40–60 A, «nuqta — pauza»"),{s:11,w:600}),
+  R(l,"Сварка тонкого металла короткими участками вразброс","Yupqa metallni qisqa qismlar bilan sochma payvandlash")),
+ steps:{ru:["Металл 1–2 мм (профтруба 20×20, 40×20, жесть) легко прожечь. Берите электрод 2 мм, ток 40–60 А, или полуавтомат с проволокой 0,8.","Плотно подгоните детали: без зазора или с минимальным. Зазор на тонком металле — сразу дыра.","Варите <b>прерывистой дугой</b>: точка — пауза — точка, каждая следующая заходит на край предыдущей.","Длинный шов делите на короткие участки по 2–3 см и варите <b>вразброс</b>, давая металлу остыть.","Под шов можно подложить медную пластину: она отводит тепло и не приваривается.","На профтрубе начинайте с углов: угол толще и меньше прожигается. Стенку ведите быстрее."],
+       uz:["1–2 mm metallni (20×20, 40×20 profil quvur, tunuka) oson kuydirib qo'yish mumkin. 2 mm elektrod, 40–60 A tok yoki 0,8 simli yarimavtomat oling.","Detallarni zich moslang: tirqishsiz yoki minimal. Yupqa metallda tirqish — darhol teshik.","<b>Uzlukli yoy</b> bilan payvandlang: nuqta — pauza — nuqta, har keyingisi oldingisining chetiga kirsin.","Uzun chokni 2–3 sm lik qisqa qismlarga bo'ling va <b>sochma</b> payvandlang, metall sovisin.","Chok ostiga mis plastina qo'yish mumkin: u issiqlikni oladi va payvandlanib qolmaydi.","Profil quvurda burchaklardan boshlang: burchak qalinroq va kamroq kuyadi. Devorni tezroq olib boring."]},
+ tip:{ru:"Прожгли дыру? Не пытайтесь заварить её сразу. Дайте остыть и закрывайте дыру точками от краёв к центру.",uz:"Teshik kuydirdingizmi? Uni darhol to'ldirishga urinmang. Sovishini kuting va teshikni chetlaridan markazga qarab nuqtalar bilan yoping."},
+ quiz:[
+  {a:2,ru:{q:"Металл 1,5 мм. Какой электрод и ток?",o:["4 мм, 150 А","3 мм, 120 А","2 мм, 40–60 А"],e:"Тонкий электрод и малый ток не прожигают."},uz:{q:"Metall 1,5 mm. Qaysi elektrod va tok?",o:["4 mm, 150 A","3 mm, 120 A","2 mm, 40–60 A"],e:"Ingichka elektrod va kichik tok kuydirmaydi."}},
+  {a:0,ru:{q:"Как варить длинный шов на тонком металле?",o:["Короткими участками вразброс","Одним проходом без остановок","Сверху вниз"],e:"Так металл меньше перегревается и не ведёт."},uz:{q:"Yupqa metallda uzun chokni qanday payvandlash kerak?",o:["Qisqa qismlar bilan sochma","To'xtamasdan bir o'tishda","Tepadan pastga"],e:"Shunda metall kamroq qiziydi va qiyshaymaydi."}},
+  {a:1,ru:{q:"Зачем медная подкладка?",o:["Для красоты","Отводит тепло, не даёт прожечь","Чтобы приварить медь"],e:"Медь хорошо проводит тепло и не приваривается электродом."},uz:{q:"Mis taglik nima uchun?",o:["Chiroy uchun","Issiqlikni oladi, kuydirishga yo'l qo'ymaydi","Misni payvandlash uchun"],e:"Mis issiqlikni yaxshi o'tkazadi va elektrod bilan payvandlanmaydi."}},
+  {a:1,ru:{q:"Прожгли дыру. Что дальше?",o:["Сразу заваривать на большом токе","Остудить и закрыть точками от краёв","Выбросить деталь"],e:"Горячий край снова прогорит."},uz:{q:"Teshik kuydirildi. Keyin nima?",o:["Darhol katta tokda to'ldirish","Sovitib, chetlaridan nuqtalar bilan yopish","Detalni tashlab yuborish"],e:"Issiq chet yana kuyib ketadi."}}]},
+
+{id:'a3',lv:2,min:8,nowarn:true,
+ t:{ru:"Деформации и коробление",uz:"Deformatsiya va qiyshayish"},s:{ru:"Почему ведёт металл и как этого избежать",uz:"Metall nega qiyshayadi va buni qanday oldini olish"},
+ svg:l=>svg(
+  `<path d="M30 80l70 -10 70 10" fill="none" stroke="var(--fg)" stroke-width="10" stroke-linejoin="round"/>`+bead('M92 64q8 -8 16 0z')+tx(100,110,R(l,"после сварки края поднялись","payvanddan keyin chetlar ko'tarildi"),{s:10,c:'var(--bad)',w:600})+
+  `<path d="M200 70l70 10 70 -10" fill="none" stroke="var(--fg)" stroke-width="10" stroke-linejoin="round"/>`+tx(270,110,R(l,"обратный выгиб заранее","oldindan teskari egish"),{s:10,c:'var(--ok)',w:600})+
+  plate(30,160,300,12)+
+  [[300,240],[240,180],[180,120],[120,60]].map(([a,b],i)=>`<path d="M${a} 152H${b+4}" stroke="var(--accent)" stroke-width="2" marker-end="url(#ar)"/>`+tx((a+b)/2,146,String(i+1),{s:11,w:700})).join('')+
+  `<path d="M40 200H320" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>`+tx(180,222,R(l,"Обратноступенчатый шов: участки идут назад, общий ход — вперёд","Teskari pog'onali chok: qismlar orqaga, umumiy yo'nalish — oldinga"),{s:10,w:600}),
+  R(l,"Коробление и способы его уменьшить","Qiyshayish va uni kamaytirish usullari")),
+ steps:{ru:["Шов при остывании <b>сжимается</b> и тянет металл за собой. Поэтому детали «ведёт»: изгибаются, сходятся углы.","Закрепите детали струбцинами или прихватите к столу. Снимайте зажимы только после остывания.","Ставьте больше прихваток и равномерно: сначала по концам, потом посередине.","Длинные швы варите <b>обратноступенчатым</b> способом: участки по 15–20 см, каждый варится в сторону уже сваренного.","Двусторонние швы (тавр, двутавр) варите поочерёдно с обеих сторон, чтобы напряжения уравновешивались.","Если известно, куда поведёт, — заранее отогните деталь в обратную сторону на небольшой угол."],
+       uz:["Chok sovishida <b>qisqaradi</b> va metallni o'zi bilan tortadi. Shuning uchun detallar «qiyshayadi»: egiladi, burchaklar yaqinlashadi.","Detallarni strubsina bilan mahkamlang yoki stolga prixvatka qiling. Qisqichlarni faqat sovigandan keyin oling.","Ko'proq va bir tekis prixvatka qo'ying: avval uchlariga, keyin o'rtasiga.","Uzun choklarni <b>teskari pog'onali</b> usulda payvandlang: 15–20 sm lik qismlar, har biri payvandlangan tomonga qarab.","Ikki tomonlama choklarni (tavr, qo'shtavr) ikkala tomondan navbatma-navbat payvandlang, kuchlanishlar muvozanatlashsin.","Qayerga qiyshayishi ma'lum bo'lsa — detalni oldindan teskari tomonga ozgina burchakka eging."]},
+ tip:{ru:"Ворота и рамы собирайте на ровном столе или на ровном полу по диагоналям: диагонали должны быть равны до и после сварки.",uz:"Darvoza va ramalarni tekis stol yoki tekis polda diagonallar bo'yicha yig'ing: diagonallar payvanddan oldin ham, keyin ham teng bo'lishi kerak."},
+ quiz:[
+  {a:0,ru:{q:"Почему металл «ведёт» после сварки?",o:["Шов сжимается при остывании","Плохая маска","Металл слишком холодный"],e:"Усадка шва тянет детали."},uz:{q:"Nima uchun metall payvanddan keyin «qiyshayadi»?",o:["Chok sovishda qisqaradi","Yomon niqob","Metall juda sovuq"],e:"Chokning qisqarishi detallarni tortadi."}},
+  {a:2,ru:{q:"Что такое обратноступенчатый шов?",o:["Шов сверху вниз","Шов в один проход","Короткие участки, каждый в сторону сваренного"],e:"Так тепло распределяется равномернее."},uz:{q:"Teskari pog'onali chok nima?",o:["Tepadan pastga chok","Bir o'tishli chok","Qisqa qismlar, har biri payvandlangan tomonga"],e:"Shunda issiqlik bir tekisroq taqsimlanadi."}},
+  {a:1,ru:{q:"Когда снимать струбцины?",o:["Сразу после шва","После остывания","Не ставить вовсе"],e:"Горячий металл ещё продолжает тянуть."},uz:{q:"Strubsinalarni qachon olish kerak?",o:["Chokdan darhol keyin","Sovigandan keyin","Umuman qo'ymaslik"],e:"Issiq metall hali tortishda davom etadi."}},
+  {a:1,ru:{q:"Как проверить, что рама не перекосилась?",o:["На глаз","Измерить диагонали — они равны","Постучать молотком"],e:"Равные диагонали — прямые углы."},uz:{q:"Rama qiyshaymaganini qanday tekshirish mumkin?",o:["Ko'z bilan","Diagonallarni o'lchash — ular teng","Bolg'a bilan urish"],e:"Teng diagonallar — to'g'ri burchaklar."}}]},
+
+{id:'a4',lv:2,min:9,
+ t:{ru:"Аргон (TIG): нержавейка и алюминий",uz:"Argon (TIG): zanglamas po'lat va alyuminiy"},s:{ru:"Вольфрам, присадка, переменный ток",uz:"Volfram, prisadka, o'zgaruvchan tok"},
+ svg:l=>svg(
+  `<path d="M120 40l40 0 10 70h-60z" fill="var(--fg)"/>`+line('M140 110l0 22','var(--wS)',4)+spark(140,140)+plate(40,146,200,12)+
+  tx(140,30,R(l,"горелка TIG","TIG gorelkasi"),{s:10,w:600})+tx(190,126,R(l,"вольфрам","volfram"),{s:10,a:'start'})+
+  line('M240 70l-80 66','#c9a36b',3)+tx(250,70,R(l,"присадочный","prisadka"),{s:10,a:'start'})+tx(250,84,R(l,"пруток","chiviq"),{s:10,a:'start'})+
+  `<path d="M120 110q20 30 40 0" fill="color-mix(in srgb,var(--wC) 25%,transparent)" stroke="var(--wC)" stroke-dasharray="3 2"/>`+tx(60,100,R(l,"аргон","argon"),{s:10,w:600,c:'var(--wC)'})+
+  flow(20,190,150,44,R(l,"Нержавейка, сталь","Zanglamas, po'lat"),R(l,"постоянный ток DC","o'zgarmas tok DC"))+flow(190,190,150,44,R(l,"Алюминий","Alyuminiy"),R(l,"переменный ток AC","o'zgaruvchan tok AC")),
+  R(l,"Аргонодуговая сварка: горелка, вольфрам, присадка","Argon-yoy payvandi: gorelka, volfram, prisadka")),
+ warnB:{ru:"Сильный ультрафиолет.",uz:"Kuchli ultrabinafsha."},warn:{ru:"У аргона дуга почти без дыма, но ультрафиолета больше, чем у электрода. Закрывайте всю кожу, иначе будет «загар» как ожог.",uz:"Argonda yoy deyarli tutunsiz, lekin ultrabinafsha elektroddagidan ko'proq. Butun terini yoping, aks holda kuyishdek «qorayish» bo'ladi."},
+ steps:{ru:["TIG — это дуга от <b>вольфрамового</b> электрода (он не плавится) в аргоне. Присадочный пруток подаёте второй рукой. Шов самый аккуратный.","Нержавейку и сталь варят на постоянном токе (DC), горелка на «−». Алюминий — только на <b>переменном</b> токе (AC), нужен аппарат с режимом AC/DC.","Заточите вольфрам на конус вдоль, длина заточки 2–3 диаметра. Касание вольфрама к ванне — остановитесь и переточите.","Аргон 6–10 л/мин. После окончания шва держите горелку над ним 5–10 секунд — газ защищает остывающий металл.","Металл и пруток должны быть идеально чистыми: нержавейку протрите растворителем, алюминий зачистите нержавеющей щёткой прямо перед сваркой (оксидная плёнка).","Нержавейку не перегревайте: шов с синевой и чернотой теряет стойкость к ржавчине."],
+       uz:["TIG — argonda <b>volfram</b> elektroddan (u erimaydi) yoy. Prisadka chiviqni ikkinchi qo'l bilan uzatasiz. Chok eng tartibli.","Zanglamas po'lat va po'lat o'zgarmas tokda (DC) payvandlanadi, gorelka «−» ga. Alyuminiy — faqat <b>o'zgaruvchan</b> tokda (AC), AC/DC rejimli apparat kerak.","Volframni uzunasiga konus qilib charxlang, charx uzunligi 2–3 diametr. Volfram vannaga tegsa — to'xtang va qayta charxlang.","Argon 6–10 l/daq. Chok tugagach, gorelkani uning ustida 5–10 soniya ushlang — gaz soviyotgan metallni himoya qiladi.","Metall va chiviq mutlaqo toza bo'lishi kerak: zanglamasni erituvchi bilan arting, alyuminiyni payvand oldidan zanglamas cho'tka bilan tozalang (oksid plyonka).","Zanglamas po'latni qizdirib yubormang: ko'kimtir va qora chok zangga chidamliligini yo'qotadi."]},
+ tip:{ru:"Аргонщик зарабатывает больше обычного сварщика: нержавейка нужна в пищевых цехах, молочке, ресторанах. Хороший навык для роста.",uz:"Argonchi oddiy payvandchidan ko'proq ishlaydi: zanglamas po'lat oziq-ovqat sexlari, sut zavodlari, restoranlarda kerak. O'sish uchun yaxshi ko'nikma."},
+ quiz:[
+  {a:1,ru:{q:"Каким током варят алюминий аргоном?",o:["Постоянным DC","Переменным AC","Любым"],e:"Переменный ток разрушает оксидную плёнку алюминия."},uz:{q:"Alyuminiy argon bilan qanday tokda payvandlanadi?",o:["O'zgarmas DC","O'zgaruvchan AC","Har qanday"],e:"O'zgaruvchan tok alyuminiyning oksid plyonkasini buzadi."}},
+  {a:0,ru:{q:"Вольфрамовый электрод в TIG…",o:["Не плавится, металл добавляют прутком","Плавится как обычный","Не нужен"],e:"Присадка подаётся отдельно второй рукой."},uz:{q:"TIG dagi volfram elektrod…",o:["Erimaydi, metall chiviq bilan qo'shiladi","Oddiy kabi eriydi","Kerak emas"],e:"Prisadka alohida ikkinchi qo'l bilan uzatiladi."}},
+  {a:2,ru:{q:"Зачем держать горелку над швом после окончания?",o:["Чтобы погреть руки","Чтобы шов был шире","Газ защищает остывающий металл"],e:"Без газа горячий шов окисляется."},uz:{q:"Chok tugagach gorelkani uning ustida nima uchun ushlash kerak?",o:["Qo'lni isitish uchun","Chok kengroq bo'lishi uchun","Gaz soviyotgan metallni himoya qiladi"],e:"Gazsiz issiq chok oksidlanadi."}},
+  {a:1,ru:{q:"Шов на нержавейке почернел. Что это значит?",o:["Так и надо","Перегрев, стойкость к ржавчине хуже","Мало тока"],e:"Варите быстрее, меньше током, с хорошей защитой газом."},uz:{q:"Zanglamas po'latdagi chok qorayib ketdi. Bu nimani anglatadi?",o:["Shunday bo'lishi kerak","Qizib ketgan, zangga chidamliligi yomonroq","Tok kam"],e:"Tezroq, kamroq tok bilan, yaxshi gaz himoyasi bilan payvandlang."}}]}
+];
+
+// UI for Сварщик Pro. Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Сварщик Pro',tag:'Сварка с нуля · 13 уроков со схемами',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Начальный','Средний','Продвинутый'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} уровень · урок ${n} · ~${m} мин`,
+ leg:{},
+ warnB:'Без маски на дугу не смотреть.',warn:'Ультрафиолет дуги обжигает глаза за секунды. Сухая брезентовая одежда, краги, огнетушитель рядом.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ tkT:'Электрод и ток',tkSub:'По толщине металла и положению шва',th:'Толщина металла, мм',pos:'Положение шва',posL:['Нижнее','Вертикаль','Потолок'],
+ el:'Электрод',cur:'Ток',mm:'мм',a:'А',tkNote:'Для электродов с рутиловой и основной обмазкой. Точный ток смотрите на пачке и подбирайте пробой на обрезке.',
+ thin:'Тоньше 1,5 мм электродом варить трудно: лучше полуавтомат с проволокой 0,8 мм или аргон.',thick:'Толще 5 мм: снимите фаску и варите в несколько проходов.',
+ rsT:'Расход электродов',rsSub:'Сколько брать на угловой или тавровый шов',len:'Длина шва, м',kat:'Катет шва, мм',dia:'Электрод',
+ kg:'Электродов',pcs:'Примерно',kgU:'кг',pcsU:'шт',rsNote:'Расчёт: наплавленный металл × 1,7 (огарки, брызги, шлак). Берите с запасом 10–15%.',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Payvandchi Pro',tag:'Payvandlash noldan · sxemali 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Boshlang\'ich','O\'rta','Yuqori'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} daraja · ${n}-dars · ~${m} daq`,
+ leg:{},
+ warnB:'Niqobsiz yoyga qaramang.',warn:'Yoyning ultrabinafsha nuri ko\'zni soniyalarda kuydiradi. Quruq brezent kiyim, kragi, yonida o\'t o\'chirgich.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ tkT:'Elektrod va tok',tkSub:'Metall qalinligi va chok holatiga qarab',th:'Metall qalinligi, mm',pos:'Chok holati',posL:['Pastki','Vertikal','Shift'],
+ el:'Elektrod',cur:'Tok',mm:'mm',a:'A',tkNote:'Rutilli va asosli qoplamali elektrodlar uchun. Aniq tokni qutidan qarang va qoldiq metallda sinab tanlang.',
+ thin:'1,5 mm dan yupqani elektrod bilan payvandlash qiyin: 0,8 mm simli yarimavtomat yoki argon yaxshiroq.',thick:'5 mm dan qalin: faska oling va bir necha o\'tishda payvandlang.',
+ rsT:'Elektrod sarfi',rsSub:'Burchak yoki tavr chokiga qancha olish kerak',len:'Chok uzunligi, m',kat:'Chok kateti, mm',dia:'Elektrod',
+ kg:'Elektrodlar',pcs:'Taxminan',kgU:'kg',pcsU:'dona',rsNote:'Hisob: eritilgan metall × 1,7 (qoldiqlar, sachrash, shlak). 10–15% zaxira bilan oling.',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (sv_)
+const pk=k=>(k==='lang'?'ep_':'sv_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{th:4,pos:0,len:5,kat:4,dia:3}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l10 10" stroke="var(--accent-ink)" stroke-width="2.6" stroke-linecap="round"/><path d="M16.5 16.5l3.5 1M16.5 16.5l1 3.5M16.5 16.5l3 -1.5M16.5 16.5l-1.5 3" stroke="var(--accent-ink)" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="var(--accent-ink)"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+const swatch={};
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    if(x.legend)h+=`<div class="legend">${x.legend.map(k=>`<span><i class="sw" style="background:${swatch[k]}"></i>${L.leg[k]}</span>`).join('')}</div>`;h+='</div>'}
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warnB?tr(x.warnB):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* calculators: electrode and current by thickness; electrode consumption by seam length */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',').replace('-','−');
+const numv=v=>+String(v).replace(',','.').replace('−','-')||0;
+// [max thickness mm, electrode mm, current min, current max] for flat position
+const TK=[[2,'2',40,70],[3,'2,5',60,90],[5,'3',80,120],[10,'4',120,170],[999,'5',160,220]];
+const POSK=[1,0.87,0.82];
+// electrode weight per piece, kg (typical 350–450 mm lengths)
+const EW={'2,5':0.018,'3':0.027,'4':0.05,'5':0.075};
+function calcBlock(){const L=U();const c=S.calc;
+  return `<div class="card stack"><div><h3>${L.tkT}</h3><p class="expl">${L.tkSub}</p></div>
+  <label class="fld" for="ct">${L.th}<input id="ct" type="number" inputmode="decimal" min="0.5" step="0.5" value="${c.th}"></label>
+  <div class="fld">${L.pos}<div class="seg" role="group">${L.posL.map((p,i)=>`<button type="button" data-pos="${i}" aria-pressed="${c.pos===i}">${p}</button>`).join('')}</div></div>
+  <div class="out two" id="out1"></div><p class="expl" id="verd"></p><p class="expl">${L.tkNote}</p></div>
+  <div class="card stack"><div><h3>${L.rsT}</h3><p class="expl">${L.rsSub}</p></div>
+  <div class="pair"><label class="fld" for="cl">${L.len}<input id="cl" type="number" inputmode="decimal" min="0" step="0.5" value="${c.len}"></label>
+  <label class="fld" for="ck">${L.kat}<input id="ck" type="number" inputmode="decimal" min="2" step="1" value="${c.kat}"></label></div>
+  <label class="fld" for="cdia">${L.dia}<select id="cdia">${Object.keys(EW).map(k=>`<option value="${k}" ${k===String(c.dia).replace('.',',')?'selected':''}>Ø ${k} ${L.mm}</option>`).join('')}</select></label>
+  <div class="out two" id="out2"></div><p class="expl">${L.rsNote}</p></div>`}
+function paintCalc(){const L=U();const c=S.calc;
+  const th=Math.max(0,numv(c.th));const r=TK.find(x=>th<=x[0]);const k=POSK[c.pos];
+  const lo=Math.round(r[2]*k/5)*5,hi=Math.round(r[3]*k/5)*5;
+  $('#out1').innerHTML=`<div><span>${L.el}</span><b>Ø ${r[1]} ${L.mm}</b></div><div><span>${L.cur}</span><b>${lo}–${hi} ${L.a}</b></div>`;
+  const v=$('#verd');v.textContent=th<1.5?L.thin:th>5?L.thick:'';v.className='expl '+(th<1.5?'badc':'');v.hidden=!v.textContent;
+  const len=Math.max(0,numv(c.len)),kat=Math.max(0,numv(c.kat));
+  // deposited metal: triangle kat²/2 mm² × length, steel 7.85 g/cm³, ×1.2 bead reinforcement; electrodes ×1.7
+  const dep=kat*kat/2*1.2*len*1000*7.85/1e6;const kg=dep*1.7;
+  const key=String(c.dia).replace('.',',');const pcs=Math.ceil(kg/EW[key]);
+  $('#out2').innerHTML=`<div><span>${L.kg}</span><b>${fmt(kg,kg<10?1:0)} ${L.kgU}</b></div><div><span>${L.pcs}</span><b>${pcs} ${L.pcsU}</b></div>`}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  on('#ct','th');on('#cl','len');on('#ck','kat');
+  $('#cdia').onchange=e=>{S.calc.dia=e.target.value;paintCalc()};
+  document.querySelectorAll('[data-pos]').forEach(b=>b.onclick=()=>{S.calc.pos=+b.dataset.pos;document.querySelectorAll('[data-pos]').forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>

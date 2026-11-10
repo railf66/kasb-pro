@@ -9,3 +9,4 @@
 - `santehnik/` — приложение для сантехников (исходники: папка проекта santehnik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`)
 - `medsestra/` — приложение для медсестёр и медбратьев (исходники: папка проекта medsestra-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`). Только уход, первая помощь и санитария, без лекарств и доз.
 - `optik/` — приложение для монтажников оптики (исходники: папка проекта optik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
+- `svarshik/` — приложение для сварщиков (исходники: папка проекта svarshik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
