@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<title>Медсестра Pro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a clear calm medical teal accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#1fae93; --accent-ink:#00261e; --navy:#123a3c; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#3cc9ad; --accent-ink:#00261e; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#3cc9ad; --accent-ink:#00261e; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+.metro{display:grid;place-items:center;padding:6px 0}
+.beat{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:40px;background:var(--bg);border:3px solid var(--accent);font-variant-numeric:tabular-nums}
+.beat.on{animation:pulse .35s ease-out}
+.beat.last{background:var(--accent);color:var(--accent-ink)}
+@keyframes pulse{0%{transform:scale(1.12)}100%{transform:scale(1)}}
+.note{margin-top:4px}
+.bar h1{white-space:nowrap;font-size:19px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Медсестра Pro. Each text is {ru, uz}. Quiz: a = index of the right option.
+// Scope: patient care, first aid, hygiene. No medicines and no doses on purpose.
+const W={H:'var(--wH)',C:'var(--wC)',S:'var(--wS)',F:'var(--wF)'};
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}">${s}</text>`;
+const box=(x,y,w,h,f='var(--surface)',dash)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="12" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2,f)=>`${box(x,y,w,h,f)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const arrow=(x1,y1,x2,y2)=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>`;
+const dot=(x,y,r=7)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--wH)" opacity=".85"/>`;
+const ln=(d,c='var(--fg)',w=1.5)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+const A103={ru:"Если человеку плохо, сначала позвоните 103 (скорая) или 112.",uz:"Odamning ahvoli yomon bo'lsa, avval 103 (tez yordam) yoki 112 ga qo'ng'iroq qiling."};
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:5,
+ t:{ru:"Гигиена рук",uz:"Qo'l gigiyenasi"},s:{ru:"5 моментов и 6 движений",uz:"5 lahza va 6 harakat"},
+ svg:l=>svg(
+  box(14,14,332,204,'none','5 4')+tx(24,32,R(l,"Окружение пациента: кровать, тумбочка, капельница","Bemor atrofi: karavot, tumbochka, tomchilatgich"),{a:'start',s:10,c:'var(--muted)'})+
+  box(125,85,110,62,'color-mix(in srgb,var(--accent) 18%,var(--surface))')+tx(180,113,R(l,"Пациент","Bemor"),{w:700,s:13})+tx(180,130,R(l,"и его кровать","va karavoti"),{s:10,c:'var(--muted)'})+
+  num(70,70,1)+tx(70,96,R(l,"ДО контакта","Tegishdan OLDIN"),{s:10,w:600})+
+  num(290,70,2)+tx(290,96,R(l,"ДО чистой","Toza muolajadan"),{s:10,w:600})+tx(290,108,R(l,"процедуры","OLDIN"),{s:10,w:600})+
+  num(290,165,3)+tx(290,191,R(l,"ПОСЛЕ жидкостей","Tana suyuqligidan"),{s:10,w:600})+tx(290,203,R(l,"тела","KEYIN"),{s:10,w:600})+
+  num(70,165,4)+tx(70,191,R(l,"ПОСЛЕ контакта","Tegishdan KEYIN"),{s:10,w:600})+
+  num(180,182,5)+tx(180,208,R(l,"ПОСЛЕ окружения","Atrofga tekkandan KEYIN"),{s:10,w:600})+
+  tx(180,242,R(l,"Мыло и вода 40–60 с · спиртовой антисептик 20–30 с","Sovun va suv 40–60 s · spirtli antiseptik 20–30 s"),{w:700,s:11}),
+  R(l,"Схема: пять моментов, когда обрабатывать руки вокруг пациента","Sxema: bemor atrofida qo'lni ishlash kerak bo'lgan besh lahza"),252),
+ steps:{ru:["Снимите кольца, часы и браслеты: под ними остаются микробы. Ногти короткие, без накладных.","Намочите руки, возьмите мыло. Трите <b>ладонь о ладонь</b>, потом ладонью по тыльной стороне другой руки.","Ладонь к ладони с переплетёнными пальцами. Затем тыльной стороной пальцев о ладонь другой руки.","Обхватите большой палец и трите вращением. Потом кончики пальцев о ладонь кругами.","Смойте, вытрите <b>одноразовым полотенцем</b> и им же закройте кран.","Если руки видимо не грязные, можно спиртовым антисептиком: те же движения, пока руки не высохнут."],
+       uz:["Uzuk, soat va bilaguzukni yeching: ularning ostida mikroblar qoladi. Tirnoqlar kalta, yopishtirilmagan.","Qo'lni ho'llang, sovun oling. <b>Kaftni kaftga</b> ishqalang, keyin kaft bilan boshqa qo'lning orqasini.","Barmoqlarni chalishtirib kaftni kaftga. Keyin barmoqlar orqasini boshqa kaftga.","Bosh barmoqni ushlab aylantirib ishqalang. Keyin barmoq uchlarini kaftga aylantirib.","Yuving, <b>bir martalik sochiq</b> bilan arting va o'sha sochiq bilan jo'mrakni yoping.","Qo'l ko'rinib turgan darajada kir bo'lmasa, spirtli antiseptik mumkin: o'sha harakatlar, qo'l qurigunicha."]},
+ tip:{ru:"Перчатки не заменяют мытьё рук. Руки обрабатывают и до того, как надеть перчатки, и сразу после того, как их сняли.",uz:"Qo'lqop qo'l yuvishning o'rnini bosmaydi. Qo'l qo'lqop kiyishdan oldin ham, yechgandan keyin ham ishlanadi."},
+ quiz:[
+  {a:1,ru:{q:"Сколько времени мыть руки с мылом?",o:["5–10 секунд","40–60 секунд","5 минут"],e:"За 40–60 секунд успеваете сделать все движения."},uz:{q:"Qo'lni sovun bilan qancha vaqt yuvish kerak?",o:["5–10 soniya","40–60 soniya","5 daqiqa"],e:"40–60 soniyada barcha harakatlarni bajarib ulgurasiz."}},
+  {a:2,ru:{q:"Когда обрабатывать руки?",o:["Только после пациента","Только если руки грязные","До и после контакта, до чистой процедуры, после жидкостей тела и окружения"],e:"Это 5 моментов гигиены рук."},uz:{q:"Qo'lni qachon ishlash kerak?",o:["Faqat bemordan keyin","Faqat qo'l kir bo'lsa","Tegishdan oldin va keyin, toza muolajadan oldin, suyuqlik va atrofdan keyin"],e:"Bu qo'l gigiyenasining 5 lahzasi."}},
+  {a:0,ru:{q:"Нужно ли мыть руки, если работали в перчатках?",o:["Да, после снятия перчаток","Нет, перчатки защитили","Только раз в смену"],e:"Перчатки бывают с микроскопическими дырками, а руки пачкаются при снятии."},uz:{q:"Qo'lqopda ishlagan bo'lsangiz, qo'l yuvish kerakmi?",o:["Ha, qo'lqopni yechgandan keyin","Yo'q, qo'lqop himoya qildi","Faqat smenada bir marta"],e:"Qo'lqopda mayda teshiklar bo'ladi, qo'l esa yechishda kirlanadi."}},
+  {a:1,ru:{q:"Чем закрыть кран после мытья рук?",o:["Чистой рукой","Одноразовым полотенцем","Локтем не нужно, просто оставить"],e:"Кран грязный: чистую руку им не трогают."},uz:{q:"Qo'l yuvgandan keyin jo'mrakni nima bilan yopish kerak?",o:["Toza qo'l bilan","Bir martalik sochiq bilan","Yopmay qoldirish"],e:"Jo'mrak kir: toza qo'l bilan unga tegilmaydi."}}]},
+
+{id:'b2',lv:0,min:5,
+ t:{ru:"Средства защиты",uz:"Himoya vositalari"},s:{ru:"Перчатки, маска, халат: в каком порядке",uz:"Qo'lqop, niqob, xalat: qaysi tartibda"},
+ table:{head:{ru:["Надеть (порядок)","Снять (порядок)"],uz:["Kiyish (tartib)","Yechish (tartib)"]},rows:{
+  ru:[["1. Обработать руки","1. Перчатки (самое грязное)"],["2. Халат","2. Очки или экран"],["3. Маска или респиратор","3. Халат: свернуть грязным внутрь"],["4. Очки или экран","4. Маска: за резинки, не трогая перёд"],["5. Перчатки: поверх манжет халата","5. Обработать руки"]],
+  uz:[["1. Qo'lni ishlash","1. Qo'lqop (eng kir)"],["2. Xalat","2. Ko'zoynak yoki ekran"],["3. Niqob yoki respirator","3. Xalat: kir tomonini ichkariga o'rab"],["4. Ko'zoynak yoki ekran","4. Niqob: rezinkasidan, old tomoniga tegmay"],["5. Qo'lqop: xalat yengi ustidan","5. Qo'lni ishlash"]]}},
+ steps:{ru:["Перчатки нужны, когда можете коснуться крови, слюны, мочи, рвоты, ран или слизистых.","Маска закрывает <b>нос и рот</b>. Прижмите полоску на переносице. Под подбородком маска не работает.","Снимая перчатку, берите её снаружи у запястья и выворачивайте. Вторую снимайте чистыми пальцами изнутри.","Одноразовые средства не используют второй раз. Одна пара перчаток — один пациент.","Если перчатка порвалась, снимите обе, обработайте руки, наденьте новые."],
+       uz:["Qo'lqop qon, so'lak, siydik, qusuq, yara yoki shilliq qavatga tegishingiz mumkin bo'lganda kerak.","Niqob <b>burun va og'izni</b> yopadi. Burun ustidagi tasmani bosing. Iyak ostida niqob ishlamaydi.","Qo'lqopni yechishda uni bilak yonidan tashqarisidan ushlab teskari ag'daring. Ikkinchisini toza barmoqlar bilan ichkaridan yeching.","Bir martalik vositalar ikkinchi marta ishlatilmaydi. Bir juft qo'lqop — bitta bemor.","Qo'lqop yirtilsa, ikkalasini yeching, qo'lni ishlang, yangisini kiying."]},
+ tip:{ru:"Не ходите в перчатках по коридору и не трогайте в них телефон, ручки дверей и документы. Так вы переносите микробы дальше.",uz:"Qo'lqopda yo'lakda yurmang, telefon, eshik dastasi va hujjatlarga tegmang. Shunda mikroblarni boshqa joyga olib o'tasiz."},
+ quiz:[
+  {a:0,ru:{q:"Что снимают первым?",o:["Перчатки","Маску","Халат"],e:"Перчатки самые грязные, их снимают первыми."},uz:{q:"Birinchi navbatda nima yechiladi?",o:["Qo'lqop","Niqob","Xalat"],e:"Qo'lqop eng kir, uni birinchi yechishadi."}},
+  {a:2,ru:{q:"Как правильно носить маску?",o:["Под носом","На подбородке","Закрывая нос и рот"],e:"Только так маска защищает."},uz:{q:"Niqobni qanday to'g'ri taqish kerak?",o:["Burun ostida","Iyakda","Burun va og'izni yopib"],e:"Faqat shunda niqob himoya qiladi."}},
+  {a:1,ru:{q:"Можно ли в одних перчатках перейти к другому пациенту?",o:["Да, если обработать спиртом","Нет, одна пара — один пациент","Да, если не видно грязи"],e:"Перчатки меняют между пациентами и обрабатывают руки."},uz:{q:"Bitta qo'lqopda boshqa bemorga o'tish mumkinmi?",o:["Ha, spirt bilan artsa","Yo'q, bir juft — bitta bemor","Ha, kir ko'rinmasa"],e:"Bemorlar orasida qo'lqop almashtiriladi va qo'l ishlanadi."}},
+  {a:1,ru:{q:"Как снимать маску?",o:["За переднюю часть","За резинки или завязки","Не снимать до конца смены"],e:"Передняя часть грязная, её не трогают."},uz:{q:"Niqobni qanday yechish kerak?",o:["Old qismidan","Rezinka yoki bog'ichidan","Smena oxirigacha yechmaslik"],e:"Old qismi kir, unga tegilmaydi."}}]},
+
+{id:'b3',lv:0,min:6,calc:true,
+ t:{ru:"Пульс, дыхание, температура",uz:"Puls, nafas, harorat"},s:{ru:"Как считать и какие нормы",uz:"Qanday sanash va me'yorlar"},
+ table:{head:{ru:["Показатель (взрослый, в покое)","Норма"],uz:["Ko'rsatkich (katta yosh, tinch holatda)","Me'yor"]},rows:{
+  ru:[["Пульс","60–100 ударов в минуту, ровный"],["Дыхание","12–20 вдохов в минуту"],["Температура (подмышка)","36,0–37,0 °C"],["Сатурация (пульсоксиметр)","95% и выше"]],
+  uz:[["Puls","Daqiqada 60–100 zarba, bir maromda"],["Nafas","Daqiqada 12–20 marta"],["Harorat (qo'ltiq ostida)","36,0–37,0 °C"],["Saturatsiya (pulsoksimetr)","95% va undan yuqori"]]}},
+ steps:{ru:["Пульс: два пальца (указательный и средний) на запястье со стороны большого пальца. <b>Не большим пальцем</b>: в нём свой пульс.","Считайте 30 секунд и умножьте на 2. Если пульс неровный, считайте полную минуту.","Дыхание считайте незаметно, не говоря пациенту: иначе он начнёт дышать по-другому. Один вдох + выдох = 1.","Температура: подмышка сухая, градусник плотно прижат рукой. Электронный — до сигнала, ртутный — 7–10 минут.","Записывайте всё сразу: время, цифры, как чувствует себя пациент. Отклонение от нормы — сообщите врачу."],
+       uz:["Puls: ikki barmoq (ko'rsatkich va o'rta) bilakda, bosh barmoq tomonida. <b>Bosh barmoq bilan emas</b>: unda o'z pulsi bor.","30 soniya sanang va 2 ga ko'paytiring. Puls notekis bo'lsa, to'liq bir daqiqa sanang.","Nafasni bemorga aytmasdan, sezdirmay sanang: aks holda u boshqacha nafas ola boshlaydi. Bir nafas olish + chiqarish = 1.","Harorat: qo'ltiq osti quruq, termometr qo'l bilan mahkam bosilgan. Elektron — signalgacha, simobli — 7–10 daqiqa.","Hammasini darhol yozing: vaqt, raqamlar, bemorning o'zini his qilishi. Me'yordan chetlanish — shifokorga ayting."]},
+ tip:{ru:"Ртутный градусник разбился? Не пылесосьте и не мойте ртуть веником. Откройте окно, выведите людей и сообщите старшей медсестре.",uz:"Simobli termometr sindimi? Changyutgich ishlatmang va simobni supurgi bilan supurmang. Derazani oching, odamlarni chiqaring va katta hamshiraga xabar bering."},
+ quiz:[
+  {a:1,ru:{q:"Каким пальцем НЕЛЬЗЯ считать пульс?",o:["Указательным","Большим","Средним"],e:"В большом пальце свой пульс, вы спутаете его с пульсом пациента."},uz:{q:"Pulsni qaysi barmoq bilan sanash MUMKIN EMAS?",o:["Ko'rsatkich","Bosh barmoq","O'rta"],e:"Bosh barmoqda o'z pulsi bor, uni bemor pulsi bilan adashtirasiz."}},
+  {a:0,ru:{q:"За 30 секунд насчитали 40 ударов. Пульс…",o:["80 в минуту","40 в минуту","120 в минуту"],e:"40 × 2 = 80. Это норма."},uz:{q:"30 soniyada 40 zarba sanaldi. Puls…",o:["Daqiqada 80","Daqiqada 40","Daqiqada 120"],e:"40 × 2 = 80. Bu me'yor."}},
+  {a:2,ru:{q:"Почему дыхание считают незаметно?",o:["Так быстрее","Это неважно","Пациент начнёт дышать иначе"],e:"Когда человек знает, что за ним следят, ритм меняется."},uz:{q:"Nima uchun nafas sezdirmay sanaladi?",o:["Tezroq","Ahamiyati yo'q","Bemor boshqacha nafas ola boshlaydi"],e:"Odam kuzatilayotganini bilsa, maromi o'zgaradi."}},
+  {a:1,ru:{q:"Нормальная частота дыхания взрослого в покое:",o:["5–8 в минуту","12–20 в минуту","30–40 в минуту"],e:"Больше 20 или меньше 12 — повод сказать врачу."},uz:{q:"Katta yoshdagi odamning tinch holatdagi nafas soni:",o:["Daqiqada 5–8","Daqiqada 12–20","Daqiqada 30–40"],e:"20 dan ko'p yoki 12 dan kam — shifokorga aytish uchun sabab."}}]},
+
+{id:'b4',lv:0,min:7,calc:true,
+ t:{ru:"Измерение давления",uz:"Bosimni o'lchash"},s:{ru:"Манжета, тоны, правильные цифры",uz:"Manjet, tonlar, to'g'ri raqamlar"},
+ svg:l=>svg(
+  `<path d="M24 98H174Q190 98 196 104L330 104V136H196Q190 142 174 142H24Z" fill="color-mix(in srgb,var(--wF) 14%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<rect x="70" y="90" width="80" height="60" rx="8" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(110,124,R(l,"Манжета","Manjet"),{w:700,s:11,c:'var(--accent-ink)'})+
+  `<circle cx="196" cy="121" r="10" fill="var(--surface)" stroke="var(--fg)" stroke-width="2"/>`+ln('M196 111V70Q196 52 220 52H250','var(--fg)',2.5)+tx(256,56,R(l,"стетоскоп","stetoskop"),{a:'start',s:10})+
+  ln('M150 78H192','var(--muted)')+ln('M150 72V84')+ln('M192 72V84')+tx(171,68,R(l,"2–3 см","2–3 sm"),{s:10,w:700})+
+  tx(196,162,R(l,"локтевой сгиб","tirsak bukilishi"),{s:10,c:'var(--muted)'})+tx(40,90,R(l,"плечо","yelka"),{s:10,c:'var(--muted)',a:'start'})+tx(320,96,R(l,"кисть","kaft"),{s:10,c:'var(--muted)',a:'end'})+
+  ln('M110 150V172 M110 172H40','var(--fg)',2)+`<circle cx="30" cy="190" r="22" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+ln('M30 190L42 178','var(--wH)',2)+tx(30,226,R(l,"манометр","manometr"),{s:10})+
+  tx(220,196,R(l,"Рука на уровне сердца,","Qo'l yurak balandligida,"),{w:700})+tx(220,212,R(l,"на столе, ладонью вверх","stolda, kaft yuqoriga"),{c:'var(--muted)'})+tx(220,236,R(l,"Первый тон = верхнее, исчезновение = нижнее","Birinchi ton = yuqori, yo'qolishi = pastki"),{s:10,w:600}),
+  R(l,"Схема: манжета на плече на 2–3 см выше локтевого сгиба, стетоскоп на сгибе, рука на уровне сердца","Sxema: manjet yelkada tirsak bukilishidan 2–3 sm yuqorida, stetoskop bukilishda, qo'l yurak balandligida"),250),
+ steps:{ru:["Пациент сидит 5 минут спокойно, спина опирается, ноги не скрещены. За 30 минут до этого не курит, не пьёт кофе.","Манжета на голом плече, нижний край на 2–3 см выше локтевого сгиба. Под манжету проходит один палец.","Нащупайте пульс на запястье и накачивайте, пока он не пропадёт, и ещё на 20–30 мм рт. ст. выше.","Стетоскоп на локтевой сгиб. Спускайте воздух медленно: 2–3 деления в секунду.","Первый стук — <b>верхнее</b> (систолическое) давление. Когда стук пропал — <b>нижнее</b> (диастолическое).","Запишите, например «130/85», руку и время. Повторить можно через 1–2 минуты."],
+       uz:["Bemor 5 daqiqa tinch o'tiradi, orqasi suyangan, oyoqlari chalishtirilmagan. 30 daqiqa oldin chekmaydi, kofe ichmaydi.","Manjet ochiq yelkada, pastki cheti tirsak bukilishidan 2–3 sm yuqorida. Manjet ostiga bitta barmoq sig'adi.","Bilakda pulsni toping va u yo'qolguncha, keyin yana 20–30 mm sim. ust. ko'proq damlang.","Stetoskopni tirsak bukilishiga qo'ying. Havoni sekin chiqaring: soniyasiga 2–3 bo'linma.","Birinchi taqillash — <b>yuqori</b> (sistolik) bosim. Taqillash yo'qolganda — <b>pastki</b> (diastolik).","Yozing, masalan «130/85», qaysi qo'l va vaqt. 1–2 daqiqadan keyin qayta o'lchash mumkin."]},
+ tip:{ru:"Давление 180/110 и выше, или пациенту плохо (сильная головная боль, боль в груди, слабость в руке) — сразу сообщите врачу. Лекарство выбирает только врач.",uz:"Bosim 180/110 va undan yuqori bo'lsa yoki bemorning ahvoli yomon bo'lsa (kuchli bosh og'rig'i, ko'krakda og'riq, qo'lda holsizlik) — darhol shifokorga ayting. Dorini faqat shifokor tanlaydi."},
+ quiz:[
+  {a:1,ru:{q:"Где должна быть манжета?",o:["На локте","На 2–3 см выше локтевого сгиба","На предплечье"],e:"Так стетоскоп стоит на артерии, а манжета её не закрывает."},uz:{q:"Manjet qayerda bo'lishi kerak?",o:["Tirsakda","Tirsak bukilishidan 2–3 sm yuqorida","Bilakda"],e:"Shunda stetoskop arteriyada turadi, manjet uni yopmaydi."}},
+  {a:0,ru:{q:"Первый услышанный тон — это…",o:["Верхнее (систолическое) давление","Нижнее давление","Пульс"],e:"Нижнее — когда тоны пропали."},uz:{q:"Birinchi eshitilgan ton bu…",o:["Yuqori (sistolik) bosim","Pastki bosim","Puls"],e:"Pastki — tonlar yo'qolganda."}},
+  {a:2,ru:{q:"Как подготовить пациента?",o:["Сразу после лестницы","Стоя, рука опущена","5 минут покоя сидя, рука на уровне сердца"],e:"После нагрузки и с опущенной рукой цифры будут выше."},uz:{q:"Bemorni qanday tayyorlash kerak?",o:["Zinadan chiqqanidan keyin darhol","Tik turgan, qo'li tushirilgan","5 daqiqa o'tirib dam, qo'l yurak balandligida"],e:"Yuklamadan keyin va qo'l tushirilganda raqamlar yuqori chiqadi."}},
+  {a:1,ru:{q:"Давление 185/115, болит голова. Что делать?",o:["Дать таблетку от давления","Сразу сообщить врачу","Перемерить завтра"],e:"Лекарство и дозу назначает только врач."},uz:{q:"Bosim 185/115, boshi og'riyapti. Nima qilish kerak?",o:["Bosim tabletkasini berish","Darhol shifokorga aytish","Ertaga qayta o'lchash"],e:"Dori va dozani faqat shifokor belgilaydi."}}]},
+
+{id:'b5',lv:0,min:6,
+ t:{ru:"Профилактика пролежней",uz:"Yotoq yaralarining oldini olish"},s:{ru:"Опасные точки и смена положения",uz:"Xavfli nuqtalar va holatni o'zgartirish"},
+ svg:l=>svg(
+  `<rect x="20" y="150" width="320" height="16" rx="4" fill="var(--line)"/>`+ln('M24 166V196 M336 166V196','var(--muted)',3)+
+  `<circle cx="52" cy="128" r="20" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<path d="M74 120Q90 112 120 114H200Q218 114 226 124L250 132H318Q330 132 330 142V150H74Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  dot(38,146)+dot(96,148)+dot(150,148)+dot(204,148)+dot(322,146)+
+  tx(38,58,R(l,"затылок","ensa"),{s:10,w:600})+ln('M38 64V136','var(--muted)',1)+
+  tx(96,80,R(l,"лопатки","kuraklar"),{s:10,w:600})+ln('M96 86V140','var(--muted)',1)+
+  tx(150,58,R(l,"локти","tirsaklar"),{s:10,w:600})+ln('M150 64V140','var(--muted)',1)+
+  tx(204,80,R(l,"крестец","dumg'aza"),{s:10,w:600})+ln('M204 86V140','var(--muted)',1)+
+  tx(322,92,R(l,"пятки","tovonlar"),{s:10,w:600})+ln('M322 98V138','var(--muted)',1)+
+  tx(180,222,R(l,"Меняйте положение не реже чем раз в 2 часа","Holatni kamida 2 soatda bir marta o'zgartiring"),{w:700})+
+  tx(180,240,R(l,"Лёжа на боку: ещё бедро, плечо, ухо, лодыжки","Yonboshda: son, yelka, quloq, to'piqlar ham"),{s:10,c:'var(--muted)'}),
+  R(l,"Схема: лежачий пациент на спине, красным отмечены места пролежней: затылок, лопатки, локти, крестец, пятки","Sxema: chalqancha yotgan bemor, qizil bilan yotoq yarasi joylari belgilangan: ensa, kuraklar, tirsaklar, dumg'aza, tovonlar"),250),
+ steps:{ru:["Пролежень появляется, когда кожу долго давит кость о постель. У лежачего первые признаки бывают уже через несколько часов.","Каждый день осматривайте опасные точки. Покраснение, которое <b>не бледнеет</b> при нажатии пальцем, — первая стадия. Сообщите врачу.","Поворачивайте пациента минимум раз в 2 часа: спина, левый бок, правый бок. Записывайте время.","На боку — подушка под спину, поворот примерно на 30°, а не прямо на бедро. Пятки «на весу»: подушка под голени.","Кожа чистая и сухая. Простыня без складок и крошек. Не тяните пациента по простыне: кожа травмируется."],
+       uz:["Yotoq yarasi suyak terini uzoq vaqt to'shakka bosganda paydo bo'ladi. Yotgan bemorda birinchi belgilar bir necha soatda chiqishi mumkin.","Har kuni xavfli nuqtalarni ko'zdan kechiring. Barmoq bilan bosganda <b>oqarmaydigan</b> qizarish — birinchi bosqich. Shifokorga ayting.","Bemorni kamida 2 soatda bir marta ag'daring: chalqancha, chap yonbosh, o'ng yonbosh. Vaqtni yozing.","Yonboshda — orqasiga yostiq, taxminan 30° ga burish, to'g'ri songa emas. Tovonlar «osilib» tursin: boldir ostiga yostiq.","Teri toza va quruq. Choyshab burmasiz va ushoqsiz. Bemorni choyshab bo'ylab sudramang: teri jarohatlanadi."]},
+ tip:{ru:"Не массируйте покрасневшие места и не растирайте их спиртом: это повреждает ткани ещё сильнее.",uz:"Qizargan joylarni uqalamang va spirt bilan ishqalamang: bu to'qimalarni yanada ko'proq shikastlaydi."},
+ quiz:[
+  {a:1,ru:{q:"Как часто менять положение лежачего пациента?",o:["Раз в день","Не реже чем раз в 2 часа","Раз в неделю"],e:"Давление дольше 2 часов повреждает кожу."},uz:{q:"Yotgan bemor holatini qanchalik tez-tez o'zgartirish kerak?",o:["Kuniga bir marta","Kamida 2 soatda bir marta","Haftada bir marta"],e:"2 soatdan uzoq bosim terini shikastlaydi."}},
+  {a:0,ru:{q:"Какой признак первой стадии пролежня?",o:["Покраснение, которое не бледнеет при нажатии","Сухая кожа","Бледное пятно, которое быстро прошло"],e:"Сообщите врачу и уберите давление с этого места."},uz:{q:"Yotoq yarasining birinchi bosqich belgisi qaysi?",o:["Bosganda oqarmaydigan qizarish","Quruq teri","Tez o'tib ketgan oqish dog'"],e:"Shifokorga ayting va bu joydan bosimni oling."}},
+  {a:2,ru:{q:"Где чаще всего бывают пролежни у лежащего на спине?",o:["На животе и груди","На ладонях","Крестец, пятки, лопатки, затылок"],e:"Там кость близко к коже."},uz:{q:"Chalqancha yotganda yotoq yaralari ko'pincha qayerda bo'ladi?",o:["Qorin va ko'krakda","Kaftlarda","Dumg'aza, tovon, kurak, ensa"],e:"U yerda suyak teriga yaqin."}},
+  {a:1,ru:{q:"Покраснело место на крестце. Что НЕЛЬЗЯ?",o:["Убрать давление","Массировать и растирать спиртом","Сказать врачу"],e:"Массаж повреждает ткани ещё сильнее."},uz:{q:"Dumg'azada qizarish bor. Nima MUMKIN EMAS?",o:["Bosimni olish","Uqalash va spirt bilan ishqalash","Shifokorga aytish"],e:"Uqalash to'qimalarni yanada shikastlaydi."}}]},
+
+/* ---------- INTERMEDIATE ---------- */
+{id:'m1',lv:1,min:7,
+ t:{ru:"Перемещение и падения",uz:"Ko'chirish va yiqilishlar"},s:{ru:"Поднять, пересадить и не сорвать спину",uz:"Ko'tarish, o'tqazish va belni shikastlamaslik"},
+ svg:l=>svg(
+  flow(20,20,150,44,R(l,"1. Тормоза на кровати","1. Karavot tormozi"),R(l,"и на кресле","va kreslo tormozi"))+
+  flow(190,20,150,44,R(l,"2. Объясните пациенту","2. Bemorga tushuntiring"),R(l,"что будете делать","nima qilishingizni"))+
+  flow(20,84,150,44,R(l,"3. Сядет на край","3. Chetiga o'tirsin"),R(l,"посидит 1–2 минуты","1–2 daqiqa o'tirsin"))+
+  flow(190,84,150,44,R(l,"4. Ноги на полу,","4. Oyoqlar yerda,"),R(l,"обувь без скольжения","sirpanmaydigan poyabzal"))+
+  flow(20,148,320,44,R(l,"5. Колени согнуты, спина прямая, пациент близко к вам","5. Tizzalar bukilgan, bel to'g'ri, bemor sizga yaqin"),R(l,"поворачивайтесь ногами, не корпусом","gavda bilan emas, oyoqlar bilan buriling"),'color-mix(in srgb,var(--accent) 16%,var(--surface))')+
+  arrow(170,42,188,42)+arrow(265,64,110,84)+arrow(170,106,188,106)+arrow(265,128,180,148)+
+  tx(180,222,R(l,"Тяжёлый пациент — зовите второго человека","Og'ir bemor — ikkinchi odamni chaqiring"),{w:700,c:'var(--wH)'}),
+  R(l,"Схема: пять шагов безопасного перемещения пациента","Sxema: bemorni xavfsiz ko'chirishning besh bosqichi"),240),
+ steps:{ru:["Перед любым перемещением: тормоза на кровати и кресле, лишние вещи убраны с пола.","Объясните пациенту, что будете делать, и попросите помочь, насколько он может. Так легче вам и безопаснее ему.","Чтобы встать: сначала на бок, потом сесть на край кровати, ноги на пол. <b>Посидеть 1–2 минуты</b>: при резком подъёме может закружиться голова.","Сами держите спину прямо, ноги на ширине плеч, колени согнуты. Поднимаете ногами, а не спиной.","Не тяните пациента за руки и подмышки: можно вывихнуть плечо. Для подтягивания в постели используйте простыню-скольжение и двух человек.","Профилактика падений: кровать низко, кнопка вызова и вода под рукой, ночью свет, на полу сухо."],
+       uz:["Har qanday ko'chirishdan oldin: karavot va kreslo tormozi, poldan ortiqcha narsalar olingan.","Bemorga nima qilishingizni tushuntiring va imkoni boricha yordam berishini so'rang. Bu sizga oson, unga xavfsiz.","Turish uchun: avval yonboshga, keyin karavot chetiga o'tirib, oyoqlarni yerga. <b>1–2 daqiqa o'tirsin</b>: keskin turganda bosh aylanishi mumkin.","O'zingiz belni to'g'ri tuting, oyoqlar yelka kengligida, tizzalar bukilgan. Bel bilan emas, oyoq bilan ko'tarasiz.","Bemorni qo'lidan va qo'ltig'idan tortmang: yelka chiqishi mumkin. Karavotda yuqoriga tortish uchun sirpanchiq choyshab va ikki odam ishlating.","Yiqilishning oldini olish: karavot past, chaqiruv tugmasi va suv yaqinda, kechasi chiroq, pol quruq."]},
+ tip:{ru:"Пациент начал падать? Не пытайтесь удержать его на весу. Прижмите к себе и плавно «опустите» на пол, защищая голову. Потом позовите помощь и сообщите врачу.",uz:"Bemor yiqila boshladimi? Uni havoda ushlab qolishga urinmang. O'zingizga bosib, boshini himoya qilib, sekin polga «tushiring». Keyin yordam chaqiring va shifokorga ayting."},
+ quiz:[
+  {a:1,ru:{q:"Чем поднимать тяжесть?",o:["Спиной, ноги прямые","Ногами: колени согнуты, спина прямая","Руками на вытянутых руках"],e:"Так нагрузка идёт на сильные мышцы ног, а не на позвоночник."},uz:{q:"Og'irlikni nima bilan ko'tarish kerak?",o:["Bel bilan, oyoqlar to'g'ri","Oyoq bilan: tizza bukilgan, bel to'g'ri","Uzatilgan qo'llar bilan"],e:"Shunda yuk umurtqaga emas, oyoqning kuchli mushaklariga tushadi."}},
+  {a:2,ru:{q:"Зачем пациенту посидеть на краю кровати перед тем, как встать?",o:["Чтобы отдохнуть медсестре","Так положено по расписанию","Чтобы не закружилась голова при резком подъёме"],e:"При резком вставании падает давление, человек может упасть."},uz:{q:"Turishdan oldin bemor nima uchun karavot chetida o'tirishi kerak?",o:["Hamshira dam olishi uchun","Jadval bo'yicha shunday","Keskin turganda bosh aylanmasligi uchun"],e:"Keskin turganda bosim tushadi, odam yiqilishi mumkin."}},
+  {a:0,ru:{q:"Что сделать первым перед пересадкой в кресло?",o:["Поставить тормоза","Поднять пациента за подмышки","Ничего"],e:"Кресло без тормоза уедет, и пациент упадёт."},uz:{q:"Kreslogi o'tqazishdan oldin birinchi nima qilinadi?",o:["Tormozni qo'yish","Bemorni qo'ltig'idan ko'tarish","Hech narsa"],e:"Tormozsiz kreslo ketib qoladi va bemor yiqiladi."}},
+  {a:1,ru:{q:"Пациент начал падать. Правильно:",o:["Удерживать на весу любой ценой","Плавно опустить на пол, защищая голову","Отпустить и отойти"],e:"Удерживая на весу, травмируются и пациент, и медсестра."},uz:{q:"Bemor yiqila boshladi. To'g'risi:",o:["Har qanday holatda havoda ushlab turish","Boshini himoya qilib, sekin polga tushirish","Qo'yib yuborib, chetga o'tish"],e:"Havoda ushlab turishda bemor ham, hamshira ham jarohatlanadi."}}]},
+
+{id:'m2',lv:1,min:7,
+ t:{ru:"Гигиена лежачего и смена белья",uz:"Yotgan bemor gigiyenasi va choyshab almashtirish"},s:{ru:"Умывание, уход за ртом, бельё без вставания",uz:"Yuvish, og'iz parvarishi, turmasdan choyshab"},
+ svg:l=>svg(
+  tx(180,20,R(l,"Смена простыни, пациент в постели","Bemor karavotda, choyshab almashtirish"),{w:700})+
+  [0,1,2].map(i=>{const x=12+i*118;return box(x,36,100,120)+num(x+16,52,i+1)+
+   `<rect x="${x+8}" y="${i==2?78:i==1?78:78}" width="84" height="66" rx="3" fill="var(--line)"/>`+
+   (i==0?`<rect x="${x+8}" y="78" width="84" height="66" rx="3" fill="color-mix(in srgb,var(--wF) 30%,var(--surface))"/><ellipse cx="${x+28}" cy="111" rx="12" ry="26" fill="var(--surface)" stroke="var(--fg)"/>`:'')+
+   (i==1?`<rect x="${x+8}" y="78" width="40" height="66" fill="color-mix(in srgb,var(--wF) 30%,var(--surface))"/><rect x="${x+48}" y="78" width="10" height="66" fill="var(--wS)"/><rect x="${x+58}" y="78" width="34" height="66" fill="color-mix(in srgb,var(--accent) 35%,var(--surface))"/><ellipse cx="${x+28}" cy="111" rx="12" ry="26" fill="var(--surface)" stroke="var(--fg)"/>`:'')+
+   (i==2?`<rect x="${x+8}" y="78" width="84" height="66" rx="3" fill="color-mix(in srgb,var(--accent) 35%,var(--surface))"/><ellipse cx="${x+72}" cy="111" rx="12" ry="26" fill="var(--surface)" stroke="var(--fg)"/>`:'')}).join('')+
+  tx(62,176,R(l,"На бок,","Yonboshga,"),{s:10,w:600})+tx(62,190,R(l,"от себя","o'zingizdan"),{s:10,c:'var(--muted)'})+
+  tx(180,176,R(l,"Грязную — валиком,","Kirini — rulon,"),{s:10,w:600})+tx(180,190,R(l,"чистую — рядом","tozasi — yonida"),{s:10,c:'var(--muted)'})+
+  tx(298,176,R(l,"Перевернуть,","Ag'darib,"),{s:10,w:600})+tx(298,190,R(l,"убрать грязную","kirini olish"),{s:10,c:'var(--muted)'})+
+  `<rect x="30" y="206" width="14" height="10" fill="color-mix(in srgb,var(--wF) 30%,var(--surface))" stroke="var(--fg)"/>`+tx(50,215,R(l,"грязная","kir"),{a:'start',s:10})+
+  `<rect x="120" y="206" width="14" height="10" fill="color-mix(in srgb,var(--accent) 35%,var(--surface))" stroke="var(--fg)"/>`+tx(140,215,R(l,"чистая","toza"),{a:'start',s:10})+
+  tx(180,238,R(l,"Бельё не трясут и не кладут на пол","Choyshab silkitilmaydi va polga qo'yilmaydi"),{w:700,c:'var(--wH)'}),
+  R(l,"Схема: три шага смены простыни, когда пациент лежит: на бок, грязную валиком, чистую рядом, перевернуть","Sxema: bemor yotganda choyshab almashtirishning uch bosqichi"),250),
+ steps:{ru:["Подготовьте всё заранее: таз с тёплой водой (проверьте локтем), мыло, 2 полотенца, чистое бельё, мешок для грязного, перчатки.","Закройте дверь или ширму. Открывайте только ту часть тела, которую моете: человеку стыдно и холодно.","Моют <b>от чистого к грязному</b>: лицо, руки, грудь, живот, ноги, спина, в конце промежность. Интимную зону — спереди назад.","Рот: зубы чистят 2 раза в день. Если пациент без сознания или не глотает — только влажный тампон, повернув голову на бок, чтобы вода не попала в дыхательные пути.","Простыня: пациент на боку, грязную скатайте валиком к спине, рядом раскатайте чистую. Переверните через валик, уберите грязную, расправьте чистую.","После мытья кожу промокните, а не трите. Особенно складки и между пальцами."],
+       uz:["Hammasini oldindan tayyorlang: iliq suvli tog'ora (tirsak bilan tekshiring), sovun, 2 sochiq, toza choyshab, kir uchun xalta, qo'lqop.","Eshikni yoki pardani yoping. Faqat yuvayotgan joyni oching: odam uyaladi va sovqotadi.","<b>Tozadan kirga</b> qarab yuviladi: yuz, qo'llar, ko'krak, qorin, oyoqlar, orqa, oxirida oraliq. Intim joy — oldindan orqaga.","Og'iz: tishlar kuniga 2 marta tozalanadi. Bemor hushsiz yoki yuta olmasa — faqat nam tampon, boshini yonga burib, suv nafas yo'liga tushmasin.","Choyshab: bemor yonboshda, kirini rulon qilib orqasiga o'rang, yonida tozasini yoying. Rulon ustidan ag'daring, kirini oling, tozasini to'g'rilang.","Yuvgandan keyin terini ishqalamang, bosib quriting. Ayniqsa burmalar va barmoqlar orasini."]},
+ tip:{ru:"Грязное бельё сразу в мешок. Не прижимайте его к своей форме и не трясите: так микробы разлетаются по палате.",uz:"Kir choyshabni darhol xaltaga. Uni formangizga bosmang va silkitmang: shunda mikroblar palataga tarqaladi."},
+ quiz:[
+  {a:0,ru:{q:"В каком порядке мыть лежачего пациента?",o:["От чистого к грязному: лицо первым, промежность последней","Сначала ноги","Неважно"],e:"Иначе вы переносите микробы на чистые места."},uz:{q:"Yotgan bemor qaysi tartibda yuviladi?",o:["Tozadan kirga: avval yuz, oxirida oraliq","Avval oyoqlar","Farqi yo'q"],e:"Aks holda mikroblarni toza joylarga olib o'tasiz."}},
+  {a:2,ru:{q:"Как проверить температуру воды в тазу?",o:["Не проверять","Кончиком пальца","Внутренней стороной локтя или запястья"],e:"Кожа локтя чувствительнее, а у пожилых кожа легко обжигается."},uz:{q:"Tog'oradagi suv haroratini qanday tekshirish kerak?",o:["Tekshirmaslik","Barmoq uchi bilan","Tirsak yoki bilakning ichki tomoni bilan"],e:"Tirsak terisi sezgirroq, keksalarning terisi esa oson kuyadi."}},
+  {a:1,ru:{q:"Пациент не глотает. Как ухаживать за ртом?",o:["Дать прополоскать стаканом воды","Влажным тампоном, голова повёрнута на бок","Не ухаживать"],e:"Вода может попасть в дыхательные пути."},uz:{q:"Bemor yuta olmaydi. Og'iz qanday parvarish qilinadi?",o:["Stakan suv bilan chayqatish","Nam tampon bilan, bosh yonga burilgan","Parvarish qilmaslik"],e:"Suv nafas yo'llariga tushishi mumkin."}},
+  {a:1,ru:{q:"Что делать с грязным бельём?",o:["Встряхнуть и положить на пол","Сразу в мешок, не тряся","Положить на соседнюю кровать"],e:"Тряска разносит микробы по палате."},uz:{q:"Kir choyshab bilan nima qilinadi?",o:["Silkitib polga qo'yish","Silkitmay darhol xaltaga","Qo'shni karavotga qo'yish"],e:"Silkitish mikroblarni palataga tarqatadi."}}]},
+
+{id:'m3',lv:1,min:6,
+ t:{ru:"Кормление и питьё",uz:"Ovqatlantirish va suv ichirish"},s:{ru:"Как не допустить попадания еды в лёгкие",uz:"Ovqat o'pkaga tushmasligi uchun"},
+ svg:l=>svg(
+  `<rect x="40" y="170" width="200" height="14" rx="4" fill="var(--line)"/>`+ln('M44 184V214 M236 184V214','var(--muted)',3)+
+  `<rect x="40" y="70" width="14" height="114" rx="4" fill="var(--line)"/>`+
+  `<circle cx="84" cy="62" r="18" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<path d="M66 84H102V168H66Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/><path d="M100 150H200V168H100Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  ln('M136 150A34 34 0 0 0 102 116','var(--accent)',3)+tx(112,108,'90°',{w:700,s:14,a:'start'})+
+  `<rect x="150" y="128" width="70" height="8" rx="2" fill="var(--muted)"/>`+tx(185,124,R(l,"столик","stolcha"),{s:10,c:'var(--muted)'})+
+  tx(300,40,R(l,"Сидя прямо","To'g'ri o'tirib"),{w:700})+tx(300,56,R(l,"(минимум 60°)","(kamida 60°)"),{s:10,c:'var(--muted)'})+
+  tx(300,90,R(l,"Голова чуть","Bosh biroz"),{w:700})+tx(300,106,R(l,"вперёд","oldinga"),{w:700})+
+  tx(300,140,R(l,"Маленькие","Kichik"),{w:700})+tx(300,156,R(l,"порции","bo'laklar"),{w:700})+
+  tx(300,190,R(l,"30 минут","30 daqiqa"),{w:700,c:'var(--wH)'})+tx(300,206,R(l,"не ложиться","yotmaslik"),{w:700,c:'var(--wH)'}),
+  R(l,"Схема: пациент сидит в кровати прямо под углом 90 градусов, перед ним столик","Sxema: bemor karavotda 90 daraja to'g'ri o'tiradi, oldida stolcha"),230),
+ steps:{ru:["Перед едой: руки пациента вымыты, зубные протезы на месте, очки надеты. Человеку должно быть видно, что он ест.","Посадите пациента прямо, минимум 60°, лучше 90°. Лёжа кормить нельзя: еда попадёт в дыхательные пути.","Садитесь рядом на уровне глаз, не стойте над ним. Не торопите: маленькая ложка, следующая — когда проглотил.","Следите: кашель во время еды, «булькающий» голос, слёзы, посинение — <b>остановитесь</b> и сообщите врачу. Это признаки, что пища идёт не туда.","После еды — уход за ртом, и пациент остаётся сидеть ещё 30 минут.","Записывайте, сколько съел и выпил. Мало пьёт — сухие губы, тёмная моча: скажите врачу."],
+       uz:["Ovqatdan oldin: bemorning qo'li yuvilgan, tish protezi joyida, ko'zoynagi taqilgan. Odam nima yeyayotganini ko'rishi kerak.","Bemorni to'g'ri o'tqazing, kamida 60°, yaxshisi 90°. Yotgan holda ovqatlantirish mumkin emas: ovqat nafas yo'llariga tushadi.","Uning yonida ko'z balandligida o'tiring, tepasida turmang. Shoshiltirmang: kichik qoshiq, keyingisi — yutgandan keyin.","Kuzating: ovqat paytida yo'tal, «g'uldiragan» ovoz, ko'z yoshi, ko'karish — <b>to'xtang</b> va shifokorga ayting. Bu ovqat noto'g'ri ketayotgani belgisi.","Ovqatdan keyin — og'iz parvarishi, bemor yana 30 daqiqa o'tirib turadi.","Qancha yegani va ichganini yozing. Kam ichsa — lablar quruq, siydik to'q: shifokorga ayting."]},
+ tip:{ru:"Не давайте воду и еду пациенту, который плохо проснулся, сонный или после инсульта, пока врач не проверил глотание.",uz:"Yaxshi uyg'onmagan, uyquchan yoki insultdan keyingi bemorga shifokor yutishni tekshirmaguncha suv va ovqat bermang."},
+ quiz:[
+  {a:2,ru:{q:"В каком положении кормить пациента?",o:["Лёжа на спине","Лёжа на боку","Сидя прямо, минимум 60°"],e:"Лёжа еда легко попадает в дыхательные пути."},uz:{q:"Bemorni qaysi holatda ovqatlantirish kerak?",o:["Chalqancha yotib","Yonboshda yotib","To'g'ri o'tirib, kamida 60°"],e:"Yotganda ovqat nafas yo'llariga oson tushadi."}},
+  {a:0,ru:{q:"Пациент закашлялся и голос стал «булькающим». Что делать?",o:["Остановить кормление и сообщить врачу","Дать запить большим глотком","Кормить быстрее"],e:"Это признак, что пища попадает в дыхательные пути."},uz:{q:"Bemor yo'taldi va ovozi «g'uldiragan» bo'ldi. Nima qilish kerak?",o:["Ovqatlantirishni to'xtatib, shifokorga aytish","Katta qultum suv berish","Tezroq ovqatlantirish"],e:"Bu ovqat nafas yo'llariga tushayotgani belgisi."}},
+  {a:1,ru:{q:"Сколько пациенту сидеть после еды?",o:["Сразу лечь","Около 30 минут","5 часов"],e:"Так пища не возвращается и не попадает в лёгкие."},uz:{q:"Ovqatdan keyin bemor qancha o'tirishi kerak?",o:["Darhol yotish","Taxminan 30 daqiqa","5 soat"],e:"Shunda ovqat qaytmaydi va o'pkaga tushmaydi."}},
+  {a:1,ru:{q:"Признаки, что пациент мало пьёт:",o:["Частое мочеиспускание","Сухие губы, тёмная моча","Хороший аппетит"],e:"Обезвоживание у пожилых развивается быстро."},uz:{q:"Bemor kam suv ichayotgani belgilari:",o:["Tez-tez siyish","Quruq lablar, to'q siydik","Yaxshi ishtaha"],e:"Keksalarda suvsizlanish tez rivojlanadi."}}]},
+
+{id:'m4',lv:1,min:7,
+ t:{ru:"Дезинфекция и отходы",uz:"Dezinfeksiya va chiqindilar"},s:{ru:"Иглы, кровь на полу, укол иглой",uz:"Ignalar, poldagi qon, igna sanchilishi"},
+ table:{head:{ru:["Что","Куда / как"],uz:["Nima","Qayerga / qanday"]},rows:{
+  ru:[["Иглы, скальпели, ампулы","Сразу в твёрдый контейнер для острого. Не надевать колпачок обратно"],["Контейнер для острого","Заполнять до ¾, потом закрыть и заменить"],["Перчатки, бинты в крови","Мешок для опасных (инфицированных) отходов"],["Обычный мусор: упаковка, бумага","Мешок для обычных отходов"],["Пролили кровь","Перчатки → впитать салфеткой → дезраствор по инструкции → убрать в опасные"]],
+  uz:[["Igna, skalpel, ampulalar","Darhol o'tkir narsalar uchun qattiq idishga. Qalpoqchani qayta kiydirmaslik"],["O'tkir narsalar idishi","¾ gacha to'ldirish, keyin yopib almashtirish"],["Qonli qo'lqop, bint","Xavfli (yuqumli) chiqindilar xaltasiga"],["Oddiy chiqindi: qadoq, qog'oz","Oddiy chiqindilar xaltasiga"],["Qon to'kildi","Qo'lqop → salfetka bilan shimdirish → yo'riqnoma bo'yicha dezeritma → xavfli chiqindiga"]]}},
+ steps:{ru:["Цвета мешков и классы отходов в разных клиниках свои. Спросите старшую медсестру и следуйте правилам вашего отделения.","Иглу после укола <b>не накрывают колпачком</b> руками: так чаще всего и колются. Сразу в контейнер.","Дезинфицирующий раствор разводят строго по инструкции на упаковке: время и концентрация важны. Работают в перчатках.","Укололись иглой? Не сосите и не выдавливайте ранку. Промойте под проточной водой с мылом.","<b>Сразу</b> сообщите старшей медсестре или врачу и запишите случай. Если нужна профилактика, её начинают в первые часы."],
+       uz:["Xalta ranglari va chiqindi sinflari har klinikada o'zicha. Katta hamshiradan so'rang va bo'limingiz qoidalariga amal qiling.","Ukoldan keyin ignaga qo'l bilan <b>qalpoqcha kiydirilmaydi</b>: ko'pincha shunda sanchiladi. Darhol idishga.","Dezinfeksiya eritmasi qadoqdagi yo'riqnoma bo'yicha qat'iy suyultiriladi: vaqt va konsentratsiya muhim. Qo'lqopda ishlanadi.","Igna sanchildimi? Yarani so'rmang va siqmang. Oqar suv ostida sovun bilan yuving.","<b>Darhol</b> katta hamshira yoki shifokorga ayting va hodisani yozing. Profilaktika kerak bo'lsa, u birinchi soatlarda boshlanadi."]},
+ tip:{ru:"Никогда не перекладывайте отходы руками из одного мешка в другой и не утрамбовывайте их: внутри могут быть иглы.",uz:"Chiqindini hech qachon qo'l bilan bir xaltadan boshqasiga o'tkazmang va zichlamang: ichida ignalar bo'lishi mumkin."},
+ quiz:[
+  {a:1,ru:{q:"Что делать с иглой после укола?",o:["Надеть колпачок и выбросить","Сразу в контейнер для острого, без колпачка","В обычный мусор"],e:"Надевая колпачок, люди чаще всего колются."},uz:{q:"Ukoldan keyin igna bilan nima qilinadi?",o:["Qalpoqcha kiydirib tashlash","Qalpoqchasiz darhol o'tkir narsalar idishiga","Oddiy chiqindiga"],e:"Qalpoqcha kiydirishda odamlar ko'pincha sanchiladi."}},
+  {a:0,ru:{q:"До какого уровня заполняют контейнер для острого?",o:["До ¾","До краёв","Утрамбовав"],e:"Переполненный контейнер колет руки."},uz:{q:"O'tkir narsalar idishi qaysi darajagacha to'ldiriladi?",o:["¾ gacha","Chetigacha","Zichlab"],e:"To'lib ketgan idish qo'lga sanchiladi."}},
+  {a:2,ru:{q:"Укололись использованной иглой. Первое действие:",o:["Высосать кровь","Ничего, пройдёт","Промыть водой с мылом и сразу сообщить старшей медсестре"],e:"Профилактику, если нужна, начинают в первые часы."},uz:{q:"Ishlatilgan igna sanchildi. Birinchi harakat:",o:["Qonni so'rib olish","Hech narsa, o'tib ketadi","Suv va sovun bilan yuvib, darhol katta hamshiraga aytish"],e:"Profilaktika kerak bo'lsa, birinchi soatlarda boshlanadi."}},
+  {a:1,ru:{q:"Как разводить дезинфицирующий раствор?",o:["На глаз, покрепче","Строго по инструкции на упаковке","Любой водой без мерки"],e:"Слабый не убьёт микробы, крепкий вредит коже и лёгким."},uz:{q:"Dezinfeksiya eritmasi qanday suyultiriladi?",o:["Taxminan, quyuqroq","Qadoqdagi yo'riqnoma bo'yicha qat'iy","Istalgan suv bilan o'lchovsiz"],e:"Kuchsizi mikrobni o'ldirmaydi, kuchlisi teri va o'pkaga zarar."}}]},
+
+/* ---------- ADVANCED: FIRST AID ---------- */
+{id:'a1',lv:2,min:8,calc:true,warn:A103,
+ t:{ru:"Сердечно-лёгочная реанимация",uz:"Yurak-o'pka reanimatsiyasi"},s:{ru:"Взрослый без сознания и не дышит",uz:"Katta yoshli hushsiz va nafas olmayapti"},
+ svg:l=>svg(
+  flow(20,14,150,40,R(l,"1. Безопасно?","1. Xavfsizmi?"),R(l,"ток, дорога, газ","tok, yo'l, gaz"))+
+  flow(190,14,150,40,R(l,"2. Реагирует?","2. Javob beradimi?"),R(l,"окликните, потрясите","chaqiring, silkiting"))+
+  flow(20,74,150,40,R(l,"3. Дышит? ≤10 с","3. Nafas? ≤10 s"),R(l,"голову назад, смотрите","boshni orqaga, qarang"))+
+  flow(190,74,150,40,R(l,"4. 103 + АНД","4. 103 + AND"),R(l,"громкая связь","baland aloqa"),'color-mix(in srgb,var(--wH) 14%,var(--surface))')+
+  arrow(170,34,188,34)+arrow(265,54,110,74)+arrow(170,94,188,94)+arrow(265,114,180,132)+
+  box(20,134,320,62,'color-mix(in srgb,var(--accent) 18%,var(--surface))')+tx(180,158,R(l,"5. 30 нажатий : 2 вдоха","5. 30 bosish : 2 nafas"),{w:700,s:15})+
+  tx(180,180,R(l,"центр груди · 5–6 см · 100–120 в минуту","ko'krak markazi · 5–6 sm · daqiqada 100–120"),{s:11})+
+  ln('M180 196V212','var(--muted)')+tx(180,224,R(l,"Без перерыва, пока не приедет скорая,","Tez yordam kelguncha, AND ishlaguncha"),{s:10,w:600,c:'var(--wH)'})+tx(180,238,R(l,"не заработает АНД или человек не задышит","yoki odam nafas olguncha to'xtamang"),{s:10,w:600,c:'var(--wH)'}),
+  R(l,"Схема: пять шагов реанимации, в конце 30 нажатий и 2 вдоха","Sxema: reanimatsiyaning besh bosqichi, oxirida 30 bosish va 2 nafas"),250),
+ steps:{ru:["Убедитесь, что вам ничего не угрожает. Громко окликните человека и потрясите за плечи.","Не реагирует: откройте дыхательные пути — ладонь на лоб, голову назад, двумя пальцами поднимите подбородок. Смотрите, слушайте и чувствуйте дыхание <b>не больше 10 секунд</b>.","Редкие судорожные «всхлипы» — это НЕ нормальное дыхание. Начинайте реанимацию.","Звоните 103 на громкой связи или пусть позвонит другой человек. Попросите принести АНД (автоматический дефибриллятор), если он есть рядом.","Основание ладони в центр груди, вторая ладонь сверху, руки прямые. Давите на 5–6 см, 100–120 раз в минуту, давайте груди полностью подняться.","После 30 нажатий — 2 вдоха «рот ко рту», зажав нос (по 1 секунде, грудь должна подняться). Не умеете или не можете делать вдохи — давите на грудь без остановки.","АНД принесли: включите и делайте, что он говорит. Во время разряда никто не касается человека."],
+       uz:["Sizga hech narsa xavf solmayotganiga ishonch hosil qiling. Odamni baland chaqiring va yelkasidan silkiting.","Javob bermasa: nafas yo'lini oching — kaftni peshonaga, boshni orqaga, ikki barmoq bilan iyakni ko'taring. Nafasni <b>10 soniyadan ko'p emas</b> kuzating, eshiting va his qiling.","Kamdan-kam tortishib «hiqillash» — bu ODDIY nafas EMAS. Reanimatsiyani boshlang.","103 ga baland aloqada qo'ng'iroq qiling yoki boshqa odam qilsin. Yaqinda bo'lsa, AND (avtomatik defibrillyator) olib kelishni so'rang.","Kaft asosini ko'krak markaziga, ikkinchi kaft ustiga, qo'llar to'g'ri. 5–6 sm ga, daqiqada 100–120 marta bosing, ko'krak to'liq ko'tarilsin.","30 bosishdan keyin — burunni qisib, 2 ta «og'izdan og'izga» nafas (har biri 1 soniya, ko'krak ko'tarilishi kerak). Qila olmasangiz — to'xtamasdan ko'krakni bosing.","AND keltirildi: yoqing va u aytganini bajaring. Zaryad paytida hech kim odamga tegmaydi."]},
+ tip:{ru:"Ритм 100–120 в минуту — как песня «Stayin' Alive». В разделе «Инструменты» есть метроном. Устали — меняйтесь с помощником каждые 2 минуты, без паузы.",uz:"Daqiqada 100–120 marom — «Stayin' Alive» qo'shig'i kabi. «Asboblar» bo'limida metronom bor. Charchasangiz — har 2 daqiqada yordamchi bilan to'xtamay almashing."},
+ quiz:[
+  {a:1,ru:{q:"Соотношение нажатий и вдохов у взрослого:",o:["15 : 1","30 : 2","5 : 5"],e:"30 нажатий, затем 2 вдоха."},uz:{q:"Katta yoshlida bosish va nafas nisbati:",o:["15 : 1","30 : 2","5 : 5"],e:"30 bosish, keyin 2 nafas."}},
+  {a:2,ru:{q:"На какую глубину давить на грудь?",o:["1–2 см","10 см","5–6 см"],e:"Меньше — кровь не идёт к мозгу, больше — риск травмы."},uz:{q:"Ko'krakni qancha chuqurlikka bosish kerak?",o:["1–2 sm","10 sm","5–6 sm"],e:"Kam bo'lsa qon miyaga bormaydi, ko'p bo'lsa jarohat xavfi."}},
+  {a:0,ru:{q:"Человек без сознания, редко «всхлипывает». Это…",o:["Не нормальное дыхание: начать реанимацию","Нормальное дыхание: ждать","Сон: не трогать"],e:"Судорожные вдохи бывают при остановке сердца."},uz:{q:"Odam hushsiz, kamdan-kam «hiqillaydi». Bu…",o:["Oddiy nafas emas: reanimatsiyani boshlash","Oddiy nafas: kutish","Uyqu: tegmaslik"],e:"Tortishib nafas olish yurak to'xtaganda bo'ladi."}},
+  {a:1,ru:{q:"Сколько времени проверять дыхание?",o:["1 минуту","Не больше 10 секунд","3 минуты"],e:"Каждая секунда без нажатий снижает шансы."},uz:{q:"Nafasni qancha vaqt tekshirish kerak?",o:["1 daqiqa","10 soniyadan ko'p emas","3 daqiqa"],e:"Bosishsiz har soniya imkoniyatni kamaytiradi."}}]},
+
+{id:'a2',lv:2,min:6,warn:A103,
+ t:{ru:"Подавился: инородное тело",uz:"Tomog'iga tiqildi: yot jism"},s:{ru:"Удары по спине и приём Геймлиха",uz:"Orqaga urish va Geymlix usuli"},
+ svg:l=>svg(
+  flow(105,10,150,40,R(l,"Может кашлять,","Yo'tala oladi,"),R(l,"говорить?","gapira oladimi?"))+
+  arrow(140,50,80,72)+arrow(220,50,280,72)+tx(100,64,R(l,"да","ha"),{s:10,w:700})+tx(262,64,R(l,"нет","yo'q"),{s:10,w:700})+
+  flow(10,74,140,46,R(l,"Пусть кашляет","Yo'talsin"),R(l,"не бейте по спине","orqaga urmang"))+
+  flow(200,74,150,46,R(l,"5 ударов по спине","Orqaga 5 zarba"),R(l,"наклонив вперёд","oldinga egib"),'color-mix(in srgb,var(--accent) 18%,var(--surface))')+
+  arrow(275,120,275,138)+
+  flow(200,140,150,46,R(l,"5 толчков в живот","Qoringa 5 turtki"),R(l,"кулак над пупком","kindik ustida musht"),'color-mix(in srgb,var(--accent) 18%,var(--surface))')+
+  ln('M350 163Q358 130 350 97','var(--muted)')+
+  arrow(275,186,275,204)+flow(170,206,180,36,R(l,"Без сознания → 103 + СЛР","Hushsiz → 103 + YO'R"),'','color-mix(in srgb,var(--wH) 14%,var(--surface))')+
+  tx(80,150,R(l,"Беременная","Homilador"),{s:10,w:600})+tx(80,164,R(l,"или полный:","yoki to'la:"),{s:10,w:600})+tx(80,180,R(l,"толчки в грудь","ko'krakka turtki"),{s:10,c:'var(--muted)'}),
+  R(l,"Схема действий, если человек подавился: кашель, 5 ударов по спине, 5 толчков в живот, без сознания — реанимация","Sxema: odam tiqilganda harakatlar: yo'tal, orqaga 5 zarba, qoringa 5 turtki, hushsiz bo'lsa — reanimatsiya"),250),
+ steps:{ru:["Спросите: «Вы подавились?» Если человек кашляет и может говорить, пусть кашляет сам. Не бейте по спине и не давайте пить.","Не может кашлять, говорить, хватается за горло: встаньте сбоку-сзади, наклоните его вперёд, поддерживая грудь рукой.","Нанесите <b>до 5 резких ударов</b> основанием ладони между лопатками. После каждого смотрите, не вышло ли.","Не помогло: встаньте сзади, обхватите. Кулак — между пупком и нижним концом грудины, второй рукой обхватите кулак. Резко дёрните внутрь и вверх, до 5 раз.","Чередуйте 5 ударов и 5 толчков, пока предмет не выйдет или человек не потеряет сознание.","Потерял сознание: аккуратно опустите на пол, звоните 103 и начинайте реанимацию (урок «Сердечно-лёгочная реанимация»). После толчков в живот человека обязательно должен осмотреть врач."],
+       uz:["So'rang: «Tomog'ingizga tiqildimi?» Odam yo'talsa va gapira olsa, o'zi yo'talsin. Orqasiga urmang va suv bermang.","Yo'tala olmasa, gapira olmasa, tomog'ini ushlasa: yon-orqasida turing, ko'kragini qo'l bilan ushlab, oldinga egiting.","Kuraklar orasiga kaft asosi bilan <b>5 tagacha keskin zarba</b> bering. Har biridan keyin chiqdimi, qarang.","Yordam bermasa: orqasida turib quchoqlang. Musht — kindik va to'sh suyagining pastki uchi orasida, ikkinchi qo'l bilan mushtni ushlang. Ichkariga va yuqoriga keskin torting, 5 martagacha.","Narsa chiqquncha yoki odam hushini yo'qotguncha 5 zarba va 5 turtkini almashtiring.","Hushini yo'qotdi: sekin polga yotqizing, 103 ga qo'ng'iroq qiling va reanimatsiyani boshlang («Yurak-o'pka reanimatsiyasi» darsi). Qoringa turtkidan keyin odamni albatta shifokor ko'rishi kerak."]},
+ tip:{ru:"Не лезьте пальцами в рот вслепую: можно протолкнуть предмет глубже. Достают только то, что хорошо видно.",uz:"Ko'r-ko'rona barmoqni og'izga tiqmang: narsani chuqurroq itarib yuborishingiz mumkin. Faqat aniq ko'rinib turganini olishadi."},
+ quiz:[
+  {a:0,ru:{q:"Человек подавился, но громко кашляет. Что делать?",o:["Поощрять кашель и наблюдать","Сразу бить по спине","Дать воды"],e:"Сильный кашель — лучший способ вытолкнуть предмет."},uz:{q:"Odam tiqildi, lekin baland yo'talyapti. Nima qilish kerak?",o:["Yo'talishga undash va kuzatish","Darhol orqasiga urish","Suv berish"],e:"Kuchli yo'tal — narsani chiqarishning eng yaxshi usuli."}},
+  {a:1,ru:{q:"Куда ставить кулак при толчках в живот?",o:["На грудину","Между пупком и нижним концом грудины","Ниже пупка"],e:"Толчок выталкивает воздух из лёгких вместе с предметом."},uz:{q:"Qoringa turtkida musht qayerga qo'yiladi?",o:["To'sh suyagiga","Kindik va to'sh suyagining pastki uchi orasiga","Kindikdan pastga"],e:"Turtki o'pkadan havoni narsa bilan birga chiqaradi."}},
+  {a:2,ru:{q:"Пять ударов по спине не помогли. Дальше:",o:["Ждать","Залезть пальцами в горло","5 толчков в живот, потом снова 5 ударов"],e:"Чередуйте, пока предмет не выйдет."},uz:{q:"Orqaga besh zarba yordam bermadi. Keyin:",o:["Kutish","Barmoqni tomoqqa tiqish","Qoringa 5 turtki, keyin yana 5 zarba"],e:"Narsa chiqquncha almashtiring."}},
+  {a:1,ru:{q:"Пострадавший потерял сознание. Что делать?",o:["Продолжать толчки стоя","Опустить на пол, звонить 103, начать реанимацию","Посадить на стул"],e:"Нажатия на грудь тоже помогают вытолкнуть предмет."},uz:{q:"Jabrlanuvchi hushini yo'qotdi. Nima qilish kerak?",o:["Tik turib turtkini davom ettirish","Polga yotqizib, 103 ga qo'ng'iroq, reanimatsiyani boshlash","Stulga o'tqazish"],e:"Ko'krakni bosish ham narsani chiqarishga yordam beradi."}}]},
+
+{id:'a3',lv:2,min:7,warn:A103,
+ t:{ru:"Кровотечение и раны",uz:"Qon ketishi va yaralar"},s:{ru:"Давящая повязка, жгут, кровь из носа",uz:"Bosuvchi bog'lam, jgut, burundan qon"},
+ svg:l=>svg(
+  tx(180,20,R(l,"Сильное кровотечение из руки или ноги","Qo'l yoki oyoqdan kuchli qon ketishi"),{w:700})+
+  `<path d="M20 90Q100 78 180 84Q260 90 330 96L330 130Q260 126 180 122Q100 118 20 128Z" fill="color-mix(in srgb,var(--wF) 14%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<ellipse cx="250" cy="108" rx="16" ry="7" fill="var(--wH)"/>`+tx(250,150,R(l,"рана","yara"),{s:10,w:600,c:'var(--wH)'})+
+  `<rect x="150" y="76" width="16" height="54" rx="3" fill="var(--fg)"/>`+tx(158,66,R(l,"жгут","jgut"),{s:11,w:700})+
+  ln('M166 158H234','var(--muted)')+ln('M166 152V164')+ln('M234 152V164')+tx(200,176,R(l,"5–7 см выше","5–7 sm yuqori"),{s:10,w:700})+
+  tx(58,164,R(l,"к сердцу","yurakka"),{s:10,c:'var(--muted)'})+arrow(84,148,30,148)+
+  flow(20,192,100,46,R(l,"1. Давить","1. Bosing"),R(l,"10 минут","10 daqiqa"))+
+  flow(130,192,100,46,R(l,"2. Повязка","2. Bog'lam"),R(l,"туго","qattiq"))+
+  flow(240,192,100,46,R(l,"3. Жгут","3. Jgut"),R(l,"+ время!","+ vaqt!"),'color-mix(in srgb,var(--wH) 14%,var(--surface))')+
+  arrow(120,215,128,215)+arrow(230,215,238,215),
+  R(l,"Схема: жгут на 5–7 см выше раны, ближе к сердцу; шаги: давить, повязка, жгут с записью времени","Sxema: jgut yaradan 5–7 sm yuqorida, yurakka yaqinroq; bosqichlar: bosish, bog'lam, vaqtini yozib jgut"),250),
+ steps:{ru:["Наденьте перчатки. Положите на рану чистую салфетку или бинт и <b>сильно прижмите</b> рукой. Держите не меньше 10 минут, не подглядывая.","Повязка промокла — не снимайте её, положите сверху ещё и давите сильнее. Затем туго забинтуйте (давящая повязка).","Жгут только если кровь из руки или ноги бьёт струёй или быстро течёт и давление не помогает. Накладывают на 5–7 см выше раны, не на сустав.","Затягивайте, пока кровь не остановится. <b>Запишите время</b> на жгуте или на коже и не ослабляйте его сами: снимет врач.","Кровь из носа: сесть, <b>наклонить голову вперёд</b>, зажать мягкую часть носа на 10–15 минут. Голову назад не запрокидывать: кровь стечёт в горло.","Звоните 103: сильное кровотечение, кровь не останавливается за 20 минут, рана глубокая или на лице, человек бледный и слабый."],
+       uz:["Qo'lqop kiying. Yaraga toza salfetka yoki bint qo'yib, qo'l bilan <b>qattiq bosing</b>. Kamida 10 daqiqa, qaramasdan ushlab turing.","Bog'lam ho'l bo'ldi — yechmang, ustiga yana qo'ying va kuchliroq bosing. Keyin qattiq bog'lang (bosuvchi bog'lam).","Jgut faqat qo'l yoki oyoqdan qon otilib yoki tez oqsa va bosish yordam bermasa. Yaradan 5–7 sm yuqoriga, bo'g'imga emas qo'yiladi.","Qon to'xtaguncha torting. <b>Vaqtni</b> jgutga yoki teriga <b>yozing</b> va o'zingiz bo'shatmang: shifokor yechadi.","Burundan qon: o'tirish, <b>boshni oldinga egish</b>, burunning yumshoq qismini 10–15 daqiqa qisish. Boshni orqaga tashlamang: qon tomoqqa oqadi.","103 ga qo'ng'iroq: kuchli qon ketishi, 20 daqiqada to'xtamaydi, yara chuqur yoki yuzda, odam oqarib, holsizlangan."]},
+ tip:{ru:"Предмет торчит из раны (нож, стекло)? Не вытаскивайте его. Закрепите бинтом вокруг и звоните 103.",uz:"Yaradan narsa chiqib turibdimi (pichoq, shisha)? Uni sug'urmang. Atrofidan bint bilan mahkamlang va 103 ga qo'ng'iroq qiling."},
+ quiz:[
+  {a:0,ru:{q:"Первое действие при кровотечении из раны:",o:["Сильно прижать рану чистой салфеткой","Сразу наложить жгут","Промыть рану и ждать"],e:"Прямое давление останавливает большинство кровотечений."},uz:{q:"Yaradan qon ketganda birinchi harakat:",o:["Yarani toza salfetka bilan qattiq bosish","Darhol jgut qo'yish","Yarani yuvib kutish"],e:"To'g'ridan-to'g'ri bosish ko'p qon ketishlarni to'xtatadi."}},
+  {a:2,ru:{q:"Повязка промокла кровью. Что делать?",o:["Снять и положить новую","Оставить и не трогать","Не снимая, положить сверху ещё и давить сильнее"],e:"Снимая, вы срываете сгусток, и кровь пойдёт снова."},uz:{q:"Bog'lam qonga to'ldi. Nima qilish kerak?",o:["Yechib yangisini qo'yish","Qoldirib tegmaslik","Yechmasdan ustiga yana qo'yib, kuchliroq bosish"],e:"Yechsangiz, ivib qolgan qonni uzasiz va qon yana ketadi."}},
+  {a:1,ru:{q:"Что обязательно сделать после наложения жгута?",o:["Ослабить через 5 минут","Записать время","Снять через час самому"],e:"Врач должен знать, сколько времени нога или рука без крови."},uz:{q:"Jgut qo'ygandan keyin albatta nima qilish kerak?",o:["5 daqiqadan keyin bo'shatish","Vaqtni yozish","Bir soatdan keyin o'zi yechish"],e:"Shifokor qo'l yoki oyoq qancha vaqt qonsiz qolganini bilishi kerak."}},
+  {a:1,ru:{q:"Кровь из носа. Как правильно?",o:["Запрокинуть голову назад","Наклонить голову вперёд и зажать нос на 10–15 минут","Лечь на спину"],e:"Запрокинув голову, человек глотает кровь, может начаться рвота."},uz:{q:"Burundan qon ketyapti. To'g'risi:",o:["Boshni orqaga tashlash","Boshni oldinga egib, burunni 10–15 daqiqa qisish","Chalqancha yotish"],e:"Boshni orqaga tashlasa, odam qonni yutadi, qusish boshlanishi mumkin."}}]},
+
+{id:'a4',lv:2,min:7,warn:A103,
+ t:{ru:"Ожоги и обморок",uz:"Kuyish va hushdan ketish"},s:{ru:"Охладить 20 минут · устойчивое боковое положение",uz:"20 daqiqa sovutish · barqaror yonbosh holat"},
+ svg:l=>svg(
+  box(14,14,160,108,'color-mix(in srgb,var(--wC) 12%,var(--surface))')+tx(94,36,R(l,"ОЖОГ","KUYISH"),{w:700,s:13})+
+  `<circle cx="94" cy="72" r="22" fill="var(--surface)" stroke="var(--wC)" stroke-width="3"/>`+tx(94,77,'20',{w:700,s:16})+tx(94,110,R(l,"минут прохладной воды","daqiqa salqin suv"),{s:10,w:600})+
+  box(186,14,160,108,'color-mix(in srgb,var(--wH) 10%,var(--surface))')+tx(266,36,R(l,"НЕЛЬЗЯ","MUMKIN EMAS"),{w:700,s:13,c:'var(--wH)'})+
+  tx(200,58,R(l,"✕ лёд","✕ muz"),{a:'start'})+tx(200,76,R(l,"✕ масло, крем, яйцо","✕ yog', krem, tuxum"),{a:'start'})+tx(200,94,R(l,"✕ прокалывать пузыри","✕ pufaklarni teshish"),{a:'start'})+tx(200,112,R(l,"✕ отдирать одежду","✕ kiyimni yulib olish"),{a:'start'})+
+  tx(180,146,R(l,"Без сознания, но дышит: устойчивое боковое положение","Hushsiz, lekin nafas oladi: barqaror yonbosh holat"),{w:700})+
+  `<rect x="20" y="214" width="320" height="6" rx="3" fill="var(--line)"/>`+
+  `<circle cx="74" cy="192" r="15" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<path d="M90 176H220Q236 176 236 192V212H90Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  ln('M110 212L96 200L64 208','var(--fg)',5)+ln('M236 200L280 172L320 212','var(--fg)',6)+ln('M236 208H320','var(--fg)',6)+
+  tx(56,172,R(l,"голова назад,","bosh orqaga,"),{s:9,c:'var(--muted)'})+tx(290,166,R(l,"колено вперёд","tizza oldinga"),{s:9,c:'var(--muted)'})+
+  tx(180,240,R(l,"Дыхание проверять каждую минуту","Nafasni har daqiqada tekshirish"),{s:10,w:600}),
+  R(l,"Схема: ожог охлаждать 20 минут прохладной водой; чего нельзя; человек в устойчивом боковом положении","Sxema: kuyishni 20 daqiqa salqin suv bilan sovutish; nima mumkin emas; barqaror yonbosh holatdagi odam"),250),
+ steps:{ru:["Ожог: сразу под <b>прохладную проточную воду на 20 минут</b>. Не ледяную и не лёд: он повреждает кожу.","Пока охлаждаете, снимите кольца, часы, браслеты: место опухнет. Прилипшую одежду не отрывайте.","После — закройте чистой нетугой повязкой или пищевой плёнкой. Пузыри не прокалывать, ничем не мазать.","Звоните 103: ожог больше ладони пострадавшего, на лице, руках, в паху, от тока или химии, у ребёнка или пожилого.","Обморок: уложите на спину, <b>поднимите ноги</b> на 30–40 см, расстегните воротник и ремень, откройте окно. Обычно приходит в себя за 1–2 минуты.","Не приходит в себя, но дышит: положите на бок (устойчивое боковое положение) — верхняя нога согнута, голова чуть назад. Звоните 103 и проверяйте дыхание. Перестал дышать — реанимация."],
+       uz:["Kuyish: darhol <b>20 daqiqa salqin oqar suv</b> ostiga. Muzdek emas va muz emas: u terini shikastlaydi.","Sovutayotganda uzuk, soat, bilaguzukni yeching: joy shishadi. Yopishgan kiyimni yulib olmang.","Keyin toza, bo'sh bog'lam yoki oziq-ovqat plyonkasi bilan yoping. Pufaklarni teshmang, hech narsa surtmang.","103 ga qo'ng'iroq: kuyish jabrlanuvchi kaftidan katta, yuzda, qo'lda, chovda, tok yoki kimyoviy, bola yoki keksada.","Hushdan ketish: chalqancha yotqizing, <b>oyoqlarini</b> 30–40 sm <b>ko'taring</b>, yoqa va kamarni yeching, derazani oching. Odatda 1–2 daqiqada o'ziga keladi.","O'ziga kelmasa, lekin nafas olsa: yonboshga yotqizing (barqaror yonbosh holat) — yuqoridagi oyoq bukilgan, bosh biroz orqaga. 103 ga qo'ng'iroq qiling va nafasni tekshiring. Nafas to'xtasa — reanimatsiya."]},
+ tip:{ru:"Человеку после обморока не давайте сразу вставать: пусть полежит 10–15 минут, потом посидит. Не бейте по щекам и не давайте нюхать нашатырь.",uz:"Hushdan ketgan odamni darhol turg'izmang: 10–15 daqiqa yotsin, keyin o'tirsin. Yuziga urmang va novshadil hidlatmang."},
+ quiz:[
+  {a:1,ru:{q:"Сколько охлаждать ожог водой?",o:["1 минуту","20 минут","Не охлаждать"],e:"20 минут прохладной воды уменьшают глубину ожога."},uz:{q:"Kuyishni suv bilan qancha sovutish kerak?",o:["1 daqiqa","20 daqiqa","Sovutmaslik"],e:"20 daqiqa salqin suv kuyish chuqurligini kamaytiradi."}},
+  {a:1,ru:{q:"Ожог охладили. Что дальше?",o:["Намазать маслом или кремом","Закрыть чистой нетугой повязкой или плёнкой","Проколоть пузыри"],e:"Масло держит тепло в коже, а через проколотый пузырь попадает инфекция."},uz:{q:"Kuyish sovutildi. Keyin nima?",o:["Yog' yoki krem surtish","Toza, bo'sh bog'lam yoki plyonka bilan yopish","Pufaklarni teshish"],e:"Yog' issiqlikni terida ushlab qoladi, teshilgan pufakdan esa infeksiya kiradi."}},
+  {a:0,ru:{q:"Человек упал в обморок. Что сделать?",o:["Уложить и поднять ноги","Посадить и дать воды","Бить по щекам"],e:"Поднятые ноги возвращают кровь к мозгу."},uz:{q:"Odam hushdan ketdi. Nima qilish kerak?",o:["Yotqizib, oyoqlarini ko'tarish","O'tqazib, suv berish","Yuziga urish"],e:"Ko'tarilgan oyoqlar qonni miyaga qaytaradi."}},
+  {a:1,ru:{q:"Без сознания, но дышит нормально. Как положить?",o:["На спину, голову на подушку","На бок, в устойчивое боковое положение","Посадить"],e:"На боку язык не западает, а рвота не попадёт в лёгкие."},uz:{q:"Hushsiz, lekin oddiy nafas olyapti. Qanday yotqiziladi?",o:["Chalqancha, boshini yostiqqa","Yonboshga, barqaror yonbosh holatga","O'tqazish"],e:"Yonboshda til botib qolmaydi, qusuq esa o'pkaga tushmaydi."}}]}
+];
+
+// UI for Медсестра Pro. Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Медсестра Pro',tag:'Для медсестёр, медбратьев и сиделок · 13 уроков',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Основы ухода','Уход за пациентом','Первая помощь'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Инструменты'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} · урок ${n} · ~${m} мин`,
+ warnB:'Скорая: 103.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть инструменты',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ disc:'Уроки не заменяют медицинское образование. Лекарства и дозы назначает только врач.',
+ puT:'Пульс и дыхание',puSub:'Посчитали за несколько секунд — переведём в минуту',what:'Что считали',pulse:'Пульс',resp:'Дыхание',secs:'Сколько секунд считали',cnt:'Сколько насчитали',perMin:'В минуту',state:'Оценка',
+ lowS:'Ниже нормы',okS:'Норма',hiS:'Выше нормы',puNote:'Норма для взрослого в покое: пульс 60–100, дыхание 12–20. Отклонение — сообщите врачу.',
+ bpT:'Давление',bpSub:'Какая категория у этих цифр',sys:'Верхнее',dia:'Нижнее',bpNote:'Одна высокая цифра — ещё не диагноз. Перемерьте через 1–2 минуты и сообщите врачу.',
+ bpC:['Низкое','Нормальное','Высокое нормальное','Повышенное','Очень высокое: сразу врачу'],
+ mtT:'Метроном для реанимации',mtSub:'110 нажатий в минуту, счёт до 30',mtGo:'Старт',mtStop:'Стоп',mtNote:'После 30 нажатий — 2 вдоха. Звук работает, если телефон не на беззвучном.',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Hamshira Pro',tag:'Hamshiralar va parvarishchilar uchun · 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Parvarish asoslari','Bemor parvarishi','Birinchi yordam'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Asboblar'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} · ${n}-dars · ~${m} daq`,
+ warnB:'Tez yordam: 103.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Asboblarni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ disc:'Darslar tibbiy ta\'limni almashtirmaydi. Dori va dozani faqat shifokor belgilaydi.',
+ puT:'Puls va nafas',puSub:'Bir necha soniyada sanadingiz — daqiqaga aylantiramiz',what:'Nima sanaldi',pulse:'Puls',resp:'Nafas',secs:'Necha soniya sanaldi',cnt:'Nechta sanaldi',perMin:'Daqiqada',state:'Baho',
+ lowS:'Me\'yordan past',okS:'Me\'yor',hiS:'Me\'yordan yuqori',puNote:'Katta yoshli uchun tinch holatda me\'yor: puls 60–100, nafas 12–20. Chetlanish — shifokorga ayting.',
+ bpT:'Bosim',bpSub:'Bu raqamlar qaysi toifada',sys:'Yuqori',dia:'Pastki',bpNote:'Bitta yuqori raqam hali tashxis emas. 1–2 daqiqadan keyin qayta o\'lchang va shifokorga ayting.',
+ bpC:['Past','Me\'yoriy','Yuqori me\'yoriy','Oshgan','Juda yuqori: darhol shifokorga'],
+ mtT:'Reanimatsiya metronomi',mtSub:'Daqiqada 110 bosish, 30 gacha sanash',mtGo:'Boshlash',mtStop:'To\'xtatish',mtNote:'30 bosishdan keyin — 2 nafas. Telefon ovozsiz rejimda bo\'lmasa, ovoz ishlaydi.',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (ms_)
+const pk=k=>(k==='lang'?'ep_':'ms_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{k:'p',sec:30,n:40,s:130,d:85}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="var(--accent-ink)"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}<p class="note">${L.disc}</p></main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<p class="note">${L.disc}</p><button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    h+='</div>'}
+  if(x.warn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${L.warnB}</b> ${tr(x.warn)}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* tools: pulse/breathing per minute, blood pressure category, CPR metronome */
+const numv=v=>+String(v).replace(',','.')||0;
+const seg=(key,val,opts)=>`<div class="seg" role="group">${opts.map(([v,t])=>`<button type="button" data-k="${key}" data-v="${v}" aria-pressed="${val==v}">${t}</button>`).join('')}</div>`;
+function calcBlock(){const L=U();const c=S.calc;const sc=lang==='ru'?'с':'s';
+  return `<div class="card stack"><div><h3>${L.puT}</h3><p class="expl">${L.puSub}</p></div>
+  <div class="fld"><span>${L.what}</span>${seg('k',c.k,[['p',L.pulse],['r',L.resp]])}</div>
+  <div class="fld"><span>${L.secs}</span>${seg('sec',c.sec,[[15,'15 '+sc],[30,'30 '+sc],[60,'60 '+sc]])}</div>
+  <label class="fld" for="cn">${L.cnt}<input id="cn" type="number" inputmode="numeric" min="0" step="1" value="${c.n}"></label>
+  <div class="out two" id="out1"></div><p class="expl">${L.puNote}</p></div>
+  <div class="card stack"><div><h3>${L.bpT}</h3><p class="expl">${L.bpSub}</p></div>
+  <div class="pair"><label class="fld" for="bs">${L.sys}<input id="bs" type="number" inputmode="numeric" min="0" step="1" value="${c.s}"></label>
+  <label class="fld" for="bd">${L.dia}<input id="bd" type="number" inputmode="numeric" min="0" step="1" value="${c.d}"></label></div>
+  <div class="out" id="out2" style="grid-template-columns:1fr"></div><p class="expl">${L.bpNote}</p></div>
+  <div class="card stack"><div><h3>${L.mtT}</h3><p class="expl">${L.mtSub}</p></div>
+  <div class="metro"><div class="beat" id="beat" aria-live="off">0</div></div>
+  <button class="btn" id="mt" type="button">${MT.t?L.mtStop:L.mtGo}</button><p class="expl">${L.mtNote}</p></div>`}
+function bpCat(s,d){if(!s||!d)return -1;if(s>=180||d>=110)return 4;if(s>=140||d>=90)return 3;if(s<90||d<60)return 0;if(s>=130||d>=85)return 2;return 1}
+function paintCalc(){const L=U();const c=S.calc;
+  const pm=Math.round(Math.max(0,numv(c.n))*60/c.sec);const [lo,hi]=c.k==='p'?[60,100]:[12,20];
+  const st=numv(c.n)>0?(pm<lo?L.lowS:pm>hi?L.hiS:L.okS):'—';const bg=st===L.okS?'var(--ok)':st==='—'?'':'var(--bad)';
+  $('#out1').innerHTML=`<div><span>${L.perMin}</span><b>${numv(c.n)>0?pm:'—'}</b></div><div style="${bg?`background:${bg};color:#fff`:''}"><span>${L.state}</span><b style="font-size:15px">${st}</b></div>`;
+  const k=bpCat(numv(c.s),numv(c.d));const bg2=k<0?'':k===1?'var(--ok)':k===2?'var(--wF)':'var(--bad)';
+  $('#out2').innerHTML=`<div style="${bg2?`background:${bg2};color:#fff`:''}"><span>${numv(c.s)||'—'} / ${numv(c.d)||'—'}</span><b style="font-size:16px">${k<0?'—':L.bpC[k]}</b></div>`}
+const MT={t:null,n:0,ctx:null};
+function tick(){MT.n=MT.n%30+1;const b=$('#beat');if(b){b.textContent=MT.n;b.classList.remove('on');void b.offsetWidth;b.classList.add('on');b.classList.toggle('last',MT.n===30)}
+  try{const a=MT.ctx;const o=a.createOscillator(),g=a.createGain();o.frequency.value=MT.n===30?1320:880;g.gain.setValueAtTime(.25,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.08);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.09)}catch(e){}
+  try{if(tg&&tg.HapticFeedback)tg.HapticFeedback.impactOccurred('light')}catch(e){}}
+function mtStop(){if(MT.t){clearInterval(MT.t);MT.t=null}}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  on('#cn','n');on('#bs','s');on('#bd','d');
+  document.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k;S.calc[k]=k==='sec'?+b.dataset.v:b.dataset.v;document.querySelectorAll(`[data-k="${k}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  $('#beat').textContent=MT.n;
+  $('#mt').onclick=e=>{const L=U();if(MT.t){mtStop();e.target.textContent=L.mtGo}else{try{MT.ctx=MT.ctx||new (window.AudioContext||window.webkitAudioContext)();MT.ctx.resume()}catch(er){}MT.n=0;tick();MT.t=setInterval(tick,60000/110);e.target.textContent=L.mtStop}};
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;if(S.tab!==1)mtStop();render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){if(s!=='home')mtStop();S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>

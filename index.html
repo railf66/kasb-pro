@@ -71,7 +71,7 @@ a.card:focus-visible,.lang button:focus-visible,.bot:focus-visible{outline:3px s
  <div class="grid">
   <a class="card" href="elektrik/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="var(--fg)"/></svg></div><b data-t="el"></b><p data-t="eld"></p><span class="go" data-t="open"></span></a>
   <a class="card" href="santehnik/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z" fill="var(--fg)"/></svg></div><b data-t="pl"></b><p data-t="pld"></p><span class="go" data-t="open"></span></a>
-  <div class="card soon"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="none" stroke="var(--fg)" stroke-width="2"/></svg></div><b data-t="md"></b><p data-t="mdd"></p><span class="tag" data-t="soon"></span></div>
+  <a class="card" href="medsestra/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="var(--fg)"/></svg></div><b data-t="md"></b><p data-t="mdd"></p><span class="go" data-t="open"></span></a>
  </div>
  <a class="bot" href="https://t.me/elektrikpro_uz_bot" data-t="bot"></a>
  <p class="note" data-t="note"></p>
@@ -79,11 +79,11 @@ a.card:focus-visible,.lang button:focus-visible,.bot:focus-visible{outline:3px s
 <script>
 const T={ru:{h1:'Бесплатные уроки по рабочим профессиям',lead:'Схемы, пошаговые инструкции, тесты и калькуляторы. Учитесь с телефона, когда удобно.',f1:'Русский и узбекский',f2:'Работает в Telegram',f3:'Бесплатно',choose:'Выберите профессию',
  el:'Электрик',eld:'13 уроков: розетки, автоматы и УЗО, щиток, три фазы, двигатели. Калькулятор кабеля.',open:'Открыть ›',
- pl:'Сантехник',pld:'13 уроков: смесители, засоры, унитаз, канализация, пайка труб, бойлер, тёплый пол. Калькуляторы уклона и нагрева.',md:'Медсестра / медбрат',mdd:'Уход за больным, первая помощь, санитарные правила.',soon:'Скоро',
+ pl:'Сантехник',pld:'13 уроков: смесители, засоры, унитаз, канализация, пайка труб, бойлер, тёплый пол. Калькуляторы уклона и нагрева.',md:'Медсестра / медбрат',mdd:'13 уроков: гигиена рук, давление и пульс, пролежни, кормление, реанимация, кровотечения, ожоги. Метроном для СЛР.',soon:'Скоро',
  bot:'Открыть в Telegram',note:'Kasb Pro — от новичка до мастера. Уроки не заменяют обучение и допуск к работе.'},
 uz:{h1:'Ishchi kasblar bo\'yicha bepul darslar',lead:'Sxemalar, bosqichma-bosqich ko\'rsatmalar, testlar va kalkulyatorlar. Telefondan qulay vaqtda o\'rganing.',f1:'O\'zbek va rus tillari',f2:'Telegramda ishlaydi',f3:'Bepul',choose:'Kasbni tanlang',
  el:'Elektrik',eld:'13 ta dars: rozetka, avtomat va UZO, shit, uch faza, dvigatellar. Kabel kalkulyatori.',open:'Ochish ›',
- pl:'Santexnik',pld:'13 ta dars: smesitel, tiqilish, unitaz, kanalizatsiya, quvur payvandlash, boyler, issiq pol. Qiyalik va qizish kalkulyatorlari.',md:'Hamshira',mdd:'Bemorni parvarish qilish, birinchi yordam, sanitariya qoidalari.',soon:'Tez kunda',
+ pl:'Santexnik',pld:'13 ta dars: smesitel, tiqilish, unitaz, kanalizatsiya, quvur payvandlash, boyler, issiq pol. Qiyalik va qizish kalkulyatorlari.',md:'Hamshira',mdd:'13 ta dars: qo\'l gigiyenasi, bosim va puls, yotoq yaralari, ovqatlantirish, reanimatsiya, qon ketishi, kuyish. YO\'R metronomi.',soon:'Tez kunda',
  bot:'Telegramda ochish',note:'Kasb Pro — yangi boshlovchidan ustagacha. Darslar o\'qish va ishga ruxsatni almashtirmaydi.'}};
 let lang='ru';try{const v=localStorage.getItem('ep_lang');if(v)lang=JSON.parse(v)}catch(e){}
 function render(){document.documentElement.lang=lang;document.querySelectorAll('[data-t]').forEach(e=>e.textContent=T[lang][e.dataset.t]);document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===lang))}
