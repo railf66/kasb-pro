@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<title>Оптик Pro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a violet "laser" accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#8f6ef5; --accent-ink:#170a3a; --navy:#1b1f45; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#a68cff; --accent-ink:#170a3a; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#a68cff; --accent-ink:#170a3a; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select:focus,.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Оптик Pro (fiber optic installer). Each text is {ru, uz}. Quiz: a = index of the right option.
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}">${s}</text>`;
+const line=(d,c,w=3,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const circ=(x,y,r,f,st='var(--fg)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st}" stroke-width="1.5"/>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="12" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2)=>`${box(x,y,w,h)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const arrow=(x1,y1,x2,y2)=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+// fiber colours of a typical 12-colour code (the order depends on the cable maker)
+const FC=['#1e6fd0','#e07a1f','#1f9a4c','#8a5a2b','#7d8790','#f4f4f4','#d23b2f','#222','#f2c916','#8f4fd8','#f08bb4','#2fc3c9'];
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:5,
+ warnB:{ru:"Невидимый лазер.",uz:"Ko'rinmas lazer."},warn:{ru:"Свет в оптике невидим и может сжечь сетчатку. Никогда не смотрите в коннектор, розетку или торец волокна.",uz:"Optikadagi nur ko'rinmaydi va ko'z to'r pardasini kuydirishi mumkin. Hech qachon konnektor, rozetka yoki tola uchiga qaramang."},
+ t:{ru:"Техника безопасности",uz:"Xavfsizlik texnikasi"},s:{ru:"Лазер, осколки стекла, высота, колодцы",uz:"Lazer, shisha bo'laklari, balandlik, quduqlar"},
+ table:{head:{ru:["Опасность","Как защититься"],uz:["Xavf","Qanday himoyalanish"]},rows:{
+  ru:[["Лазер (невидимый)","Не смотреть в торец и коннектор. Проверять свет только прибором"],["Осколки волокна","Тёмный коврик, липкая лента, банка для обрезков, очки"],["Спирт","Не курить рядом, закрывать флакон, проветривать"],["Высота (опоры, фасады)","Страховочный пояс, исправная лестница, работать вдвоём"],["Колодцы связи","Проверить воздух на газ, проветрить, один человек наверху"],["Линии электропередачи","Держаться на расстоянии, на опорах ЛЭП — только с допуском"]],
+  uz:[["Lazer (ko'rinmas)","Tola uchi va konnektorga qaramang. Nurni faqat asbob bilan tekshiring"],["Tola bo'laklari","Qora gilamcha, yopishqoq lenta, chiqindi uchun banka, ko'zoynak"],["Spirt","Yonida chekmang, flakonni yoping, shamollating"],["Balandlik (ustunlar, fasadlar)","Himoya kamari, soz narvon, ikki kishi bo'lib ishlang"],["Aloqa quduqlari","Havoni gazga tekshiring, shamollating, bir kishi tepada tursin"],["Elektr uzatish liniyalari","Masofa saqlang, LEP ustunlarida faqat ruxsatnoma bilan"]]}},
+ steps:{ru:["Перед работой спросите, есть ли свет в линии. Даже если сказали «нет», всё равно не смотрите в торец.","Чистоту коннектора проверяют <b>микроскопом</b> или по экрану прибора, а не глазом.","Обрезки волокна сразу клейте на липкую ленту или кладите в банку с крышкой. Они тоньше волоса и легко входят в кожу.","Не ешьте и не пейте на рабочем месте. Перед едой вымойте руки. Не трите глаза.","Если осколок попал в кожу, достаньте его пинцетом при хорошем свете. Не давите: он сломается и уйдёт глубже."],
+       uz:["Ishdan oldin liniyada nur bormi, so'rang. «Yo'q» deyishsa ham, baribir tola uchiga qaramang.","Konnektor tozaligi ko'z bilan emas, <b>mikroskop</b> yoki asbob ekrani orqali tekshiriladi.","Tola qoldiqlarini darhol yopishqoq lentaga yopishtiring yoki qopqoqli bankaga soling. Ular sochdan ingichka va teriga oson kiradi.","Ish joyida yemang va ichmang. Ovqatdan oldin qo'lingizni yuving. Ko'zingizni ishqalamang.","Bo'lak teriga kirsa, yaxshi yorug'likda pinset bilan oling. Siqmang: u sinib, chuqurroq kiradi."]},
+ tip:{ru:"Рабочее место — тёмный коврик. На нём белые осколки волокна хорошо видно. После работы соберите всё липкой лентой.",uz:"Ish joyi uchun qora gilamcha. Unda oq tola bo'laklari yaxshi ko'rinadi. Ishdan keyin hammasini yopishqoq lenta bilan yig'ing."},
+ quiz:[
+  {a:2,ru:{q:"Как проверить, есть ли свет в волокне?",o:["Посмотреть в торец","Посмотреть в коннектор через лупу","Прибором: измерителем мощности"],e:"Рабочий лазер невидим. Свет проверяют только приборами."},uz:{q:"Tolada nur borligini qanday tekshirish mumkin?",o:["Tola uchiga qarash","Lupa orqali konnektorga qarash","Asbob bilan: quvvat o'lchagich"],e:"Ishchi lazer ko'rinmaydi. Nur faqat asboblar bilan tekshiriladi."}},
+  {a:1,ru:{q:"Куда девать обрезки волокна?",o:["На пол","На липкую ленту или в банку с крышкой","В карман"],e:"Осколки тоньше волоса и впиваются в кожу."},uz:{q:"Tola qoldiqlarini qayerga tashlash kerak?",o:["Polga","Yopishqoq lentaga yoki qopqoqli bankaga","Cho'ntakka"],e:"Bo'laklar sochdan ingichka va teriga kirib ketadi."}},
+  {a:0,ru:{q:"Что сделать перед спуском в колодец связи?",o:["Проверить воздух и проветрить, один остаётся наверху","Спуститься одному побыстрее","Закурить, чтобы проверить газ"],e:"В колодцах скапливаются опасные газы."},uz:{q:"Aloqa qudug'iga tushishdan oldin nima qilish kerak?",o:["Havoni tekshirib shamollatish, bir kishi tepada qoladi","Tezroq yolg'iz tushish","Gazni tekshirish uchun sigaret yoqish"],e:"Quduqlarda xavfli gazlar to'planadi."}},
+  {a:1,ru:{q:"Почему работают на тёмном коврике?",o:["Так красивее","На нём видно белые осколки волокна","Он греет руки"],e:"Осколки легко найти и собрать."},uz:{q:"Nima uchun qora gilamchada ishlanadi?",o:["Chiroyli bo'lishi uchun","Unda oq tola bo'laklari ko'rinadi","U qo'lni isitadi"],e:"Bo'laklarni topish va yig'ish oson."}}]},
+
+{id:'b2',lv:0,min:6,nowarn:true,
+ t:{ru:"Как устроено волокно",uz:"Tola qanday tuzilgan"},s:{ru:"Сердцевина, оболочка, одномод и многомод",uz:"O'zak, qobiq, bir modali va ko'p modali"},
+ svg:l=>svg(
+  circ(78,120,72,'var(--line)')+circ(78,120,52,'var(--surface)')+circ(78,120,37,'color-mix(in srgb,var(--accent) 22%,var(--surface))')+circ(78,120,7,'var(--accent)')+
+  line('M78 120L184 42',`var(--muted)`,1)+line('M113 120L184 92',`var(--muted)`,1)+line('M122 150L184 142',`var(--muted)`,1)+line('M140 162L184 192',`var(--muted)`,1)+
+  tx(188,38,R(l,"Сердцевина 9 мкм","O'zak 9 mkm"),{a:'start',w:700})+tx(188,52,R(l,"по ней идёт свет","nur shundan o'tadi"),{a:'start',s:10,c:'var(--muted)'})+
+  tx(188,88,R(l,"Оболочка 125 мкм","Qobiq 125 mkm"),{a:'start',w:700})+tx(188,102,R(l,"стекло, держит свет внутри","shisha, nurni ichida ushlaydi"),{a:'start',s:10,c:'var(--muted)'})+
+  tx(188,138,R(l,"Лак 250 мкм","Lak 250 mkm"),{a:'start',w:700})+tx(188,152,R(l,"цветной, снимает стриппер","rangli, stripper oladi"),{a:'start',s:10,c:'var(--muted)'})+
+  tx(188,188,R(l,"Буфер 900 мкм","Bufer 900 mkm"),{a:'start',w:700})+tx(188,202,R(l,"в пигтейлах и патчкордах","pigteyl va patchkordlarda"),{a:'start',s:10,c:'var(--muted)'})+
+  tx(78,232,R(l,"Срез одномодового волокна","Bir modali tola kesimi"),{w:600,c:'var(--muted)'}),
+  R(l,"Срез волокна: сердцевина 9 мкм, оболочка 125 мкм, лак 250 мкм, буфер 900 мкм","Tola kesimi: o'zak 9 mkm, qobiq 125 mkm, lak 250 mkm, bufer 900 mkm")),
+ table:{head:{ru:["","Одномод (SM)","Многомод (MM)"],uz:["","Bir modali (SM)","Ko'p modali (MM)"]},rows:{
+  ru:[["Сердцевина","9 мкм","50 или 62,5 мкм"],["Где","Провайдеры, дома, города","Внутри зданий, серверные"],["Расстояние","Десятки км","До 300–550 м"],["Цвет патчкорда","Жёлтый","Оранжевый, бирюзовый"]],
+  uz:[["O'zak","9 mkm","50 yoki 62,5 mkm"],["Qayerda","Provayderlar, uylar, shaharlar","Bino ichida, server xonalari"],["Masofa","O'nlab km","300–550 m gacha"],["Patchkord rangi","Sariq","To'q sariq, firuza"]]}},
+ steps:{ru:["Волокно — это тонкая стеклянная нить толщиной 125 мкм, как волос. Свет бежит по сердцевине и отражается от оболочки, поэтому не выходит наружу.","Провайдеры (интернет в квартиры, GPON) почти всегда используют <b>одномодовое</b> волокно G.652 или G.657.","G.657 — волокно, которое меньше боится изгибов. Его ставят в домах и подъездах.","Свет в волокне — инфракрасный (1310, 1490, 1550 нм). Глаз его не видит, а лазер всё равно повреждает глаз.","Стекло прочное на разрыв, но ломается при резком изгибе и от царапины. Царапина на оболочке — будущий обрыв."],
+       uz:["Tola — soch kabi 125 mkm qalinlikdagi ingichka shisha ip. Nur o'zak bo'ylab yuradi va qobiqdan qaytadi, shuning uchun tashqariga chiqmaydi.","Provayderlar (kvartiralarga internet, GPON) deyarli doim <b>bir modali</b> G.652 yoki G.657 tolasidan foydalanadi.","G.657 — egilishdan kamroq qo'rqadigan tola. Uni uylarda va podyezdlarda qo'yishadi.","Tolada nur infraqizil (1310, 1490, 1550 nm). Ko'z uni ko'rmaydi, lekin lazer baribir ko'zga zarar yetkazadi.","Shisha uzilishga chidamli, lekin keskin egilishdan va tirnalishdan sinadi. Qobiqdagi tirnalish — kelajakdagi uzilish."]},
+ tip:{ru:"Никогда не соединяйте одномод и многомод. Сердцевины разного размера: свет почти весь потеряется.",uz:"Hech qachon bir modali va ko'p modalini ulamang. O'zaklar har xil o'lchamda: nur deyarli butunlay yo'qoladi."},
+ quiz:[
+  {a:1,ru:{q:"Какой диаметр оболочки стандартного волокна?",o:["9 мкм","125 мкм","2 мм"],e:"Сердцевина 9 мкм, оболочка 125 мкм. Это размер волоса."},uz:{q:"Standart tola qobig'ining diametri qancha?",o:["9 mkm","125 mkm","2 mm"],e:"O'zak 9 mkm, qobiq 125 mkm. Bu soch o'lchami."}},
+  {a:0,ru:{q:"Какое волокно используют провайдеры для интернета в квартиры?",o:["Одномодовое","Многомодовое","Медное"],e:"GPON-сети строят на одномодовом волокне."},uz:{q:"Provayderlar kvartiralarga internet uchun qaysi toladan foydalanadi?",o:["Bir modali","Ko'p modali","Mis"],e:"GPON tarmoqlari bir modali tolada quriladi."}},
+  {a:2,ru:{q:"Какого цвета обычно одномодовый патчкорд?",o:["Оранжевый","Синий","Жёлтый"],e:"Жёлтый — одномод, оранжевый и бирюзовый — многомод."},uz:{q:"Bir modali patchkord odatda qanday rangda?",o:["To'q sariq","Ko'k","Sariq"],e:"Sariq — bir modali, to'q sariq va firuza — ko'p modali."}},
+  {a:1,ru:{q:"Почему свет в волокне не видно?",o:["Его там нет","Он инфракрасный","Он слишком слабый"],e:"Рабочие длины волн 1310–1550 нм глаз не видит, но лазер опасен."},uz:{q:"Nima uchun tolada nur ko'rinmaydi?",o:["U yerda nur yo'q","U infraqizil","U juda kuchsiz"],e:"1310–1550 nm ishchi to'lqinlarini ko'z ko'rmaydi, lekin lazer xavfli."}}]},
+
+{id:'b3',lv:0,min:6,nowarn:true,
+ t:{ru:"Виды кабеля",uz:"Kabel turlari"},s:{ru:"Подвесной, в грунт, в канализацию, дроп",uz:"Osma, yerga, kanalizatsiyaga, drop"},
+ svg:l=>{let m='';const mods=[[150,90],[200,90],[226,135],[200,180],[150,180],[124,135]];
+  mods.forEach(([x,y],i)=>{m+=circ(x,y,20,'color-mix(in srgb,var(--accent) 10%,var(--surface))');for(let k=0;k<4;k++){const a=k*Math.PI/2+.6;m+=`<circle cx="${(x+Math.cos(a)*9).toFixed(1)}" cy="${(y+Math.sin(a)*9).toFixed(1)}" r="3.4" fill="${FC[(i*4+k)%12]}" stroke="var(--fg)" stroke-width=".8"/>`}});
+  return svg(circ(175,135,96,'var(--line)')+circ(175,135,82,'var(--surface)')+circ(175,135,13,'var(--muted)')+m+
+  line('M175 39V22',`var(--muted)`,1)+tx(175,16,R(l,"Оболочка (полиэтилен)","Qobiq (polietilen)"),{w:600})+
+  line('M188 135H284',`var(--muted)`,1)+tx(287,131,R(l,"Центральный","Markaziy"),{a:'start',s:10,w:600})+tx(287,144,R(l,"элемент","element"),{a:'start',s:10,w:600})+
+  line('M110 120L40 74',`var(--muted)`,1)+tx(4,52,R(l,"Модуль (трубка)","Modul (trubka)"),{a:'start',s:10,w:600})+tx(4,65,R(l,"с волокнами и гелем","tola va gel bilan"),{a:'start',s:10,c:'var(--muted)'})+
+  tx(175,248,R(l,"6 модулей × 4 волокна = 24 волокна","6 modul × 4 tola = 24 tola"),{w:600,c:'var(--muted)'}),
+  R(l,"Срез кабеля: оболочка, центральный элемент, 6 модулей по 4 цветных волокна","Kabel kesimi: qobiq, markaziy element, 4 tadan rangli tolali 6 modul"),256)},
+ table:{head:{ru:["Кабель","Где ставят"],uz:["Kabel","Qayerga qo'yiladi"]},rows:{
+  ru:[["Подвесной самонесущий (ADSS)","По опорам и между домами, держит сам себя"],["С тросом («восьмёрка»)","По опорам, трос несёт вес"],["Бронированный","В землю, в траншею"],["Канализационный","В трубах и колодцах связи"],["Дроп (FTTH)","От щитка на этаже до квартиры"],["Внутренний (распределительный)","По стоякам и кабель-каналам в доме"]],
+  uz:[["Osma o'zini ko'taruvchi (ADSS)","Ustunlar va uylar orasida, o'zini o'zi ushlaydi"],["Trosli («sakkizlik»)","Ustunlar bo'ylab, og'irlikni tros ko'taradi"],["Zirhli","Yerga, transheyaga"],["Kanalizatsiya kabeli","Aloqa quvurlari va quduqlarida"],["Drop (FTTH)","Qavatdagi shitdan kvartiragacha"],["Ichki (taqsimlovchi)","Uy ichidagi stoyak va kabel kanallari bo'ylab"]]}},
+ steps:{ru:["Внутри кабеля волокна лежат в <b>модулях</b> — тонких цветных трубках с гелем. Гель защищает от воды.","И модули, и волокна разного цвета. По цвету вы находите нужное волокно: например, модуль 2, волокно 3.","Порядок цветов зависит от завода. Перед работой посмотрите паспорт кабеля и запишите схему цветов.","Ёмкость кабеля пишут на оболочке: например, «ОКА-24» — 24 волокна. Там же метраж: по нему считают длину.","Кабель нельзя сильно гнуть и тянуть за волокна. Тянут только за силовые элементы или трос."],
+       uz:["Kabel ichida tolalar <b>modullarda</b> yotadi — gelli ingichka rangli trubkalarda. Gel suvdan himoya qiladi.","Modullar ham, tolalar ham har xil rangda. Kerakli tolani rang bo'yicha topasiz: masalan, 2-modul, 3-tola.","Ranglar tartibi zavodga bog'liq. Ishdan oldin kabel pasportini ko'ring va rang sxemasini yozib oling.","Kabel sig'imi qobiqda yoziladi: masalan, «OKA-24» — 24 tola. U yerda metr belgisi ham bor: u bo'yicha uzunlik hisoblanadi.","Kabelni qattiq egish va tolalardan tortish mumkin emas. Faqat kuch elementlari yoki trosdan tortiladi."]},
+ tip:{ru:"Запишите метки метража на оболочке в начале и в конце участка. Разница — это точная длина кабеля. Пригодится для поиска обрыва.",uz:"Uchastka boshida va oxirida qobiqdagi metr belgilarini yozib oling. Farqi — kabelning aniq uzunligi. Uzilishni qidirishda kerak bo'ladi."},
+ quiz:[
+  {a:1,ru:{q:"Что такое модуль в оптическом кабеле?",o:["Защитная броня","Трубка с волокнами и гелем","Разъём на конце"],e:"В модуле лежат несколько цветных волокон в геле."},uz:{q:"Optik kabeldagi modul nima?",o:["Himoya zirhi","Tola va gelli trubka","Uchidagi ulagich"],e:"Modulda gel ichida bir nechta rangli tola yotadi."}},
+  {a:2,ru:{q:"Какой кабель кладут в землю?",o:["Дроп","Внутренний","Бронированный"],e:"Броня защищает от камней, лопат и грызунов."},uz:{q:"Qaysi kabel yerga yotqiziladi?",o:["Drop","Ichki","Zirhli"],e:"Zirh toshlar, belkurak va kemiruvchilardan himoya qiladi."}},
+  {a:0,ru:{q:"Где узнать порядок цветов волокон?",o:["В паспорте кабеля","Он везде одинаковый","У соседа"],e:"Цветовой код зависит от завода-изготовителя."},uz:{q:"Tolalar ranglari tartibini qayerdan bilish mumkin?",o:["Kabel pasportidan","U hamma joyda bir xil","Qo'shnidan"],e:"Rang kodi ishlab chiqaruvchi zavodga bog'liq."}},
+  {a:1,ru:{q:"За что тянут кабель при прокладке?",o:["За волокна","За трос или силовые элементы","За оболочку зубами"],e:"Волокна рвутся, тянут только силовую часть."},uz:{q:"Yotqizishda kabel nimadan tortiladi?",o:["Tolalardan","Tros yoki kuch elementlaridan","Qobig'idan tish bilan"],e:"Tolalar uziladi, faqat kuch qismidan tortiladi."}}]},
+
+{id:'b4',lv:0,min:5,nowarn:true,
+ t:{ru:"Инструменты монтажника",uz:"Montajchi asboblari"},s:{ru:"Стриппер, скалыватель, сварка, приборы",uz:"Stripper, skalyvatel, payvand, asboblar"},
+ table:{head:{ru:["Инструмент","Зачем"],uz:["Asbob","Nima uchun"]},rows:{
+  ru:[["Нож для оболочки, ножницы для кевлара","Разделать кабель"],["Стриппер (например, Miller)","Снять лак 250 мкм с волокна"],["Спирт изопропиловый 99% и безворсовые салфетки","Очистить волокно перед сколом"],["Скалыватель (кливер)","Сделать ровный торец под 90°"],["Сварочный аппарат","Сварить два волокна"],["Гильзы КДЗС","Защитить место сварки"],["Визуальный дефектоскоп (VFL)","Красным светом найти обрыв и изгиб"],["Измеритель мощности","Измерить сигнал в дБм"],["Рефлектометр (OTDR)","Найти расстояние до обрыва и сварки"],["Микроскоп и очиститель коннекторов","Проверить и очистить торец"]],
+  uz:[["Qobiq pichog'i, kevlar qaychisi","Kabelni ochish"],["Stripper (masalan, Miller)","Toladan 250 mkm lakni olish"],["99% izopropil spirt va tuksiz salfetkalar","Skoldan oldin tolani tozalash"],["Skalyvatel (kliver)","90° tekis uch qilish"],["Payvandlash apparati","Ikki tolani payvandlash"],["KDZS gilzalari","Payvand joyini himoyalash"],["Vizual defektoskop (VFL)","Qizil nur bilan uzilish va egilishni topish"],["Quvvat o'lchagich","Signalni dBm da o'lchash"],["Reflektometr (OTDR)","Uzilish va payvandgacha masofani topish"],["Mikroskop va konnektor tozalagich","Uchni tekshirish va tozalash"]]}},
+ steps:{ru:["Новичку для старта хватит: ножа, стриппера, спирта, салфеток, скалывателя и VFL. Сварку и рефлектометр часто выдаёт работодатель.","Спирт берите только <b>99%</b>. Водка и аптечный 70% оставляют воду и плёнку.","Салфетки — безворсовые. Обычная вата оставляет волокна на стекле.","Скалыватель держите в чистоте: протирайте нож, крутите его по меткам, когда скол стал плохим.","Электроды сварочного аппарата со временем изнашиваются. Аппарат сам показывает, когда их менять."],
+       uz:["Yangi boshlovchiga boshlash uchun yetadi: pichoq, stripper, spirt, salfetka, skalyvatel va VFL. Payvand va reflektometrni ko'pincha ish beruvchi beradi.","Faqat <b>99%</b> spirt oling. Aroq va dorixonadagi 70% suv va parda qoldiradi.","Salfetkalar — tuksiz. Oddiy paxta shishada tola qoldiradi.","Skalyvatelni toza saqlang: pichoqni arting, skol yomonlashganda uni belgilar bo'yicha aylantiring.","Payvandlash apparati elektrodlari vaqt o'tib yeyiladi. Qachon almashtirishni apparatning o'zi ko'rsatadi."]},
+ tip:{ru:"Чистое волокно после спирта нельзя трогать пальцами и класть на стол. Сразу в скалыватель.",uz:"Spirtdan keyin toza tolani barmoq bilan ushlash va stolga qo'yish mumkin emas. Darhol skalyvatelga."},
+ quiz:[
+  {a:1,ru:{q:"Каким спиртом чистят волокно?",o:["Аптечным 70%","Изопропиловым 99%","Водкой"],e:"Только 99%: он не оставляет воды и плёнки."},uz:{q:"Tola qanday spirt bilan tozalanadi?",o:["Dorixonadagi 70%","99% izopropil","Aroq bilan"],e:"Faqat 99%: u suv va parda qoldirmaydi."}},
+  {a:0,ru:{q:"Зачем нужен скалыватель?",o:["Сделать ровный торец под 90°","Снять оболочку кабеля","Измерить сигнал"],e:"Без ровного скола хорошей сварки не будет."},uz:{q:"Skalyvatel nima uchun kerak?",o:["90° tekis uch qilish","Kabel qobig'ini olish","Signalni o'lchash"],e:"Tekis skolsiz yaxshi payvand bo'lmaydi."}},
+  {a:2,ru:{q:"Каким прибором красным светом ищут изгиб и обрыв рядом?",o:["Рефлектометром","Мультиметром","Визуальным дефектоскопом (VFL)"],e:"Красный свет VFL виден в месте изгиба или обрыва."},uz:{q:"Yaqindagi egilish va uzilishni qaysi asbob qizil nur bilan topadi?",o:["Reflektometr","Multimetr","Vizual defektoskop (VFL)"],e:"VFL ning qizil nuri egilish yoki uzilish joyida ko'rinadi."}},
+  {a:1,ru:{q:"Что защищает место сварки?",o:["Изолента","Гильза КДЗС","Клей"],e:"Гильзу надевают до сварки и усаживают в печке аппарата."},uz:{q:"Payvand joyini nima himoya qiladi?",o:["Izolenta","KDZS gilzasi","Yelim"],e:"Gilza payvanddan oldin kiygiziladi va apparat pechida o'tiradi."}}]},
+
+{id:'b5',lv:0,min:7,nowarn:true,
+ t:{ru:"Разделка кабеля",uz:"Kabelni ochish"},s:{ru:"Оболочка, кевлар, модули, гидрофоб",uz:"Qobiq, kevlar, modullar, gidrofob"},
+ svg:l=>svg(
+  `<rect x="10" y="108" width="120" height="34" rx="8" fill="var(--wS)"/>`+tx(70,129,R(l,"кабель","kabel"),{w:700,c:'#fff'})+
+  line('M130 116C170 116 180 70 230 70H350','color-mix(in srgb,var(--accent) 60%,var(--surface))',8)+
+  line('M130 125C175 125 190 125 240 125H350','#1e6fd0',8)+line('M130 134C170 134 180 180 230 180H350','#e07a1f',8)+
+  line('M130 125H170',`var(--muted)`,4)+
+  `<path d="M128 108V142" stroke="var(--fg)" stroke-width="2" stroke-dasharray="3 3"/>`+
+  num(128,92,1)+tx(128,72,R(l,"надрез оболочки","qobiq kesigi"),{s:10,w:600})+
+  num(150,160,2)+tx(150,196,R(l,"силовой элемент","kuch elementi"),{s:10,c:'var(--muted)'})+tx(150,208,R(l,"зажать в муфте","muftada qisiladi"),{s:10,c:'var(--muted)'})+
+  num(290,52,3)+tx(290,36,R(l,"модули ~1,5–2 м","modullar ~1,5–2 m"),{s:10,w:600})+
+  tx(180,236,R(l,"Изгиб модулей и волокон — не меньше 3 см в радиусе","Modul va tolalar egilishi — radiusi 3 sm dan kam emas"),{s:10,c:'var(--muted)'}),
+  R(l,"Разделка: надрез оболочки, закрепление силового элемента, модули длиной 1,5–2 метра","Ochish: qobiq kesigi, kuch elementini mahkamlash, 1,5–2 metr uzunlikdagi modullar")),
+ steps:{ru:["Отмерьте длину по инструкции муфты: обычно 1,5–2 м модулей. Оставьте запас кабеля 5–10 м на будущие ремонты.","Ножом сделайте круговой надрез оболочки, не до конца. Согните — оболочка треснет. Глубокий надрез повредит модули.","Обрежьте кевлар ножницами, центральный силовой элемент оставьте длиной по инструкции муфты: им кабель крепят.","Вскройте модуль специальным стриппером для трубок, протащите его по волокнам. Не перегибайте трубку: волокна сломаются.","Гидрофоб (гель) снимите безворсовой салфеткой, потом специальным очистителем или спиртом. Волокна должны быть сухие и чистые."],
+       uz:["Mufta yo'riqnomasi bo'yicha uzunlikni o'lchang: odatda 1,5–2 m modul. Kelajakdagi ta'mirlar uchun 5–10 m kabel zaxirasini qoldiring.","Pichoq bilan qobiqni aylana qilib, oxirigacha emas, kesing. Bukling — qobiq yoriladi. Chuqur kesik modullarni shikastlaydi.","Kevlarni qaychi bilan kesing, markaziy kuch elementini mufta yo'riqnomasi bo'yicha uzunlikda qoldiring: kabel u bilan mahkamlanadi.","Modulni maxsus trubka strippari bilan oching va uni tolalar bo'ylab torting. Trubkani bukmang: tolalar sinadi.","Gidrofobni (gelni) tuksiz salfetka bilan, keyin maxsus tozalagich yoki spirt bilan oling. Tolalar quruq va toza bo'lishi kerak."]},
+ tip:{ru:"Радиус изгиба кабеля при прокладке — не меньше 20 его диаметров. Кабель 10 мм нельзя гнуть круче, чем по кругу диаметром 40 см.",uz:"Yotqizishda kabel egilish radiusi — uning 20 diametridan kam emas. 10 mm kabelni diametri 40 sm doiradan keskin egish mumkin emas."},
+ quiz:[
+  {a:1,ru:{q:"Как правильно надрезать оболочку?",o:["Резать до упора, сильно","Круговой надрез не до конца, потом согнуть","Зубами"],e:"Глубокий надрез повредит модули с волокнами."},uz:{q:"Qobiqni qanday to'g'ri kesish kerak?",o:["Oxirigacha qattiq kesish","Oxirigacha emas aylana kesib, keyin bukish","Tish bilan"],e:"Chuqur kesik tolali modullarni shikastlaydi."}},
+  {a:0,ru:{q:"Зачем оставлять запас кабеля 5–10 м?",o:["Для будущих ремонтов","Чтобы было тяжелее","Не нужно оставлять"],e:"Без запаса при ремонте придётся ставить новую вставку кабеля."},uz:{q:"Nima uchun 5–10 m kabel zaxirasi qoldiriladi?",o:["Kelajakdagi ta'mirlar uchun","Og'irroq bo'lishi uchun","Qoldirish shart emas"],e:"Zaxirasiz ta'mirda yangi kabel qo'shimchasini qo'yishga to'g'ri keladi."}},
+  {a:2,ru:{q:"Чем снимают гидрофоб с волокон?",o:["Водой с мылом","Ножом","Салфеткой и очистителем или спиртом"],e:"Волокна должны быть сухими и чистыми."},uz:{q:"Tolalardan gidrofob nima bilan olinadi?",o:["Sovunli suv bilan","Pichoq bilan","Salfetka va tozalagich yoki spirt bilan"],e:"Tolalar quruq va toza bo'lishi kerak."}},
+  {a:1,ru:{q:"Минимальный радиус изгиба кабеля при прокладке?",o:["1 диаметр","20 диаметров кабеля","Любой"],e:"Сильный изгиб даёт потери и ломает волокна."},uz:{q:"Yotqizishda kabelning minimal egilish radiusi?",o:["1 diametr","Kabelning 20 diametri","Istalgan"],e:"Qattiq egilish yo'qotish beradi va tolalarni sindiradi."}}]},
+
+/* ---------- MIDDLE ---------- */
+{id:'m1',lv:1,min:9,
+ t:{ru:"Сварка волокна",uz:"Tolani payvandlash"},s:{ru:"Зачистка, скол, сварка, гильза",uz:"Tozalash, skol, payvand, gilza"},
+ svg:l=>svg(
+  flow(10,20,100,44,R(l,"1. Гильза","1. Gilza"),R(l,"надеть заранее","oldindan kiydiring"))+arrow(110,42,128,42)+
+  flow(130,20,100,44,R(l,"2. Стриппер","2. Stripper"),R(l,"снять лак 3–4 см","3–4 sm lak olish"))+arrow(230,42,248,42)+
+  flow(250,20,100,44,R(l,"3. Спирт","3. Spirt"),R(l,"протереть 1 раз","bir marta artish"))+
+  arrow(300,64,300,86)+
+  flow(250,88,100,44,R(l,"4. Скол","4. Skol"),R(l,"10–16 мм","10–16 mm"))+arrow(250,110,232,110)+
+  flow(130,88,100,44,R(l,"5. Сварка","5. Payvand"),R(l,"в аппарат","apparatga"))+arrow(130,110,112,110)+
+  flow(10,88,100,44,R(l,"6. Печка","6. Pech"),R(l,"усадить гильзу","gilzani o'tqazish"))+
+  line('M30 190H170',FC[8],3)+line('M190 190H330',FC[8],3)+`<path d="M170 190H190" stroke="var(--accent)" stroke-width="5"/>`+
+  `<rect x="150" y="180" width="60" height="20" rx="4" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>`+
+  tx(180,172,R(l,"место сварки внутри гильзы","payvand joyi gilza ichida"),{s:10,c:'var(--muted)'})+
+  tx(180,226,R(l,"Хорошая сварка: 0,01–0,05 дБ. Больше 0,1 дБ — переварить","Yaxshi payvand: 0,01–0,05 dB. 0,1 dB dan ko'p — qayta payvandlang"),{s:10,w:600}),
+  R(l,"Шесть шагов сварки: гильза, стриппер, спирт, скол, сварка, печка","Payvandning olti bosqichi: gilza, stripper, spirt, skol, payvand, pech")),
+ steps:{ru:["Сначала наденьте на одно из волокон <b>гильзу КДЗС</b>. Забыли — придётся резать и варить заново.","Стриппером снимите лак на 3–4 см. Держите стриппер ровно, не под углом: волокно сломается.","Один раз протрите голое волокно салфеткой со спиртом, со скрипом. После этого ничего не трогайте.","Положите волокно в скалыватель по метке (обычно 10–16 мм, смотрите инструкцию) и сделайте скол.","Положите оба волокна в аппарат, закройте крышку. Аппарат сам совместит и сварит, покажет потери.","Сдвиньте гильзу на место сварки, положите в печку. Через 30–60 с она усядет. Уложите волокно в кассету."],
+       uz:["Avval tolalardan biriga <b>KDZS gilzasini</b> kiydiring. Unutsangiz — kesib, qayta payvandlashga to'g'ri keladi.","Stripper bilan 3–4 sm lakni oling. Stripperni qiya emas, tekis tuting: tola sinadi.","Yalang'och tolani spirtli salfetka bilan bir marta, g'ichirlaguncha arting. Shundan keyin hech narsaga tegmang.","Tolani skalyvatelga belgi bo'yicha (odatda 10–16 mm, yo'riqnomaga qarang) qo'ying va skol qiling.","Ikkala tolani apparatga qo'yib, qopqog'ini yoping. Apparat o'zi moslaydi, payvandlaydi va yo'qotishni ko'rsatadi.","Gilzani payvand joyiga suring, pechga qo'ying. 30–60 soniyada u o'tiradi. Tolani kassetaga joylang."]},
+ warnB:{ru:"Не смотрите в торец.",uz:"Tola uchiga qaramang."},warn:{ru:"Если в линии может быть свет, работайте с волокнами, отвернув торец от себя. Обрезки — сразу в банку.",uz:"Liniyada nur bo'lishi mumkin bo'lsa, tola uchini o'zingizdan burib ishlang. Qoldiqlar — darhol bankaga."},
+ tip:{ru:"Аппарат пишет «плохой скол» или «пыль»? Не спорьте: заново зачистите и сколите. Плохой торец даёт большие потери.",uz:"Apparat «yomon skol» yoki «chang» deb yozyaptimi? Bahslashmang: qayta tozalang va skol qiling. Yomon uch katta yo'qotish beradi."},
+ quiz:[
+  {a:0,ru:{q:"Что делают самым первым шагом перед сваркой?",o:["Надевают гильзу КДЗС","Включают печку","Делают скол"],e:"После сварки гильзу уже не надеть."},uz:{q:"Payvanddan oldin eng birinchi nima qilinadi?",o:["KDZS gilzasi kiydiriladi","Pech yoqiladi","Skol qilinadi"],e:"Payvanddan keyin gilzani kiydirib bo'lmaydi."}},
+  {a:2,ru:{q:"Сколько раз протирать волокно спиртом после стриппера?",o:["Ни разу","5–10 раз","Один раз, и больше не трогать"],e:"Лишние касания снова пачкают волокно."},uz:{q:"Stripperdan keyin tolani spirt bilan necha marta artish kerak?",o:["Birorta ham","5–10 marta","Bir marta va boshqa tegmaslik"],e:"Ortiqcha tegish tolani yana ifloslaydi."}},
+  {a:1,ru:{q:"Аппарат показал потери 0,25 дБ. Что делать?",o:["Оставить","Переварить","Залить клеем"],e:"Хорошая сварка 0,01–0,05 дБ, больше 0,1 — переделать."},uz:{q:"Apparat 0,25 dB yo'qotish ko'rsatdi. Nima qilish kerak?",o:["Qoldirish","Qayta payvandlash","Yelim quyish"],e:"Yaxshi payvand 0,01–0,05 dB, 0,1 dan ko'p bo'lsa — qayta qiling."}},
+  {a:0,ru:{q:"Аппарат пишет «плохой скол». Причина?",o:["Грязь или неровный торец — сколоть заново","Сломался аппарат","Так и должно быть"],e:"Перезачистите, протрите и сколите снова."},uz:{q:"Apparat «yomon skol» deb yozyapti. Sababi?",o:["Kir yoki notekis uch — qayta skol qilish","Apparat buzildi","Shunday bo'lishi kerak"],e:"Qayta tozalang, arting va yana skol qiling."}}]},
+
+{id:'m2',lv:1,min:8,
+ t:{ru:"Коннекторы и чистота",uz:"Konnektorlar va tozalik"},s:{ru:"SC, LC, APC и UPC, чистка торца",uz:"SC, LC, APC va UPC, uchni tozalash"},
+ svg:l=>svg(
+  `<rect x="30" y="40" width="80" height="44" rx="6" fill="#1e6fd0" stroke="var(--fg)" stroke-width="1.5"/><rect x="110" y="54" width="24" height="16" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(70,67,"SC/UPC",{w:700,c:'#fff'})+
+  `<path d="M134 54V70" stroke="var(--fg)" stroke-width="3"/>`+tx(172,58,R(l,"торец прямой","uchi to'g'ri"),{a:'start',s:10})+tx(172,72,R(l,"синий","ko'k"),{a:'start',s:10,c:'var(--muted)'})+
+  `<rect x="30" y="120" width="80" height="44" rx="6" fill="#1f9a4c" stroke="var(--fg)" stroke-width="1.5"/><path d="M110 134H136L132 150H110Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(70,147,"SC/APC",{w:700,c:'#fff'})+
+  `<path d="M136 134L132 150" stroke="var(--fg)" stroke-width="3"/>`+tx(172,138,R(l,"торец под углом 8°","uchi 8° burchakda"),{a:'start',s:10})+tx(172,152,R(l,"зелёный","yashil"),{a:'start',s:10,c:'var(--muted)'})+
+  `<rect x="30" y="196" width="48" height="30" rx="5" fill="#1e6fd0" stroke="var(--fg)" stroke-width="1.5"/>`+tx(54,215,"LC",{w:700,c:'#fff'})+
+  tx(92,210,R(l,"LC — маленький, в оборудовании","LC — kichik, uskunalarda"),{a:'start',s:10})+tx(92,223,R(l,"SC — в розетках и кроссах","SC — rozetka va krosslarda"),{a:'start',s:10,c:'var(--muted)'})+
+  tx(270,120,R(l,"APC ≠ UPC","APC ≠ UPC"),{w:700,s:15,c:'var(--bad)'})+tx(270,138,R(l,"не соединять!","ulamang!"),{w:600,c:'var(--bad)'}),
+  R(l,"Коннекторы: синий SC/UPC с прямым торцом, зелёный SC/APC с торцом под 8°, маленький LC","Konnektorlar: to'g'ri uchli ko'k SC/UPC, 8° uchli yashil SC/APC, kichik LC")),
+ steps:{ru:["Цвет корпуса подсказывает полировку: <b>синий — UPC</b> (прямой торец), <b>зелёный — APC</b> (угол 8°). В GPON почти всегда зелёный APC.","Никогда не вставляйте APC в UPC: торцы не прилегают, потери огромные, торцы портятся.","Перед каждым подключением чистите коннектор: кликер-очиститель или безворсовая салфетка со спиртом, затем сухая.","Проверьте торец микроскопом: ни пыли, ни царапин. Грязный коннектор — самая частая причина плохого сигнала.","Ставьте пылезащитные колпачки сразу, как отключили коннектор. Открытый торец пачкается за минуты."],
+       uz:["Korpus rangi silliqlashni ko'rsatadi: <b>ko'k — UPC</b> (to'g'ri uch), <b>yashil — APC</b> (8° burchak). GPON da deyarli doim yashil APC.","Hech qachon APC ni UPC ga ulamang: uchlar tegmaydi, yo'qotish juda katta, uchlar buziladi.","Har ulashdan oldin konnektorni tozalang: kliker-tozalagich yoki spirtli tuksiz salfetka, keyin quruq.","Uchni mikroskop bilan tekshiring: chang ham, tirnalish ham yo'q. Iflos konnektor — yomon signalning eng ko'p sababi.","Konnektorni uzishingiz bilan darhol changdan himoya qalpoqchasini kiydiring. Ochiq uch bir necha daqiqada ifloslanadi."]},
+ tip:{ru:"Пигтейл — шнур с коннектором с одной стороны: его приваривают к кабелю в кроссе. Патчкорд — шнур с коннекторами с двух сторон.",uz:"Pigteyl — bir tomonida konnektori bor shnur: u krossda kabelga payvandlanadi. Patchkord — ikki tomonida konnektori bor shnur."},
+ quiz:[
+  {a:1,ru:{q:"Зелёный коннектор — это…",o:["UPC, прямой торец","APC, торец под углом 8°","Многомод"],e:"Зелёный — APC, синий — UPC."},uz:{q:"Yashil konnektor bu…",o:["UPC, to'g'ri uch","APC, 8° burchakli uch","Ko'p modali"],e:"Yashil — APC, ko'k — UPC."}},
+  {a:2,ru:{q:"Можно ли соединить APC и UPC?",o:["Да, без разницы","Да, если сильно вставить","Нет: большие потери и порча торцов"],e:"Торцы с разным углом не прилегают друг к другу."},uz:{q:"APC va UPC ni ulash mumkinmi?",o:["Ha, farqi yo'q","Ha, qattiq tiqsa","Yo'q: katta yo'qotish va uchlar buziladi"],e:"Burchagi har xil uchlar bir-biriga tegmaydi."}},
+  {a:0,ru:{q:"Самая частая причина плохого сигнала на коннекторе?",o:["Грязь на торце","Цвет корпуса","Длина шнура"],e:"Чистите и проверяйте торец перед каждым подключением."},uz:{q:"Konnektorda yomon signalning eng ko'p sababi?",o:["Uchdagi kir","Korpus rangi","Shnur uzunligi"],e:"Har ulashdan oldin uchni tozalang va tekshiring."}},
+  {a:1,ru:{q:"Что такое пигтейл?",o:["Шнур с коннекторами с двух сторон","Шнур с коннектором с одной стороны","Вид муфты"],e:"Пигтейл приваривают к волокну кабеля."},uz:{q:"Pigteyl nima?",o:["Ikki tomonida konnektorli shnur","Bir tomonida konnektorli shnur","Mufta turi"],e:"Pigteyl kabel tolasiga payvandlanadi."}}]},
+
+{id:'m3',lv:1,min:8,nowarn:true,
+ t:{ru:"Муфты и кроссы",uz:"Muftalar va krosslar"},s:{ru:"Кассеты, укладка, герметизация",uz:"Kassetalar, joylash, germetiklash"},
+ svg:l=>{let f='';for(let i=0;i<6;i++){f+=`<rect x="${150+i*0}" y="${86+i*14}" width="60" height="8" rx="3" fill="color-mix(in srgb,var(--accent) 30%,var(--surface))" stroke="var(--fg)" stroke-width="1"/>`}
+  return svg(`<rect x="40" y="40" width="280" height="170" rx="22" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<ellipse cx="180" cy="125" rx="110" ry="62" fill="none" stroke="${FC[8]}" stroke-width="2.5"/><ellipse cx="180" cy="125" rx="96" ry="52" fill="none" stroke="${FC[0]}" stroke-width="2.5"/>`+f+
+  line('M10 110H40','var(--wS)',12)+line('M10 140H40','var(--wS)',12)+
+  tx(180,32,R(l,"Кассета сплайсов","Splays kassetasi"),{w:700})+
+  tx(180,202,R(l,"гильзы в ложементе","gilzalar joyida"),{s:10,c:'var(--muted)'})+
+  tx(300,226,R(l,"запас волокна петлёй","tola zaxirasi halqa bilan"),{a:'end',s:10,c:'var(--muted)'})+
+  tx(4,30,R(l,"кабели ↓","kabellar ↓"),{a:'start',s:10,c:'var(--muted)'})+
+  tx(180,244,R(l,"Радиус петли не меньше 3 см","Halqa radiusi 3 sm dan kam emas"),{s:10,w:600}),
+  R(l,"Кассета: волокна уложены петлями, гильзы сварки в ложементе","Kasseta: tolalar halqa qilib joylangan, payvand gilzalari joyida"))},
+ steps:{ru:["<b>Муфта</b> соединяет кабели на трассе: на опоре, в колодце, в земле. <b>Кросс (ODF)</b> — шкаф или полка, где кабель переходит в коннекторы.","Введите кабели через уплотнители, закрепите силовые элементы и оболочку. Кабель не должен болтаться в муфте.","Модули заведите в кассету, волокна уложите петлями с запасом 0,8–1,5 м. Радиус петли — не меньше 3 см.","Каждую сварку кладите в своё место ложемента. Подпишите кассету: какой кабель, модуль, волокно куда идёт.","Перед закрытием проверьте волокна VFL или рефлектометром. Закройте и загерметизируйте муфту по инструкции."],
+       uz:["<b>Mufta</b> trassada kabellarni ulaydi: ustunda, quduqda, yerda. <b>Kross (ODF)</b> — kabel konnektorlarga o'tadigan shkaf yoki tokcha.","Kabellarni zichlagichlar orqali kiriting, kuch elementlari va qobiqni mahkamlang. Kabel muftada osilib turmasligi kerak.","Modullarni kassetaga kiriting, tolalarni 0,8–1,5 m zaxira bilan halqa qilib joylang. Halqa radiusi — 3 sm dan kam emas.","Har bir payvandni joyidagi o'z o'rniga qo'ying. Kassetaga yozing: qaysi kabel, modul, tola qayerga boradi.","Yopishdan oldin tolalarni VFL yoki reflektometr bilan tekshiring. Muftani yo'riqnoma bo'yicha yoping va germetiklang."]},
+ tip:{ru:"Схема соединений (какое волокно куда) — главный документ. Без неё следующий монтажник потратит часы, чтобы разобраться.",uz:"Ulanish sxemasi (qaysi tola qayerga) — asosiy hujjat. Usiz keyingi montajchi tushunish uchun soatlab vaqt sarflaydi."},
+ quiz:[
+  {a:0,ru:{q:"Чем муфта отличается от кросса?",o:["Муфта — на трассе, кросс — где кабель переходит в коннекторы","Ничем","Кросс ставят в землю"],e:"Муфта соединяет кабели, кросс выводит волокна на коннекторы."},uz:{q:"Mufta krossdan nimasi bilan farq qiladi?",o:["Mufta — trassada, kross — kabel konnektorlarga o'tadigan joy","Hech narsa","Kross yerga qo'yiladi"],e:"Mufta kabellarni ulaydi, kross tolalarni konnektorlarga chiqaradi."}},
+  {a:2,ru:{q:"Какой минимальный радиус петли волокна в кассете?",o:["5 мм","1 см","3 см"],e:"Меньший радиус даёт потери, особенно на 1550 нм."},uz:{q:"Kassetada tola halqasining minimal radiusi qancha?",o:["5 mm","1 sm","3 sm"],e:"Kichikroq radius yo'qotish beradi, ayniqsa 1550 nm da."}},
+  {a:1,ru:{q:"Что сделать перед закрытием муфты?",o:["Ничего","Проверить волокна прибором","Залить водой"],e:"Открыть муфту заново — это лишние часы работы."},uz:{q:"Muftani yopishdan oldin nima qilish kerak?",o:["Hech narsa","Tolalarni asbob bilan tekshirish","Suv quyish"],e:"Muftani qayta ochish — ortiqcha ish soatlari."}},
+  {a:1,ru:{q:"Зачем подписывать кассету?",o:["Для красоты","Чтобы знать, какое волокно куда идёт","Так требует аппарат"],e:"Схема соединений экономит часы при ремонте."},uz:{q:"Kassetaga nima uchun yoziladi?",o:["Chiroy uchun","Qaysi tola qayerga borishini bilish uchun","Apparat shuni talab qiladi"],e:"Ulanish sxemasi ta'mirda soatlarni tejaydi."}}]},
+
+{id:'m4',lv:1,min:8,nowarn:true,
+ t:{ru:"Сеть GPON до квартиры",uz:"Kvartiragacha GPON tarmog'i"},s:{ru:"OLT, сплиттеры, ONT, длины волн",uz:"OLT, splitterlar, ONT, to'lqin uzunliklari"},
+ svg:l=>{let e='';[48,98,148,198].forEach(y=>{e+=line(`M250 125L300 ${y}`,FC[8],2)+box(300,y-12,50,24)+tx(325,y+4,'ONT',{s:10,w:700})});
+  return svg(flow(10,100,64,50,'OLT',R(l,"станция","stansiya"))+line('M74 125H130',FC[8],3)+
+  `<path d="M130 105L170 125L130 145Z" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(150,165,'1:4',{w:700})+
+  line('M170 125H210',FC[8],2)+`<path d="M210 105L250 125L210 145Z" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(230,165,'1:8',{w:700})+e+
+  tx(42,88,R(l,"у провайдера","provayderda"),{s:10,c:'var(--muted)'})+
+  tx(150,90,R(l,"сплиттер","splitter"),{s:10,c:'var(--muted)'})+tx(232,90,R(l,"в подъезде","podyezdda"),{s:10,c:'var(--muted)'})+
+  tx(325,226,R(l,"у абонента","abonentda"),{s:10,c:'var(--muted)'})+
+  tx(10,212,R(l,"↓ 1490 нм к абоненту","↓ 1490 nm abonentga"),{a:'start',s:10,w:600})+tx(10,228,R(l,"↑ 1310 нм от абонента","↑ 1310 nm abonentdan"),{a:'start',s:10,w:600})+tx(10,244,R(l,"1550 нм — ТВ","1550 nm — TV"),{a:'start',s:10,c:'var(--muted)'}),
+  R(l,"Сеть GPON: OLT у провайдера, сплиттеры 1:4 и 1:8, ONT у абонентов","GPON tarmog'i: provayderda OLT, 1:4 va 1:8 splitterlar, abonentlarda ONT"),256)},
+ table:{head:{ru:["Сплиттер","Потери"],uz:["Splitter","Yo'qotish"]},rows:{
+  ru:[["1:2","~3,6 дБ"],["1:4","~7,2 дБ"],["1:8","~10,5 дБ"],["1:16","~13,8 дБ"],["1:32","~17,1 дБ"],["1:64","~20,5 дБ"]],
+  uz:[["1:2","~3,6 dB"],["1:4","~7,2 dB"],["1:8","~10,5 dB"],["1:16","~13,8 dB"],["1:32","~17,1 dB"],["1:64","~20,5 dB"]]}},
+ steps:{ru:["<b>OLT</b> — оборудование провайдера. От него одно волокно идёт в район, там его делят <b>сплиттеры</b> на много абонентов.","Сплиттер — пассивный, без питания. Чем больше выходов, тем сильнее он ослабляет сигнал (смотрите таблицу).","У абонента стоит <b>ONT</b> (оптический модем, терминал). Он получает свет на 1490 нм и отвечает на 1310 нм.","Нормальный сигнал на ONT — обычно от −8 до −27 дБм. Слабее −27 — интернет будет пропадать.","Абонентский дроп подключают в оптическую розетку коннектором SC/APC (зелёный), из розетки патчкордом в ONT."],
+       uz:["<b>OLT</b> — provayder uskunasi. Undan bitta tola tumanga boradi, u yerda <b>splitterlar</b> uni ko'p abonentlarga bo'ladi.","Splitter — passiv, elektrsiz. Chiqishlari qancha ko'p bo'lsa, signalni shuncha kuchli susaytiradi (jadvalga qarang).","Abonentda <b>ONT</b> (optik modem, terminal) turadi. U 1490 nm da nur oladi va 1310 nm da javob beradi.","ONT dagi normal signal — odatda −8 dan −27 dBm gacha. −27 dan kuchsizroq bo'lsa — internet uzilib turadi.","Abonent dropi optik rozetkaga SC/APC (yashil) konnektor bilan ulanadi, rozetkadan patchkord bilan ONT ga."]},
+ tip:{ru:"Чем «минус» больше по модулю, тем слабее сигнал: −25 дБм хуже, чем −18 дБм.",uz:"«Minus» qancha katta bo'lsa, signal shuncha kuchsiz: −25 dBm −18 dBm dan yomonroq."},
+ quiz:[
+  {a:1,ru:{q:"Что делает сплиттер?",o:["Усиливает сигнал","Делит одно волокно на много абонентов","Сваривает волокна"],e:"Сплиттер пассивный и ослабляет сигнал."},uz:{q:"Splitter nima qiladi?",o:["Signalni kuchaytiradi","Bitta tolani ko'p abonentlarga bo'ladi","Tolalarni payvandlaydi"],e:"Splitter passiv va signalni susaytiradi."}},
+  {a:2,ru:{q:"Какие потери у сплиттера 1:8?",o:["~1 дБ","~3,6 дБ","~10,5 дБ"],e:"Каждое деление на 2 добавляет примерно 3,5 дБ."},uz:{q:"1:8 splitterning yo'qotishi qancha?",o:["~1 dB","~3,6 dB","~10,5 dB"],e:"Har ikkiga bo'linish taxminan 3,5 dB qo'shadi."}},
+  {a:0,ru:{q:"Какой сигнал на ONT лучше?",o:["−18 дБм","−26 дБм","−30 дБм"],e:"Чем ближе к нулю, тем сильнее сигнал."},uz:{q:"ONT da qaysi signal yaxshiroq?",o:["−18 dBm","−26 dBm","−30 dBm"],e:"Nolga qancha yaqin bo'lsa, signal shuncha kuchli."}},
+  {a:1,ru:{q:"На какой длине волны ONT получает интернет?",o:["1310 нм","1490 нм","650 нм"],e:"1490 нм — к абоненту, 1310 нм — от абонента."},uz:{q:"ONT internetni qaysi to'lqin uzunligida oladi?",o:["1310 nm","1490 nm","650 nm"],e:"1490 nm — abonentga, 1310 nm — abonentdan."}}]},
+
+/* ---------- ADVANCED ---------- */
+{id:'a1',lv:2,min:8,nowarn:true,calc:'budget',
+ t:{ru:"Бюджет потерь",uz:"Yo'qotishlar byudjeti"},s:{ru:"Хватит ли сигнала до абонента",uz:"Abonentgacha signal yetadimi"},
+ table:{head:{ru:["Что","Сколько закладывать"],uz:["Nima","Qancha hisoblash"]},rows:{
+  ru:[["1 км волокна (1310 нм)","0,35 дБ"],["1 км волокна (1550 нм)","0,25 дБ"],["Одна сварка","0,1 дБ"],["Один коннектор (соединение)","0,5 дБ"],["Сплиттер","по таблице урока 4"],["Запас на ремонты и старение","3 дБ"]],
+  uz:[["1 km tola (1310 nm)","0,35 dB"],["1 km tola (1550 nm)","0,25 dB"],["Bitta payvand","0,1 dB"],["Bitta konnektor (ulanish)","0,5 dB"],["Splitter","4-dars jadvali bo'yicha"],["Ta'mir va eskirish uchun zaxira","3 dB"]]}},
+ steps:{ru:["Бюджет — это сумма всех потерь от OLT до абонента. Сложите: волокно × км + сварки + коннекторы + сплиттеры.","Пример: 4 км × 0,35 = 1,4; 6 сварок × 0,1 = 0,6; 4 коннектора × 0,5 = 2; сплиттеры 1:4 и 1:8 = 17,7. Итого <b>21,7 дБ</b>.","Мощность OLT (например +3 дБм) минус потери: 3 − 21,7 = <b>−18,7 дБм</b> на ONT. Это хорошо.","Сравните с порогом ONT (−27 дБм) и оставьте запас 3 дБ. Если не хватает — меньше делений сплиттера или короче трасса.","Посчитайте в калькуляторе своё подключение: он сделает это за вас."],
+       uz:["Byudjet — OLT dan abonentgacha barcha yo'qotishlar yig'indisi. Qo'shing: tola × km + payvandlar + konnektorlar + splitterlar.","Misol: 4 km × 0,35 = 1,4; 6 payvand × 0,1 = 0,6; 4 konnektor × 0,5 = 2; 1:4 va 1:8 splitterlar = 17,7. Jami <b>21,7 dB</b>.","OLT quvvati (masalan +3 dBm) minus yo'qotishlar: 3 − 21,7 = <b>−18,7 dBm</b> ONT da. Bu yaxshi.","ONT chegarasi (−27 dBm) bilan solishtiring va 3 dB zaxira qoldiring. Yetmasa — splitter bo'linishi kamroq yoki trassa qisqaroq.","Ulanishingizni kalkulyatorda hisoblang: u buni siz uchun qiladi."]},
+ tip:{ru:"3 дБ — это половина света. 10 дБ — свет ослаб в 10 раз. 20 дБ — в 100 раз.",uz:"3 dB — nurning yarmi. 10 dB — nur 10 marta susaydi. 20 dB — 100 marta."},
+ quiz:[
+  {a:1,ru:{q:"Сколько закладывать на 1 км волокна на 1310 нм?",o:["3 дБ","0,35 дБ","0,01 дБ"],e:"На 1550 нм меньше — около 0,25 дБ."},uz:{q:"1310 nm da 1 km tola uchun qancha hisoblanadi?",o:["3 dB","0,35 dB","0,01 dB"],e:"1550 nm da kamroq — taxminan 0,25 dB."}},
+  {a:2,ru:{q:"OLT +3 дБм, потери 20 дБ. Сигнал на ONT?",o:["+23 дБм","−3 дБм","−17 дБм"],e:"3 − 20 = −17 дБм."},uz:{q:"OLT +3 dBm, yo'qotish 20 dB. ONT dagi signal?",o:["+23 dBm","−3 dBm","−17 dBm"],e:"3 − 20 = −17 dBm."}},
+  {a:0,ru:{q:"Что значит потеря 3 дБ?",o:["Потеряна половина света","Потерян весь свет","Ничего не потеряно"],e:"Каждые 3 дБ — сигнал в 2 раза слабее."},uz:{q:"3 dB yo'qotish nimani anglatadi?",o:["Nurning yarmi yo'qoldi","Butun nur yo'qoldi","Hech narsa yo'qolmadi"],e:"Har 3 dB — signal 2 marta kuchsizroq."}},
+  {a:1,ru:{q:"Зачем запас 3 дБ в бюджете?",o:["Он не нужен","На будущие ремонты, сварки и старение","Чтобы сигнал был сильнее"],e:"Каждый ремонт добавляет сварки и потери."},uz:{q:"Byudjetda 3 dB zaxira nima uchun?",o:["U kerak emas","Kelajakdagi ta'mir, payvand va eskirish uchun","Signal kuchliroq bo'lishi uchun"],e:"Har ta'mir payvand va yo'qotish qo'shadi."}}]},
+
+{id:'a2',lv:2,min:7,
+ t:{ru:"Измеритель мощности и VFL",uz:"Quvvat o'lchagich va VFL"},s:{ru:"Сигнал у абонента и поиск изгиба",uz:"Abonentdagi signal va egilishni topish"},
+ svg:l=>svg(
+  box(20,60,90,120)+`<rect x="32" y="74" width="66" height="40" rx="4" fill="var(--navy)"/>`+tx(65,100,'−19,4',{w:700,s:15,c:'var(--navy-fg)'})+tx(65,136,'dBm',{w:600})+tx(65,156,'1490 nm',{s:10,c:'var(--muted)'})+
+  tx(65,48,R(l,"Измеритель","O'lchagich"),{w:700})+
+  line('M110 120C150 120 150 120 180 120',FC[8],3)+box(180,104,40,32)+tx(200,124,R(l,"розетка","rozetka"),{s:9})+line('M220 120H250',FC[8],3)+
+  tx(200,92,R(l,"отключить ONT, подключить прибор","ONT ni uzib, asbobni ulang"),{s:10,c:'var(--muted)'})+
+  line('M30 220H140',FC[8],3)+`<path d="M140 220C160 220 170 196 182 196C194 196 204 220 224 220H330" fill="none" stroke="${FC[8]}" stroke-width="3"/>`+
+  `<circle cx="182" cy="198" r="10" fill="#ff2a2a" opacity=".45"/><circle cx="182" cy="198" r="4" fill="#ff2a2a"/>`+
+  tx(182,180,R(l,"VFL: изгиб светится красным","VFL: egilish qizil yonadi"),{s:10,w:600}),
+  R(l,"Измеритель мощности показывает −19,4 дБм на 1490 нм; VFL подсвечивает изгиб красным","Quvvat o'lchagich 1490 nm da −19,4 dBm ko'rsatyapti; VFL egilishni qizil yoritadi"),250),
+ warnB:{ru:"VFL — тоже лазер.",uz:"VFL ham lazer."},warn:{ru:"Красный свет дефектоскопа яркий. Не направляйте его в глаза и не смотрите в торец.",uz:"Defektoskopning qizil nuri yorqin. Uni ko'zga qaratmang va tola uchiga qaramang."},
+ steps:{ru:["<b>Измеритель мощности</b> показывает силу света в дБм. Выберите длину волны: для интернета GPON — 1490 нм.","Почистите коннектор, отключите ONT и подключите шнур в прибор. Сравните с нормой: от −8 до −27 дБм.","Есть специальные PON-измерители: их включают между розеткой и ONT, они показывают 1490 и 1550 сразу, без отключения абонента.","<b>VFL</b> светит красным лазером в волокно. В месте сильного изгиба или обрыва свет виден через оболочку.","VFL работает на коротких участках (до нескольких км) и в белых или жёлтых шнурах. Для длинной линии нужен рефлектометр."],
+       uz:["<b>Quvvat o'lchagich</b> nur kuchini dBm da ko'rsatadi. To'lqin uzunligini tanlang: GPON interneti uchun — 1490 nm.","Konnektorni tozalang, ONT ni uzib, shnurni asbobga ulang. Me'yor bilan solishtiring: −8 dan −27 dBm gacha.","Maxsus PON o'lchagichlar bor: ular rozetka va ONT orasiga ulanadi, abonentni uzmasdan 1490 va 1550 ni birga ko'rsatadi.","<b>VFL</b> tolaga qizil lazer yuboradi. Kuchli egilish yoki uzilish joyida nur qobiq orqali ko'rinadi.","VFL qisqa uchastkalarda (bir necha km gacha) va oq yoki sariq shnurlarda ishlaydi. Uzun liniya uchun reflektometr kerak."]},
+ tip:{ru:"Сигнал слабый? Сначала почистите все коннекторы по пути и проверьте изгибы шнура у ONT. Это решает больше половины жалоб.",uz:"Signal kuchsizmi? Avval yo'ldagi barcha konnektorlarni tozalang va ONT yonidagi shnur egilishlarini tekshiring. Bu shikoyatlarning yarmidan ko'pini hal qiladi."},
+ quiz:[
+  {a:1,ru:{q:"Какую длину волны выбрать на измерителе для интернета GPON?",o:["1310 нм","1490 нм","850 нм"],e:"Интернет к абоненту идёт на 1490 нм."},uz:{q:"GPON interneti uchun o'lchagichda qaysi to'lqin uzunligini tanlash kerak?",o:["1310 nm","1490 nm","850 nm"],e:"Abonentga internet 1490 nm da boradi."}},
+  {a:0,ru:{q:"Прибор показал −29 дБм. Это…",o:["Слишком слабо, ищем причину","Отлично","Слишком сильно"],e:"Норма до −27 дБм. Ищите грязь, изгибы, плохие сварки."},uz:{q:"Asbob −29 dBm ko'rsatdi. Bu…",o:["Juda kuchsiz, sababini qidiramiz","A'lo","Juda kuchli"],e:"Me'yor −27 dBm gacha. Kir, egilish, yomon payvandlarni qidiring."}},
+  {a:2,ru:{q:"Как VFL показывает изгиб?",o:["Пищит","Пишет расстояние","Место изгиба светится красным"],e:"Красный свет выходит через оболочку в месте изгиба."},uz:{q:"VFL egilishni qanday ko'rsatadi?",o:["Chiyillaydi","Masofani yozadi","Egilish joyi qizil yonadi"],e:"Qizil nur egilish joyida qobiq orqali chiqadi."}},
+  {a:1,ru:{q:"Что сделать первым делом при слабом сигнале?",o:["Менять кабель","Почистить коннекторы и проверить изгибы","Менять ONT"],e:"Грязь и изгибы — самые частые причины."},uz:{q:"Signal kuchsiz bo'lsa, birinchi navbatda nima qilish kerak?",o:["Kabelni almashtirish","Konnektorlarni tozalash va egilishlarni tekshirish","ONT ni almashtirish"],e:"Kir va egilishlar — eng ko'p uchraydigan sabablar."}}]},
+
+{id:'a3',lv:2,min:10,nowarn:true,
+ t:{ru:"Рефлектометр (OTDR)",uz:"Reflektometr (OTDR)"},s:{ru:"Как читать рефлектограмму",uz:"Reflektogrammani qanday o'qish"},
+ svg:l=>svg(
+  line('M30 200H340','var(--line)',1.5)+line('M30 30V200','var(--line)',1.5)+
+  tx(34,24,R(l,"дБ","dB"),{a:'start',s:10,c:'var(--muted)'})+tx(340,216,R(l,"км","km"),{a:'end',s:10,c:'var(--muted)'})+
+  line('M30 40L40 44L120 66L120 74L200 96L200 90L206 104L280 124L282 70L288 186L340 194','var(--accent)',2.5)+
+  num(58,30,1)+num(120,52,2)+num(203,74,3)+num(283,56,4)+
+  tx(40,236,R(l,"1 мёртвая зона","1 o'lik zona"),{a:'start',s:10})+tx(40,250,R(l,"2 сварка — ступенька","2 payvand — pog'ona"),{a:'start',s:10})+
+  tx(190,236,R(l,"3 коннектор — пик","3 konnektor — cho'qqi"),{a:'start',s:10})+tx(190,250,R(l,"4 конец волокна","4 tola oxiri"),{a:'start',s:10}),
+  R(l,"Рефлектограмма: мёртвая зона, ступенька сварки, пик коннектора, конец волокна","Reflektogramma: o'lik zona, payvand pog'onasi, konnektor cho'qqisi, tola oxiri"),258),
+ steps:{ru:["<b>Рефлектометр</b> посылает импульс света и ловит отражения. На экране — линия: по горизонтали расстояние, по вертикали потери.","Ровный наклон линии — само волокно. <b>Ступенька вниз</b> — сварка или изгиб. <b>Пик</b> — коннектор. Большой пик и шум — конец волокна или обрыв.","В начале линии есть «мёртвая зона»: там прибор ничего не видит. Поэтому подключают <b>катушку нормализации</b> 0,5–1 км.","Изгиб от сварки отличают так: измерьте на 1310 и 1550 нм. Если на 1550 потери намного больше — это изгиб.","Сварку точно оценивают, только если измерить с двух концов и взять среднее. С одного конца бывает «плюс» вместо потери."],
+       uz:["<b>Reflektometr</b> nur impulsi yuboradi va qaytishlarni ushlaydi. Ekranda chiziq: gorizontal bo'yicha masofa, vertikal bo'yicha yo'qotish.","Chiziqning tekis qiyaligi — tolaning o'zi. <b>Pastga pog'ona</b> — payvand yoki egilish. <b>Cho'qqi</b> — konnektor. Katta cho'qqi va shovqin — tola oxiri yoki uzilish.","Chiziq boshida «o'lik zona» bor: u yerda asbob hech narsa ko'rmaydi. Shuning uchun 0,5–1 km <b>normallashtirish g'altagi</b> ulanadi.","Egilishni payvanddan shunday ajratiladi: 1310 va 1550 nm da o'lchang. 1550 da yo'qotish ancha ko'p bo'lsa — bu egilish.","Payvandni aniq baholash uchun ikki uchdan o'lchab, o'rtachasini olish kerak. Bir uchdan ba'zan yo'qotish o'rniga «plyus» chiqadi."]},
+ warnB:{ru:"Отключите оборудование.",uz:"Uskunani uzing."},
+ tip:{ru:"Никогда не подключайте рефлектометр к волокну, где работает OLT: можно сжечь прибор. Сначала отключите линию от оборудования.",uz:"Reflektometrni hech qachon OLT ishlab turgan tolaga ulamang: asbob kuyishi mumkin. Avval liniyani uskunadan uzing."},
+ quiz:[
+  {a:1,ru:{q:"Как на рефлектограмме выглядит сварка?",o:["Большой пик","Ступенька вниз","Шум"],e:"Пик — коннектор, ступенька — сварка или изгиб."},uz:{q:"Reflektogrammada payvand qanday ko'rinadi?",o:["Katta cho'qqi","Pastga pog'ona","Shovqin"],e:"Cho'qqi — konnektor, pog'ona — payvand yoki egilish."}},
+  {a:0,ru:{q:"Зачем нужна катушка нормализации?",o:["Убрать мёртвую зону в начале линии","Усилить сигнал","Для красоты"],e:"Без неё первые сотни метров не видно."},uz:{q:"Normallashtirish g'altagi nima uchun kerak?",o:["Liniya boshidagi o'lik zonani olib tashlash","Signalni kuchaytirish","Chiroy uchun"],e:"Usiz birinchi yuzlab metrlar ko'rinmaydi."}},
+  {a:2,ru:{q:"На 1550 нм потери в точке намного больше, чем на 1310. Это…",o:["Хорошая сварка","Коннектор","Изгиб волокна"],e:"Изгибы сильнее влияют на длинные волны."},uz:{q:"1550 nm da nuqtadagi yo'qotish 1310 dan ancha ko'p. Bu…",o:["Yaxshi payvand","Konnektor","Tola egilishi"],e:"Egilishlar uzun to'lqinlarga kuchliroq ta'sir qiladi."}},
+  {a:1,ru:{q:"Можно ли подключить рефлектометр к рабочей линии с OLT?",o:["Да, всегда","Нет, сначала отключить от оборудования","Да, если быстро"],e:"Свет OLT может повредить прибор и мешает измерению."},uz:{q:"Reflektometrni OLT li ishchi liniyaga ulash mumkinmi?",o:["Ha, doim","Yo'q, avval uskunadan uzish kerak","Ha, tez bo'lsa"],e:"OLT nuri asbobni shikastlashi va o'lchashga xalaqit berishi mumkin."}}]},
+
+{id:'a4',lv:2,min:9,nowarn:true,
+ t:{ru:"Аварии и ремонт обрыва",uz:"Avariya va uzilishni ta'mirlash"},s:{ru:"Найти место, восстановить, записать",uz:"Joyni topish, tiklash, yozib qo'yish"},
+ svg:l=>svg(
+  flow(110,10,140,40,R(l,"Нет сигнала","Signal yo'q"),R(l,"у абонентов","abonentlarda"))+arrow(180,50,180,66)+
+  flow(110,68,140,40,R(l,"Чистка, VFL","Tozalash, VFL"),R(l,"рядом с абонентом","abonent yonida"))+arrow(180,108,180,124)+
+  flow(110,126,140,40,R(l,"OTDR","OTDR"),R(l,"расстояние до обрыва","uzilishgacha masofa"))+arrow(180,166,180,182)+
+  flow(110,184,140,40,R(l,"Ремонт","Ta'mir"),R(l,"муфта или вставка","mufta yoki qo'shimcha"))+
+  tx(272,148,R(l,"сверить с","solishtiring"),{a:'start',s:10,c:'var(--muted)'})+tx(272,161,R(l,"метками кабеля","kabel belgilari"),{a:'start',s:10,c:'var(--muted)'})+
+  tx(180,246,R(l,"После ремонта — новое измерение и запись в журнал","Ta'mirdan keyin — yangi o'lchov va jurnalga yozuv"),{s:10,w:600}),
+  R(l,"Порядок аварии: нет сигнала, чистка и VFL, рефлектометр, ремонт","Avariya tartibi: signal yo'q, tozalash va VFL, reflektometr, ta'mir"),256),
+ steps:{ru:["Узнайте, сколько абонентов без связи. Один — проблема у него (шнур, коннектор, ONT). Много — проблема выше, на сплиттере или магистрали.","У одного абонента: почистите коннекторы, проверьте изгибы, VFL по дропу, измерьте мощность.","Если пропали многие: рефлектометром измерьте расстояние до обрыва. Сверьте с картой трассы и метками метража на кабеле.","Найдите место (часто: стройка, упавшее дерево, перегиб на опоре, грызуны). Если запас кабеля есть — ставьте муфту. Нет — вставку кабеля и две муфты.","После ремонта снова снимите рефлектограмму и сохраните её. Запишите в журнал: где, что, сколько сварок, какие потери."],
+       uz:["Nechta abonent aloqasiz ekanini bilib oling. Bitta — muammo unda (shnur, konnektor, ONT). Ko'p — muammo yuqorida, splitter yoki magistralda.","Bitta abonentda: konnektorlarni tozalang, egilishlarni tekshiring, drop bo'yicha VFL, quvvatni o'lchang.","Ko'pchilik uzilgan bo'lsa: reflektometr bilan uzilishgacha masofani o'lchang. Trassa xaritasi va kabeldagi metr belgilari bilan solishtiring.","Joyni toping (ko'pincha: qurilish, yiqilgan daraxt, ustundagi bukilish, kemiruvchilar). Kabel zaxirasi bo'lsa — mufta qo'ying. Yo'q bo'lsa — kabel qo'shimchasi va ikkita mufta.","Ta'mirdan keyin yana reflektogramma oling va saqlang. Jurnalga yozing: qayerda, nima, nechta payvand, qanday yo'qotishlar."]},
+ tip:{ru:"Расстояние на рефлектометре — по волокну, а не по земле. Волокно в кабеле длиннее кабеля примерно на 1–2%, плюс запасы в муфтах. Ищите с запасом.",uz:"Reflektometrdagi masofa — yer bo'yicha emas, tola bo'yicha. Kabeldagi tola kabeldan taxminan 1–2% uzunroq, ustiga muftalardagi zaxiralar. Zaxira bilan qidiring."},
+ quiz:[
+  {a:0,ru:{q:"Без связи только один абонент. Где искать?",o:["У абонента: шнур, коннектор, ONT","На магистрали","У OLT"],e:"Если бы обрыв был выше, пропали бы многие."},uz:{q:"Faqat bitta abonent aloqasiz. Qayerdan qidirish kerak?",o:["Abonentda: shnur, konnektor, ONT","Magistralda","OLT da"],e:"Uzilish yuqorida bo'lsa, ko'pchilik uzilgan bo'lardi."}},
+  {a:2,ru:{q:"Как найти место обрыва на длинной линии?",o:["Идти и смотреть","VFL с 20 км","Рефлектометром измерить расстояние"],e:"OTDR показывает расстояние до обрыва."},uz:{q:"Uzun liniyada uzilish joyini qanday topish mumkin?",o:["Yurib qarash","20 km dan VFL","Reflektometr bilan masofani o'lchash"],e:"OTDR uzilishgacha masofani ko'rsatadi."}},
+  {a:1,ru:{q:"Запаса кабеля нет. Как ремонтировать?",o:["Натянуть кабель","Вставка кабеля и две муфты","Склеить скотчем"],e:"Вставка заменяет повреждённый участок."},uz:{q:"Kabel zaxirasi yo'q. Qanday ta'mirlash kerak?",o:["Kabelni tortish","Kabel qo'shimchasi va ikkita mufta","Skotch bilan yopishtirish"],e:"Qo'shimcha shikastlangan uchastkani almashtiradi."}},
+  {a:1,ru:{q:"Почему расстояние OTDR не совпадает с землёй?",o:["Прибор сломан","Волокно длиннее кабеля, есть запасы в муфтах","Так не бывает"],e:"Ищите с запасом и сверяйте с метками кабеля."},uz:{q:"Nima uchun OTDR masofasi yer bilan mos kelmaydi?",o:["Asbob buzilgan","Tola kabeldan uzunroq, muftalarda zaxiralar bor","Bunday bo'lmaydi"],e:"Zaxira bilan qidiring va kabel belgilari bilan solishtiring."}}]}
+];
+
+// UI for Оптик Pro. Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Оптик Pro',tag:'Монтаж оптики с нуля · 13 уроков со схемами',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Начальный','Средний','Продвинутый'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} уровень · урок ${n} · ~${m} мин`,
+ leg:{},
+ warnB:'Не смотрите в торец.',warn:'Свет в волокне невидим, но опасен для глаз. Обрезки волокна — сразу в банку.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ bgT:'Бюджет потерь GPON',bgSub:'Какой сигнал дойдёт до ONT абонента',olt:'Мощность OLT, дБм',km:'Длина трассы, км',spl:'Сварок, шт',con:'Коннекторов, шт',s1:'Сплиттер 1',s2:'Сплиттер 2',none:'нет',
+ loss:'Потери',rx:'На ONT',db:'дБ',dbm:'дБм',okR:'Хорошо: запас больше 3 дБ до порога −27 дБм.',midR:'На грани: запаса меньше 3 дБ. Любая грязь или изгиб — и связь пропадёт.',badR:'Не хватит: сигнал слабее −27 дБм. Уменьшите деление сплиттера или длину трассы.',
+ bgNote:'Расчёт: 0,35 дБ/км, 0,1 дБ на сварку, 0,5 дБ на коннектор. Реальные потери лучше измерить прибором.',
+ dbT:'Сколько света потеряно',dbSub:'Перевод децибел в проценты',dbIn:'Потери, дБ',left:'Осталось света',lost:'Потеряно',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Optik Pro',tag:'Optika montaji noldan · sxemali 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Boshlang\'ich','O\'rta','Yuqori'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} daraja · ${n}-dars · ~${m} daq`,
+ leg:{},
+ warnB:'Tola uchiga qaramang.',warn:'Toladagi nur ko\'rinmaydi, lekin ko\'z uchun xavfli. Tola qoldiqlari — darhol bankaga.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ bgT:'GPON yo\'qotishlar byudjeti',bgSub:'Abonent ONT siga qanday signal yetadi',olt:'OLT quvvati, dBm',km:'Trassa uzunligi, km',spl:'Payvandlar, dona',con:'Konnektorlar, dona',s1:'1-splitter',s2:'2-splitter',none:'yo\'q',
+ loss:'Yo\'qotish',rx:'ONT da',db:'dB',dbm:'dBm',okR:'Yaxshi: −27 dBm chegarasigacha 3 dB dan ko\'p zaxira.',midR:'Chegarada: zaxira 3 dB dan kam. Ozgina kir yoki egilish — va aloqa uziladi.',badR:'Yetmaydi: signal −27 dBm dan kuchsiz. Splitter bo\'linishini yoki trassa uzunligini kamaytiring.',
+ bgNote:'Hisob: 0,35 dB/km, payvandga 0,1 dB, konnektorga 0,5 dB. Haqiqiy yo\'qotishni asbob bilan o\'lchagan ma\'qul.',
+ dbT:'Qancha nur yo\'qoldi',dbSub:'Detsibelni foizga o\'tkazish',dbIn:'Yo\'qotish, dB',left:'Qolgan nur',lost:'Yo\'qolgan',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (op_)
+const pk=k=>(k==='lang'?'ep_':'op_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{olt:3,km:4,sp:6,cn:4,s1:4,s2:8,db:3}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="var(--accent-ink)" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="var(--accent-ink)" stroke-width="1.6"/><circle cx="12" cy="12" r="2" fill="var(--accent-ink)"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+const swatch={};
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    if(x.legend)h+=`<div class="legend">${x.legend.map(k=>`<span><i class="sw" style="background:${swatch[k]}"></i>${L.leg[k]}</span>`).join('')}</div>`;h+='</div>'}
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warnB?tr(x.warnB):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* calculators: GPON loss budget and dB to percent */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',').replace('-','−');
+const numv=v=>+String(v).replace(',','.').replace('−','-')||0;
+const SPL={0:0,2:3.6,4:7.2,8:10.5,16:13.8,32:17.1,64:20.5};
+function splSel(id,v){const L=U();return `<select id="${id}">${Object.keys(SPL).map(k=>`<option value="${k}" ${+k===+v?'selected':''}>${+k?'1:'+k+' (−'+fmt(SPL[k],1)+' '+L.db+')':L.none}</option>`).join('')}</select>`}
+function calcBlock(){const L=U();const c=S.calc;
+  return `<div class="card stack"><div><h3>${L.bgT}</h3><p class="expl">${L.bgSub}</p></div>
+  <div class="pair"><label class="fld" for="co">${L.olt}<input id="co" type="number" inputmode="decimal" step="0.5" value="${c.olt}"></label>
+  <label class="fld" for="ck">${L.km}<input id="ck" type="number" inputmode="decimal" min="0" step="0.5" value="${c.km}"></label></div>
+  <div class="pair"><label class="fld" for="cs">${L.spl}<input id="cs" type="number" inputmode="numeric" min="0" step="1" value="${c.sp}"></label>
+  <label class="fld" for="cc">${L.con}<input id="cc" type="number" inputmode="numeric" min="0" step="1" value="${c.cn}"></label></div>
+  <div class="pair"><label class="fld" for="s1">${L.s1}${splSel('s1',c.s1)}</label><label class="fld" for="s2">${L.s2}${splSel('s2',c.s2)}</label></div>
+  <div class="out two" id="out1"></div><p class="expl" id="verd"></p><p class="expl">${L.bgNote}</p></div>
+  <div class="card stack"><div><h3>${L.dbT}</h3><p class="expl">${L.dbSub}</p></div>
+  <label class="fld" for="cd">${L.dbIn}<input id="cd" type="number" inputmode="decimal" min="0" step="0.5" value="${c.db}"></label>
+  <div class="out two" id="out2"></div></div>`}
+function paintCalc(){const L=U();const c=S.calc;
+  const loss=Math.max(0,numv(c.km))*0.35+Math.max(0,numv(c.sp))*0.1+Math.max(0,numv(c.cn))*0.5+SPL[c.s1]+SPL[c.s2];
+  const rx=numv(c.olt)-loss;
+  $('#out1').innerHTML=`<div><span>${L.loss}</span><b>${fmt(loss,1)} ${L.db}</b></div><div><span>${L.rx}</span><b>${fmt(rx,1)} ${L.dbm}</b></div>`;
+  const v=$('#verd');v.textContent=rx>=-24?L.okR:rx>=-27?L.midR:L.badR;v.className='expl '+(rx>=-24?'okc':rx>=-27?'':'badc');
+  const d=Math.max(0,numv(c.db));const left=100*Math.pow(10,-d/10);
+  $('#out2').innerHTML=`<div><span>${L.left}</span><b>${fmt(left,left<10?1:0)}%</b></div><div><span>${L.lost}</span><b>${fmt(100-left,left>90?1:0)}%</b></div>`}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  on('#co','olt');on('#ck','km');on('#cs','sp');on('#cc','cn');on('#cd','db');
+  ['s1','s2'].forEach(k=>{$('#'+k).onchange=e=>{S.calc[k]=+e.target.value;paintCalc()}});
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>
