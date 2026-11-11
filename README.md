@@ -11,3 +11,4 @@
 - `optik/` — приложение для монтажников оптики (исходники: папка проекта optik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
 - `svarshik/` — приложение для сварщиков (исходники: папка проекта svarshik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
 - `holod/` — приложение для мастеров по кондиционерам и холодильникам «Холод Pro» (исходники: папка проекта holod-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
+- `avtoelektrik/` — приложение для автоэлектриков и диагностов «Автоэлектрик Pro» (исходники: папка проекта avtoelektrik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).

@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<title>Автоэлектрик Pro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a lime "battery" accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#9bcf2f; --accent-ink:#172400; --navy:#1d2530; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#b2e04a; --accent-ink:#172400; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#b2e04a; --accent-ink:#172400; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select:focus,.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Автоэлектрик Pro (auto electrician / diagnostician). Each text is {ru, uz}. Quiz: a = index of the right option.
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}">${s}</text>`;
+const line=(d,c,w=3,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const circ=(x,y,r,f,st='var(--fg)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st}" stroke-width="1.5"/>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="11" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2)=>`${box(x,y,w,h)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+const P='var(--wH)',M='var(--wS)',SG='var(--wF)',CH='var(--wF)',CLo='var(--wC)';
+// ground symbol at x,y
+const gnd=(x,y)=>line(`M${x} ${y}V${y+8}M${x-9} ${y+8}H${x+9}M${x-6} ${y+12}H${x+6}M${x-3} ${y+16}H${x+3}`,M,2);
+// battery block with + and − posts
+const batt=(x,y,l)=>`${box(x,y,70,46)}<rect x="${x+10}" y="${y-7}" width="12" height="7" fill="${P}"/><rect x="${x+48}" y="${y-7}" width="12" height="7" fill="var(--fg)"/>${tx(x+16,y+20,'+',{w:700,s:15,c:P})}${tx(x+54,y+20,'−',{w:700,s:15})}${tx(x+35,y+38,R(l,'АКБ 12 В','AKB 12 V'),{s:10,w:600})}`;
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:6,nowarn:true,
+ t:{ru:"Техника безопасности",uz:"Xavfsizlik texnikasi"},s:{ru:"АКБ, вентилятор, подушки, гибриды",uz:"AKB, ventilyator, yostiqlar, gibridlar"},
+ table:{head:{ru:["Опасность","Как защититься"],uz:["Xavf","Qanday himoyalanish"]},rows:{
+  ru:[["Короткое замыкание АКБ","Ключ между «+» и кузовом даёт сотни ампер: ожог, расплавленный металл. Сначала снимайте «−»"],["Водород из АКБ","При зарядке выделяется взрывоопасный газ. Не курить, не искрить рядом, проветривать"],["Кислота","Очки и перчатки. Попала в глаза — промывать водой 15 минут и к врачу"],["Вентилятор радиатора","Может включиться сам при выключенном моторе. Руки и провода держать подальше"],["Подушки безопасности","Отключить АКБ и ждать не меньше 5 минут. Не прозванивать пиропатрон тестером"],["Гибрид / электромобиль","Оранжевые провода — до 400–800 В. Без допуска не трогать"],["Кольца, часы, браслет","Снимать: металл на руке замыкает плюс и сильно обжигает"]],
+  uz:[["AKB qisqa tutashuvi","«+» va kuzov orasidagi kalit yuzlab amper beradi: kuyish, erigan metall. Avval «−» ni yeching"],["AKB dan vodorod","Zaryadlashda portlovchi gaz chiqadi. Chekmang, yonida uchqun chiqarmang, shamollating"],["Kislota","Ko'zoynak va qo'lqop. Ko'zga tushsa — 15 daqiqa suv bilan yuving va shifokorga boring"],["Radiator ventilyatori","Motor o'chiq bo'lsa ham o'zi yonishi mumkin. Qo'l va simlarni uzoqroq tuting"],["Xavfsizlik yostiqlari","AKB ni uzing va kamida 5 daqiqa kuting. Piropatronni tester bilan tekshirmang"],["Gibrid / elektromobil","To'q sariq simlar — 400–800 V gacha. Ruxsatsiz tegmang"],["Uzuk, soat, bilaguzuk","Yeching: qo'ldagi metall plyusni tutashtiradi va qattiq kuydiradi"]]}},
+ steps:{ru:["Перед работой с проводкой снимите <b>минусовую клемму</b> АКБ. Тогда случайное касание ключом кузова ничего не замкнёт.","Снимите кольца и часы. Работайте в очках, особенно возле аккумулятора.","Заряжайте АКБ в проветриваемом месте. Зарядное устройство включайте в сеть только после того, как надели клеммы.","Перед работой у руля, сидений и стоек отключите АКБ и подождите 5–10 минут: подушки безопасности держат заряд.","Не прокалывайте провода иголкой без нужды. Через дырку в изоляции попадает влага, и через год провод сгниёт."],
+       uz:["Simlar bilan ishlashdan oldin AKB ning <b>minus klemmasini</b> yeching. Shunda kalit tasodifan kuzovga tegsa, hech narsa tutashmaydi.","Uzuk va soatni yeching. Ko'zoynakda ishlang, ayniqsa akkumulyator yonida.","AKB ni shamollatiladigan joyda zaryadlang. Zaryadlovchini klemmalarni kiygizgandan keyingina tarmoqqa ulang.","Rul, o'rindiq va tirgaklar yonida ishlashdan oldin AKB ni uzing va 5–10 daqiqa kuting: yostiqlar zaryadni ushlab turadi.","Simlarni keraksiz igna bilan teshmang. Izolyatsiyadagi teshikdan namlik kiradi va bir yildan keyin sim chiriydi."]},
+ tip:{ru:"Никогда не проверяйте провод «на искру» о кузов на современной машине. Скачок напряжения может сжечь блок управления, а он стоит дороже всей работы.",uz:"Zamonaviy mashinada simni hech qachon kuzovga «uchqun bilan» tekshirmang. Kuchlanish sakrashi boshqaruv blokini kuydirishi mumkin, u esa butun ishdan qimmat turadi."},
+ quiz:[
+  {a:1,ru:{q:"Какую клемму АКБ снимают первой?",o:["Плюс","Минус","Без разницы"],e:"Сначала минус: тогда ключ, коснувшийся кузова, ничего не замкнёт."},uz:{q:"AKB ning qaysi klemmasi birinchi yechiladi?",o:["Plyus","Minus","Farqi yo'q"],e:"Avval minus: shunda kuzovga tekkan kalit hech narsani tutashtirmaydi."}},
+  {a:2,ru:{q:"Что выделяет аккумулятор при зарядке?",o:["Азот","Углекислый газ","Взрывоопасный водород"],e:"Поэтому рядом нельзя курить и искрить."},uz:{q:"Akkumulyator zaryadlanganda nima chiqaradi?",o:["Azot","Karbonat angidrid","Portlovchi vodorod"],e:"Shuning uchun yonida chekish va uchqun chiqarish mumkin emas."}},
+  {a:0,ru:{q:"Сколько ждать после отключения АКБ перед работой с подушками?",o:["Не меньше 5 минут","Можно сразу","30 секунд"],e:"Подушки держат заряд несколько минут. Точное время — в инструкции к машине."},uz:{q:"Yostiqlar bilan ishlashdan oldin AKB uzilgach qancha kutish kerak?",o:["Kamida 5 daqiqa","Darhol mumkin","30 soniya"],e:"Yostiqlar bir necha daqiqa zaryadni ushlaydi. Aniq vaqt — mashina yo'riqnomasida."}},
+  {a:1,ru:{q:"Что значат оранжевые провода в гибриде?",o:["Это провода магнитолы","Высокое напряжение, без допуска не трогать","Провода массы"],e:"В гибридах и электромобилях там сотни вольт."},uz:{q:"Gibriddagi to'q sariq simlar nimani anglatadi?",o:["Magnitola simlari","Yuqori kuchlanish, ruxsatsiz tegmang","Massa simlari"],e:"Gibrid va elektromobillarda u yerda yuzlab volt bor."}}]},
+
+{id:'b2',lv:0,min:7,nowarn:true,legend:['P','M'],
+ t:{ru:"Мультиметр и контрольная лампа",uz:"Multimetr va nazorat lampasi"},s:{ru:"Напряжение, сопротивление, прозвонка",uz:"Kuchlanish, qarshilik, uzluksizlikni tekshirish"},
+ svg:l=>svg(
+  box(120,20,120,130)+`<rect x="134" y="32" width="92" height="38" rx="4" fill="var(--navy)"/>`+tx(180,59,'12,6 V',{w:700,s:20,c:'var(--navy-fg)'})+
+  circ(180,104,22,'var(--bg)')+tx(180,108,'V ⎓',{w:700,s:12})+
+  circ(150,138,6,'var(--fg)')+circ(210,138,6,P,P)+tx(150,128,'COM',{s:8,c:'var(--muted)'})+tx(210,128,'VΩ',{s:8,c:'var(--muted)'})+
+  line('M210 144C210 170 220 180 216 196',P,3)+line('M150 144C150 170 140 180 144 196',M,3)+
+  box(125,203,110,40)+`<rect x="138" y="196" width="14" height="7" fill="var(--fg)"/><rect x="208" y="196" width="14" height="7" fill="${P}"/>`+tx(145,226,'−',{w:700,s:15})+tx(215,226,'+',{w:700,s:15,c:P})+tx(180,228,R(l,'АКБ','AKB'),{s:10,w:600})+
+  tx(60,214,R(l,'чёрный → минус','qora → minus'),{s:10,c:'var(--muted)'})+tx(300,214,R(l,'красный → плюс','qizil → plyus'),{s:10,c:'var(--muted)'}),
+  R(l,"Мультиметр в режиме постоянного напряжения: чёрный щуп на минус, красный на плюс, на экране 12,6 вольта","Multimetr doimiy kuchlanish rejimida: qora shchup minusga, qizil plyusga, ekranda 12,6 volt"),258),
+ table:{head:{ru:["Режим","Что меряем","Норма"],uz:["Rejim","Nimani o'lchaymiz","Me'yor"]},rows:{
+  ru:[["V ⎓ (20 V)","Напряжение АКБ, питание датчика","12,4–12,7 В без нагрузки"],["Ω","Сопротивление катушки, датчика","По справочнику"],["Прозвонка 🔊","Целый ли провод","Пищит = провод цел"],["A (10 A)","Ток утечки, потребление","Только последовательно!"]],
+  uz:[["V ⎓ (20 V)","AKB kuchlanishi, datchik ta'minoti","Yuklamasiz 12,4–12,7 V"],["Ω","G'altak, datchik qarshiligi","Ma'lumotnoma bo'yicha"],["Uzluksizlik 🔊","Sim butunmi","Chiyillasa = sim butun"],["A (10 A)","Oqish toki, iste'mol","Faqat ketma-ket!"]]}},
+ steps:{ru:["Чёрный щуп всегда в гнездо <b>COM</b>. Красный — в гнездо <b>VΩ</b> для напряжения и сопротивления.","Напряжение меряют <b>параллельно</b>: щупы на два контакта, цепь не разрывают. Можно мерить при включённом зажигании.","Сопротивление и прозвонку меряют только <b>без питания</b>. Отключите разъём или снимите минус АКБ.","Ток меряют <b>последовательно</b>: разрывают цепь и ставят тестер в разрыв, красный щуп в гнездо 10A. Никогда не ставьте щупы в режиме A на клеммы АКБ — сгорит предохранитель тестера.","Контрольная лампа (пробник) показывает, тянет ли цепь нагрузку. Тестер может показать 12 В на гнилом проводе, а лампа не загорится."],
+       uz:["Qora shchup doim <b>COM</b> uyasiga. Qizil — kuchlanish va qarshilik uchun <b>VΩ</b> uyasiga.","Kuchlanish <b>parallel</b> o'lchanadi: shchuplar ikki kontaktga, zanjir uzilmaydi. O't oldirish yoqilgan holda o'lchash mumkin.","Qarshilik va uzluksizlik faqat <b>ta'minotsiz</b> o'lchanadi. Razyomni uzing yoki AKB minusini yeching.","Tok <b>ketma-ket</b> o'lchanadi: zanjir uziladi va tester uzilgan joyga qo'yiladi, qizil shchup 10A uyasiga. Hech qachon A rejimida shchuplarni AKB klemmalariga qo'ymang — tester saqlagichi kuyadi.","Nazorat lampasi (probnik) zanjir yuklamani tortadimi, ko'rsatadi. Tester chirigan simda 12 V ko'rsatishi mumkin, lampa esa yonmaydi."]},
+ tip:{ru:"Для работы с блоками управления берите светодиодный пробник или тестер. Обычная лампа 21 Вт на сигнальном проводе датчика может сжечь выход блока.",uz:"Boshqaruv bloklari bilan ishlash uchun svetodiodli probnik yoki tester oling. Datchikning signal simidagi oddiy 21 Vt lampa blok chiqishini kuydirishi mumkin."},
+ quiz:[
+  {a:0,ru:{q:"Как подключают мультиметр для измерения напряжения?",o:["Параллельно, на два контакта","В разрыв цепи","Только к одному проводу"],e:"Напряжение — параллельно, ток — последовательно."},uz:{q:"Kuchlanishni o'lchash uchun multimetr qanday ulanadi?",o:["Parallel, ikki kontaktga","Zanjir uzilgan joyiga","Faqat bitta simga"],e:"Kuchlanish — parallel, tok — ketma-ket."}},
+  {a:2,ru:{q:"Когда можно мерить сопротивление?",o:["При работающем моторе","При включённом зажигании","Только без питания"],e:"С питанием тестер покажет ерунду или сгорит."},uz:{q:"Qarshilikni qachon o'lchash mumkin?",o:["Motor ishlab turganda","O't oldirish yoqilganda","Faqat ta'minotsiz"],e:"Ta'minot bilan tester noto'g'ri ko'rsatadi yoki kuyadi."}},
+  {a:1,ru:{q:"Что будет, если в режиме 10A поставить щупы на клеммы АКБ?",o:["Покажет 12 В","Короткое замыкание, сгорит предохранитель тестера","Ничего"],e:"В режиме тока у тестера почти нулевое сопротивление."},uz:{q:"10A rejimida shchuplarni AKB klemmalariga qo'ysa nima bo'ladi?",o:["12 V ko'rsatadi","Qisqa tutashuv, tester saqlagichi kuyadi","Hech narsa"],e:"Tok rejimida testerning qarshiligi deyarli nol."}},
+  {a:1,ru:{q:"Почему иногда лучше проверить цепь лампой, а не тестером?",o:["Лампа точнее","Лампа даёт нагрузку и выявляет плохой контакт","Лампа дешевле"],e:"Тестер почти не берёт ток, поэтому «видит» 12 В даже на гнилом проводе."},uz:{q:"Nega ba'zan zanjirni tester emas, lampa bilan tekshirgan yaxshi?",o:["Lampa aniqroq","Lampa yuklama beradi va yomon kontaktni aniqlaydi","Lampa arzonroq"],e:"Tester deyarli tok olmaydi, shuning uchun chirigan simda ham 12 V «ko'radi»."}}]},
+
+{id:'b3',lv:0,min:7,nowarn:true,calc:true,
+ t:{ru:"Аккумулятор: проверка и зарядка",uz:"Akkumulyator: tekshirish va zaryadlash"},s:{ru:"Заряд по напряжению, прикуривание",uz:"Kuchlanish bo'yicha zaryad, prikurivaniye"},
+ table:{head:{ru:["Напряжение в покое","Заряд","Что делать"],uz:["Tinch holatdagi kuchlanish","Zaryad","Nima qilish kerak"]},rows:{
+  ru:[["12,7 В и выше","100 %","Норма"],["12,5 В","~75 %","Можно ездить"],["12,3 В","~50 %","Зарядить"],["12,1 В","~25 %","Срочно зарядить"],["11,9 В и ниже","0 %","Глубокий разряд, проверить АКБ"]],
+  uz:[["12,7 V va undan yuqori","100 %","Me'yor"],["12,5 V","~75 %","Yurish mumkin"],["12,3 V","~50 %","Zaryadlash kerak"],["12,1 V","~25 %","Zudlik bilan zaryadlang"],["11,9 V va past","0 %","Chuqur razryad, AKB ni tekshiring"]]}},
+ steps:{ru:["Мерьте напряжение через 2–3 часа после поездки, когда АКБ «отдохнул». Сразу после поездки покажет завышено.","Проверка под нагрузкой: попросите крутить стартер и смотрите на тестер. Если падает <b>ниже 9,6–10 В</b> — АКБ слабый или стартер тянет много.","Снимать АКБ: сначала <b>минус</b>, потом плюс. Ставить: сначала <b>плюс</b>, потом минус. Клеммы зачистить и смазать.","Зарядка: ток примерно 1/10 от ёмкости. Для АКБ 60 А·ч это 6 А, около 10–12 часов. Зарядка окончена, когда напряжение на зарядке держится 14,4–14,8 В и ток упал.","Прикуривание: плюс донора к плюсу, минус донора к <b>массе мотора</b> разряженной машины, подальше от АКБ. Отключать в обратном порядке."],
+       uz:["Kuchlanishni safardan 2–3 soat keyin, AKB «dam olganda» o'lchang. Safardan keyin darhol oshirib ko'rsatadi.","Yuklama ostida tekshirish: starterni aylantirishni so'rang va testerga qarang. <b>9,6–10 V dan pastga</b> tushsa — AKB kuchsiz yoki starter ko'p tortadi.","AKB ni yechish: avval <b>minus</b>, keyin plyus. O'rnatish: avval <b>plyus</b>, keyin minus. Klemmalarni tozalang va moylang.","Zaryadlash: tok taxminan sig'imning 1/10 qismi. 60 A·soat AKB uchun bu 6 A, taxminan 10–12 soat. Zaryadlashda kuchlanish 14,4–14,8 V da tursa va tok tushsa, zaryad tugagan.","Prikurivaniye: donor plyusi plyusga, donor minusi zaryadsiz mashinaning <b>motor massasiga</b>, AKB dan uzoqroq. Teskari tartibda uzing."]},
+ tip:{ru:"Если АКБ разрядился за ночь, а сам он новый — ищите утечку тока (урок «Утечка тока»). Менять аккумулятор в этом случае бесполезно.",uz:"AKB bir kechada zaryadsizlansa, o'zi esa yangi bo'lsa — tok oqishini qidiring («Tok oqishi» darsi). Bu holda akkumulyatorni almashtirish foydasiz."},
+ quiz:[
+  {a:2,ru:{q:"Сколько показывает полностью заряженный АКБ в покое?",o:["11,8 В","12,2 В","12,7 В и выше"],e:"12,7 В — 100 %, 12,3 В — около половины."},uz:{q:"To'liq zaryadlangan AKB tinch holatda qancha ko'rsatadi?",o:["11,8 V","12,2 V","12,7 V va undan yuqori"],e:"12,7 V — 100 %, 12,3 V — taxminan yarmi."}},
+  {a:0,ru:{q:"При прокрутке стартером напряжение упало до 8,5 В. Что это значит?",o:["АКБ слабый или стартер тянет много","Всё в норме","Генератор перезаряжает"],e:"Норма при прокрутке — не ниже 9,6–10 В."},uz:{q:"Starter bilan aylantirganda kuchlanish 8,5 V gacha tushdi. Bu nimani anglatadi?",o:["AKB kuchsiz yoki starter ko'p tortadi","Hammasi joyida","Generator ortiqcha zaryadlayapti"],e:"Aylantirganda me'yor — 9,6–10 V dan past emas."}},
+  {a:1,ru:{q:"Каким током заряжать АКБ 60 А·ч?",o:["30 А","Около 6 А","0,5 А"],e:"Примерно 1/10 от ёмкости."},uz:{q:"60 A·soat AKB ni qanday tok bilan zaryadlash kerak?",o:["30 A","Taxminan 6 A","0,5 A"],e:"Taxminan sig'imning 1/10 qismi."}},
+  {a:1,ru:{q:"Куда подключать минус донора при прикуривании?",o:["На минус разряженного АКБ","На массу мотора, подальше от АКБ","На плюс"],e:"Так искра будет далеко от водорода над аккумулятором."},uz:{q:"Prikurivaniyeda donor minusi qayerga ulanadi?",o:["Zaryadsiz AKB minusiga","Motor massasiga, AKB dan uzoqroq","Plyusga"],e:"Shunda uchqun akkumulyator ustidagi vodoroddan uzoqda bo'ladi."}}]},
+
+{id:'b4',lv:0,min:8,legend:['P','S','M'],
+ t:{ru:"Предохранители и реле",uz:"Saqlagichlar va rele"},s:{ru:"Контакты 30, 87, 85, 86",uz:"30, 87, 85, 86 kontaktlari"},
+ svg:l=>svg(
+  batt(14,30,l)+line('M30 23V12H120',P,3)+`<rect x="120" y="5" width="34" height="14" rx="3" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(137,16,'15A',{w:700,s:9,c:'var(--accent-ink)'})+line('M154 12H226V64',P,3)+line('M68 23V18H96V80',M,3)+gnd(96,80)+
+  box(170,64,110,96)+tx(225,82,R(l,'Реле','Rele'),{w:700,s:12})+
+  `<path d="M196 104h14l6-8 6 16 6-16 6 16 6-8h14" fill="none" stroke="var(--fg)" stroke-width="1.5"/>`+tx(225,128,R(l,'катушка','g\'altak'),{s:9,c:'var(--muted)'})+
+  tx(226,60,'30',{w:700,s:12,c:P})+tx(292,140,'87',{w:700,s:12})+tx(178,176,'86',{w:700,s:12})+tx(262,176,'85',{w:700,s:12})+
+  line('M280 140H330V180',P,3)+circ(330,196,14,'var(--surface)')+tx(330,200,R(l,'Нагр.','Yukl.'),{s:8,w:600})+line('M330 210V222',M,3)+gnd(330,222)+
+  line('M190 160V210H120',SG,3)+line('M112 210l-16-8M96 210H60',SG,3)+circ(112,210,3,'var(--fg)')+tx(104,232,R(l,'кнопка','tugma'),{s:9,c:'var(--muted)'})+tx(60,204,'+12',{s:9,c:P})+
+  line('M260 160V216',M,3)+gnd(260,216),
+  R(l,"Реле: плюс через предохранитель на контакт 30, с контакта 87 на нагрузку, катушка 86 от кнопки, 85 на массу","Rele: plyus saqlagich orqali 30 kontaktga, 87 dan yuklamaga, g'altak 86 tugmadan, 85 massaga"),245),
+ warnB:{ru:"Не ставьте предохранитель больше нужного.",uz:"Keragidan katta saqlagich qo'ymang."},warn:{ru:"«Жучок» или 30 А вместо 10 А — и сгорит уже проводка, а не предохранитель.",uz:"«Jujik» yoki 10 A o'rniga 30 A — va saqlagich emas, simlar kuyadi."},
+ table:{head:{ru:["Контакт","Что подключают"],uz:["Kontakt","Nima ulanadi"]},rows:{
+  ru:[["30","Плюс от АКБ через предохранитель"],["87","Выход на нагрузку (вентилятор, фары, сигнал)"],["87a","Выход, который замкнут, пока реле выключено"],["86","Управление катушкой (плюс от кнопки или блока)"],["85","Катушка на массу"]],
+  uz:[["30","AKB dan saqlagich orqali plyus"],["87","Yuklamaga chiqish (ventilyator, faralar, signal)"],["87a","Rele o'chiq paytda ulangan chiqish"],["86","G'altakni boshqarish (tugma yoki blokdan plyus)"],["85","G'altak massaga"]]}},
+ steps:{ru:["Предохранитель защищает <b>провод</b>, а не прибор. Номинал подбирают по сечению провода (смотрите калькулятор).","Проверка предохранителя: на включённой цепи щуп тестера на оба «пятачка» сверху. 12 В на одном и 0 на другом — сгорел. 12 В на обоих — цел.","Реле позволяет слабой кнопкой включать большой ток. Через кнопку идёт 0,1–0,2 А, через контакты реле — 20–40 А.","Проверка реле: на столе подайте +12 В на 86 и массу на 85. Должен быть щелчок, а 30 и 87 должны прозваниваться.","Катушка реле прозванивается обычно на 60–90 Ом. Обрыв (бесконечность) — реле на замену."],
+       uz:["Saqlagich asbobni emas, <b>simni</b> himoya qiladi. Nominal sim kesimi bo'yicha tanlanadi (kalkulyatorga qarang).","Saqlagichni tekshirish: yoqilgan zanjirda tester shchupini ustidagi ikkala «nuqta»ga tekkizing. Birida 12 V, boshqasida 0 — kuygan. Ikkalasida 12 V — butun.","Rele kuchsiz tugma bilan katta tokni yoqishga imkon beradi. Tugma orqali 0,1–0,2 A, rele kontaktlari orqali 20–40 A o'tadi.","Releni tekshirish: stolda 86 ga +12 V, 85 ga massa bering. Chiqillash bo'lishi kerak, 30 va 87 esa ulanishi kerak.","Rele g'altagi odatda 60–90 Om ko'rsatadi. Uzilish (cheksizlik) — releni almashtirish kerak."]},
+ tip:{ru:"Если новый предохранитель сразу горит снова — в цепи короткое замыкание. Ищите перетёртый провод, а не ставьте предохранитель больше.",uz:"Yangi saqlagich darhol yana kuysa — zanjirda qisqa tutashuv bor. Kattaroq saqlagich qo'ymang, ishqalanib ketgan simni qidiring."},
+ quiz:[
+  {a:1,ru:{q:"Что защищает предохранитель?",o:["Аккумулятор","Провод от перегрева","Лампу"],e:"Номинал выбирают по сечению провода."},uz:{q:"Saqlagich nimani himoya qiladi?",o:["Akkumulyatorni","Simni qizib ketishdan","Lampani"],e:"Nominal sim kesimi bo'yicha tanlanadi."}},
+  {a:0,ru:{q:"Какой контакт реле — выход на нагрузку?",o:["87","85","86"],e:"30 — вход питания, 87 — выход, 85 и 86 — катушка."},uz:{q:"Relening qaysi kontakti yuklamaga chiqish?",o:["87","85","86"],e:"30 — ta'minot kirishi, 87 — chiqish, 85 va 86 — g'altak."}},
+  {a:2,ru:{q:"Новый предохранитель сразу сгорел. Что делать?",o:["Поставить на 10 А больше","Поставить «жучок»","Искать короткое замыкание"],e:"Больший номинал — и сгорит проводка."},uz:{q:"Yangi saqlagich darhol kuydi. Nima qilish kerak?",o:["10 A kattasini qo'yish","«Jujik» qo'yish","Qisqa tutashuvni qidirish"],e:"Katta nominal — va simlar kuyadi."}},
+  {a:1,ru:{q:"Зачем ставят реле?",o:["Чтобы светило ярче","Чтобы слабая кнопка включала большой ток","Вместо предохранителя"],e:"Через кнопку идёт маленький ток катушки."},uz:{q:"Rele nima uchun qo'yiladi?",o:["Yorqinroq yonishi uchun","Kuchsiz tugma katta tokni yoqishi uchun","Saqlagich o'rniga"],e:"Tugma orqali g'altakning kichik toki o'tadi."}}]},
+
+{id:'b5',lv:0,min:7,calc:true,
+ t:{ru:"Провода, разъёмы, соединения",uz:"Simlar, razyomlar, ulanishlar"},s:{ru:"Сечение, обжим, пайка, термоусадка",uz:"Kesim, siqish, kavsharlash, termousadka"},
+ table:{head:{ru:["Сечение","Длительно до","Где обычно"],uz:["Kesim","Uzoq muddat","Odatda qayerda"]},rows:{
+  ru:[["0,5 мм²","8 А","Датчики, сигналы"],["0,75 мм²","11 А","Габариты, поворотники"],["1,0 мм²","15 А","Фары, магнитола"],["1,5 мм²","20 А","Вентилятор печки"],["2,5 мм²","30 А","Вентилятор радиатора"],["4–6 мм²","40–55 А","Питание усилителя"],["16–25 мм²","100–135 А","Стартер, генератор, масса"]],
+  uz:[["0,5 mm²","8 A","Datchiklar, signallar"],["0,75 mm²","11 A","Gabaritlar, burilish chiroqlari"],["1,0 mm²","15 A","Faralar, magnitola"],["1,5 mm²","20 A","Pech ventilyatori"],["2,5 mm²","30 A","Radiator ventilyatori"],["4–6 mm²","40–55 A","Kuchaytirgich ta'minoti"],["16–25 mm²","100–135 A","Starter, generator, massa"]]}},
+ steps:{ru:["Цвета проводов у каждой марки свои. Не угадывайте — смотрите <b>электросхему</b> именно этой модели и года.","Обозначения на схемах: <b>30</b> — постоянный плюс, <b>15</b> — плюс после замка зажигания, <b>31</b> — масса, <b>50</b> — стартер.","Лучшее соединение — <b>обжим</b> гильзой правильным инструментом, сверху термоусадка с клеем. Пайка тоже хороша, но место пайки надо закрепить: от вибрации провод ломается рядом.","Никаких скруток с изолентой под капотом. Через полгода там окисление, нагрев и «плавающая» неисправность.","Новый провод ведите вдоль штатного жгута, крепите хомутами, через металл — только через резиновую втулку."],
+       uz:["Simlarning ranglari har bir markada o'zgacha. Taxmin qilmang — aynan shu model va yilning <b>elektr sxemasiga</b> qarang.","Sxemalardagi belgilar: <b>30</b> — doimiy plyus, <b>15</b> — o't oldirish qulfidan keyingi plyus, <b>31</b> — massa, <b>50</b> — starter.","Eng yaxshi ulanish — to'g'ri asbob bilan gilza orqali <b>siqish</b>, ustidan yelimli termousadka. Kavsharlash ham yaxshi, lekin kavshar joyini mahkamlash kerak: tebranishdan sim uning yonida sinadi.","Kapot ostida izolentali burama ulanish yo'q. Yarim yildan keyin u yerda oksidlanish, qizish va «suzib yuruvchi» nosozlik bo'ladi.","Yangi simni shtat jgut bo'ylab olib boring, xomutlar bilan mahkamlang, metall orqali — faqat rezina vtulka orqali."]},
+ warnB:{ru:"Снимите минус АКБ.",uz:"AKB minusini yeching."},warn:{ru:"Перед врезкой в проводку отключите аккумулятор, чтобы не замкнуть плюс на кузов.",uz:"Simlarga ulanishdan oldin akkumulyatorni uzing, plyusni kuzovga tutashtirib qo'ymaslik uchun."},
+ tip:{ru:"Чем длиннее провод, тем толще он нужен: на длинном тонком проводе теряется напряжение, и фары светят тускло. Посчитайте в калькуляторе.",uz:"Sim qancha uzun bo'lsa, shuncha yo'g'on bo'lishi kerak: uzun ingichka simda kuchlanish yo'qoladi va faralar xira yonadi. Kalkulyatorda hisoblang."},
+ quiz:[
+  {a:1,ru:{q:"Что означает обозначение 15 на схеме?",o:["Масса","Плюс после замка зажигания","Постоянный плюс"],e:"30 — постоянный плюс, 15 — после замка, 31 — масса."},uz:{q:"Sxemadagi 15 belgisi nimani anglatadi?",o:["Massa","O't oldirish qulfidan keyingi plyus","Doimiy plyus"],e:"30 — doimiy plyus, 15 — qulfdan keyin, 31 — massa."}},
+  {a:2,ru:{q:"Какое соединение лучше под капотом?",o:["Скрутка с изолентой","Скрутка без изоленты","Обжим гильзой и термоусадка с клеем"],e:"Скрутка окисляется и греется."},uz:{q:"Kapot ostida qaysi ulanish yaxshiroq?",o:["Izolentali burama","Izolentasiz burama","Gilza bilan siqish va yelimli termousadka"],e:"Burama oksidlanadi va qiziydi."}},
+  {a:0,ru:{q:"Как узнать назначение провода по цвету?",o:["По схеме конкретной модели","Красный всегда плюс, остальное масса","По толщине"],e:"У каждой марки свои цвета."},uz:{q:"Simning vazifasini rang bo'yicha qanday bilish mumkin?",o:["Aniq modelning sxemasi bo'yicha","Qizil doim plyus, qolgani massa","Qalinligi bo'yicha"],e:"Har bir markaning o'z ranglari bor."}},
+  {a:1,ru:{q:"Почему длинный тонкий провод — плохо?",o:["Он дорогой","На нём теряется напряжение и он греется","Он не гнётся"],e:"Сечение подбирают по току и длине."},uz:{q:"Nega uzun ingichka sim yomon?",o:["U qimmat","Unda kuchlanish yo'qoladi va u qiziydi","U egilmaydi"],e:"Kesim tok va uzunlik bo'yicha tanlanadi."}}]},
+
+/* ---------- INTERMEDIATE ---------- */
+{id:'m1',lv:1,min:8,legend:['P','S','M'],
+ t:{ru:"Стартер: не крутит, щёлкает",uz:"Starter: aylantirmaydi, chiqillaydi"},s:{ru:"Тяговое реле, масса, падение напряжения",uz:"Tortish relesi, massa, kuchlanish tushishi"},
+ svg:l=>svg(
+  batt(20,40,l)+line('M36 33V18H300V70',P,5)+tx(170,12,R(l,'толстый провод «30»','yo\'g\'on sim «30»'),{s:9,c:'var(--muted)'})+
+  box(250,70,96,70)+circ(298,175,30,'var(--surface)')+line('M298 140V145',M,2)+tx(298,96,R(l,'Тяговое','Tortish'),{w:600,s:10})+tx(298,110,R(l,'реле','relesi'),{w:600,s:10})+tx(298,179,R(l,'Мотор','Motor'),{w:600,s:10})+
+  tx(310,64,'30',{w:700,s:11,c:P})+tx(240,126,'50',{w:700,s:11,c:SG})+
+  box(70,120,80,40)+tx(110,138,R(l,'Замок','Qulf'),{w:600,s:10})+tx(110,151,R(l,'зажигания','o\'t oldirish'),{s:9,c:'var(--muted)'})+line('M110 18V120',P,3)+line('M150 140H170',SG,3)+
+  box(172,122,50,36)+tx(197,144,R(l,'Реле','Rele'),{s:10,w:600})+line('M222 140H250',SG,3)+
+  line('M40 86V230H298V205',M,5)+tx(150,244,R(l,'масса: АКБ → двигатель → кузов','massa: AKB → dvigatel → kuzov'),{s:9,c:'var(--muted)'})+
+  num(190,30,1)+num(161,112,2)+num(110,218,3),
+  R(l,"Цепь стартера: толстый плюс с АКБ на контакт 30, управление через замок и реле на контакт 50, масса с АКБ на двигатель","Starter zanjiri: AKB dan yo'g'on plyus 30 kontaktga, boshqaruv qulf va rele orqali 50 kontaktga, AKB dan massa dvigatelga"),252),
+ warnB:{ru:"Коробка на нейтрали, ручник затянут.",uz:"Uzatma neytralda, qo'l tormozi tortilgan."},warn:{ru:"Не замыкайте стартер отвёрткой под машиной на передаче — она поедет на вас.",uz:"Uzatmada turgan mashina ostida starterni otvyortka bilan tutashtirmang — u sizning ustingizga yuradi."},
+ table:{head:{ru:["Симптом","Вероятная причина"],uz:["Belgi","Ehtimoliy sabab"]},rows:{
+  ru:[["Тишина, лампы гаснут","Разряжен АКБ или окислены клеммы"],["Одиночный щелчок","Подгорели контакты тягового реле, плохая масса"],["Частые щелчки «тр-р-р»","Слабый АКБ, тяговое реле не держит"],["Крутит медленно","Слабый АКБ, плохая масса, износ втулок"],["Воет, но не цепляет","Бендикс (обгонная муфта)"]],
+  uz:[["Jimlik, lampalar o'chadi","AKB zaryadsiz yoki klemmalar oksidlangan"],["Bitta chiqillash","Tortish relesi kontaktlari kuygan, yomon massa"],["Tez-tez chiqillash «tr-r-r»","AKB kuchsiz, tortish relesi ushlamaydi"],["Sekin aylantiradi","AKB kuchsiz, yomon massa, vtulkalar yeyilgan"],["Uvillaydi, lekin ilmaydi","Bendiks (quvib o'tuvchi mufta)"]]}},
+ steps:{ru:["Сначала АКБ: в покое не ниже 12,4 В, при прокрутке не ниже 9,6–10 В.","Проверьте <b>массу</b>: провод АКБ → кузов и кузов → двигатель. Окисленная масса — самая частая причина «щелчка».","<b>Падение напряжения</b>: один щуп на минус АКБ, другой на корпус стартера, крутите стартер. Больше 0,3–0,5 В — плохая масса. Так же проверьте плюс: клемма АКБ → контакт 30.","Проверьте управление: при повороте ключа на контакте <b>50</b> должно быть больше 10 В. Нет — ищите реле стартера, замок, датчик нейтрали (АКПП).","Если на 50 и 30 напряжение есть, массы в норме, а стартер молчит — снимайте стартер: тяговое реле или щётки."],
+       uz:["Avval AKB: tinch holatda 12,4 V dan past emas, aylantirganda 9,6–10 V dan past emas.","<b>Massani</b> tekshiring: AKB → kuzov va kuzov → dvigatel simi. Oksidlangan massa — «chiqillash»ning eng ko'p uchraydigan sababi.","<b>Kuchlanish tushishi</b>: bitta shchup AKB minusiga, ikkinchisi starter korpusiga, starterni aylantiring. 0,3–0,5 V dan ko'p — yomon massa. Plyusni ham shunday tekshiring: AKB klemmasi → 30 kontakt.","Boshqaruvni tekshiring: kalit burilganda <b>50</b> kontaktda 10 V dan ko'p bo'lishi kerak. Yo'q — starter relesi, qulf, neytral datchigini (AKPP) qidiring.","50 va 30 da kuchlanish bo'lsa, massalar joyida, starter esa jim bo'lsa — starterni yeching: tortish relesi yoki cho'tkalar."]},
+ tip:{ru:"Проверка падением напряжения — главный приём автоэлектрика. Мерьте не «есть ли 12 В», а сколько вольт теряется на проводе под нагрузкой.",uz:"Kuchlanish tushishi bilan tekshirish — avtoelektrikning asosiy usuli. «12 V bormi» emas, yuklama ostida simda necha volt yo'qolishini o'lchang."},
+ quiz:[
+  {a:1,ru:{q:"Одиночный щелчок, стартер не крутит. Что проверить первым?",o:["Бендикс","АКБ и массу","Свечи"],e:"Чаще всего виноваты слабый АКБ или окисленная масса."},uz:{q:"Bitta chiqillash, starter aylantirmaydi. Birinchi navbatda nimani tekshirish kerak?",o:["Bendiksni","AKB va massani","Svechalarni"],e:"Ko'pincha kuchsiz AKB yoki oksidlangan massa aybdor."}},
+  {a:0,ru:{q:"Падение напряжения на массе при прокрутке 1,2 В. Это…",o:["Плохая масса","Норма","Слабый генератор"],e:"Норма — до 0,3–0,5 В."},uz:{q:"Aylantirganda massada kuchlanish tushishi 1,2 V. Bu…",o:["Yomon massa","Me'yor","Kuchsiz generator"],e:"Me'yor — 0,3–0,5 V gacha."}},
+  {a:2,ru:{q:"За что отвечает контакт 50 стартера?",o:["Массу","Постоянный плюс","Управление тяговым реле"],e:"На 50 приходит плюс от замка через реле."},uz:{q:"Starterning 50 kontakti nima uchun javob beradi?",o:["Massa","Doimiy plyus","Tortish relesini boshqarish"],e:"50 ga qulfdan rele orqali plyus keladi."}},
+  {a:1,ru:{q:"Стартер воет, но мотор не крутит. Причина?",o:["Разряжен АКБ","Бендикс","Сгорел предохранитель"],e:"Мотор стартера крутится, но шестерня не входит в маховик."},uz:{q:"Starter uvillaydi, lekin motorni aylantirmaydi. Sabab?",o:["AKB zaryadsiz","Bendiks","Saqlagich kuygan"],e:"Starter motori aylanadi, lekin shesternya maxovikka kirmaydi."}}]},
+
+{id:'m2',lv:1,min:8,legend:['P','S','M'],
+ t:{ru:"Генератор и зарядка",uz:"Generator va zaryadlash"},s:{ru:"13,8–14,7 В, регулятор, диоды, ремень",uz:"13,8–14,7 V, regulyator, diodlar, tasma"},
+ svg:l=>svg(
+  circ(90,120,56,'var(--surface)')+tx(90,112,R(l,'Генератор','Generator'),{w:700,s:11})+tx(90,128,R(l,'диоды + регулятор','diodlar + regulyator'),{s:9,c:'var(--muted)'})+
+  tx(150,82,'B+',{w:700,s:11,c:P})+line('M140 90H250V64',P,4)+batt(240,64,l)+
+  line('M140 140H190',SG,3)+circ(205,140,13,'var(--surface)')+tx(205,144,'!',{w:700,s:12,c:'var(--bad)'})+tx(205,168,R(l,'лампа','lampa'),{s:9,c:'var(--muted)'})+line('M218 140H240',SG,3)+tx(250,150,R(l,'от замка','qulfdan'),{s:9,c:'var(--muted)',a:'start'})+tx(160,134,'D+/L',{w:700,s:9})+
+  line('M90 176V204',M,3)+gnd(90,204)+line('M294 57V40H330V210',M,3)+gnd(330,210)+
+  `<rect x="20" y="40" width="10" height="160" rx="5" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 4"/>`+tx(14,30,R(l,'ремень','tasma'),{s:9,c:'var(--muted)',a:'start'})+
+  num(195,74,1)+num(205,112,2)+num(60,210,3),
+  R(l,"Генератор: вывод B+ толстым проводом на плюс АКБ, лампа зарядки на выводе D+, корпус на массе","Generator: B+ chiqishi yo'g'on sim bilan AKB plyusiga, zaryad lampasi D+ chiqishida, korpus massada"),236),
+ warnB:{ru:"Осторожно, ремень и вентилятор.",uz:"Ehtiyot bo'ling, tasma va ventilyator."},warn:{ru:"Мерьте на работающем моторе: держите провода тестера и руки подальше от ремня.",uz:"Ishlab turgan motorda o'lchang: tester simlari va qo'llarni tasmadan uzoqroq tuting."},
+ table:{head:{ru:["Напряжение на АКБ (мотор работает)","Вывод"],uz:["AKB dagi kuchlanish (motor ishlaydi)","Xulosa"]},rows:{
+  ru:[["13,8–14,7 В","Норма"],["Ниже 13,5 В","Недозаряд: ремень, щётки, регулятор, диод"],["Выше 14,8–15 В","Перезаряд: регулятор. АКБ «кипит»"],["Пульсации больше 0,5 В~","Пробит диодный мост"]],
+  uz:[["13,8–14,7 V","Me'yor"],["13,5 V dan past","Kam zaryad: tasma, cho'tkalar, regulyator, diod"],["14,8–15 V dan yuqori","Ortiqcha zaryad: regulyator. AKB «qaynaydi»"],["0,5 V~ dan ko'p pulsatsiya","Diod ko'prigi teshilgan"]]}},
+ steps:{ru:["Заведите мотор, тестер на клеммы АКБ. На холостых должно быть <b>13,8–14,7 В</b>.","Включите нагрузку: фары, печку на максимум, обогрев стекла. Напряжение может просесть, но не ниже 13,3–13,5 В. Поднимите обороты до 2000 — должно вернуться.","Проверьте ремень: натяжение, трещины, свист при включении нагрузки.","Лампа зарядки горит при работающем моторе — генератор не заряжает. Не горит при включённом зажигании до запуска — обрыв цепи лампы или щётки.","Переключите тестер на переменное напряжение (V~) на клеммах АКБ. Больше 0,5 В — пробит диод, генератор на ремонт."],
+       uz:["Motorni o'tkazing, testerni AKB klemmalariga qo'ying. Salt yurishda <b>13,8–14,7 V</b> bo'lishi kerak.","Yuklamani yoqing: faralar, pechni maksimumga, oyna isitgichini. Kuchlanish tushishi mumkin, lekin 13,3–13,5 V dan past emas. Aylanishni 2000 gacha ko'taring — qaytishi kerak.","Tasmani tekshiring: tarangligi, yoriqlar, yuklama yoqilganda hushtak.","Motor ishlab turganda zaryad lampasi yonsa — generator zaryadlamayapti. O't oldirish yoqilganda, o't oldirishdan oldin yonmasa — lampa zanjirida uzilish yoki cho'tkalar.","Testerni o'zgaruvchan kuchlanishga (V~) o'tkazing, AKB klemmalarida. 0,5 V dan ko'p — diod teshilgan, generatorni ta'mirlash kerak."]},
+ tip:{ru:"Никогда не снимайте клемму АКБ на работающем моторе, чтобы «проверить генератор». Скачок напряжения сжигает блоки управления.",uz:"«Generatorni tekshirish» uchun ishlab turgan motorda hech qachon AKB klemmasini yechmang. Kuchlanish sakrashi boshqaruv bloklarini kuydiradi."},
+ quiz:[
+  {a:1,ru:{q:"Нормальное напряжение зарядки на работающем моторе?",o:["12,0–12,6 В","13,8–14,7 В","15,5–16 В"],e:"Меньше — недозаряд, больше — перезаряд."},uz:{q:"Ishlab turgan motorda zaryadlashning me'yoriy kuchlanishi?",o:["12,0–12,6 V","13,8–14,7 V","15,5–16 V"],e:"Kamroq — kam zaryad, ko'proq — ortiqcha zaryad."}},
+  {a:2,ru:{q:"На АКБ 15,3 В на работающем моторе. Что неисправно?",o:["Ремень","Аккумулятор","Регулятор напряжения"],e:"Регулятор не ограничивает напряжение, АКБ закипит."},uz:{q:"Ishlab turgan motorda AKB da 15,3 V. Nima nosoz?",o:["Tasma","Akkumulyator","Kuchlanish regulyatori"],e:"Regulyator kuchlanishni cheklamayapti, AKB qaynab ketadi."}},
+  {a:0,ru:{q:"Как проверить диодный мост тестером на машине?",o:["Переменное напряжение на АКБ, больше 0,5 В — плохо","Сопротивление ремня","Снять клемму на ходу"],e:"Пробитый диод даёт пульсации."},uz:{q:"Mashinada diod ko'prigini tester bilan qanday tekshirish mumkin?",o:["AKB da o'zgaruvchan kuchlanish, 0,5 V dan ko'p — yomon","Tasma qarshiligi","Yurib turganda klemmani yechish"],e:"Teshilgan diod pulsatsiya beradi."}},
+  {a:1,ru:{q:"Можно ли снять клемму на работающем моторе для проверки генератора?",o:["Да, это старый способ","Нет, сгорят блоки управления","Только минус"],e:"Скачок напряжения опасен для электроники."},uz:{q:"Generatorni tekshirish uchun ishlab turgan motorda klemmani yechish mumkinmi?",o:["Ha, bu eski usul","Yo'q, boshqaruv bloklari kuyadi","Faqat minusni"],e:"Kuchlanish sakrashi elektronika uchun xavfli."}}]},
+
+{id:'m3',lv:1,min:7,
+ t:{ru:"Свет и поиск обрыва по схеме",uz:"Chiroqlar va sxema bo'yicha uzilishni qidirish"},s:{ru:"Чтение электросхемы, масса, разъёмы",uz:"Elektr sxemasini o'qish, massa, razyomlar"},
+ table:{head:{ru:["Признак","Где искать"],uz:["Belgi","Qayerdan qidirish"]},rows:{
+  ru:[["Не горит одна фара","Лампа, разъём фары, масса фары"],["Не горят обе","Предохранитель, реле, переключатель"],["Светит тускло","Плохая масса, окисленный разъём (падение напряжения)"],["Горят «не те» лампы вместе","Пропала общая масса фонаря"],["Поворотники мигают быстро","Сгорела лампа на этой стороне"]],
+  uz:[["Bitta fara yonmaydi","Lampa, fara razyomi, fara massasi"],["Ikkalasi yonmaydi","Saqlagich, rele, o'chirgich"],["Xira yonadi","Yomon massa, oksidlangan razyom (kuchlanish tushishi)"],["«Boshqa» lampalar birga yonadi","Fonarning umumiy massasi yo'qolgan"],["Burilish chiroqlari tez miltillaydi","Shu tarafdagi lampa kuygan"]]}},
+ steps:{ru:["Найдите схему этой модели. Проследите путь тока: <b>предохранитель → реле → переключатель → разъём → лампа → масса</b>.","Начинайте с середины цепи. Проверьте, есть ли плюс на разъёме фары при включённом свете. Есть — проблема ближе к лампе. Нет — ищите выше.","Проверьте массу: щуп на плюс АКБ, второй на контакт массы в разъёме. Тестер показывает 12 В — масса есть. Ноль — обрыв массы.","Под нагрузкой проверьте <b>падение напряжения</b> на массе: от минуса АКБ до массы лампы. Больше 0,2–0,3 В — плохая точка массы. Зачистите болт массы до металла.","Разъёмы осматривайте на зелень и следы оплавления. Окисленные контакты чистите, проблемный разъём меняйте."],
+       uz:["Shu modelning sxemasini toping. Tok yo'lini kuzating: <b>saqlagich → rele → o'chirgich → razyom → lampa → massa</b>.","Zanjirning o'rtasidan boshlang. Chiroq yoqilganda fara razyomida plyus bormi, tekshiring. Bor — muammo lampaga yaqinroq. Yo'q — yuqoridan qidiring.","Massani tekshiring: shchup AKB plyusiga, ikkinchisi razyomdagi massa kontaktiga. Tester 12 V ko'rsatsa — massa bor. Nol — massa uzilgan.","Yuklama ostida massadagi <b>kuchlanish tushishini</b> tekshiring: AKB minusidan lampa massasigacha. 0,2–0,3 V dan ko'p — massa nuqtasi yomon. Massa boltini metallgacha tozalang.","Razyomlarni ko'kish va erish izlariga qarab ko'zdan kechiring. Oksidlangan kontaktlarni tozalang, muammoli razyomni almashtiring."]},
+ tip:{ru:"«Плавающая» неисправность часто в разъёме или массе. Пошевелите жгут при включённой цепи и смотрите на тестер — скачок покажет место.",uz:"«Suzib yuruvchi» nosozlik ko'pincha razyom yoki massada bo'ladi. Zanjir yoqilganda jgutni qimirlating va testerga qarang — sakrash joyni ko'rsatadi."},
+ quiz:[
+  {a:1,ru:{q:"Не горят обе фары. Что проверить первым?",o:["Лампы обеих фар","Предохранитель и реле","Генератор"],e:"Общее для двух фар — предохранитель, реле, переключатель."},uz:{q:"Ikkala fara yonmaydi. Birinchi navbatda nimani tekshirish kerak?",o:["Ikkala faraning lampalarini","Saqlagich va releni","Generatorni"],e:"Ikkala fara uchun umumiy — saqlagich, rele, o'chirgich."}},
+  {a:0,ru:{q:"Как быстро проверить массу на разъёме?",o:["Щуп на плюс АКБ, второй на массу разъёма — должно быть 12 В","Прозвонить на кузов при включённой цепи","Посмотреть цвет провода"],e:"Если масса есть, тестер покажет напряжение АКБ."},uz:{q:"Razyomdagi massani qanday tez tekshirish mumkin?",o:["Shchup AKB plyusiga, ikkinchisi razyom massasiga — 12 V bo'lishi kerak","Zanjir yoqilganda kuzovga tekshirish","Sim rangiga qarash"],e:"Massa bo'lsa, tester AKB kuchlanishini ko'rsatadi."}},
+  {a:2,ru:{q:"Фара светит тускло. Вероятная причина?",o:["Слишком мощная лампа","Перезаряд","Плохая масса или окисленный разъём"],e:"На плохом контакте теряется напряжение."},uz:{q:"Fara xira yonadi. Ehtimoliy sabab?",o:["Juda kuchli lampa","Ortiqcha zaryad","Yomon massa yoki oksidlangan razyom"],e:"Yomon kontaktda kuchlanish yo'qoladi."}},
+  {a:1,ru:{q:"Поворотник слева мигает в 2 раза быстрее. Что это?",o:["Сломалось реле","Сгорела лампа слева","Разряжен АКБ"],e:"Реле поворотов чувствует меньший ток и мигает быстрее."},uz:{q:"Chap burilish chirog'i 2 marta tezroq miltillaydi. Bu nima?",o:["Rele buzilgan","Chapdagi lampa kuygan","AKB zaryadsiz"],e:"Burilish relesi kamroq tokni sezadi va tezroq miltillaydi."}}]},
+
+{id:'m4',lv:1,min:8,
+ t:{ru:"Утечка тока: АКБ садится за ночь",uz:"Tok oqishi: AKB bir kechada o'tiradi"},s:{ru:"Замер тока покоя, поиск по предохранителям",uz:"Tinchlik tokini o'lchash, saqlagichlar bo'yicha qidirish"},
+ nowarn:true,
+ table:{head:{ru:["Ток покоя","Вывод"],uz:["Tinchlik toki","Xulosa"]},rows:{
+  ru:[["До 30–50 мА","Норма для современной машины"],["50–100 мА","Многовато, АКБ сядет за 2–3 недели"],["Больше 100 мА","Утечка, ищите потребителя"],["Больше 0,5–1 А","Серьёзная утечка: реле залипло, лампа багажника, сигнализация"]],
+  uz:[["30–50 mA gacha","Zamonaviy mashina uchun me'yor"],["50–100 mA","Ko'proq, AKB 2–3 haftada o'tiradi"],["100 mA dan ko'p","Oqish bor, iste'molchini qidiring"],["0,5–1 A dan ko'p","Jiddiy oqish: rele yopishib qolgan, yukxona lampasi, signalizatsiya"]]}},
+ steps:{ru:["Зажигание выключено, двери закрыты (замок капота и двери можно «обмануть», защёлкнув отвёрткой). Ключ уберите подальше.","Тестер в режим <b>10 A</b>, красный щуп в гнездо 10A. Снимите минусовую клемму и поставьте тестер <b>в разрыв</b>: между минусом АКБ и клеммой.","Подождите <b>20–40 минут</b>: блоки управления «засыпают» не сразу. Сначала ток может быть 0,3–1 А, потом должен упасть.","Если ток не падает — вынимайте предохранители <b>по одному</b>. Ток резко упал — нашли цепь. По схеме смотрите, что на ней: магнитола, сигнализация, плафон, блок комфорта.","Без разрыва цепи: мерьте милливольты на каждом предохранителе (щупы на «пятачки» сверху). Где есть падение — там идёт ток."],
+       uz:["O't oldirish o'chiq, eshiklar yopiq (kapot va eshik qulfini otvyortka bilan qulflab «aldash» mumkin). Kalitni uzoqroqqa qo'ying.","Tester <b>10 A</b> rejimida, qizil shchup 10A uyasida. Minus klemmasini yeching va testerni <b>uzilgan joyga</b> qo'ying: AKB minusi va klemma orasiga.","<b>20–40 daqiqa</b> kuting: boshqaruv bloklari darhol «uxlamaydi». Avval tok 0,3–1 A bo'lishi mumkin, keyin tushishi kerak.","Tok tushmasa — saqlagichlarni <b>bittadan</b> chiqaring. Tok keskin tushdi — zanjir topildi. Sxemadan unda nima borligini qarang: magnitola, signalizatsiya, plafon, komfort bloki.","Zanjirni uzmasdan: har bir saqlagichda millivoltlarni o'lchang (shchuplar ustidagi «nuqtalar»ga). Qayerda tushish bo'lsa — o'sha yerdan tok o'tyapti."]},
+ tip:{ru:"Частые виновники: дешёвая сигнализация, неправильно подключённая магнитола (на постоянный плюс вместо 15), залипшее реле, генератор с пробитым диодом.",uz:"Ko'p uchraydigan aybdorlar: arzon signalizatsiya, noto'g'ri ulangan magnitola (15 o'rniga doimiy plyusga), yopishib qolgan rele, diodi teshilgan generator."},
+ quiz:[
+  {a:0,ru:{q:"Какой ток покоя — норма?",o:["До 30–50 мА","500 мА","2 А"],e:"Больше 100 мА — уже утечка."},uz:{q:"Qanday tinchlik toki me'yor?",o:["30–50 mA gacha","500 mA","2 A"],e:"100 mA dan ko'p — bu oqish."}},
+  {a:1,ru:{q:"Как подключить тестер для замера утечки?",o:["Параллельно на клеммы АКБ","В разрыв между минусом АКБ и клеммой","На плюс и кузов"],e:"Ток меряют последовательно."},uz:{q:"Oqishni o'lchash uchun tester qanday ulanadi?",o:["AKB klemmalariga parallel","AKB minusi va klemma orasiga, uzilgan joyga","Plyus va kuzovga"],e:"Tok ketma-ket o'lchanadi."}},
+  {a:2,ru:{q:"Почему нужно ждать 20–40 минут?",o:["Остынет мотор","Зарядится АКБ","Блоки управления засыпают не сразу"],e:"Сразу после выключения ток всегда больше."},uz:{q:"Nega 20–40 daqiqa kutish kerak?",o:["Motor soviydi","AKB zaryadlanadi","Boshqaruv bloklari darhol uxlamaydi"],e:"O'chirilgandan keyin darhol tok doim ko'proq bo'ladi."}},
+  {a:1,ru:{q:"Как найти цепь с утечкой?",o:["Поменять АКБ","Вынимать предохранители по одному и смотреть ток","Снять генератор"],e:"Где ток упал — та цепь и виновата."},uz:{q:"Oqish bor zanjirni qanday topish mumkin?",o:["AKB ni almashtirish","Saqlagichlarni bittadan chiqarib, tokka qarash","Generatorni yechish"],e:"Tok qayerda tushsa — o'sha zanjir aybdor."}}]},
+
+/* ---------- ADVANCED ---------- */
+{id:'a1',lv:2,min:9,nowarn:true,legend:['P','M','H','L'],
+ t:{ru:"Компьютерная диагностика OBD-II",uz:"OBD-II kompyuter diagnostikasi"},s:{ru:"Разъём, сканер, коды ошибок",uz:"Razyom, skaner, xato kodlari"},
+ svg:l=>{const pins={4:M,5:M,16:P,6:CH,14:CLo,7:'var(--accent)'};let b='<path d="M40 60H320L300 170H60Z" fill="var(--surface)" stroke="var(--fg)" stroke-width="2"/>';
+  for(let i=0;i<8;i++){const x=72+i*31;[[1+i,92],[9+i,140]].forEach(([n,y])=>{const c=pins[n];b+=`<rect x="${x-11}" y="${y-13}" width="22" height="26" rx="4" fill="${c||'var(--bg)'}" stroke="var(--fg)" stroke-width="1.2"/>`+tx(x,y+4,n,{w:700,s:11,c:n===7?'var(--accent-ink)':c?'#fff':'var(--muted)'})})}
+  return svg(b+tx(180,46,R(l,'Разъём OBD-II под рулём (вид на гнёзда)','Rul ostidagi OBD-II razyomi (uyalar tomondan)'),{w:600,s:11})+
+   tx(20,200,R(l,'4, 5 — масса · 16 — +12 В','4, 5 — massa · 16 — +12 V'),{s:11,a:'start'})+tx(20,220,R(l,'6 — CAN-H · 14 — CAN-L · 7 — K-line','6 — CAN-H · 14 — CAN-L · 7 — K-line'),{s:11,a:'start'}),
+   R(l,"Разъём OBD-II, 16 контактов: 4 и 5 масса, 16 плюс 12 вольт, 6 CAN-H, 14 CAN-L, 7 K-line","OBD-II razyomi, 16 kontakt: 4 va 5 massa, 16 plyus 12 volt, 6 CAN-H, 14 CAN-L, 7 K-line"),236)},
+ table:{head:{ru:["Код","Что значит"],uz:["Kod","Ma'nosi"]},rows:{
+  ru:[["P0300–P0304","Пропуски зажигания (0 — случайные, 1–4 — в цилиндре)"],["P0171","Бедная смесь: подсос воздуха, ДМРВ, давление топлива"],["P0335","Нет сигнала датчика коленвала"],["P0115–P0118","Датчик температуры охлаждающей жидкости"],["P0130–P0141","Датчик кислорода (лямбда)"],["P0420","Катализатор работает плохо"],["P0562","Низкое напряжение бортсети"],["U0100","Нет связи с блоком двигателя"]],
+  uz:[["P0300–P0304","O't oldirishdagi uzilishlar (0 — tasodifiy, 1–4 — silindrda)"],["P0171","Kambag'al aralashma: havo so'rilishi, DMRV, yoqilg'i bosimi"],["P0335","Tirsakli val datchigidan signal yo'q"],["P0115–P0118","Sovutish suyuqligi harorati datchigi"],["P0130–P0141","Kislorod datchigi (lyambda)"],["P0420","Katalizator yomon ishlaydi"],["P0562","Bort tarmog'ida past kuchlanish"],["U0100","Dvigatel bloki bilan aloqa yo'q"]]}},
+ steps:{ru:["Разъём OBD-II стоит у всех машин примерно с 2000-х, обычно под рулём слева. Подключите сканер (например, адаптер ELM327 + приложение на телефоне) и включите зажигание.","Первая буква кода: <b>P</b> — двигатель и коробка, <b>B</b> — кузов, <b>C</b> — шасси (ABS), <b>U</b> — связь между блоками. P0… — общие коды, P1… — коды производителя.","Запишите все коды и <b>стоп-кадр</b> (freeze frame): обороты, температура, скорость в момент ошибки. Это подсказка, при каких условиях проблема.","Код показывает, <b>что заметил блок</b>, а не какую деталь менять. P0171 — это не «замените ДМРВ», а «смесь бедная»: сначала ищите подсос воздуха.","После ремонта сотрите коды и проедьте. Вернулся код — причина не устранена."],
+       uz:["OBD-II razyomi taxminan 2000-yillardan beri barcha mashinalarda bor, odatda rulning chap tomonida pastda. Skanerni ulang (masalan, ELM327 adapteri + telefondagi ilova) va o't oldirishni yoqing.","Kodning birinchi harfi: <b>P</b> — dvigatel va uzatmalar qutisi, <b>B</b> — kuzov, <b>C</b> — shassi (ABS), <b>U</b> — bloklar orasidagi aloqa. P0… — umumiy kodlar, P1… — ishlab chiqaruvchi kodlari.","Barcha kodlarni va <b>stop-kadrni</b> (freeze frame) yozib oling: xato paytidagi aylanish, harorat, tezlik. Bu muammo qanday sharoitda bo'lishiga ishora.","Kod qaysi detalni almashtirishni emas, <b>blok nimani sezganini</b> ko'rsatadi. P0171 — bu «DMRV ni almashtiring» emas, «aralashma kambag'al»: avval havo so'rilishini qidiring.","Ta'mirdan keyin kodlarni o'chiring va yurib ko'ring. Kod qaytsa — sabab bartaraf etilmagan."]},
+ tip:{ru:"Не подключайте дешёвый адаптер ELM327 и не оставляйте его в разъёме на ночь: некоторые не «засыпают» и разряжают АКБ.",uz:"Arzon ELM327 adapterini razyomda bir kechaga qoldirmang: ba'zilari «uxlamaydi» va AKB ni zaryadsizlantiradi."},
+ quiz:[
+  {a:1,ru:{q:"Что значит буква U в коде ошибки?",o:["Двигатель","Связь между блоками","Подушки безопасности"],e:"P — двигатель, B — кузов, C — шасси, U — сеть."},uz:{q:"Xato kodidagi U harfi nimani anglatadi?",o:["Dvigatel","Bloklar orasidagi aloqa","Xavfsizlik yostiqlari"],e:"P — dvigatel, B — kuzov, C — shassi, U — tarmoq."}},
+  {a:2,ru:{q:"Сканер показал P0171. Что делать первым?",o:["Сразу менять ДМРВ","Менять лямбду","Искать подсос воздуха"],e:"Код говорит «смесь бедная», а не какую деталь менять."},uz:{q:"Skaner P0171 ko'rsatdi. Birinchi navbatda nima qilish kerak?",o:["Darhol DMRV ni almashtirish","Lyambdani almashtirish","Havo so'rilishini qidirish"],e:"Kod qaysi detalni almashtirishni emas, «aralashma kambag'al»ligini aytadi."}},
+  {a:0,ru:{q:"На каком контакте OBD-II плюс 12 В?",o:["16","4","7"],e:"4 и 5 — масса, 16 — плюс."},uz:{q:"OBD-II ning qaysi kontaktida plyus 12 V?",o:["16","4","7"],e:"4 va 5 — massa, 16 — plyus."}},
+  {a:1,ru:{q:"Зачем смотреть стоп-кадр (freeze frame)?",o:["Чтобы стереть ошибку","Узнать условия, при которых появилась ошибка","Это фото двигателя"],e:"Обороты, температура и скорость в момент ошибки помогают найти причину."},uz:{q:"Stop-kadrga (freeze frame) nima uchun qaraladi?",o:["Xatoni o'chirish uchun","Xato qanday sharoitda paydo bo'lganini bilish uchun","Bu dvigatel surati"],e:"Xato paytidagi aylanish, harorat va tezlik sababni topishga yordam beradi."}}]},
+
+{id:'a2',lv:2,min:9,
+ t:{ru:"Датчики двигателя",uz:"Dvigatel datchiklari"},s:{ru:"ДПКВ, ДТОЖ, ДПДЗ, ДМРВ, лямбда",uz:"DPKV, DTOJ, DPDZ, DMRV, lyambda"},
+ warnB:{ru:"Отключайте разъём только при выключенном зажигании.",uz:"Razyomni faqat o't oldirish o'chiq paytda uzing."},warn:{ru:"Отключение датчика на включённом зажигании добавит лишние ошибки, а иногда повредит блок.",uz:"O't oldirish yoqilganda datchikni uzish ortiqcha xatolar qo'shadi, ba'zan esa blokka zarar yetkazadi."},
+ table:{head:{ru:["Датчик","Если неисправен","Как проверить"],uz:["Datchik","Nosoz bo'lsa","Qanday tekshirish"]},rows:{
+  ru:[["ДПКВ (коленвал)","Мотор не заводится или глохнет горячим","Сопротивление (индуктивный), сигнал при прокрутке"],["ДТОЖ (температура)","Тяжёлый пуск, не включается вентилятор, расход","Холодный ~2–4 кОм, горячий ~200–300 Ом (по марке)"],["ДПДЗ (дроссель)","Провалы при нажатии газа","Питание 5 В, сигнал плавно 0,5→4,5 В"],["ДМРВ (расход воздуха)","Плохая тяга, бедная/богатая смесь","Показания в сканере на холостых и при газе"],["Лямбда (кислород)","Расход, P0130–P0141","Сигнал прыгает 0,1–0,9 В на прогретом моторе"]],
+  uz:[["DPKV (tirsakli val)","Motor o't olmaydi yoki issiqda o'chadi","Qarshilik (induktiv), aylantirganda signal"],["DTOJ (harorat)","Qiyin o't olish, ventilyator yonmaydi, sarf","Sovuq ~2–4 kOm, issiq ~200–300 Om (marka bo'yicha)"],["DPDZ (drossel)","Gaz bosilganda uzilishlar","Ta'minot 5 V, signal ravon 0,5→4,5 V"],["DMRV (havo sarfi)","Tortish yomon, kambag'al/boy aralashma","Salt yurishda va gazda skanerdagi ko'rsatkichlar"],["Lyambda (kislorod)","Sarf, P0130–P0141","Qizigan motorda signal 0,1–0,9 V oralig'ida sakraydi"]]}},
+ steps:{ru:["У большинства датчиков три провода: <b>питание 5 В</b> от блока, <b>масса</b> датчика и <b>сигнал</b>. Сначала проверьте, что 5 В и масса приходят к разъёму.","Нет 5 В на одном датчике — обрыв провода. Нет 5 В на нескольких сразу — один из датчиков замкнул общую линию питания. Отключайте по одному.","Смотрите «живые данные» в сканере. Температура −40 °C на тёплом моторе — обрыв цепи ДТОЖ. +130 °C — замыкание.","ДПДЗ проверяйте плавным нажатием педали: сигнал должен расти без провалов. Провал на графике = стёртая дорожка.","Перед заменой лямбды проверьте подсос воздуха и выпуск: трещина в выпуске до датчика обманывает его."],
+       uz:["Ko'pchilik datchiklarda uchta sim bor: blokdan <b>5 V ta'minot</b>, datchik <b>massasi</b> va <b>signal</b>. Avval razyomga 5 V va massa kelishini tekshiring.","Bitta datchikda 5 V yo'q — sim uzilgan. Bir nechtasida birdaniga 5 V yo'q — datchiklardan biri umumiy ta'minot liniyasini tutashtirgan. Bittadan uzing.","Skanerda «jonli ma'lumotlar»ga qarang. Issiq motorda −40 °C harorat — DTOJ zanjiri uzilgan. +130 °C — tutashuv.","DPDZ ni pedalni ravon bosib tekshiring: signal uzilishlarsiz o'sishi kerak. Grafikdagi uzilish = yeyilgan yo'lak.","Lyambdani almashtirishdan oldin havo so'rilishi va chiqindi quvurini tekshiring: datchikdan oldingi chiqindi quvuridagi yoriq uni aldaydi."]},
+ tip:{ru:"Не меряйте сигнал датчика лампой-пробником — только тестером или осциллографом. Лампа нагружает линию 5 В и может сжечь выход блока.",uz:"Datchik signalini lampa-probnik bilan o'lchamang — faqat tester yoki ossillograf bilan. Lampa 5 V liniyasini yuklaydi va blok chiqishini kuydirishi mumkin."},
+ quiz:[
+  {a:0,ru:{q:"Без какого датчика мотор обычно не заведётся?",o:["ДПКВ (коленвал)","Лямбда","ДТОЖ"],e:"Без сигнала коленвала блок не знает, когда давать искру и топливо."},uz:{q:"Qaysi datchiksiz motor odatda o't olmaydi?",o:["DPKV (tirsakli val)","Lyambda","DTOJ"],e:"Tirsakli val signalisiz blok qachon uchqun va yoqilg'i berishni bilmaydi."}},
+  {a:2,ru:{q:"Сканер показывает −40 °C на тёплом моторе. Это…",o:["Норма зимой","Замыкание датчика","Обрыв цепи ДТОЖ"],e:"Обрыв = бесконечное сопротивление = очень холодно для блока."},uz:{q:"Skaner issiq motorda −40 °C ko'rsatyapti. Bu…",o:["Qishda me'yor","Datchik tutashuvi","DTOJ zanjiri uzilgan"],e:"Uzilish = cheksiz qarshilik = blok uchun juda sovuq."}},
+  {a:1,ru:{q:"Какое питание обычно у датчиков от блока?",o:["12 В","5 В","220 В"],e:"Блок даёт датчикам опорные 5 В."},uz:{q:"Blokdan datchiklarga odatda qanday ta'minot beriladi?",o:["12 V","5 V","220 V"],e:"Blok datchiklarga tayanch 5 V beradi."}},
+  {a:1,ru:{q:"Как ведёт себя исправная узкополосная лямбда на прогретом моторе?",o:["Стоит на 0,45 В","Прыгает 0,1–0,9 В","Всегда 0 В"],e:"Блок постоянно корректирует смесь, и сигнал «качается»."},uz:{q:"Qizigan motorda soz tor polosali lyambda o'zini qanday tutadi?",o:["0,45 V da turadi","0,1–0,9 V oralig'ida sakraydi","Doim 0 V"],e:"Blok aralashmani doim tuzatib turadi va signal «tebranadi»."}}]},
+
+{id:'a3',lv:2,min:8,legend:['H','L'],
+ t:{ru:"CAN-шина: блоки не видят друг друга",uz:"CAN-shina: bloklar bir-birini ko'rmaydi"},s:{ru:"CAN-H, CAN-L, 60 Ом, терминаторы",uz:"CAN-H, CAN-L, 60 Om, terminatorlar"},
+ svg:l=>{const node=(x,a)=>box(x-32,24,64,40)+tx(x,48,a,{w:600,s:10})+line(`M${x-8} 64V110`,CH,3)+line(`M${x+8} 64V140`,CLo,3);
+  return svg(line('M30 110H330',CH,4)+line('M30 140H330',CLo,4)+
+   node(80,R(l,'Мотор','Motor'))+node(180,'ABS')+node(280,R(l,'Кузов','Kuzov'))+
+   `<rect x="10" y="114" width="16" height="22" rx="3" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.2"/><rect x="334" y="114" width="16" height="22" rx="3" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.2"/>`+
+   line('M30 110H18V114M30 140H18V136',CH,2)+line('M330 110H342V114M330 140H342V136',CLo,2)+
+   tx(18,160,'120 Ω',{s:10,w:700})+tx(342,160,'120 Ω',{s:10,w:700})+tx(36,104,'CAN-H',{s:10,w:700,a:'start'})+tx(36,154,'CAN-L',{s:10,w:700,a:'start'})+
+   box(140,180,80,36)+tx(180,203,'OBD 6 / 14',{s:10,w:600})+line('M172 110V180',CH,2)+line('M188 140V180',CLo,2)+
+   tx(180,236,R(l,'Между 6 и 14: 120 ‖ 120 = 60 Ом','6 va 14 orasida: 120 ‖ 120 = 60 Om'),{s:11,w:600}),
+   R(l,"CAN-шина: два провода CAN-H и CAN-L, блоки подключены параллельно, на концах резисторы по 120 Ом, между контактами 6 и 14 OBD 60 Ом","CAN-shina: CAN-H va CAN-L ikki sim, bloklar parallel ulangan, uchlarida 120 Om rezistorlar, OBD 6 va 14 kontaktlari orasida 60 Om"),248)},
+ warnB:{ru:"Сопротивление шины — без питания.",uz:"Shina qarshiligi — ta'minotsiz."},warn:{ru:"Снимите минус АКБ и подождите несколько минут, пока блоки уснут, потом мерьте Ом.",uz:"AKB minusini yeching va bloklar uxlaguncha bir necha daqiqa kuting, keyin Om o'lchang."},
+ table:{head:{ru:["Между 6 и 14 (без питания)","Вывод"],uz:["6 va 14 orasida (ta'minotsiz)","Xulosa"]},rows:{
+  ru:[["~60 Ом","Шина цела, оба терминатора на месте"],["~120 Ом","Обрыв шины или нет одного терминатора"],["Около 0 Ом","CAN-H и CAN-L замкнуты между собой"],["Бесконечность","Обрыв до разъёма OBD"]],
+  uz:[["~60 Om","Shina butun, ikkala terminator joyida"],["~120 Om","Shina uzilgan yoki bitta terminator yo'q"],["Taxminan 0 Om","CAN-H va CAN-L o'zaro tutashgan"],["Cheksizlik","OBD razyomigacha uzilish"]]}},
+ steps:{ru:["CAN — это два перевитых провода, по которым блоки обмениваются данными. Если шина «легла», на панели загораются сразу много ламп, а сканер не видит блоки (коды U0…).","Без питания мерьте сопротивление между контактами <b>6 и 14</b> разъёма OBD. Норма около <b>60 Ом</b>: два резистора по 120 Ом параллельно.","С включённым зажиганием мерьте напряжение относительно массы: CAN-H около <b>2,5–3,5 В</b>, CAN-L около <b>1,5–2,5 В</b>. Оба по 0 или по 12 В — замыкание на массу или плюс.","Ищите виновника, отключая блоки <b>по одному</b>. Шина «ожила» после отключения блока — неисправен он или его провод.","Частые места: разъёмы в дверях и под ковриком (вода), неправильно врезанная сигнализация, повреждённый жгут после ДТП."],
+       uz:["CAN — bu bloklar ma'lumot almashadigan ikkita o'ralgan sim. Shina «yotib qolsa», panelda birdaniga ko'p lampalar yonadi, skaner esa bloklarni ko'rmaydi (U0… kodlar).","Ta'minotsiz OBD razyomining <b>6 va 14</b> kontaktlari orasidagi qarshilikni o'lchang. Me'yor taxminan <b>60 Om</b>: parallel ulangan ikkita 120 Om rezistor.","O't oldirish yoqilganda massaga nisbatan kuchlanishni o'lchang: CAN-H taxminan <b>2,5–3,5 V</b>, CAN-L taxminan <b>1,5–2,5 V</b>. Ikkalasi 0 yoki 12 V — massa yoki plyusga tutashuv.","Aybdorni bloklarni <b>bittadan</b> uzib qidiring. Blok uzilgandan keyin shina «jonlansa» — u yoki uning simi nosoz.","Ko'p uchraydigan joylar: eshiklardagi va gilam ostidagi razyomlar (suv), noto'g'ri ulangan signalizatsiya, avariyadan keyin shikastlangan jgut."]},
+ tip:{ru:"Не подключайте ничего к CAN-проводам «на скрутку». Для доп. оборудования используйте штатный разъём или CAN-модуль по инструкции.",uz:"CAN simlariga hech narsani «burab» ulamang. Qo'shimcha uskunalar uchun shtat razyomi yoki yo'riqnoma bo'yicha CAN-moduldan foydalaning."},
+ quiz:[
+  {a:1,ru:{q:"Сколько Ом должно быть между 6 и 14 OBD без питания?",o:["120 Ом","Около 60 Ом","0 Ом"],e:"Два терминатора по 120 Ом параллельно дают 60 Ом."},uz:{q:"Ta'minotsiz OBD ning 6 va 14 kontaktlari orasida necha Om bo'lishi kerak?",o:["120 Om","Taxminan 60 Om","0 Om"],e:"Parallel ikkita 120 Om terminator 60 Om beradi."}},
+  {a:2,ru:{q:"Намерили 120 Ом. Что это значит?",o:["Норма","Замыкание CAN-H и CAN-L","Обрыв шины или нет одного терминатора"],e:"Остался только один резистор."},uz:{q:"120 Om o'lchandi. Bu nimani anglatadi?",o:["Me'yor","CAN-H va CAN-L tutashgan","Shina uzilgan yoki bitta terminator yo'q"],e:"Faqat bitta rezistor qolgan."}},
+  {a:0,ru:{q:"Как найти блок, который «положил» шину?",o:["Отключать блоки по одному","Поменять АКБ","Стереть ошибки"],e:"После отключения виновника шина заработает."},uz:{q:"Shinani «yotqizgan» blokni qanday topish mumkin?",o:["Bloklarni bittadan uzish","AKB ni almashtirish","Xatolarni o'chirish"],e:"Aybdor uzilgach shina ishlaydi."}},
+  {a:1,ru:{q:"Какой признак «упавшей» CAN-шины?",o:["Не горит одна лампа","Много ламп на панели, сканер не видит блоки","Слабо крутит стартер"],e:"Блоки перестают обмениваться данными, появляются коды U."},uz:{q:"«Yiqilgan» CAN-shinaning belgisi qanday?",o:["Bitta lampa yonmaydi","Panelda ko'p lampalar, skaner bloklarni ko'rmaydi","Starter sust aylantiradi"],e:"Bloklar ma'lumot almashishni to'xtatadi, U kodlari paydo bo'ladi."}}]},
+
+{id:'a4',lv:2,min:8,
+ t:{ru:"Зажигание и форсунки: пропуски",uz:"O't oldirish va forsunkalar: uzilishlar"},s:{ru:"Катушки, свечи, форсунки, P0301",uz:"G'altaklar, svechalar, forsunkalar, P0301"},
+ warnB:{ru:"Высокое напряжение.",uz:"Yuqori kuchlanish."},warn:{ru:"На катушке зажигания до 30 000 В. Не трогайте провода и катушки на работающем моторе.",uz:"O't oldirish g'altagida 30 000 V gacha. Ishlab turgan motorda simlar va g'altaklarga tegmang."},
+ table:{head:{ru:["Деталь","Проверка","Ориентир"],uz:["Detal","Tekshirish","Mo'ljal"]},rows:{
+  ru:[["Свеча","Осмотр, зазор","Ровный светло-коричневый нагар; зазор по инструкции"],["Катушка (первичка)","Сопротивление","~0,5–1,5 Ом"],["Форсунка","Сопротивление","Высокоомная ~11–16 Ом"],["Форсунка","Питание на разъёме","+12 В при включённом зажигании"],["Компрессия","Компрессометр","Разница между цилиндрами не больше 10 %"]],
+  uz:[["Svecha","Ko'zdan kechirish, oraliq","Tekis och-jigarrang qurum; oraliq yo'riqnoma bo'yicha"],["G'altak (birlamchi)","Qarshilik","~0,5–1,5 Om"],["Forsunka","Qarshilik","Yuqori omli ~11–16 Om"],["Forsunka","Razyomdagi ta'minot","O't oldirish yoqilganda +12 V"],["Kompressiya","Kompressometr","Silindrlar orasidagi farq 10 % dan oshmasin"]]}},
+ steps:{ru:["Код P0301–P0304 показывает цилиндр с пропусками. Мотор трясёт, мигает «Check Engine» — не ездите долго: сгорит катализатор.","Простой приём: <b>переставьте катушку</b> с проблемного цилиндра на соседний и сотрите ошибку. Ошибка «переехала» — виновата катушка. Осталась — ищите дальше.","Так же переставьте <b>свечу</b>. Посмотрите на неё: чёрная, мокрая, с трещиной на изоляторе — менять.","Проверьте форсунку: сопротивление, +12 В на разъёме, «щелчки» при работе (стетоскоп или отвёртка к уху).","Если катушка, свеча и форсунка в порядке — замерьте <b>компрессию</b>. Низкая в одном цилиндре — это уже механика, к мотористу."],
+       uz:["P0301–P0304 kodi uzilish bor silindrni ko'rsatadi. Motor silkinadi, «Check Engine» miltillaydi — uzoq yurmang: katalizator kuyadi.","Oddiy usul: <b>g'altakni</b> muammoli silindrdan qo'shnisiga <b>o'tkazing</b> va xatoni o'chiring. Xato «ko'chsa» — g'altak aybdor. Qolsa — davom eting.","<b>Svechani</b> ham shunday o'tkazing. Unga qarang: qora, ho'l, izolyatorida yoriq — almashtiring.","Forsunkani tekshiring: qarshilik, razyomda +12 V, ishlaganda «chiqillash» (stetoskop yoki quloqqa otvyortka).","G'altak, svecha va forsunka joyida bo'lsa — <b>kompressiyani</b> o'lchang. Bitta silindrda past — bu mexanika, motoristga."]},
+ tip:{ru:"На метане и пропане свечи изнашиваются быстрее, а пропуски бывают чаще. Ставьте свечи с правильным калильным числом и меняйте вдвое чаще.",uz:"Metan va propanda svechalar tezroq yeyiladi, uzilishlar esa ko'proq bo'ladi. To'g'ri kalil raqamli svechalarni qo'ying va ikki baravar tez-tez almashtiring."},
+ quiz:[
+  {a:2,ru:{q:"Что значит код P0303?",o:["Бедная смесь","Нет связи","Пропуски в 3-м цилиндре"],e:"Последняя цифра — номер цилиндра."},uz:{q:"P0303 kodi nimani anglatadi?",o:["Kambag'al aralashma","Aloqa yo'q","3-silindrda uzilishlar"],e:"Oxirgi raqam — silindr raqami."}},
+  {a:0,ru:{q:"Катушку переставили на другой цилиндр, и ошибка «переехала» за ней. Вывод?",o:["Неисправна катушка","Неисправна форсунка","Низкая компрессия"],e:"Неисправность ходит вместе с деталью."},uz:{q:"G'altak boshqa silindrga o'tkazildi va xato uning ortidan «ko'chdi». Xulosa?",o:["G'altak nosoz","Forsunka nosoz","Kompressiya past"],e:"Nosozlik detal bilan birga yuradi."}},
+  {a:1,ru:{q:"Какое сопротивление у высокоомной форсунки?",o:["0,5 Ом","Около 11–16 Ом","1000 Ом"],e:"Большинство современных форсунок — 11–16 Ом."},uz:{q:"Yuqori omli forsunkaning qarshiligi qancha?",o:["0,5 Om","Taxminan 11–16 Om","1000 Om"],e:"Ko'pchilik zamonaviy forsunkalar — 11–16 Om."}},
+  {a:1,ru:{q:"Почему нельзя долго ездить с мигающим Check Engine?",o:["Сядет АКБ","Сгорит катализатор","Сломается стартер"],e:"Несгоревшее топливо догорает в катализаторе и плавит его."},uz:{q:"Nega miltillayotgan Check Engine bilan uzoq yurish mumkin emas?",o:["AKB o'tiradi","Katalizator kuyadi","Starter buziladi"],e:"Yonmagan yoqilg'i katalizatorda yonib, uni eritadi."}}]}
+];
+
+// UI for Автоэлектрик Pro (Avtoelektrik Pro). Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Автоэлектрик Pro',tag:'Автоэлектрика и диагностика · 13 уроков',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Начальный','Средний','Продвинутый'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} уровень · урок ${n} · ~${m} мин`,
+ leg:{P:'Плюс +12 В',M:'Масса (минус)',S:'Управление',H:'CAN-H',L:'CAN-L'},
+ warnB:'Снимите минус АКБ.',warn:'Перед работой с проводкой отключите аккумулятор, чтобы не устроить короткое замыкание.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ wT:'Провод и предохранитель',wSub:'Для новой нагрузки: фары, вентилятор, компрессор',inp:'Что знаете',inpO:['Мощность, Вт','Ток, А'],pw:'Мощность, Вт',cur:'Ток, А',sys:'Бортсеть',len:'Длина провода, м',drop:'Потеря, макс.',dropO:['3 %','5 %'],
+ iT:'Ток',wire:'Провод',fuse:'Предохр.',mm:'мм²',a:'А',
+ wNote:'Сечение берётся большее из двух: по нагреву (таблица из урока) и по потере напряжения на длине провода (минус идёт через кузов; если минус отдельным проводом, длину удвойте). Предохранитель — ближайший больше тока ×1,25, но не больше, чем выдерживает провод.',
+ bT:'Проверка аккумулятора и зарядки',bSub:'По показаниям тестера',rest:'АКБ в покое, В',run:'Мотор работает, В',soc:'Заряд АКБ',chg:'Зарядка',
+ bNote:'Мерьте в покое через 2–3 часа после поездки. На работающем моторе — с включёнными фарами и печкой.',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Avtoelektrik Pro',tag:'Avtoelektrika va diagnostika · 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Boshlang\'ich','O\'rta','Yuqori'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} daraja · ${n}-dars · ~${m} daq`,
+ leg:{P:'Plyus +12 V',M:'Massa (minus)',S:'Boshqaruv',H:'CAN-H',L:'CAN-L'},
+ warnB:'AKB minusini yeching.',warn:'Simlar bilan ishlashdan oldin qisqa tutashuv bo\'lmasligi uchun akkumulyatorni uzing.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ wT:'Sim va saqlagich',wSub:'Yangi yuklama uchun: faralar, ventilyator, kompressor',inp:'Nimani bilasiz',inpO:['Quvvat, Vt','Tok, A'],pw:'Quvvat, Vt',cur:'Tok, A',sys:'Bort tarmog\'i',len:'Sim uzunligi, m',drop:'Yo\'qotish, maks.',dropO:['3 %','5 %'],
+ iT:'Tok',wire:'Sim',fuse:'Saqlagich',mm:'mm²',a:'A',
+ wNote:'Kesim ikkitadan kattasi olinadi: qizish bo\'yicha (darsdagi jadval) va sim uzunligidagi kuchlanish yo\'qotilishi bo\'yicha (minus kuzov orqali; minus alohida sim bo\'lsa, uzunlikni ikki barobar qiling). Saqlagich — tok ×1,25 dan katta eng yaqini, lekin sim ko\'taradiganidan katta emas.',
+ bT:'Akkumulyator va zaryadlashni tekshirish',bSub:'Tester ko\'rsatkichlari bo\'yicha',rest:'Tinch holatda AKB, V',run:'Motor ishlayapti, V',soc:'AKB zaryadi',chg:'Zaryadlash',
+ bNote:'Tinch holatda safardan 2–3 soat keyin o\'lchang. Ishlab turgan motorda — faralar va pech yoqilgan holda.',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (ae_)
+const pk=k=>(k==='lang'?'ep_':'ae_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{mode:0,w:120,i:10,v:0,len:3,dr:0,rest:12.6,run:14.2}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="13" rx="2" fill="none" stroke="var(--accent-ink)" stroke-width="2"/><path d="M6 7V4.5h3V7M15 7V4.5h3V7M6 13.5h4M8 11.5v4M14 13.5h4" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+const swatch={P:'var(--wH)',M:'var(--wS)',S:'var(--wF)',H:'var(--wF)',L:'var(--wC)'};
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    if(x.legend)h+=`<div class="legend">${x.legend.map(k=>`<span><i class="sw" style="background:${swatch[k]}"></i>${L.leg[k]}</span>`).join('')}</div>`;h+='</div>'}
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warnB?tr(x.warnB):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* calculators: wire gauge + fuse for a 12/24 V load, battery state of charge + charging voltage */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',').replace('-','−');
+const numv=v=>+String(v).replace(',','.')||0;
+const WIRES=[[0.5,8],[0.75,11],[1,15],[1.5,20],[2.5,30],[4,40],[6,55],[10,75],[16,100],[25,135],[35,170],[50,210]];
+const FUSES=[1,2,3,5,7.5,10,15,20,25,30,40,50,60,70,80,100,125,150,175,200];
+const seg=(k,opts)=>`<div class="seg" role="group">${opts.map((o,i)=>`<button type="button" data-seg="${k}" data-v="${i}" aria-pressed="${S.calc[k]===i}">${o}</button>`).join('')}</div>`;
+function calcBlock(){const L=U();const c=S.calc;
+  return `<div class="card stack"><div><h3>${L.wT}</h3><p class="expl">${L.wSub}</p></div>
+  <div class="fld">${L.inp}${seg('mode',L.inpO)}</div>
+  <div class="pair"><label class="fld" for="cw" id="lw">${c.mode?L.cur:L.pw}<input id="cw" type="number" inputmode="decimal" min="0" step="1" value="${c.mode?c.i:c.w}"></label>
+  <div class="fld">${L.sys}${seg('v',['12 V','24 V'])}</div></div>
+  <div class="pair"><label class="fld" for="cl">${L.len}<input id="cl" type="number" inputmode="decimal" min="0" step="0.5" value="${c.len}"></label>
+  <div class="fld">${L.drop}${seg('dr',L.dropO)}</div></div>
+  <div class="out" id="out1"></div><p class="expl" id="verd"></p><p class="expl">${L.wNote}</p></div>
+  <div class="card stack"><div><h3>${L.bT}</h3><p class="expl">${L.bSub}</p></div>
+  <div class="pair"><label class="fld" for="cr">${L.rest}<input id="cr" type="number" inputmode="decimal" min="0" step="0.05" value="${c.rest}"></label>
+  <label class="fld" for="cu">${L.run}<input id="cu" type="number" inputmode="decimal" min="0" step="0.05" value="${c.run}"></label></div>
+  <div class="out two" id="out2"></div><p class="expl" id="v1"></p><p class="expl" id="v2"></p><p class="expl">${L.bNote}</p></div>`}
+function wireCalc(c){
+  const U0=c.v?24:12;const I=c.mode?Math.max(0,numv(c.i)):Math.max(0,numv(c.w))/U0;
+  const dU=U0*(c.dr?0.05:0.03);const sDrop=Math.max(0,numv(c.len))*I*0.0175/dU;
+  let wi=WIRES.findIndex(w=>w[0]>=sDrop&&w[1]>=I);if(wi<0)return {I,big:true};
+  let f=FUSES.find(x=>x>=I*1.25);
+  while(wi<WIRES.length&&f&&f>WIRES[wi][1])wi++;
+  if(wi>=WIRES.length||!f)return {I,big:true};
+  return {I,s:WIRES[wi][0],f,sDrop}}
+function paintCalc(){const L=U();const c=S.calc;const r=wireCalc(c);const ru=lang==='ru';
+  $('#out1').innerHTML=`<div><span>${L.iT}</span><b>${fmt(r.I,1)} ${L.a}</b></div><div><span>${L.wire}</span><b>${r.big?'—':fmt(r.s,r.s<1?2:r.s%1?1:0)} ${L.mm}</b></div><div><span>${L.fuse}</span><b>${r.big?'—':fmt(r.f,r.f%1?1:0)} ${L.a}</b></div>`;
+  const v=$('#verd');
+  if(r.big){v.textContent=ru?'Слишком большой ток для одного провода: разделите нагрузку или ставьте силовой кабель по расчёту.':'Bitta sim uchun tok juda katta: yuklamani bo\'ling yoki hisob bo\'yicha kuch kabelini qo\'ying.';v.className='expl badc'}
+  else{v.textContent=r.I>=15?(ru?`Ток ${fmt(r.I,1)} А — подключайте через реле, а не напрямую через кнопку.`:`Tok ${fmt(r.I,1)} A — tugma orqali to\'g\'ridan-to\'g\'ri emas, rele orqali ulang.`):(ru?`Провод ${fmt(r.s,r.s<1?2:1)} мм², предохранитель ставьте рядом с АКБ.`:`Sim ${fmt(r.s,r.s<1?2:1)} mm², saqlagichni AKB yoniga qo\'ying.`);v.className='expl okc'}
+  const rest=numv(c.rest),run=numv(c.run);
+  const soc=Math.max(0,Math.min(100,(rest-11.9)/(12.7-11.9)*100));
+  $('#out2').innerHTML=`<div><span>${L.soc}</span><b>${rest>0?'~'+fmt(Math.round(soc/5)*5)+' %':'—'}</b></div><div><span>${L.chg}</span><b>${run>0?fmt(run,2)+' V':'—'}</b></div>`;
+  const v1=$('#v1'),v2=$('#v2');
+  if(rest>0){const ok=rest>=12.5;v1.textContent=rest>13.0?(ru?'Выше 13 В в покое — АКБ ещё не «отдохнул» после поездки или зарядки. Перемерьте позже.':'Tinch holatda 13 V dan yuqori — AKB safar yoki zaryaddan keyin hali «dam olmagan». Keyinroq qayta o\'lchang.'):ok?(ru?'Аккумулятор заряжен.':'Akkumulyator zaryadlangan.'):rest>=12.2?(ru?'АКБ разряжен наполовину — зарядите.':'AKB yarmigacha zaryadsizlangan — zaryadlang.'):(ru?'Сильный разряд — зарядите и проверьте АКБ под нагрузкой, ищите утечку тока.':'Kuchli razryad — zaryadlang, AKB ni yuklama ostida tekshiring, tok oqishini qidiring.');v1.className='expl '+(ok||rest>13?'okc':'badc')}else v1.textContent='';
+  if(run>0){const ok=run>=13.5&&run<=14.8;v2.textContent=ok?(ru?'Генератор заряжает нормально.':'Generator me\'yorida zaryadlayapti.'):run<13.5?(ru?'Недозаряд: проверьте ремень, щётки, регулятор, диодный мост.':'Kam zaryad: tasma, cho\'tkalar, regulyator, diod ko\'prigini tekshiring.'):(ru?'Перезаряд: скорее всего регулятор напряжения. АКБ может закипеть.':'Ortiqcha zaryad: katta ehtimol kuchlanish regulyatori. AKB qaynab ketishi mumkin.');v2.className='expl '+(ok?'okc':'badc')}else v2.textContent='';
+}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  $('#cw').oninput=e=>{S.calc[S.calc.mode?'i':'w']=e.target.value;paintCalc()};
+  on('#cl','len');on('#cr','rest');on('#cu','run');
+  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const k=b.dataset.seg;S.calc[k]=+b.dataset.v;
+    if(k==='mode'){render();return}
+    document.querySelectorAll(`[data-seg="${k}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>
