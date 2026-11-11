@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<title>Видеонаблюдение Pro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a green "online" accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#3ccf8e; --accent-ink:#04261a; --navy:#13222e; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#4fdc9c; --accent-ink:#04261a; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#4fdc9c; --accent-ink:#04261a; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select:focus,.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+td:first-child{white-space:normal;min-width:76px}
+th,td{padding:10px 9px;overflow-wrap:break-word;hyphens:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Видеонаблюдение Pro (CCTV installer). Each text is {ru, uz}. Quiz: a = index of the right option.
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}"${o.r?` transform="rotate(${o.r} ${x} ${y})"`:''}>${s}</text>`;
+const line=(d,c,w=3,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const circ=(x,y,r,f,st='var(--fg)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st}" stroke-width="1.5"/>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="11" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2)=>`${box(x,y,w,h)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+const PW='var(--wH)',DT='var(--wC)',VD='var(--wF)';
+// small camera pictogram: body + lens, looking right
+const cam=(x,y)=>`<rect x="${x}" y="${y}" width="34" height="18" rx="4" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/><circle cx="${x+34}" cy="${y+9}" r="6" fill="var(--navy)" stroke="var(--fg)" stroke-width="1.5"/><circle cx="${x+8}" cy="${y+9}" r="2.5" fill="var(--wH)"/>`;
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:6,
+ t:{ru:"Техника безопасности",uz:"Xavfsizlik texnikasi"},s:{ru:"Высота, ток 220 В, перфоратор, гроза",uz:"Balandlik, 220 V tok, perforator, momaqaldiroq"},
+ table:{head:{ru:["Опасность","Как защититься"],uz:["Xavf","Qanday himoyalanish"]},rows:{
+  ru:[["Падение с лестницы","Устойчивая стремянка, напарник держит её. Выше 3 м или с края крыши — страховочный пояс"],["Ток 220 В","Блок питания и регистратор подключать при выключенном автомате. Проверить индикатором"],["Скрытая проводка в стене","Перед сверлением проверить стену детектором. Не сверлить вертикально над розеткой и выключателем"],["Пыль и осколки","Очки при сверлении, особенно над головой"],["Гроза","Не работать на крыше и фасаде в грозу. Кабель на улице защищать от молнии"],["Падающий инструмент","Внизу никто не стоит. Инструмент на высоте привязать или держать в сумке"]],
+  uz:[["Narvondan yiqilish","Mustahkam narvon, sherigingiz uni ushlab tursin. 3 m dan baland yoki tom chetida — himoya kamari"],["220 V tok","Quvvat bloki va registratorni avtomat o'chirilganda ulang. Indikator bilan tekshiring"],["Devordagi yashirin sim","Burg'ulashdan oldin devorni detektor bilan tekshiring. Rozetka va o'chirgich ustidan tik burg'ulamang"],["Chang va siniqlar","Burg'ulashda, ayniqsa bosh ustida, ko'zoynak taqing"],["Momaqaldiroq","Momaqaldiroqda tom va fasadda ishlamang. Ko'chadagi kabelni chaqmoqdan himoyalang"],["Tushib ketgan asbob","Pastda hech kim turmasin. Balandlikda asbobni bog'lang yoki sumkada saqlang"]]}},
+ steps:{ru:["Осмотрите место: куда ставить лестницу, нет ли рядом проводов и стекла. На фасад и крышу в одиночку не выходите.","Перед сверлением проверьте стену <b>детектором проводки</b>. Провода обычно идут вертикально от розетки и выключателя и по горизонтали под потолком.","Камеры, блок питания и регистратор подключайте при <b>выключенном</b> питании. Сначала все провода, потом включение.","Кабель на улице прокладывайте в гофре и не рядом с силовыми проводами. В грозу на высоте не работайте.","После работы уберите лестницу, остатки кабеля и пыль. Клиент оценивает и аккуратность."],
+       uz:["Joyni ko'zdan kechiring: narvon qayerga qo'yiladi, yaqinda sim va oyna yo'qmi. Fasad va tomga yolg'iz chiqmang.","Burg'ulashdan oldin devorni <b>sim detektori</b> bilan tekshiring. Simlar odatda rozetka va o'chirgichdan tik, shift ostida esa gorizontal yo'nalishda yotadi.","Kamera, quvvat bloki va registratorni <b>o'chirilgan</b> holatda ulang. Avval barcha simlar, keyin yoqish.","Ko'chada kabelni gofra ichida va kuch simlaridan uzoqroqda yotqizing. Momaqaldiroqda balandlikda ishlamang.","Ishdan keyin narvon, kabel qoldiqlari va changni yig'ishtiring. Mijoz tozalikka ham baho beradi."]},
+ tip:{ru:"Самые частые травмы у монтажников камер — падения со стремянки, а не удар током. Лестница должна стоять на ровном месте, а не на стуле или ящике.",uz:"Kamera montajchilarida eng ko'p uchraydigan jarohat — tok urishi emas, narvondan yiqilish. Narvon stul yoki quti ustida emas, tekis joyda turishi kerak."},
+ quiz:[
+  {a:1,ru:{q:"Что сделать перед сверлением стены?",o:["Ничего","Проверить стену детектором проводки","Намочить стену"],e:"В стене может быть скрытая проводка."},uz:{q:"Devorni burg'ulashdan oldin nima qilish kerak?",o:["Hech narsa","Devorni sim detektori bilan tekshirish","Devorni namlash"],e:"Devorda yashirin sim bo'lishi mumkin."}},
+  {a:2,ru:{q:"Где обычно идёт скрытая проводка?",o:["По диагонали","Где угодно","Вертикально от розетки и выключателя"],e:"Поэтому не сверлите прямо над розеткой и выключателем."},uz:{q:"Yashirin sim odatda qayerdan o'tadi?",o:["Diagonal bo'ylab","Istalgan joydan","Rozetka va o'chirgichdan tik"],e:"Shuning uchun rozetka va o'chirgich ustidan burg'ulamang."}},
+  {a:0,ru:{q:"Когда подключать блок питания и регистратор?",o:["При выключенном питании","Под напряжением, так быстрее","Неважно"],e:"Сначала все провода, потом включение."},uz:{q:"Quvvat bloki va registratorni qachon ulash kerak?",o:["Tok o'chirilganda","Kuchlanish ostida, tezroq","Farqi yo'q"],e:"Avval barcha simlar, keyin yoqish."}},
+  {a:1,ru:{q:"Самая частая травма монтажника камер?",o:["Ожог","Падение со стремянки","Порез кабелем"],e:"Ставьте лестницу ровно и работайте с напарником."},uz:{q:"Kamera montajchisining eng ko'p uchraydigan jarohati?",o:["Kuyish","Narvondan yiqilish","Kabeldan kesilish"],e:"Narvonni tekis qo'ying va sherik bilan ishlang."}}]},
+
+{id:'b2',lv:0,min:6,nowarn:true,legend:['D','P','V'],
+ t:{ru:"Из чего состоит система",uz:"Tizim nimalardan iborat"},s:{ru:"Камера, кабель, регистратор, диск, телефон",uz:"Kamera, kabel, registrator, disk, telefon"},
+ svg:l=>svg(
+  cam(14,34)+cam(14,104)+cam(14,174)+
+  tx(31,26,R(l,"Камера 1","Kamera 1"),{s:10,c:'var(--muted)'})+tx(31,96,R(l,"Камера 2","Kamera 2"),{s:10,c:'var(--muted)'})+tx(31,166,R(l,"Камера 3","Kamera 3"),{s:10,c:'var(--muted)'})+
+  line('M56 43H110V100H150',DT,3)+line('M56 113H150',DT,3)+line('M56 183H110V126H150',DT,3)+
+  tx(100,232,R(l,"витая пара + PoE","o'ralgan juftlik + PoE"),{s:10,c:'var(--muted)'})+
+  line('M195 75V50',PW,3)+tx(195,42,"220 V",{s:10,w:700,c:'var(--wH)'})+
+  flow(150,75,90,76,R(l,"Регистратор","Registrator"),R(l,"NVR + диск","NVR + disk"))+
+  line('M195 151V190',VD,3)+tx(212,174,"HDMI",{s:10,a:'start',c:'var(--muted)'})+flow(155,190,80,36,R(l,"Монитор","Monitor"))+
+  line('M240 113H272',DT,3)+flow(272,95,78,36,R(l,"Роутер","Router"))+
+  line('M311 131V180','var(--muted)',1.5,'5 4')+tx(304,160,R(l,"интернет","internet"),{s:10,a:'end',c:'var(--muted)'})+
+  `<rect x="292" y="182" width="38" height="58" rx="8" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(311,215,R(l,"тел.","tel."),{s:10,w:600})+
+  num(110,72,1)+num(258,66,2)+num(140,208,3)+num(274,212,4),
+  R(l,"Схема: три камеры по витой паре идут в регистратор с диском, к нему монитор по HDMI и роутер, через интернет — телефон","Sxema: uchta kamera o'ralgan juftlik orqali diskli registratorga, unga HDMI orqali monitor va router, internet orqali telefon"),250),
+ steps:{ru:["<b>Камера</b> снимает картинку и отправляет её по кабелю. Внутри — объектив, матрица и ИК-подсветка для ночи.","<b>Кабель</b> несёт видео и питание. Для IP-камер это витая пара: по ней же идёт питание PoE.","<b>Регистратор</b> принимает видео со всех камер и пишет его на <b>жёсткий диск</b>. Для IP-камер он называется NVR, для аналоговых — DVR.","<b>Монитор</b> подключается к регистратору по HDMI. На нём охранник или хозяин смотрит камеры прямо на месте.","Через <b>роутер</b> регистратор выходит в интернет. Клиент смотрит камеры и запись в телефоне из любого места."],
+       uz:["<b>Kamera</b> tasvirni oladi va kabel orqali yuboradi. Ichida — obyektiv, matritsa va tun uchun IQ-yoritgich.","<b>Kabel</b> video va quvvatni olib boradi. IP-kameralar uchun bu o'ralgan juftlik: PoE quvvati ham shu orqali boradi.","<b>Registrator</b> barcha kameralardan videoni qabul qiladi va <b>qattiq diskka</b> yozadi. IP-kameralar uchun u NVR, analog uchun — DVR deyiladi.","<b>Monitor</b> registratorga HDMI orqali ulanadi. Qorovul yoki egasi kameralarni joyida ko'radi.","<b>Router</b> orqali registrator internetga chiqadi. Mijoz kameralar va yozuvni istalgan joydan telefonda ko'radi."]},
+ tip:{ru:"Регистратор ставьте в закрытом месте: в шкафу или подсобке. Если вор унесёт регистратор, вместе с ним уйдёт и вся запись.",uz:"Registratorni yopiq joyga qo'ying: shkaf yoki xo'jalik xonasiga. O'g'ri registratorni olib ketsa, butun yozuv ham u bilan ketadi."},
+ quiz:[
+  {a:1,ru:{q:"Куда пишется видео с камер?",o:["В саму камеру","На жёсткий диск в регистраторе","В роутер"],e:"Регистратор записывает всё на жёсткий диск."},uz:{q:"Kameralardan video qayerga yoziladi?",o:["Kameraning o'ziga","Registratordagi qattiq diskka","Routerga"],e:"Registrator hammasini qattiq diskka yozadi."}},
+  {a:0,ru:{q:"Как называется регистратор для IP-камер?",o:["NVR","DVR","UPS"],e:"NVR — для IP, DVR — для аналоговых камер."},uz:{q:"IP-kameralar uchun registrator qanday ataladi?",o:["NVR","DVR","UPS"],e:"NVR — IP uchun, DVR — analog kameralar uchun."}},
+  {a:2,ru:{q:"Что идёт по витой паре к IP-камере с PoE?",o:["Только видео","Только питание","И видео, и питание"],e:"PoE — питание по тому же кабелю, что и данные."},uz:{q:"PoE bilan IP-kameraga o'ralgan juftlik orqali nima boradi?",o:["Faqat video","Faqat quvvat","Ham video, ham quvvat"],e:"PoE — ma'lumot bilan bir kabeldan quvvat."}},
+  {a:1,ru:{q:"Почему регистратор нельзя ставить на виду?",o:["Он шумит","Вор унесёт его вместе с записью","Он греется"],e:"Прячьте регистратор в шкаф или подсобку."},uz:{q:"Nima uchun registratorni ko'rinadigan joyga qo'yib bo'lmaydi?",o:["U shovqin qiladi","O'g'ri uni yozuv bilan birga olib ketadi","U qiziydi"],e:"Registratorni shkaf yoki xo'jalik xonasiga yashiring."}}]},
+
+{id:'b3',lv:0,min:6,nowarn:true,
+ t:{ru:"Аналог или IP-камеры",uz:"Analog yoki IP-kamera"},s:{ru:"AHD/TVI/CVI против IP: что выбрать",uz:"AHD/TVI/CVI va IP: nimani tanlash"},
+ table:{head:{ru:["","Аналог (AHD, TVI, CVI)","IP-камера"],uz:["","Analog (AHD, TVI, CVI)","IP-kamera"]},rows:{
+  ru:[["Кабель","Коаксиал + 2 провода питания (КВК)","Витая пара UTP"],["Длина без усилителя","До 300–500 м","До 100 м"],["Питание","Отдельный блок 12 В","PoE по тому же кабелю"],["Регистратор","DVR (или гибрид XVR)","NVR"],["Качество","До 5–8 Мп, без лишних функций","2–8 Мп и выше, распознавание людей и машин"],["Где выгоднее","Замена старой системы, длинные трассы","Новые объекты, магазины, офисы"]],
+  uz:[["Kabel","Koaksial + 2 ta quvvat simi (KVK)","O'ralgan juftlik UTP"],["Kuchaytirgichsiz uzunlik","300–500 m gacha","100 m gacha"],["Quvvat","Alohida 12 V blok","Shu kabel orqali PoE"],["Registrator","DVR (yoki gibrid XVR)","NVR"],["Sifat","5–8 Mp gacha, ortiqcha funksiyasiz","2–8 Mp va undan yuqori, odam va mashinani aniqlash"],["Qayerda foydali","Eski tizimni almashtirish, uzun trassalar","Yangi obyektlar, do'konlar, ofislar"]]}},
+ steps:{ru:["Спросите клиента, есть ли уже проложенный кабель. Если везде коаксиал — проще поставить новые <b>аналоговые HD</b> камеры и новый DVR.","Для нового объекта берите <b>IP-камеры</b>: один кабель на камеру, питание PoE, лучше картинка и удобный просмотр с телефона.","Камера и регистратор должны «понимать» друг друга. Аналоговые форматы AHD, TVI и CVI разные; гибридный XVR принимает все три.","IP-камеры разных марок обычно работают вместе по стандарту <b>ONVIF</b>. Но все функции (аналитика, звук) лучше работают с регистратором той же марки.","Запишите для клиента: сколько камер, какие, где стоят, где регистратор. Это пригодится при ремонте."],
+       uz:["Mijozdan avval yotqizilgan kabel bor-yo'qligini so'rang. Hamma joyda koaksial bo'lsa, yangi <b>analog HD</b> kameralar va yangi DVR qo'yish osonroq.","Yangi obyekt uchun <b>IP-kamera</b> oling: har kameraga bitta kabel, PoE quvvati, yaxshiroq tasvir va telefondan qulay ko'rish.","Kamera va registrator bir-birini «tushunishi» kerak. AHD, TVI va CVI analog formatlari har xil; gibrid XVR uchalasini qabul qiladi.","Har xil markadagi IP-kameralar odatda <b>ONVIF</b> standarti bo'yicha birga ishlaydi. Lekin barcha funksiyalar (analitika, ovoz) shu markadagi registrator bilan yaxshiroq ishlaydi.","Mijoz uchun yozib qo'ying: nechta kamera, qanday, qayerda turibdi, registrator qayerda. Bu ta'mirda kerak bo'ladi."]},
+ tip:{ru:"Мегапиксели — не главное. Камера 4 Мп с хорошей матрицей ночью показывает лучше, чем дешёвая 8 Мп. Смотрите примеры ночной записи.",uz:"Megapiksel — asosiysi emas. Yaxshi matritsali 4 Mp kamera tunda arzon 8 Mp kameradan yaxshiroq ko'rsatadi. Tungi yozuv namunalarini ko'ring."},
+ quiz:[
+  {a:0,ru:{q:"Какой кабель у IP-камеры?",o:["Витая пара UTP","Коаксиал","Телефонный провод"],e:"IP-камеры подключаются витой парой."},uz:{q:"IP-kamerada qanday kabel?",o:["O'ralgan juftlik UTP","Koaksial","Telefon simi"],e:"IP-kameralar o'ralgan juftlik bilan ulanadi."}},
+  {a:2,ru:{q:"Какая длина кабеля до IP-камеры без усилителя?",o:["500 м","1 км","До 100 м"],e:"Дальше нужен коммутатор, удлинитель или оптика."},uz:{q:"Kuchaytirgichsiz IP-kameragacha kabel uzunligi qancha?",o:["500 m","1 km","100 m gacha"],e:"Undan uzoq bo'lsa kommutator, uzaytirgich yoki optika kerak."}},
+  {a:1,ru:{q:"Регистратор, который принимает AHD, TVI и CVI?",o:["NVR","Гибридный XVR","Роутер"],e:"XVR работает со всеми аналоговыми форматами."},uz:{q:"AHD, TVI va CVI ni qabul qiladigan registrator?",o:["NVR","Gibrid XVR","Router"],e:"XVR barcha analog formatlar bilan ishlaydi."}},
+  {a:1,ru:{q:"Стандарт совместимости IP-камер разных марок?",o:["HDMI","ONVIF","USB"],e:"ONVIF позволяет подключить камеру другой марки."},uz:{q:"Har xil markadagi IP-kameralarning moslik standarti?",o:["HDMI","ONVIF","USB"],e:"ONVIF boshqa markadagi kamerani ulash imkonini beradi."}}]},
+
+{id:'b4',lv:0,min:7,nowarn:true,
+ t:{ru:"Объектив и угол обзора",uz:"Obyektiv va ko'rish burchagi"},s:{ru:"2,8 или 12 мм: что увидит камера",uz:"2,8 yoki 12 mm: kamera nimani ko'radi"},
+ svg:l=>svg(
+  `<path d="M54 125L350 20V230Z" fill="var(--accent)" fill-opacity=".16" stroke="var(--accent)" stroke-width="1.5"/>`+
+  `<path d="M54 125L350 92V158Z" fill="var(--wC)" fill-opacity=".22" stroke="var(--wC)" stroke-width="1.5"/>`+
+  cam(14,116)+
+  tx(300,55,R(l,"2,8 мм","2,8 mm"),{w:700,s:12})+tx(300,70,R(l,"широко, ~100°","keng, ~100°"),{s:10,c:'var(--muted)'})+
+  tx(300,129,R(l,"12 мм","12 mm"),{w:700,s:12})+tx(300,144,R(l,"узко, ~25°","tor, ~25°"),{s:10,c:'var(--muted)'})+
+  tx(170,215,R(l,"двор, парковка","hovli, avtoturargoh"),{s:10,c:'var(--muted)'})+
+  tx(180,129,R(l,"лица видно далеко","yuzlar uzoqdan"),{s:9.5,c:'var(--wC)',w:600}),
+  R(l,"Камера: объектив 2,8 мм даёт широкий угол около 100 градусов, 12 мм — узкий около 25 градусов, но видит дальше","Kamera: 2,8 mm obyektiv taxminan 100 darajali keng burchak, 12 mm — taxminan 25 darajali tor, lekin uzoqroqni ko'radi"),240),
+ table:{head:{ru:["Объектив","Угол","Для чего"],uz:["Obyektiv","Burchak","Nima uchun"]},rows:{
+  ru:[["2,8 мм","~100°","Комната, касса, небольшой двор"],["3,6 мм","~80°","Подъезд, коридор, магазин"],["6 мм","~50°","Ворота, вход, узкий двор"],["12 мм","~25°","Дальний въезд, номера машин"],["2,8–12 мм","100°–25°","Вариофокал: когда не знаете точно, настраивается на месте"]],
+  uz:[["2,8 mm","~100°","Xona, kassa, kichik hovli"],["3,6 mm","~80°","Kirish yo'lagi, koridor, do'kon"],["6 mm","~50°","Darvoza, kirish, tor hovli"],["12 mm","~25°","Uzoqdagi kirish, mashina raqamlari"],["2,8–12 mm","100°–25°","Varifokal: aniq bilmasangiz, joyida sozlanadi"]]}},
+ steps:{ru:["Чем <b>меньше</b> миллиметров, тем <b>шире</b> угол, но мельче детали. Чем больше миллиметров, тем уже угол и дальше видно.","Сначала спросите клиента, что важно: видеть всё (обзор) или узнать человека (лицо) или номер машины.","Для лица нужно примерно <b>250 точек на метр</b>. Камера 2 Мп (1920 точек по ширине) узнаёт лицо, если ширина кадра в этом месте не больше 7–8 м.","Для обзора хватит 60 точек на метр: видно, что идёт человек, но лицо не узнать.","Не ставьте одну широкую камеру на всё. Лучше одна широкая на двор и одна узкая на калитку, чтобы видеть лица."],
+       uz:["Millimetr qancha <b>kam</b> bo'lsa, burchak shuncha <b>keng</b>, lekin tafsilotlar mayda. Millimetr ko'p bo'lsa, burchak tor va uzoqroq ko'rinadi.","Avval mijozdan nima muhimligini so'rang: hammasini ko'rish (umumiy ko'rinish), odamni tanish (yuz) yoki mashina raqami.","Yuz uchun taxminan <b>metriga 250 nuqta</b> kerak. 2 Mp kamera (enida 1920 nuqta) shu joyda kadr eni 7–8 m dan oshmasa, yuzni taniydi.","Umumiy ko'rinish uchun metriga 60 nuqta yetadi: odam ketayotgani ko'rinadi, lekin yuzni tanib bo'lmaydi.","Hamma narsaga bitta keng kamera qo'ymang. Hovliga bitta keng va yuzlarni ko'rish uchun eshikka bitta tor kamera yaxshiroq."]},
+ tip:{ru:"Перед монтажом подержите камеру на месте и посмотрите картинку в телефоне. Так клиент сразу видит, что попадёт в кадр, и не будет споров потом.",uz:"Montajdan oldin kamerani joyida ushlab, tasvirni telefonda ko'ring. Shunda mijoz kadrga nima tushishini darhol ko'radi va keyin tortishuv bo'lmaydi."},
+ quiz:[
+  {a:0,ru:{q:"У какого объектива угол шире?",o:["2,8 мм","6 мм","12 мм"],e:"Меньше миллиметров — шире угол."},uz:{q:"Qaysi obyektivda burchak kengroq?",o:["2,8 mm","6 mm","12 mm"],e:"Millimetr kam — burchak keng."}},
+  {a:2,ru:{q:"Какой объектив для номеров машин на дальнем въезде?",o:["2,8 мм","3,6 мм","12 мм"],e:"Узкий угол видит дальше и крупнее."},uz:{q:"Uzoqdagi kirishda mashina raqamlari uchun qaysi obyektiv?",o:["2,8 mm","3,6 mm","12 mm"],e:"Tor burchak uzoqroq va kattaroq ko'radi."}},
+  {a:1,ru:{q:"Сколько точек на метр нужно, чтобы узнать лицо?",o:["25","Около 250","1000"],e:"Для обзора хватает около 60, для лица — около 250."},uz:{q:"Yuzni tanish uchun metriga nechta nuqta kerak?",o:["25","Taxminan 250","1000"],e:"Umumiy ko'rinishga 60 ga yaqin, yuzga — 250 ga yaqin."}},
+  {a:1,ru:{q:"Не знаете точно, какой угол нужен. Что взять?",o:["Самую дешёвую","Вариофокальную 2,8–12 мм","Любую 2,8 мм"],e:"Вариофокал настраивается на месте."},uz:{q:"Qanday burchak kerakligini aniq bilmaysiz. Nimani olish kerak?",o:["Eng arzonini","2,8–12 mm varifokalni","Istalgan 2,8 mm ni"],e:"Varifokal joyida sozlanadi."}}]},
+
+{id:'b5',lv:0,min:6,nowarn:true,
+ t:{ru:"Инструмент и кабель",uz:"Asboblar va kabel"},s:{ru:"Что взять на объект",uz:"Obyektga nima olish kerak"},
+ table:{head:{ru:["Что","Зачем"],uz:["Nima","Nima uchun"]},rows:{
+  ru:[["Витая пара UTP Cat5e, медь","Для IP-камер. Внутри 4 пары. На улицу — кабель для наружной прокладки (чёрный, FTP или с тросом)"],["Коннекторы RJ45 и кримпер","Обжимать концы кабеля"],["Кабельный тестер","Проверить, что все 8 жил целы и стоят на своих местах"],["Перфоратор, буры, дюбели","Крепить кронштейны и делать вводы через стену"],["Гофра, клипсы, кабель-канал","Аккуратно и безопасно вести кабель"],["Монтажный монитор или телефон","Смотреть картинку и настраивать угол прямо у камеры"],["Стремянка, детектор проводки","Безопасная работа на высоте"]],
+  uz:[["O'ralgan juftlik UTP Cat5e, mis","IP-kameralar uchun. Ichida 4 juft. Ko'chaga — tashqi yotqizish uchun kabel (qora, FTP yoki trosli)"],["RJ45 konnektorlar va krimper","Kabel uchlarini siqish"],["Kabel testeri","8 ta tomir butun va o'z joyida ekanini tekshirish"],["Perforator, burg'ular, dyubellar","Kronshteynlarni mahkamlash va devordan teshik ochish"],["Gofra, klipsalar, kabel-kanal","Kabelni chiroyli va xavfsiz o'tkazish"],["Montaj monitori yoki telefon","Kamera yonida tasvirni ko'rish va burchakni sozlash"],["Narvon, sim detektori","Balandlikda xavfsiz ishlash"]]}},
+ steps:{ru:["Берите кабель с <b>медными</b> жилами. Дешёвый «омеднённый» алюминий (CCA) сильно греется и не тянет PoE на длинных трассах.","Для улицы нужен кабель с чёрной оболочкой, стойкой к солнцу. Белый кабель для помещений на солнце трескается за 1–2 года.","Посчитайте кабель заранее: путь от камеры до регистратора плюс 10–15% запаса на повороты и петли.","Возьмите с собой запасные коннекторы, гермовводы и пару кронштейнов. Ехать за ними с объекта — потеря времени.","Тестер кабеля — обязателен. Проверяйте каждый обжатый кабель до того, как закроете кабель-канал."],
+       uz:["<b>Mis</b> tomirli kabel oling. Arzon «mis qoplangan» alyuminiy (CCA) kuchli qiziydi va uzun trassada PoE ni tortmaydi.","Ko'cha uchun quyoshga chidamli qora qobiqli kabel kerak. Xona uchun oq kabel quyoshda 1–2 yilda yoriladi.","Kabelni oldindan hisoblang: kameradan registratorgacha yo'l va burilish va halqalar uchun 10–15% zaxira.","Zaxira konnektorlar, germetik kirishlar va bir nechta kronshteyn oling. Obyektdan ularni olib kelishga borish — vaqt yo'qotish.","Kabel testeri — majburiy. Kabel-kanalni yopishdan oldin har bir siqilgan kabelni tekshiring."]},
+ tip:{ru:"Проверить кабель на медь просто: поскоблите жилу ножом. Медь внутри медная, а CCA — серебристая.",uz:"Kabel misligini tekshirish oson: tomirni pichoq bilan qirib ko'ring. Mis ichida ham mis rangda, CCA esa kumushrang."},
+ quiz:[
+  {a:1,ru:{q:"Почему плох кабель CCA (омеднённый алюминий)?",o:["Он дорогой","Греется и плохо тянет PoE на длине","Он слишком толстый"],e:"Берите кабель с медными жилами."},uz:{q:"Nima uchun CCA kabel (mis qoplangan alyuminiy) yomon?",o:["U qimmat","Qiziydi va uzunlikda PoE ni yomon tortadi","U juda qalin"],e:"Mis tomirli kabel oling."}},
+  {a:0,ru:{q:"Какой кабель класть на улице?",o:["С чёрной оболочкой для наружной прокладки","Белый для помещений","Любой"],e:"Белый кабель на солнце трескается."},uz:{q:"Ko'chada qanday kabel yotqizish kerak?",o:["Tashqi yotqizish uchun qora qobiqli","Xona uchun oq","Istalgan"],e:"Oq kabel quyoshda yoriladi."}},
+  {a:2,ru:{q:"Какой запас кабеля брать?",o:["Без запаса","В два раза больше","10–15% на повороты и петли"],e:"Так хватит на все повороты."},uz:{q:"Qancha kabel zaxirasi olish kerak?",o:["Zaxirasiz","Ikki baravar ko'p","Burilish va halqalar uchun 10–15%"],e:"Shunda barcha burilishlarga yetadi."}},
+  {a:1,ru:{q:"Зачем нужен кабельный тестер?",o:["Мерить длину стены","Проверить все 8 жил после обжимки","Проверить фазу"],e:"Проверяйте до того, как закроете кабель-канал."},uz:{q:"Kabel testeri nima uchun kerak?",o:["Devor uzunligini o'lchash","Siqishdan keyin 8 ta tomirni tekshirish","Fazani tekshirish"],e:"Kabel-kanalni yopishdan oldin tekshiring."}}]},
+
+/* ---------- MIDDLE ---------- */
+{id:'m1',lv:1,min:8,nowarn:true,
+ t:{ru:"Обжимка RJ45 по T568B",uz:"RJ45 ni T568B bo'yicha siqish"},s:{ru:"Порядок цветов и проверка тестером",uz:"Ranglar tartibi va tester bilan tekshirish"},
+ svg:l=>{const C=[['#f2f2f2','#e8811a'],['#e8811a'],['#f2f2f2','#2e9b4a'],['#2f6fd6'],['#f2f2f2','#2f6fd6'],['#2e9b4a'],['#f2f2f2','#8a5a33'],['#8a5a33']];
+  const lb=l=='ru'?['Б-О','О','Б-З','С','Б-С','З','Б-К','К']:['O-TS','TS','O-Y','K','O-K','Y','O-J','J'];
+  let b=`<rect x="34" y="40" width="292" height="150" rx="10" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`;
+  C.forEach((c,i)=>{const x=50+i*34;b+=`<rect x="${x}" y="70" width="24" height="100" rx="3" fill="${c[0]}" stroke="var(--fg)" stroke-width="1"/>`;if(c[1])b+=`<rect x="${x+8}" y="70" width="8" height="100" fill="${c[1]}"/>`;b+=tx(x+12,62,i+1,{w:700,s:12})+tx(x+12,208,lb[i],{s:10,w:600})});
+  b+=tx(180,30,R(l,"Защёлка от себя, контакты к себе","Qulf sizdan tomonga, kontaktlar o'zingizga"),{s:11,c:'var(--muted)'})+tx(180,232,R(l,"Б — белый, О — оранжевый, З — зелёный, С — синий, К — коричневый","O — oq, TS — to'q sariq, Y — yashil, K — ko'k, J — jigarrang"),{s:9.5,c:'var(--muted)'});
+  return svg(b,R(l,"Порядок жил T568B слева направо: бело-оранжевый, оранжевый, бело-зелёный, синий, бело-синий, зелёный, бело-коричневый, коричневый","T568B tomirlar tartibi chapdan o'ngga: oq-to'q sariq, to'q sariq, oq-yashil, ko'k, oq-ko'k, yashil, oq-jigarrang, jigarrang"),245)},
+ steps:{ru:["Снимите оболочку на 3 см. Не порежьте изоляцию жил: надрез потом ломается.","Раскрутите пары и выложите жилы по <b>T568B</b>: бело-оранжевый, оранжевый, бело-зелёный, синий, бело-синий, зелёный, бело-коричневый, коричневый.","Выровняйте жилы и обрежьте ровно, оставив <b>12–13 мм</b>. Оболочка должна зайти внутрь коннектора под фиксатор.","Вставьте жилы до упора — кончики видно у торца коннектора. Сожмите кримпером одним сильным движением.","Обожмите второй конец так же и проверьте <b>тестером</b>: лампочки 1–8 должны загораться по порядку на обеих сторонах."],
+       uz:["Qobiqni 3 sm ga oling. Tomirlar izolyatsiyasini kesib qo'ymang: kesik keyin sinadi.","Juftlarni yechib, tomirlarni <b>T568B</b> bo'yicha tering: oq-to'q sariq, to'q sariq, oq-yashil, ko'k, oq-ko'k, yashil, oq-jigarrang, jigarrang.","Tomirlarni tekislab, <b>12–13 mm</b> qoldirib to'g'ri kesing. Qobiq konnektor ichiga qisqich ostiga kirishi kerak.","Tomirlarni oxirigacha kiriting — uchlari konnektor chetida ko'rinadi. Krimper bilan bitta kuchli harakatda siqing.","Ikkinchi uchini ham shunday siqing va <b>tester</b> bilan tekshiring: 1–8 chiroqlar ikkala tomonda tartib bilan yonishi kerak."]},
+ tip:{ru:"Обе стороны кабеля обжимайте одинаково, по T568B. Если лампочки загораются не по порядку или одна не горит — переобжать, не надеяться, что «и так заработает».",uz:"Kabelning ikkala tomonini bir xil, T568B bo'yicha siqing. Chiroqlar tartibsiz yonsa yoki bittasi yonmasa — qayta siqing, «shundoq ham ishlaydi» deb umid qilmang."},
+ quiz:[
+  {a:0,ru:{q:"Какая жила первая по T568B?",o:["Бело-оранжевая","Синяя","Бело-зелёная"],e:"Порядок начинается с бело-оранжевой."},uz:{q:"T568B bo'yicha birinchi tomir qaysi?",o:["Oq-to'q sariq","Ko'k","Oq-yashil"],e:"Tartib oq-to'q sariqdan boshlanadi."}},
+  {a:2,ru:{q:"Сколько оставить жил перед обжимкой?",o:["3 см","5 мм","12–13 мм"],e:"И оболочка должна зайти под фиксатор."},uz:{q:"Siqishdan oldin tomirlarni qancha qoldirish kerak?",o:["3 sm","5 mm","12–13 mm"],e:"Qobiq ham qisqich ostiga kirishi kerak."}},
+  {a:1,ru:{q:"Тестер: лампочка 4 не горит. Что делать?",o:["Оставить так","Переобжать коннектор","Заменить камеру"],e:"Одна жила не контачит — переобжать."},uz:{q:"Tester: 4-chiroq yonmayapti. Nima qilish kerak?",o:["Shunday qoldirish","Konnektorni qayta siqish","Kamerani almashtirish"],e:"Bitta tomir kontakt bermayapti — qayta siqing."}},
+  {a:1,ru:{q:"Как держать коннектор при раскладке жил?",o:["Защёлкой к себе","Защёлкой от себя, контактами к себе","Неважно"],e:"Тогда жила 1 — слева."},uz:{q:"Tomirlarni terishda konnektorni qanday ushlash kerak?",o:["Qulfi o'zingizga","Qulfi sizdan tomonga, kontaktlari o'zingizga","Farqi yo'q"],e:"Shunda 1-tomir chapda bo'ladi."}}]},
+
+{id:'m2',lv:1,min:8,nowarn:true,calc:'poe',
+ t:{ru:"Питание камер и PoE",uz:"Kamera quvvati va PoE"},s:{ru:"Сколько ватт тянет коммутатор",uz:"Kommutator necha vattni tortadi"},
+ table:{head:{ru:["Стандарт","Мощность на порт","Для чего"],uz:["Standart","Portga quvvat","Nima uchun"]},rows:{
+  ru:[["802.3af (PoE)","до 15,4 Вт","Обычные IP-камеры 4–8 Вт"],["802.3at (PoE+)","до 30 Вт","Камеры с мощной ИК, с подогревом, небольшие поворотные"],["802.3bt (PoE++)","60–90 Вт","Большие поворотные (PTZ) камеры"],["Пассивный PoE 12/24 В","разное","Только с «родными» устройствами. Может сжечь обычную камеру"]],
+  uz:[["802.3af (PoE)","15,4 Vt gacha","Oddiy IP-kameralar 4–8 Vt"],["802.3at (PoE+)","30 Vt gacha","Kuchli IQ, isitgichli, kichik aylanadigan kameralar"],["802.3bt (PoE++)","60–90 Vt","Katta aylanadigan (PTZ) kameralar"],["Passiv PoE 12/24 V","har xil","Faqat «o'z» qurilmalari bilan. Oddiy kamerani kuydirishi mumkin"]]}},
+ steps:{ru:["Посмотрите в паспорте камеры мощность <b>с включённой ИК-подсветкой</b>. Ночью камера берёт на 30–50% больше, чем днём.","У PoE-коммутатора или регистратора есть общий <b>бюджет PoE</b>, например 60 Вт на 8 портов. Сумма всех камер должна быть меньше, с запасом 20%.","Длина кабеля от PoE-порта до камеры — не больше <b>100 м</b>. Дальше ставьте промежуточный PoE-удлинитель или коммутатор.","Если камера на 12 В с отдельным блоком: на тонких проводах длиннее 30–50 м напряжение падает, и ночью камера перезагружается.","Регистратор и коммутатор подключайте через <b>ИБП</b> (бесперебойник). Тогда при скачке или отключении света запись не прерывается."],
+       uz:["Kamera pasportida <b>IQ-yoritgich yoqilgandagi</b> quvvatni ko'ring. Tunda kamera kunduzgidan 30–50% ko'proq oladi.","PoE-kommutator yoki registratorda umumiy <b>PoE byudjeti</b> bor, masalan 8 portga 60 Vt. Barcha kameralar yig'indisi 20% zaxira bilan kamroq bo'lishi kerak.","PoE-portdan kameragacha kabel uzunligi <b>100 m</b> dan oshmasin. Undan uzoq bo'lsa oraliq PoE-uzaytirgich yoki kommutator qo'ying.","Agar kamera 12 V alohida blokda bo'lsa: 30–50 m dan uzun ingichka simlarda kuchlanish tushadi va tunda kamera qayta yuklanadi.","Registrator va kommutatorni <b>UPS</b> (uzluksiz quvvat manbai) orqali ulang. Shunda tok sakrasa yoki o'chsa ham yozuv to'xtamaydi."]},
+ tip:{ru:"Посчитайте бюджет в калькуляторе: число камер × ватты ночью + 20% запаса. Если не хватает — ставьте коммутатор мощнее, а не надейтесь на удачу.",uz:"Byudjetni kalkulyatorda hisoblang: kameralar soni × tungi vatt + 20% zaxira. Yetmasa — kuchliroq kommutator qo'ying, omadga umid qilmang."},
+ quiz:[
+  {a:1,ru:{q:"Сколько ватт даёт порт 802.3af?",o:["5 Вт","До 15,4 Вт","90 Вт"],e:"Этого хватает обычной IP-камере."},uz:{q:"802.3af port necha vatt beradi?",o:["5 Vt","15,4 Vt gacha","90 Vt"],e:"Bu oddiy IP-kameraga yetadi."}},
+  {a:0,ru:{q:"Когда камера потребляет больше?",o:["Ночью, с ИК-подсветкой","Днём","Одинаково"],e:"ИК добавляет 30–50%."},uz:{q:"Kamera qachon ko'proq iste'mol qiladi?",o:["Tunda, IQ-yoritgich bilan","Kunduzi","Bir xil"],e:"IQ 30–50% qo'shadi."}},
+  {a:2,ru:{q:"Коммутатор 60 Вт, 8 камер по 7 Вт. Хватит?",o:["Да, с большим запасом","Да, ровно","Нет, нужно 56 + 20% ≈ 67 Вт"],e:"Без запаса 20% ночью будут сбои."},uz:{q:"Kommutator 60 Vt, 8 ta kamera 7 Vt dan. Yetadimi?",o:["Ha, katta zaxira bilan","Ha, aniq","Yo'q, 56 + 20% ≈ 67 Vt kerak"],e:"20% zaxirasiz tunda nosozlik bo'ladi."}},
+  {a:1,ru:{q:"Зачем ставить ИБП на регистратор?",o:["Для красоты","Запись не прерывается при отключении света","Чтобы камера видела лучше"],e:"И защищает от скачков."},uz:{q:"Nima uchun registratorga UPS qo'yiladi?",o:["Chiroyli uchun","Tok o'chganda yozuv to'xtamaydi","Kamera yaxshiroq ko'rishi uchun"],e:"Sakrashlardan ham himoya qiladi."}}]},
+
+{id:'m3',lv:1,min:8,nowarn:true,
+ t:{ru:"Монтаж камеры на стену",uz:"Kamerani devorga o'rnatish"},s:{ru:"Высота, капельная петля, солнце",uz:"Balandlik, tomchi halqasi, quyosh"},
+ svg:l=>svg(
+  `<rect x="40" y="16" width="22" height="214" fill="color-mix(in srgb,var(--muted) 25%,var(--surface))" stroke="var(--fg)" stroke-width="1.5"/>`+
+  line('M20 230H350','var(--fg)',1.5)+
+  `<rect x="62" y="58" width="16" height="10" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<g transform="rotate(18 90 66)"><rect x="76" y="56" width="50" height="22" rx="5" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/><circle cx="126" cy="67" r="7" fill="var(--navy)" stroke="var(--fg)" stroke-width="1.5"/></g>`+
+  `<path d="M128 84L340 150V230H200Z" fill="var(--accent)" fill-opacity=".15" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`+
+  line('M70 68V102Q70 118 84 118Q96 118 96 104Q96 94 86 94H62',DT,3)+
+  tx(102,128,R(l,"петля","halqa"),{s:10,a:'start',c:'var(--wC)',w:600})+
+  line('M24 64V228','var(--muted)',1.5)+line('M18 64H30','var(--muted)',1.5)+line('M18 228H30','var(--muted)',1.5)+
+  tx(14,150,R(l,"2,5–3,5 м","2,5–3,5 m"),{s:11,w:700,r:-90})+
+  circ(318,36,14,'#f2c230')+tx(318,66,R(l,"не в объектив","obyektivga emas"),{s:10,c:'var(--muted)'})+
+  num(96,30,1)+num(290,36,2)+num(112,148,3),
+  R(l,"Камера на кронштейне на высоте 2,5–3,5 метра, кабель с капельной петлёй уходит в стену, солнце не светит в объектив","Kamera kronshteynda 2,5–3,5 metr balandlikda, kabel tomchi halqasi bilan devorga kiradi, quyosh obyektivga tushmaydi"),245),
+ steps:{ru:["Высота <b>2,5–3,5 м</b>: рукой не достать, но лица ещё видно. Выше 4 м камера видит только макушки.","Не направляйте камеру на солнце, яркий фонарь или окно. Днём будет засветка, вечером — силуэты вместо лиц.","Кабель перед вводом в стену сделайте <b>петлёй вниз</b> (капельная петля). Вода стечёт с нижней точки, а не уйдёт по кабелю в камеру или стену.","Разъём на улице закройте <b>гермовводом</b> или спрячьте в монтажную коробку. Открытый RJ45 под дождём окисляется за месяц.","Ночью ИК-подсветка отражается от близкой стены, козырька и паутины. Отодвиньте камеру от стены или уберите мешающий край кадра."],
+       uz:["Balandlik <b>2,5–3,5 m</b>: qo'l yetmaydi, lekin yuzlar hali ko'rinadi. 4 m dan baland bo'lsa kamera faqat boshning tepasini ko'radi.","Kamerani quyosh, yorqin chiroq yoki derazaga qaratmang. Kunduzi yorug'lik urib ketadi, kechqurun yuz o'rniga siluetlar ko'rinadi.","Devorga kirishdan oldin kabelni <b>pastga halqa</b> qiling (tomchi halqasi). Suv pastki nuqtadan oqib tushadi, kabel bo'ylab kamera yoki devorga kirmaydi.","Ko'chadagi ulagichni <b>germetik kirish</b> bilan yoping yoki montaj qutisiga yashiring. Yomg'irda ochiq RJ45 bir oyda oksidlanadi.","Tunda IQ-yoritgich yaqin devor, soyabon va o'rgimchak to'ridan qaytadi. Kamerani devordan uzoqlashtiring yoki xalaqit beradigan kadr chetini olib tashlang."]},
+ tip:{ru:"Камера не должна смотреть в окна и двор соседей. Это нарушение их частной жизни и частая причина жалоб. Ограничьте кадр или закройте лишнюю часть маской в настройках.",uz:"Kamera qo'shnilarning derazasi va hovlisiga qaramasligi kerak. Bu ularning shaxsiy hayotini buzish va shikoyatlarning tez-tez sababi. Kadrni cheklang yoki sozlamalarda ortiqcha qismini niqob bilan yoping."},
+ quiz:[
+  {a:1,ru:{q:"На какой высоте обычно ставят камеру у входа?",o:["1 м","2,5–3,5 м","6 м"],e:"Не достать рукой, но лица видно."},uz:{q:"Kirish yonida kamera odatda qanday balandlikka qo'yiladi?",o:["1 m","2,5–3,5 m","6 m"],e:"Qo'l yetmaydi, lekin yuzlar ko'rinadi."}},
+  {a:0,ru:{q:"Зачем капельная петля на кабеле?",o:["Вода стекает вниз, а не в камеру","Для запаса длины","Чтобы кабель не украли"],e:"Нижняя точка петли отводит воду."},uz:{q:"Kabeldagi tomchi halqasi nima uchun?",o:["Suv kameraga emas, pastga oqadi","Uzunlik zaxirasi uchun","Kabelni o'g'irlamasliklari uchun"],e:"Halqaning pastki nuqtasi suvni chetlatadi."}},
+  {a:2,ru:{q:"Ночью картинка белая и мутная. Частая причина?",o:["Плохой диск","Мало пикселей","ИК отражается от близкой стены или паутины"],e:"Уберите отражающий край из кадра."},uz:{q:"Tunda tasvir oq va xira. Tez-tez uchraydigan sabab?",o:["Yomon disk","Piksel kam","IQ yaqin devor yoki o'rgimchak to'ridan qaytadi"],e:"Qaytaradigan chetni kadrdan olib tashlang."}},
+  {a:1,ru:{q:"Камера случайно видит окна соседей. Что делать?",o:["Ничего","Повернуть или закрыть часть кадра маской","Поставить выше"],e:"Чужую частную жизнь снимать нельзя."},uz:{q:"Kamera tasodifan qo'shnilarning derazasini ko'ryapti. Nima qilish kerak?",o:["Hech narsa","Burish yoki kadr qismini niqob bilan yopish","Balandroq qo'yish"],e:"Birovning shaxsiy hayotini suratga olib bo'lmaydi."}}]},
+
+{id:'m4',lv:1,min:8,nowarn:true,calc:'disk',
+ t:{ru:"Регистратор и жёсткий диск",uz:"Registrator va qattiq disk"},s:{ru:"Установка диска и первая настройка",uz:"Diskni o'rnatish va birinchi sozlash"},
+ steps:{ru:["Берите диск для видеонаблюдения (серии для систем записи 24/7). Обычный компьютерный диск при круглосуточной записи изнашивается в 2–3 раза быстрее.","Диск ставьте при <b>выключенном</b> регистраторе: два кабеля (питание и SATA) и четыре винта снизу.","Включите регистратор, задайте <b>свой пароль</b> администратора (не 12345 и не admin) и отформатируйте диск в меню «Хранилище».","Включите режим <b>перезаписи</b>: когда диск заполнится, старые записи будут стираться автоматически. Иначе запись просто остановится.","Проверьте время и дату. Без правильного времени запись нельзя найти, а для полиции она бесполезна."],
+       uz:["Videokuzatuv uchun disk oling (24/7 yozish tizimlari seriyasi). Oddiy kompyuter diski kecha-kunduz yozishda 2–3 baravar tez eskiradi.","Diskni registrator <b>o'chirilganda</b> qo'ying: ikkita kabel (quvvat va SATA) va pastdan to'rtta vint.","Registratorni yoqing, <b>o'z parolingizni</b> qo'ying (12345 va admin emas) va «Saqlash» menyusida diskni formatlang.","<b>Qayta yozish</b> rejimini yoqing: disk to'lganda eski yozuvlar avtomatik o'chiriladi. Aks holda yozuv shunchaki to'xtaydi.","Vaqt va sanani tekshiring. To'g'ri vaqtsiz yozuvni topib bo'lmaydi va politsiya uchun u foydasiz."]},
+ tip:{ru:"Посчитайте нужный размер диска в калькуляторе. Обычно клиенту нужен архив минимум 14–30 дней: о краже часто узнают не сразу.",uz:"Kerakli disk hajmini kalkulyatorda hisoblang. Odatda mijozga kamida 14–30 kunlik arxiv kerak: o'g'irlik haqida ko'pincha darhol bilishmaydi."},
+ quiz:[
+  {a:1,ru:{q:"Какой диск ставить в регистратор?",o:["Любой старый из компьютера","Диск для видеонаблюдения 24/7","Флешку"],e:"Он рассчитан на круглосуточную запись."},uz:{q:"Registratorga qanday disk qo'yish kerak?",o:["Kompyuterdan istalgan eski disk","Videokuzatuv uchun 24/7 disk","Fleshka"],e:"U kecha-kunduz yozishga mo'ljallangan."}},
+  {a:0,ru:{q:"Что будет без режима перезаписи?",o:["Когда диск заполнится, запись остановится","Ничего","Диск сгорит"],e:"Включайте перезапись старых файлов."},uz:{q:"Qayta yozish rejimisiz nima bo'ladi?",o:["Disk to'lganda yozuv to'xtaydi","Hech narsa","Disk kuyadi"],e:"Eski fayllarni qayta yozishni yoqing."}},
+  {a:2,ru:{q:"Какой пароль ставить на регистратор?",o:["12345","admin","Свой сложный пароль"],e:"Заводские пароли знают все взломщики."},uz:{q:"Registratorga qanday parol qo'yish kerak?",o:["12345","admin","O'zingizning murakkab parolingiz"],e:"Zavod parollarini barcha buzg'unchilar biladi."}},
+  {a:1,ru:{q:"Почему важно правильное время на регистраторе?",o:["Для красоты","Без него запись не найти и она бесполезна как доказательство","Не важно"],e:"Проверяйте время и дату при настройке."},uz:{q:"Nima uchun registratorda to'g'ri vaqt muhim?",o:["Chiroyli uchun","Usiz yozuvni topib bo'lmaydi va dalil sifatida foydasiz","Muhim emas"],e:"Sozlashda vaqt va sanani tekshiring."}}]},
+
+/* ---------- ADVANCED ---------- */
+{id:'a1',lv:2,min:8,nowarn:true,calc:'disk',
+ t:{ru:"Расчёт архива",uz:"Arxivni hisoblash"},s:{ru:"Битрейт, кодек и сколько дней влезет",uz:"Bitreyt, kodek va necha kun sig'adi"},
+ table:{head:{ru:["Камера","H.264","H.265"],uz:["Kamera","H.264","H.265"]},rows:{
+  ru:[["2 Мп (1080p)","4 Мбит/с","2 Мбит/с"],["4 Мп","6 Мбит/с","3 Мбит/с"],["5 Мп","8 Мбит/с","4 Мбит/с"],["8 Мп (4K)","12 Мбит/с","6 Мбит/с"]],
+  uz:[["2 Mp (1080p)","4 Mbit/s","2 Mbit/s"],["4 Mp","6 Mbit/s","3 Mbit/s"],["5 Mp","8 Mbit/s","4 Mbit/s"],["8 Mp (4K)","12 Mbit/s","6 Mbit/s"]]}},
+ steps:{ru:["<b>Битрейт</b> — сколько данных камера отправляет за секунду. Он зависит от разрешения, кадров в секунду и кодека.","Кодек <b>H.265</b> сжимает видео примерно в 2 раза лучше, чем H.264. На тот же диск влезет в 2 раза больше дней.","Одна камера с битрейтом 1 Мбит/с за сутки записывает около <b>10,8 ГБ</b>. Умножьте на битрейт, число камер и дни.","Запись <b>по движению</b> экономит диск в 2–4 раза, если ночью и в выходные на объекте пусто. Но лучше оставить постоянную запись на главных камерах.","Для наблюдения хватает 12–15 кадров в секунду. 25 кадров нужны для кассы и быстрых машин, но удваивают архив."],
+       uz:["<b>Bitreyt</b> — kamera bir soniyada qancha ma'lumot yuborishi. U o'lcham, soniyadagi kadrlar va kodekka bog'liq.","<b>H.265</b> kodeki videoni H.264 dan taxminan 2 baravar yaxshiroq siqadi. O'sha diskka 2 baravar ko'p kun sig'adi.","Bitreyti 1 Mbit/s bo'lgan bitta kamera bir kunda taxminan <b>10,8 GB</b> yozadi. Bitreyt, kameralar soni va kunlarga ko'paytiring.","<b>Harakat bo'yicha</b> yozish, agar tunda va dam olish kunlarida obyekt bo'sh bo'lsa, diskni 2–4 baravar tejaydi. Lekin asosiy kameralarda doimiy yozuvni qoldirgan ma'qul.","Kuzatuv uchun soniyasiga 12–15 kadr yetadi. 25 kadr kassa va tez mashinalar uchun kerak, lekin arxivni ikki baravar oshiradi."]},
+ tip:{ru:"Пример: 8 камер 4 Мп, H.265 (3 Мбит/с), 30 дней: 3 × 10,8 × 8 × 30 ≈ 7,8 ТБ, с запасом 10% ≈ 8,6 ТБ. Ставим диск 10 ТБ. Посчитайте свой объект в калькуляторе.",uz:"Misol: 8 ta 4 Mp kamera, H.265 (3 Mbit/s), 30 kun: 3 × 10,8 × 8 × 30 ≈ 7,8 TB, 10% zaxira bilan ≈ 8,6 TB. 10 TB disk qo'yamiz. O'z obyektingizni kalkulyatorda hisoblang."},
+ quiz:[
+  {a:1,ru:{q:"Во сколько раз H.265 экономнее H.264?",o:["Одинаково","Примерно в 2 раза","В 10 раз"],e:"На тот же диск влезет вдвое больше дней."},uz:{q:"H.265 H.264 dan necha baravar tejamkor?",o:["Bir xil","Taxminan 2 baravar","10 baravar"],e:"O'sha diskka ikki baravar ko'p kun sig'adi."}},
+  {a:0,ru:{q:"Сколько пишет камера 1 Мбит/с за сутки?",o:["Около 10,8 ГБ","1 ГБ","100 ГБ"],e:"1 Мбит/с × 86 400 с ÷ 8 ≈ 10,8 ГБ."},uz:{q:"1 Mbit/s kamera bir kunda qancha yozadi?",o:["Taxminan 10,8 GB","1 GB","100 GB"],e:"1 Mbit/s × 86 400 s ÷ 8 ≈ 10,8 GB."}},
+  {a:2,ru:{q:"Как ещё сэкономить диск?",o:["Ставить камеры выше","Отключить ИК","Запись по движению на второстепенных камерах"],e:"Пустые часы не пишутся."},uz:{q:"Diskni yana qanday tejash mumkin?",o:["Kameralarni balandroq qo'yish","IQ ni o'chirish","Ikkinchi darajali kameralarda harakat bo'yicha yozish"],e:"Bo'sh soatlar yozilmaydi."}},
+  {a:1,ru:{q:"Сколько кадров в секунду хватает для обычного наблюдения?",o:["60","12–15","2"],e:"25 кадров удваивают архив."},uz:{q:"Oddiy kuzatuv uchun soniyasiga necha kadr yetadi?",o:["60","12–15","2"],e:"25 kadr arxivni ikki baravar oshiradi."}}]},
+
+{id:'a2',lv:2,min:9,nowarn:true,
+ t:{ru:"IP-адреса и сеть",uz:"IP-manzillar va tarmoq"},s:{ru:"Чтобы камеры не мешали друг другу",uz:"Kameralar bir-biriga xalaqit bermasligi uchun"},
+ svg:l=>svg(
+  flow(130,14,100,40,R(l,"Роутер","Router"),"192.168.1.1")+
+  line('M180 54V80',DT,3)+flow(120,80,120,40,R(l,"Регистратор","Registrator"),"192.168.1.10")+
+  line('M180 120V140H60V160',DT,3)+line('M180 140V160',DT,3)+line('M180 140H300V160',DT,3)+
+  flow(14,160,92,40,R(l,"Камера 1","Kamera 1"),"192.168.1.21")+flow(134,160,92,40,R(l,"Камера 2","Kamera 2"),"192.168.1.22")+flow(254,160,92,40,R(l,"Камера 3","Kamera 3"),"192.168.1.23")+
+  tx(180,226,R(l,"Начало адреса одинаковое (192.168.1), конец — у каждого свой","Manzil boshi bir xil (192.168.1), oxiri — har birida o'zi"),{s:10,c:'var(--muted)'})+
+  tx(180,242,R(l,"Два устройства с одним адресом = конфликт, камера пропадает","Bir manzilli ikki qurilma = to'qnashuv, kamera yo'qoladi"),{s:10,c:'var(--wH)',w:600}),
+  R(l,"Схема сети: роутер 192.168.1.1, регистратор 192.168.1.10, камеры 192.168.1.21, .22, .23","Tarmoq sxemasi: router 192.168.1.1, registrator 192.168.1.10, kameralar 192.168.1.21, .22, .23"),250),
+ steps:{ru:["Каждое устройство в сети имеет свой <b>IP-адрес</b>, как номер квартиры. Два одинаковых адреса — конфликт: камера то есть, то нет.","Все новые камеры одной марки приходят с <b>одним и тем же</b> заводским адресом. Подключайте их по одной и сразу меняйте адрес.","Первые три числа (например 192.168.1) у камер, регистратора и роутера должны совпадать. Последнее — у каждого своё, от 2 до 254.","Регистратор с <b>PoE-портами</b> часто сам раздаёт адреса камерам во внутренней сети. Тогда камеры подключаются в регистратор, а не в роутер.","Заведите таблицу: камера, место, адрес, пароль. Отдайте копию клиенту. Через год вы скажете себе спасибо."],
+       uz:["Tarmoqdagi har bir qurilmaning o'z <b>IP-manzili</b> bor, xuddi xonadon raqami kabi. Ikkita bir xil manzil — to'qnashuv: kamera goh bor, goh yo'q.","Bir markadagi barcha yangi kameralar <b>bir xil</b> zavod manzili bilan keladi. Ularni bittadan ulang va darhol manzilni o'zgartiring.","Birinchi uchta son (masalan 192.168.1) kameralar, registrator va routerda bir xil bo'lishi kerak. Oxirgisi — har birida o'zi, 2 dan 254 gacha.","<b>PoE-portli</b> registrator ko'pincha ichki tarmoqda kameralarga o'zi manzil beradi. Shunda kameralar routerga emas, registratorga ulanadi.","Jadval tuzing: kamera, joy, manzil, parol. Nusxasini mijozga bering. Bir yildan keyin o'zingizga rahmat aytasiz."]},
+ tip:{ru:"Найти камеры в сети помогает программа производителя для поиска устройств. Она показывает все камеры, их адреса и даёт сменить адрес даже из другой подсети.",uz:"Tarmoqda kameralarni topishda ishlab chiqaruvchining qurilmalarni qidirish dasturi yordam beradi. U barcha kameralar va ularning manzillarini ko'rsatadi va boshqa tarmoqdan ham manzilni o'zgartirishga imkon beradi."},
+ quiz:[
+  {a:1,ru:{q:"Две камеры с одним IP-адресом. Что будет?",o:["Всё нормально","Конфликт: камеры пропадают","Картинка лучше"],e:"У каждого устройства свой адрес."},uz:{q:"Bir IP-manzilli ikkita kamera. Nima bo'ladi?",o:["Hammasi joyida","To'qnashuv: kameralar yo'qoladi","Tasvir yaxshiroq"],e:"Har bir qurilmaning o'z manzili bor."}},
+  {a:0,ru:{q:"Роутер 192.168.1.1. Какой адрес подойдёт камере?",o:["192.168.1.25","192.168.0.25","10.0.0.1"],e:"Первые три числа должны совпадать."},uz:{q:"Router 192.168.1.1. Kameraga qaysi manzil mos?",o:["192.168.1.25","192.168.0.25","10.0.0.1"],e:"Birinchi uchta son bir xil bo'lishi kerak."}},
+  {a:2,ru:{q:"Как подключать новые камеры одной марки?",o:["Все сразу","Неважно","По одной, сразу меняя адрес"],e:"У них одинаковый заводской адрес."},uz:{q:"Bir markadagi yangi kameralarni qanday ulash kerak?",o:["Hammasini birdan","Farqi yo'q","Bittadan, darhol manzilni o'zgartirib"],e:"Ularning zavod manzili bir xil."}},
+  {a:1,ru:{q:"Регистратор с PoE-портами. Куда включать камеры?",o:["В роутер","В регистратор","В розетку"],e:"Он сам раздаёт им адреса."},uz:{q:"PoE-portli registrator. Kameralarni qayerga ulash kerak?",o:["Routerga","Registratorga","Rozetkaga"],e:"U ularga o'zi manzil beradi."}}]},
+
+{id:'a3',lv:2,min:8,nowarn:true,
+ t:{ru:"Просмотр с телефона и защита",uz:"Telefondan ko'rish va himoya"},s:{ru:"Облако P2P, пароли, обновления",uz:"P2P bulut, parollar, yangilanishlar"},
+ table:{head:{ru:["Способ","Плюсы","Минусы"],uz:["Usul","Afzalligi","Kamchiligi"]},rows:{
+  ru:[["Облако производителя (P2P, QR-код)","Просто: отсканировал QR — и всё. Не нужен белый IP","Зависит от сервиса производителя"],["Проброс портов на роутере","Работает без облака","Регистратор открыт всему интернету. Опасно со слабым паролем"],["VPN до объекта","Самый безопасный","Сложнее настроить, нужен роутер с VPN"]],
+  uz:[["Ishlab chiqaruvchi buluti (P2P, QR-kod)","Oson: QR ni skanerladingiz — tamom. Oq IP kerak emas","Ishlab chiqaruvchi xizmatiga bog'liq"],["Routerda port ochish","Bulutsiz ishlaydi","Registrator butun internetga ochiq. Zaif parol bilan xavfli"],["Obyektgacha VPN","Eng xavfsiz","Sozlash qiyinroq, VPN li router kerak"]]}},
+ steps:{ru:["Подключите регистратор к роутеру и включите в настройках <b>облачный доступ (P2P)</b>. Статус должен стать «онлайн».","Установите клиенту приложение производителя, создайте учётную запись на <b>его</b> номер или почту и отсканируйте QR-код с регистратора.","Дайте клиенту отдельного пользователя только для просмотра. Пароль администратора оставьте у владельца в запечатанном виде.","Обновите прошивку регистратора и камер. Старые прошивки — главная дыра, через которую взламывают камеры.","Отключите в роутере UPnP для регистратора и не открывайте порты без нужды. Взломанные камеры используют для атак и подглядывания."],
+       uz:["Registratorni routerga ulang va sozlamalarda <b>bulutli kirishni (P2P)</b> yoqing. Holat «onlayn» bo'lishi kerak.","Mijozga ishlab chiqaruvchi ilovasini o'rnating, <b>uning</b> raqami yoki pochtasiga hisob yarating va registratordagi QR-kodni skanerlang.","Mijozga faqat ko'rish uchun alohida foydalanuvchi bering. Administrator parolini egasida muhrlangan holda qoldiring.","Registrator va kameralar proshivkasini yangilang. Eski proshivkalar — kameralar buziladigan asosiy teshik.","Routerda registrator uchun UPnP ni o'chiring va keraksiz portlarni ochmang. Buzilgan kameralar hujum va josuslik uchun ishlatiladi."]},
+ tip:{ru:"Учётную запись в облаке создавайте на клиента, а не на себя. Иначе при ссоре или смене мастера клиент потеряет доступ к своим камерам.",uz:"Bulutdagi hisobni o'zingizga emas, mijozga yarating. Aks holda janjal yoki usta almashganda mijoz o'z kameralariga kirish huquqini yo'qotadi."},
+ quiz:[
+  {a:0,ru:{q:"Самый простой способ смотреть камеры с телефона?",o:["Облако производителя по QR-коду","Проброс портов","Кабель до телефона"],e:"Сканируете QR — и регистратор в приложении."},uz:{q:"Kameralarni telefondan ko'rishning eng oson usuli?",o:["QR-kod bo'yicha ishlab chiqaruvchi buluti","Port ochish","Telefongacha kabel"],e:"QR ni skanerlaysiz — registrator ilovada."}},
+  {a:1,ru:{q:"Чем опасен проброс портов со слабым паролем?",o:["Ничем","Регистратор могут взломать из интернета","Камеры будут медленнее"],e:"Регистратор открыт всему интернету."},uz:{q:"Zaif parol bilan port ochish nimasi bilan xavfli?",o:["Hech nimasi","Registratorni internetdan buzishlari mumkin","Kameralar sekinlashadi"],e:"Registrator butun internetga ochiq."}},
+  {a:2,ru:{q:"На кого создавать учётную запись в облаке?",o:["На мастера","На соседа","На клиента"],e:"Иначе клиент может потерять доступ."},uz:{q:"Bulutdagi hisobni kimga yaratish kerak?",o:["Ustaga","Qo'shniga","Mijozga"],e:"Aks holda mijoz kirish huquqini yo'qotishi mumkin."}},
+  {a:1,ru:{q:"Главная дыра, через которую взламывают камеры?",o:["Длинный кабель","Старая прошивка и заводской пароль","Яркое солнце"],e:"Обновляйте прошивку и меняйте пароли."},uz:{q:"Kameralar buziladigan asosiy teshik?",o:["Uzun kabel","Eski proshivka va zavod paroli","Yorqin quyosh"],e:"Proshivkani yangilang va parollarni almashtiring."}}]},
+
+{id:'a4',lv:2,min:10,nowarn:true,
+ t:{ru:"Поиск неисправностей",uz:"Nosozliklarni topish"},s:{ru:"Нет картинки, полосы, перезагрузки",uz:"Tasvir yo'q, chiziqlar, qayta yuklanish"},
+ table:{head:{ru:["Признак","Частая причина","Что делать"],uz:["Belgi","Ko'p uchraydigan sabab","Nima qilish kerak"]},rows:{
+  ru:[["Нет картинки с одной камеры","Кабель, коннектор, порт","Тестер на кабель, камеру — в другой порт"],["Камера пропадает ночью","Не хватает питания при включении ИК","Проверить бюджет PoE, длину и сечение кабеля, блок 12 В"],["Полосы и рябь (аналог)","Кабель рядом с силовыми проводами, плохой BNC","Развести кабели, переобжать BNC, развязка по земле"],["Нет записи","Диск не отформатирован, сломан, выключено расписание","Меню «Хранилище»: статус диска, расписание записи"],["Пропали все камеры","Сгорел блок питания или коммутатор, конфликт IP","Проверить питание, индикаторы портов, адреса"],["Мутная картинка","Грязь, паутина, запотел объектив","Протереть, проверить гермовводы, убрать паутину"]],
+  uz:[["Bitta kameradan tasvir yo'q","Kabel, konnektor, port","Kabelga tester, kamerani boshqa portga"],["Kamera tunda yo'qoladi","IQ yoqilganda quvvat yetmaydi","PoE byudjeti, kabel uzunligi va kesimi, 12 V blokni tekshirish"],["Chiziqlar va to'lqinlar (analog)","Kabel kuch simlari yonida, yomon BNC","Kabellarni ajratish, BNC ni qayta siqish, yer bo'yicha ajratish"],["Yozuv yo'q","Disk formatlanmagan, buzilgan, jadval o'chirilgan","«Saqlash» menyusi: disk holati, yozish jadvali"],["Barcha kameralar yo'qoldi","Quvvat bloki yoki kommutator kuygan, IP to'qnashuvi","Quvvat, port indikatorlari, manzillarni tekshirish"],["Xira tasvir","Kir, o'rgimchak to'ri, obyektiv terlagan","Artish, germetik kirishlarni tekshirish, to'rni olib tashlash"]]}},
+ steps:{ru:["Начинайте с простого: горят ли индикаторы на регистраторе, коммутаторе и порту камеры. Половина поломок — нет питания.","Если не работает <b>одна</b> камера — поменяйте её местами с рабочей. Поломка ушла за камерой — виновата камера. Осталась — кабель или порт.","Проверьте кабель <b>тестером</b> и осмотрите разъём на улице. Зелёный налёт на контактах — вода, переобжать и закрыть гермовводом.","Если камера пропадает только <b>ночью</b> — это почти всегда питание: включается ИК-подсветка, и блоку или PoE не хватает мощности.","Запишите, что нашли и что сделали. Клиенту покажите старую и новую картинку и объясните простыми словами."],
+       uz:["Oddiydan boshlang: registrator, kommutator va kamera portida indikatorlar yonyaptimi. Nosozliklarning yarmi — quvvat yo'q.","Agar <b>bitta</b> kamera ishlamasa — uni ishlaydigan kamera bilan joyini almashtiring. Nosozlik kamera bilan ketdi — kamera aybdor. Qoldi — kabel yoki port.","Kabelni <b>tester</b> bilan tekshiring va ko'chadagi ulagichni ko'ring. Kontaktlarda yashil qatlam — suv, qayta siqing va germetik kirish bilan yoping.","Agar kamera faqat <b>tunda</b> yo'qolsa — bu deyarli har doim quvvat: IQ-yoritgich yonadi va blok yoki PoE ga quvvat yetmaydi.","Nima topganingiz va nima qilganingizni yozib qo'ying. Mijozga eski va yangi tasvirni ko'rsating va oddiy so'zlar bilan tushuntiring."]},
+ tip:{ru:"Возите с собой одну заведомо рабочую камеру и короткий проверенный патч-корд. Ими за минуту проверяется и порт, и кабель, и сама камера.",uz:"O'zingiz bilan aniq ishlaydigan bitta kamera va qisqa tekshirilgan patch-kord olib yuring. Ular bilan bir daqiqada port ham, kabel ham, kameraning o'zi ham tekshiriladi."},
+ quiz:[
+  {a:0,ru:{q:"Камера пропадает только ночью. Вероятная причина?",o:["Не хватает питания при включении ИК","Плохой диск","Неправильное время"],e:"Ночью камера тянет больше мощности."},uz:{q:"Kamera faqat tunda yo'qoladi. Ehtimoliy sabab?",o:["IQ yoqilganda quvvat yetmaydi","Yomon disk","Noto'g'ri vaqt"],e:"Tunda kamera ko'proq quvvat tortadi."}},
+  {a:1,ru:{q:"Поменяли камеры местами, поломка ушла за камерой. Кто виноват?",o:["Кабель","Камера","Регистратор"],e:"Неисправность переехала вместе с камерой."},uz:{q:"Kameralar joyini almashtirdik, nosozlik kamera bilan ketdi. Kim aybdor?",o:["Kabel","Kamera","Registrator"],e:"Nosozlik kamera bilan birga ko'chdi."}},
+  {a:2,ru:{q:"Зелёный налёт на контактах RJ45 на улице — это...",o:["Нормально","Краска","Вода и окисление"],e:"Переобжать и закрыть гермовводом."},uz:{q:"Ko'chadagi RJ45 kontaktlarida yashil qatlam — bu...",o:["Normal","Bo'yoq","Suv va oksidlanish"],e:"Qayta siqing va germetik kirish bilan yoping."}},
+  {a:1,ru:{q:"На аналоговой камере полосы. Что проверить?",o:["Пароль","Кабель рядом с силовыми проводами и разъём BNC","Объектив"],e:"Силовые провода наводят помехи."},uz:{q:"Analog kamerada chiziqlar. Nimani tekshirish kerak?",o:["Parolni","Kuch simlari yonidagi kabel va BNC ulagichi","Obyektivni"],e:"Kuch simlari xalaqit beradi."}}]}
+];
+
+// UI for Видеонаблюдение Pro (Videokuzatuv Pro). Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Видеонаблюдение Pro',tag:'Монтаж камер и регистраторов · 13 уроков',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Начальный','Средний','Продвинутый'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} уровень · урок ${n} · ~${m} мин`,
+ leg:{D:'Витая пара (данные + PoE)',P:'Питание 220 В',V:'Видео на монитор'},
+ warnB:'Сначала отключите питание.',warn:'Выключите автомат и проверьте индикатором, что напряжения нет.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ dkT:'Размер диска под архив',dkSub:'Сколько терабайт нужно регистратору',cams:'Камер',days:'Дней архива',mp:'Разрешение камер',codec:'Кодек',mode:'Запись',modeO:['Постоянно','По движению'],
+ mbps:'Мбит/с',tb:'Нужно, ТБ',disk:'Диск',
+ dkOk:(d,n)=>`Ставьте диск ${d} ТБ — хватит примерно на ${n} дн.`,dkMany:n=>`Больше 24 ТБ: нужно несколько дисков, например ${n} × 12 ТБ, и регистратор с ${n} слотами.`,
+ dkNote:'Расчёт: поток камеры × 10,8 ГБ в сутки × дни, +10% запаса. По движению считаем 40% от постоянной записи. Реальный поток смотрите в настройках камеры.',
+ pT:'Бюджет PoE',pSub:'Хватит ли мощности коммутатора или регистратора',w:'Ватт на камеру',bud:'Бюджет PoE, Вт',lenM:'Длина кабеля, м',
+ needW:'Нужно, Вт',have:'Есть, Вт',left:'Запас, Вт',
+ pOk:'Мощности хватает с запасом 20%.',pBad:'Не хватает мощности. Возьмите коммутатор с бюджетом больше или разделите камеры на два.',
+ pAt:'Камере больше 15,4 Вт: нужен порт PoE+ (802.3at).',pBt:'Камере больше 30 Вт: нужен порт PoE++ (802.3bt).',pLong:'Кабель длиннее 100 м: поставьте PoE-удлинитель или коммутатор посередине.',
+ pNote:'Ватты берите ночные, с включённой ИК. Расчёт: камеры × ватты + 20% запаса. Бюджет PoE указан в паспорте коммутатора или регистратора.',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Videokuzatuv Pro',tag:'Kamera va registrator montaji · 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Boshlang\'ich','O\'rta','Yuqori'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} daraja · ${n}-dars · ~${m} daq`,
+ leg:{D:'O\'ralgan juftlik (ma\'lumot + PoE)',P:'220 V quvvat',V:'Monitorga video'},
+ warnB:'Avval tokni o\'chiring.',warn:'Avtomatni o\'chiring va indikator bilan kuchlanish yo\'qligini tekshiring.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ dkT:'Arxiv uchun disk hajmi',dkSub:'Registratorga necha terabayt kerak',cams:'Kameralar',days:'Arxiv kunlari',mp:'Kamera o\'lchami',codec:'Kodek',mode:'Yozish',modeO:['Doimiy','Harakat bo\'yicha'],
+ mbps:'Mbit/s',tb:'Kerak, TB',disk:'Disk',
+ dkOk:(d,n)=>`${d} TB disk qo\'ying — taxminan ${n} kunga yetadi.`,dkMany:n=>`24 TB dan ko\'p: bir nechta disk kerak, masalan ${n} × 12 TB, va ${n} ta slotli registrator.`,
+ dkNote:'Hisob: kamera oqimi × kuniga 10,8 GB × kunlar, +10% zaxira. Harakat bo\'yicha yozishni doimiyning 40% i deb hisoblaymiz. Haqiqiy oqimni kamera sozlamalarida ko\'ring.',
+ pT:'PoE byudjeti',pSub:'Kommutator yoki registrator quvvati yetadimi',w:'Kameraga vatt',bud:'PoE byudjeti, Vt',lenM:'Kabel uzunligi, m',
+ needW:'Kerak, Vt',have:'Bor, Vt',left:'Zaxira, Vt',
+ pOk:'Quvvat 20% zaxira bilan yetadi.',pBad:'Quvvat yetmaydi. Byudjeti kattaroq kommutator oling yoki kameralarni ikkiga bo\'ling.',
+ pAt:'Kameraga 15,4 Vt dan ko\'p: PoE+ (802.3at) port kerak.',pBt:'Kameraga 30 Vt dan ko\'p: PoE++ (802.3bt) port kerak.',pLong:'Kabel 100 m dan uzun: o\'rtaga PoE-uzaytirgich yoki kommutator qo\'ying.',
+ pNote:'Vattni tungi, IQ yoqilgan holatda oling. Hisob: kameralar × vatt + 20% zaxira. PoE byudjeti kommutator yoki registrator pasportida ko\'rsatilgan.',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (vn_)
+const pk=k=>(k==='lang'?'ep_':'vn_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{n:8,d:30,mp:1,cod:1,mo:0,pn:8,pw:7,pb:120,pl:60}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="14" height="8" rx="2" fill="none" stroke="var(--accent-ink)" stroke-width="2"/><path d="M16 9.5l5-2.5v8l-5-2.5M6 15v4M3 19h6" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="11" r="1.3" fill="var(--accent-ink)"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+const swatch={D:'var(--wC)',P:'var(--wH)',V:'var(--wF)'};
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    if(x.legend)h+=`<div class="legend">${x.legend.map(k=>`<span><i class="sw" style="background:${swatch[k]}"></i>${L.leg[k]}</span>`).join('')}</div>`;h+='</div>'}
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warnB?tr(x.warnB):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* calculators: disk size for the archive and PoE power budget */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',').replace('-','−');
+const numv=v=>+String(v).replace(',','.')||0;
+const MP=['2','4','5','8'];
+const RATE=[[4,6,8,12],[2,3,4,6]]; // Mbit/s per camera: [H.264, H.265] × [2,4,5,8 Mp]
+const DISKS=[1,2,3,4,6,8,10,12,14,16,18,20,22,24];
+const seg=(k,opts)=>`<div class="seg" role="group">${opts.map((o,i)=>`<button type="button" data-seg="${k}" data-v="${i}" aria-pressed="${S.calc[k]===i}">${o}</button>`).join('')}</div>`;
+function calcBlock(){const L=U();const c=S.calc;
+  return `<div class="card stack"><div><h3>${L.dkT}</h3><p class="expl">${L.dkSub}</p></div>
+  <div class="pair"><label class="fld" for="cn">${L.cams}<input id="cn" type="number" inputmode="numeric" min="0" step="1" value="${c.n}"></label>
+  <label class="fld" for="cd">${L.days}<input id="cd" type="number" inputmode="numeric" min="0" step="1" value="${c.d}"></label></div>
+  <div class="fld">${L.mp}${seg('mp',MP.map(x=>x+(lang==='ru'?' Мп':' Mp')))}</div>
+  <div class="fld">${L.codec}${seg('cod',['H.264','H.265'])}</div>
+  <div class="fld">${L.mode}${seg('mo',L.modeO)}</div>
+  <div class="out" id="out1"></div><p class="expl" id="verd1"></p><p class="expl">${L.dkNote}</p></div>
+  <div class="card stack"><div><h3>${L.pT}</h3><p class="expl">${L.pSub}</p></div>
+  <div class="pair"><label class="fld" for="pn">${L.cams}<input id="pn" type="number" inputmode="numeric" min="0" step="1" value="${c.pn}"></label>
+  <label class="fld" for="pw">${L.w}<input id="pw" type="number" inputmode="decimal" min="0" step="0.5" value="${c.pw}"></label></div>
+  <div class="pair"><label class="fld" for="pb">${L.bud}<input id="pb" type="number" inputmode="numeric" min="0" step="1" value="${c.pb}"></label>
+  <label class="fld" for="pl">${L.lenM}<input id="pl" type="number" inputmode="numeric" min="0" step="1" value="${c.pl}"></label></div>
+  <div class="out" id="out2"></div><p class="expl" id="verd2"></p><p class="expl">${L.pNote}</p></div>`}
+function paintCalc(){const L=U();const c=S.calc;
+  const n=Math.max(0,Math.round(numv(c.n))),days=Math.max(0,numv(c.d));
+  const rate=n*RATE[c.cod][c.mp];const k=c.mo?0.4:1;
+  const tb=rate*10.8*days*k*1.1/1000;
+  const d=DISKS.find(x=>x>=tb);
+  $('#out1').innerHTML=`<div><span>${L.mbps}</span><b>${fmt(rate)}</b></div><div><span>${L.tb}</span><b>${fmt(tb,tb<10?1:0)}</b></div><div><span>${L.disk}</span><b>${d?d+(lang==='ru'?' ТБ':' TB'):'—'}</b></div>`;
+  const v1=$('#verd1');
+  if(!rate){v1.textContent='';}
+  else if(d){const per=rate*10.8*k*1.1/1000;v1.textContent=L.dkOk(d,Math.floor(d/per));v1.className='expl okc'}
+  else{v1.textContent=L.dkMany(Math.ceil(tb/12));v1.className='expl badc'}
+  const pn=Math.max(0,Math.round(numv(c.pn))),pw=Math.max(0,numv(c.pw)),pb=Math.max(0,numv(c.pb)),pl=Math.max(0,numv(c.pl));
+  const need=pn*pw*1.2;const left=pb-need;
+  $('#out2').innerHTML=`<div><span>${L.needW}</span><b>${fmt(need)}</b></div><div><span>${L.have}</span><b>${fmt(pb)}</b></div><div><span>${L.left}</span><b>${fmt(left)}</b></div>`;
+  const msg=[left>=0?L.pOk:L.pBad];if(pw>30)msg.push(L.pBt);else if(pw>15.4)msg.push(L.pAt);if(pl>100)msg.push(L.pLong);
+  const v2=$('#verd2');v2.textContent=msg.join(' ');v2.className='expl '+(left>=0&&pw<=15.4&&pl<=100?'okc':'badc')}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  on('#cn','n');on('#cd','d');on('#pn','pn');on('#pw','pw');on('#pb','pb');on('#pl','pl');
+  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const k=b.dataset.seg;S.calc[k]=+b.dataset.v;document.querySelectorAll(`[data-seg="${k}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>
