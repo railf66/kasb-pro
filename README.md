@@ -15,3 +15,8 @@
 - `holod/` — приложение для мастеров по кондиционерам и холодильникам «Холод Pro» (исходники: папка проекта holod-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
 - `avtoelektrik/` — приложение для автоэлектриков и диагностов «Автоэлектрик Pro» (исходники: папка проекта avtoelektrik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
 - `videonablyudenie/` — приложение для установщиков видеонаблюдения (исходники: папка проекта videonablyudenie-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
+
+## Telegram
+
+- Общий бот: [@kasbpro_uz_bot](https://t.me/kasbpro_uz_bot) (сценарий Make «Kasb Pro Bot»). Ссылка `t.me/kasbpro_uz_bot?start=<папка>` сразу предлагает нужное приложение, `start=` записывается в таблицу как «Откуда пришёл».
+- `tg.js` — плашка «Удобнее в Telegram» внизу приложения, если оно открыто в обычном браузере. При копировании новой сборки в папку профессии добавляйте рядом с `window.KASB_HUB` строку `<script src="../tg.js" defer></script>`.
