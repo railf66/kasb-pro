@@ -4,6 +4,8 @@
 
 Сайт: https://railf66.github.io/kasb-pro/
 
+Прогресс уроков хранится в браузере ученика (ключи вида `vn_*`, `hp_*`), язык общий для всех приложений (`ep_lang`).
+
 - `index.html` — главная страница с профессиями
 - `elektrik/` — приложение для электриков (собирается из репозитория railf66/elektrik-pro: `python3 build.py`, затем копия `index.html` с `window.KASB_HUB="../"`)
 - `santehnik/` — приложение для сантехников (исходники: папка проекта santehnik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`)
