@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<script src="../tg.js" defer></script>
+<title>Уроки для повара: санитария, плов, себестоимость — Повар Pro</title>
+<meta name="description" content="Бесплатный курс для повара: гигиена и хранение, ножи и нарезка, тепловая обработка, мясо, плов в казане, тесто для лагмана, мантов и самсы, техкарта и себестоимость. Калькуляторы плова и цены блюда. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/povar/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Уроки для повара: санитария, плов, себестоимость — Повар Pro">
+<meta property="og:description" content="Бесплатный курс для повара: гигиена и хранение, ножи и нарезка, тепловая обработка, мясо, плов в казане, тесто для лагмана, мантов и самсы, техкарта и себестоимость. Калькуляторы плова и цены блюда. На русском и узбекском.">
+<meta property="og:url" content="https://kasbpro.uz/povar/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Course", "name": "Повар Pro", "description": "Бесплатный курс для повара: гигиена и хранение, ножи и нарезка, тепловая обработка, мясо, плов в казане, тесто для лагмана, мантов и самсы, техкарта и себестоимость. Калькуляторы плова и цены блюда. На русском и узбекском.", "url": "https://kasbpro.uz/povar/", "inLanguage": ["ru", "uz"], "isAccessibleForFree": true, "provider": {"@type": "EducationalOrganization", "name": "Kasb Pro", "url": "https://kasbpro.uz/"}, "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT3H"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "UZS", "category": "Free"}}</script>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a warm saffron accent */
+:root{
+  --bg:#f4f1ec; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#f29a2e; --accent-ink:#2b1500; --navy:#2a2119; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f5a94a; --accent-ink:#2b1500; --navy:#120d09; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f5a94a; --accent-ink:#2b1500; --navy:#120d09; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select:focus,.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Повар Pro (cook). Each text is {ru, uz}. Quiz: a = index of the right option.
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}">${s}</text>`;
+const line=(d,c,w=3,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const circ=(x,y,r,f,st='var(--fg)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st}" stroke-width="1.5"/>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="11" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2)=>`${box(x,y,w,h)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+const RED='var(--wH)',BLUE='var(--wC)',GREY='var(--wS)',OR='var(--wF)',GR='var(--ok)';
+// colored cutting board with label
+const board=(x,y,c,code,l1)=>`<rect x="${x}" y="${y}" width="100" height="58" rx="8" fill="${c}" stroke="var(--fg)" stroke-width="1.5"/><circle cx="${x+88}" cy="${y+12}" r="4" fill="var(--surface)" stroke="var(--fg)" stroke-width="1"/>${tx(x+50,y+28,code,{w:700,s:15,c:'#fff'})}${tx(x+50,y+76,l1,{s:10,w:600})}`;
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:6,nowarn:true,
+ t:{ru:"Гигиена и санитария на кухне",uz:"Oshxonada gigiyena va sanitariya"},s:{ru:"Руки, форма, разделочные доски",uz:"Qo'llar, kiyim, kesish taxtalari"},
+ svg:l=>svg(
+  board(10,14,RED,R(l,'СМ','XG'),R(l,'сырое мясо','xom go\'sht'))+board(130,14,BLUE,R(l,'СР','XB'),R(l,'сырая рыба','xom baliq'))+board(250,14,'#c9a227',R(l,'ВМ','PG'),R(l,'варёное мясо','pishgan go\'sht'))+
+  board(10,118,GR,R(l,'СО','XS'),R(l,'сырые овощи','xom sabzavot'))+board(130,118,'#8a5a2b',R(l,'ВО','PS'),R(l,'варёные овощи','pishgan sabzavot'))+board(250,118,'#9aa5b1',R(l,'Х','N'),R(l,'хлеб','non'))+
+  tx(180,232,R(l,'Своя доска и нож — для каждого вида продукта','Har bir mahsulot turi uchun — o\'z taxtasi va pichog\'i'),{s:11,w:600}),
+  R(l,"Разделочные доски по цветам и маркировке: сырое мясо, сырая рыба, варёное мясо, сырые овощи, варёные овощи, хлеб","Rang va belgi bo'yicha kesish taxtalari: xom go'sht, xom baliq, pishgan go'sht, xom sabzavot, pishgan sabzavot, non"),245),
+ table:{head:{ru:["Правило","Зачем"],uz:["Qoida","Nima uchun"]},rows:{
+  ru:[["Мыть руки 20–30 секунд","После туалета, сырого мяса, яиц, мусора, телефона и денег"],["Чистая форма, головной убор","Волосы и уличная грязь не попадают в еду"],["Без колец, часов, лака","Под ними копятся микробы, украшение может упасть в блюдо"],["Болен — не работать","Понос, рвота, температура, гнойные ранки на руках — сообщить старшему"],["Сырое отдельно от готового","Главная причина отравлений — перенос микробов с сырого мяса на готовую еду"],["Медицинская книжка","Обязательна для всех, кто работает с пищей"]],
+  uz:[["Qo'lni 20–30 soniya yuvish","Hojatxonadan, xom go'sht, tuxum, axlat, telefon va puldan keyin"],["Toza kiyim, bosh kiyim","Soch va ko'cha kiri ovqatga tushmaydi"],["Uzuk, soat, lak yo'q","Ularning ostida mikroblar to'planadi, taqinchoq taomga tushishi mumkin"],["Kasal bo'lsangiz — ishlamang","Ich ketishi, qusish, isitma, qo'lda yiringli yara — kattaga ayting"],["Xom alohida, tayyor alohida","Zaharlanishning asosiy sababi — mikroblarning xom go'shtdan tayyor ovqatga o'tishi"],["Tibbiy daftarcha","Oziq-ovqat bilan ishlaydigan hamma uchun majburiy"]]}},
+ steps:{ru:["Руки моют тёплой водой с мылом: ладони, между пальцами, ногти, запястья. Вытирают одноразовым полотенцем.","Перчатки не заменяют мытьё рук. Их меняют так же часто, как мыли бы руки.","Для сырого мяса, рыбы, овощей и готовой еды — <b>разные доски и ножи</b>. Доски маркируют цветом или буквами.","Яйца перед разбиванием моют в отдельной ёмкости. Скорлупа — частый источник сальмонеллы.","Тряпки и губки меняют каждый день или кипятят. Мокрая тряпка — рассадник микробов.","Рабочее место чистят по ходу работы: «грязно сразу — убери сразу»."],
+       uz:["Qo'llar iliq suv va sovun bilan yuviladi: kaft, barmoqlar orasi, tirnoqlar, bilaklar. Bir martalik sochiq bilan artiladi.","Qo'lqop qo'l yuvishning o'rnini bosmaydi. Ular qo'lni qancha tez-tez yuvsangiz, shuncha almashtiriladi.","Xom go'sht, baliq, sabzavot va tayyor ovqat uchun — <b>alohida taxta va pichoqlar</b>. Taxtalar rang yoki harf bilan belgilanadi.","Tuxum sindirishdan oldin alohida idishda yuviladi. Po'chog'i — salmonellaning tez-tez manbai.","Latta va gubkalar har kuni almashtiriladi yoki qaynatiladi. Ho'l latta — mikroblar uyasi.","Ish joyi ish davomida tozalanadi: «iflos bo'ldi — darrov tozala»."]},
+ tip:{ru:"Нарезали сырую курицу — помойте доску, нож и руки, прежде чем трогать салат или хлеб. Это одно правило спасает от большинства отравлений.",uz:"Xom tovuq kesdingizmi — salat yoki nonni ushlashdan oldin taxta, pichoq va qo'llarni yuving. Shu bitta qoida ko'p zaharlanishlardan saqlaydi."},
+ quiz:[
+  {a:1,ru:{q:"Сколько нужно мыть руки с мылом?",o:["3–5 секунд","20–30 секунд","2 минуты"],e:"20–30 секунд, включая ногти и между пальцами."},uz:{q:"Qo'lni sovun bilan qancha yuvish kerak?",o:["3–5 soniya","20–30 soniya","2 daqiqa"],e:"20–30 soniya, tirnoqlar va barmoqlar orasi bilan birga."}},
+  {a:2,ru:{q:"На доске резали сырое мясо. Можно ли сразу резать на ней хлеб?",o:["Да, если вытереть","Да, хлеб потом всё равно жарят","Нет, нужна другая доска"],e:"Сырое и готовое — на разных досках."},uz:{q:"Taxtada xom go'sht kesildi. Darrov unda non kesish mumkinmi?",o:["Ha, artib qo'yilsa","Ha, non baribir qovuriladi","Yo'q, boshqa taxta kerak"],e:"Xom va tayyor — alohida taxtalarda."}},
+  {a:0,ru:{q:"У повара понос и температура. Что правильно?",o:["Сообщить старшему и не работать с едой","Работать в перчатках","Выпить таблетку и работать"],e:"Больной повар может заразить всех гостей."},uz:{q:"Oshpazda ich ketishi va isitma bor. Nima to'g'ri?",o:["Kattaga aytish va ovqat bilan ishlamaslik","Qo'lqopda ishlash","Dori ichib ishlash"],e:"Kasal oshpaz barcha mehmonlarni yuqtirishi mumkin."}},
+  {a:1,ru:{q:"Почему на кухне нельзя носить кольца?",o:["Они мешают держать нож","Под ними копятся микробы, и они могут упасть в еду","Так красивее"],e:"Украшения — это грязь и риск попадания в блюдо."},uz:{q:"Nega oshxonada uzuk taqib bo'lmaydi?",o:["Pichoq ushlashga xalaqit beradi","Ostida mikroblar to'planadi va ovqatga tushishi mumkin","Shunday chiroyliroq"],e:"Taqinchoqlar — kir va taomga tushish xavfi."}}]},
+
+{id:'b2',lv:0,min:7,nowarn:true,
+ t:{ru:"Температура и хранение продуктов",uz:"Harorat va mahsulotlarni saqlash"},s:{ru:"Опасная зона, холодильник, правило FIFO",uz:"Xavfli zona, muzlatgich, FIFO qoidasi"},
+ svg:l=>svg(
+  `<rect x="150" y="14" width="26" height="196" rx="13" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+circ(163,222,18,RED)+
+  `<rect x="154" y="20" width="18" height="40" fill="${OR}"/><rect x="154" y="60" width="18" height="90" fill="${RED}" opacity=".85"/><rect x="154" y="150" width="18" height="30" fill="${BLUE}"/><rect x="154" y="180" width="18" height="26" fill="#7fb3e6"/>`+
+  line('M180 24H196',GREY,1.5)+tx(202,28,R(l,'75 °C — разогрев, готово','75 °C — isitish, tayyor'),{a:'start',s:10,w:600})+
+  line('M180 60H196',GREY,1.5)+tx(202,58,R(l,'63 °C — держать горячим','63 °C — issiq saqlash'),{a:'start',s:10,w:600})+
+  tx(202,100,R(l,'ОПАСНАЯ ЗОНА','XAVFLI ZONA'),{a:'start',s:12,w:700,c:RED})+tx(202,116,R(l,'5…60 °C — микробы','5…60 °C — mikroblar'),{a:'start',s:10})+tx(202,130,R(l,'размножаются быстро','tez ko\'payadi'),{a:'start',s:10})+
+  line('M180 150H196',GREY,1.5)+tx(202,160,R(l,'0…+4 °C — мясо, рыба','0…+4 °C — go\'sht, baliq'),{a:'start',s:10,w:600})+tx(202,174,R(l,'+2…+6 °C — остальное','+2…+6 °C — qolganlari'),{a:'start',s:10})+
+  line('M180 196H196',GREY,1.5)+tx(202,200,R(l,'−18 °C — морозилка','−18 °C — muzlatkich'),{a:'start',s:10,w:600})+
+  tx(70,100,R(l,'Еду не держат','Ovqatni'),{s:11,w:600})+tx(70,116,R(l,'в опасной зоне','xavfli zonada'),{s:11,w:600})+tx(70,132,R(l,'дольше 2 часов','2 soatdan ortiq'),{s:11,w:600,c:RED})+tx(70,148,R(l,'','saqlamang'),{s:11,w:600}),
+  R(l,"Термометр: выше 63 градусов и ниже 5 градусов еда безопасна, между ними опасная зона","Termometr: 63 darajadan yuqori va 5 darajadan past ovqat xavfsiz, oralig'ida xavfli zona"),250),
+ table:{head:{ru:["Где","Температура"],uz:["Qayerda","Harorat"]},rows:{
+  ru:[["Холодильник: мясо, рыба, фарш","0…+4 °C"],["Холодильник: молочное, овощи, заготовки","+2…+6 °C"],["Морозильная камера","−18 °C и ниже"],["Горячие блюда на раздаче","не ниже +63 °C"],["Разогрев готовой еды","до +75 °C в центре, один раз"],["Остывание","до +20 °C за 2 часа, потом в холодильник"]],
+  uz:[["Muzlatgich: go'sht, baliq, qiyma","0…+4 °C"],["Muzlatgich: sut mahsulotlari, sabzavot, tayyorlamalar","+2…+6 °C"],["Muzlatkich kamerasi","−18 °C va past"],["Tarqatishdagi issiq taomlar","+63 °C dan past emas"],["Tayyor ovqatni isitish","markazida +75 °C gacha, bir marta"],["Sovitish","2 soatda +20 °C gacha, keyin muzlatgichga"]]}},
+ steps:{ru:["Опасная зона — от +5 до +60 °C. Здесь микробы удваиваются каждые 20–30 минут.","В холодильнике <b>готовое — наверху, сырое — внизу</b>. Тогда сок от сырого мяса не капает на готовую еду.","FIFO — «первым пришёл, первым ушёл». Новые продукты ставят назад, старые — вперёд.","Каждую заготовку маркируют: что это, дата и время приготовления, до какого времени годна.","Размораживают в холодильнике, а не на столе. Повторно замораживать нельзя.","Большую кастрюлю супа или плова остужают быстрее: раскладывают в неглубокие гастроёмкости."],
+       uz:["Xavfli zona — +5 dan +60 °C gacha. Bu yerda mikroblar har 20–30 daqiqada ikki barobar ko'payadi.","Muzlatgichda <b>tayyor — tepada, xom — pastda</b>. Shunda xom go'sht suvi tayyor ovqatga tommaydi.","FIFO — «birinchi kelgan, birinchi ketadi». Yangi mahsulot orqaga, eskisi oldinga qo'yiladi.","Har bir tayyorlama belgilanadi: nima, tayyorlangan sana va vaqt, qachongacha yaroqli.","Muzdan tushirish muzlatgichda, stolda emas. Qayta muzlatib bo'lmaydi.","Katta qozondagi sho'rva yoki oshni tezroq sovitish uchun sayoz gastroyemkostlarga soling."]},
+ tip:{ru:"Купите щуп-термометр (от 30–50 тыс. сум). «На глаз» температуру не определить ни у мяса, ни у холодильника.",uz:"Shchup-termometr sotib oling (30–50 ming so'mdan). Go'shtning ham, muzlatgichning ham haroratini «ko'z bilan» aniqlab bo'lmaydi."},
+ quiz:[
+  {a:1,ru:{q:"Какой диапазон называют опасной зоной?",o:["−18…0 °C","+5…+60 °C","+70…+100 °C"],e:"В этой зоне микробы растут быстрее всего."},uz:{q:"Qaysi oraliq xavfli zona deyiladi?",o:["−18…0 °C","+5…+60 °C","+70…+100 °C"],e:"Bu zonada mikroblar eng tez o'sadi."}},
+  {a:0,ru:{q:"Где в холодильнике хранить сырое мясо?",o:["На нижней полке","На верхней полке","Над салатами"],e:"Внизу — чтобы сок не капал на готовую еду."},uz:{q:"Muzlatgichda xom go'shtni qayerda saqlash kerak?",o:["Pastki tokchada","Yuqori tokchada","Salatlar ustida"],e:"Pastda — suvi tayyor ovqatga tommasligi uchun."}},
+  {a:2,ru:{q:"Что значит FIFO?",o:["Сначала берут новые продукты","Хранить всё в морозилке","Первым пришёл — первым ушёл"],e:"Старые продукты расходуют первыми."},uz:{q:"FIFO nimani anglatadi?",o:["Avval yangi mahsulot olinadi","Hammasini muzlatkichda saqlash","Birinchi kelgan — birinchi ketadi"],e:"Eski mahsulotlar birinchi ishlatiladi."}},
+  {a:1,ru:{q:"Как правильно разморозить мясо?",o:["На столе до утра","В холодильнике","В горячей воде"],e:"В холодильнике мясо не попадает в опасную зону."},uz:{q:"Go'shtni muzdan qanday to'g'ri tushiriladi?",o:["Ertalabgacha stolda","Muzlatgichda","Issiq suvda"],e:"Muzlatgichda go'sht xavfli zonaga tushmaydi."}}]},
+
+{id:'b3',lv:0,min:7,
+ warnB:{ru:"Падающий нож не ловят.",uz:"Tushayotgan pichoq ushlanmaydi."},warn:{ru:"Отступите назад и дайте ему упасть. Нож в мойке под водой не оставляют — кто-то порежется.",uz:"Orqaga chekining va tushib ketsin. Pichoqni suv ostida yuvish joyida qoldirmang — kimdir kesib oladi."},
+ t:{ru:"Ножи: выбор, хват, заточка",uz:"Pichoqlar: tanlash, ushlash, charxlash"},s:{ru:"Шеф-нож, «коготь», мусат",uz:"Oshpaz pichog'i, «panja», musat"},
+ svg:l=>svg(
+  `<path d="M40 70 L250 70 L250 100 L80 100 Q50 98 40 70Z" fill="#d8dde3" stroke="var(--fg)" stroke-width="1.5"/><rect x="250" y="66" width="12" height="38" rx="3" fill="${GREY}" stroke="var(--fg)" stroke-width="1.5"/><rect x="262" y="72" width="80" height="26" rx="8" fill="#7a4b2a" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<circle cx="285" cy="85" r="3" fill="#ddd"/><circle cx="315" cy="85" r="3" fill="#ddd"/>`+
+  line('M42 72L36 40',GREY,1.5)+tx(36,34,R(l,'кончик','uchi'),{s:10,w:600})+line('M150 70V44',GREY,1.5)+tx(150,38,R(l,'обух','orqasi'),{s:10,w:600})+
+  line('M150 100V128',GREY,1.5)+tx(150,142,R(l,'лезвие (режущая кромка)','tig\' (kesuvchi qirra)'),{s:10,w:600})+line('M256 104V128',GREY,1.5)+tx(262,142,R(l,'больстер','bolster'),{s:10,w:600})+line('M302 98V118',GREY,1.5)+tx(310,128,R(l,'рукоять','dasta'),{s:10,w:600})+
+  `<path d="M60 190 l60 -20" stroke="${OR}" stroke-width="3"/><path d="M60 190 h70" stroke="${GREY}" stroke-width="2"/><path d="M110 190 A50 50 0 0 0 107 176" fill="none" stroke="var(--fg)" stroke-width="1.5"/>`+tx(150,186,R(l,'угол заточки 15–20°','charxlash burchagi 15–20°'),{a:'start',s:11,w:600})+tx(150,204,R(l,'на каждую сторону','har bir tomonga'),{a:'start',s:10,c:'var(--muted)'}),
+  R(l,"Части ножа: кончик, обух, лезвие, больстер, рукоять. Угол заточки 15–20 градусов","Pichoq qismlari: uchi, orqasi, tig', bolster, dasta. Charxlash burchagi 15–20 daraja"),220),
+ table:{head:{ru:["Нож","Для чего"],uz:["Pichoq","Nima uchun"]},rows:{
+  ru:[["Шеф-нож 20–25 см","Основной: лук, морковь для плова, зелень, мясо"],["Овощной 8–10 см","Чистка, мелкая работа в руках"],["Обвалочный","Снять мясо с кости"],["Филейный (гибкий)","Рыба, тонкие пласты"],["Хлебный (с зубцами)","Хлеб, лепёшка, помидоры"],["Тесак","Рубить кости"]],
+  uz:[["Oshpaz pichog'i 20–25 sm","Asosiy: piyoz, osh uchun sabzi, ko'kat, go'sht"],["Sabzavot pichog'i 8–10 sm","Tozalash, qo'lda mayda ish"],["Suyakdan ajratish pichog'i","Go'shtni suyakdan olish"],["Fileli (egiluvchan)","Baliq, yupqa qatlamlar"],["Non pichog'i (tishli)","Non, patir, pomidor"],["Satir (tesak)","Suyak chopish"]]}},
+ steps:{ru:["Доску ставят на влажное полотенце, чтобы не скользила.","Нож держат «щипком»: большой и указательный палец на лезвии у больстера, остальные — на рукояти.","Вторая рука — «коготь»: кончики пальцев подогнуты, нож идёт по костяшкам. Так пальцы не попадут под лезвие.","Режут движением вперёд-вниз, а не давят сверху.","Мусат только выпрямляет кромку — правьте каждый день. Точильный камень снимает металл — раз в 1–4 недели.","Нож моют руками и сразу вытирают. Посудомойка и мойка с водой портят нож и опасны."],
+       uz:["Taxta sirpanmasligi uchun ho'l sochiq ustiga qo'yiladi.","Pichoq «chimdik» bilan ushlanadi: bosh va ko'rsatkich barmoq bolster yonida tig'da, qolganlari — dastada.","Ikkinchi qo'l — «panja»: barmoq uchlari bukilgan, pichoq bo'g'imlar bo'ylab yuradi. Shunda barmoqlar tig' ostiga tushmaydi.","Yuqoridan bosmasdan, oldinga-pastga harakat bilan kesiladi.","Musat faqat qirrani to'g'rilaydi — har kuni to'g'rilang. Charx toshi metallni oladi — 1–4 haftada bir marta.","Pichoq qo'lda yuviladi va darrov artiladi. Idish yuvish mashinasi va suvli rakovina pichoqni buzadi va xavfli."]},
+ tip:{ru:"Острый нож безопаснее тупого: тупой соскальзывает с лука и помидора, и вы давите сильнее. Большинство порезов — от тупых ножей.",uz:"O'tkir pichoq o'tmas pichoqdan xavfsizroq: o'tmas pichoq piyoz va pomidordan sirpanadi, siz kuchliroq bosasiz. Ko'p kesilishlar — o'tmas pichoqdan."},
+ quiz:[
+  {a:2,ru:{q:"Как держать пальцы руки, которая придерживает продукт?",o:["Прямо, вытянуть вперёд","Под лезвием","Подогнуть «когтем»"],e:"Нож идёт по костяшкам, кончики пальцев спрятаны."},uz:{q:"Mahsulotni ushlab turgan qo'l barmoqlarini qanday tutish kerak?",o:["To'g'ri, oldinga cho'zib","Tig' ostida","«Panja» qilib bukib"],e:"Pichoq bo'g'imlar bo'ylab yuradi, barmoq uchlari yashiringan."}},
+  {a:0,ru:{q:"Нож падает со стола. Что делать?",o:["Отступить и дать упасть","Поймать рукой","Подставить ногу"],e:"Падающий нож не ловят никогда."},uz:{q:"Pichoq stoldan tushyapti. Nima qilish kerak?",o:["Chekinib, tushishiga yo'l qo'yish","Qo'l bilan ushlash","Oyoqni tutish"],e:"Tushayotgan pichoq hech qachon ushlanmaydi."}},
+  {a:1,ru:{q:"Для чего мусат?",o:["Снять много металла","Выпрямить кромку между заточками","Резать кости"],e:"Мусат правит, камень точит."},uz:{q:"Musat nima uchun?",o:["Ko'p metall olish","Charxlashlar orasida qirrani to'g'rilash","Suyak kesish"],e:"Musat to'g'rilaydi, tosh charxlaydi."}},
+  {a:1,ru:{q:"Какой нож опаснее?",o:["Острый","Тупой","Одинаково"],e:"Тупой соскальзывает, и вы давите сильнее."},uz:{q:"Qaysi pichoq xavfliroq?",o:["O'tkir","O'tmas","Bir xil"],e:"O'tmas sirpanadi va siz kuchliroq bosasiz."}}]},
+
+{id:'b4',lv:0,min:7,nowarn:true,
+ t:{ru:"Нарезка овощей",uz:"Sabzavot to'g'rash"},s:{ru:"Кубик, соломка, брунуаз, морковь для плова",uz:"Kubik, somoncha, brunuaz, osh uchun sabzi"},
+ svg:l=>svg(
+  `<rect x="20" y="40" width="10" height="10" fill="${OR}" stroke="var(--fg)" stroke-width="1"/>`+tx(25,72,R(l,'брунуаз','brunuaz'),{s:10,w:600})+tx(25,86,'2–3 мм',{s:10,c:'var(--muted)'})+
+  `<rect x="76" y="34" width="18" height="18" fill="${OR}" stroke="var(--fg)" stroke-width="1"/>`+tx(85,72,R(l,'мелкий кубик','mayda kubik'),{s:10,w:600})+tx(85,86,'5 мм',{s:10,c:'var(--muted)'})+
+  `<rect x="140" y="22" width="34" height="34" fill="${OR}" stroke="var(--fg)" stroke-width="1"/>`+tx(157,72,R(l,'кубик','kubik'),{s:10,w:600})+tx(157,86,'1–1,5 см',{s:10,c:'var(--muted)'})+
+  `<rect x="200" y="30" width="60" height="5" fill="${OR}" stroke="var(--fg)" stroke-width="1"/><rect x="200" y="40" width="60" height="5" fill="${OR}" stroke="var(--fg)" stroke-width="1"/><rect x="200" y="50" width="60" height="5" fill="${OR}" stroke="var(--fg)" stroke-width="1"/>`+tx(230,72,R(l,'жюльен','jyulyen'),{s:10,w:600})+tx(230,86,'2 мм × 5 см',{s:10,c:'var(--muted)'})+
+  `<rect x="282" y="26" width="64" height="9" fill="${OR}" stroke="var(--fg)" stroke-width="1"/><rect x="282" y="40" width="64" height="9" fill="${OR}" stroke="var(--fg)" stroke-width="1"/>`+tx(314,72,R(l,'соломка','somoncha'),{s:10,w:600})+tx(314,86,'4–5 мм × 5 см',{s:10,c:'var(--muted)'})+
+  box(20,112,320,118)+tx(180,134,R(l,'Морковь для плова','Osh uchun sabzi'),{w:700,s:13})+
+  `<rect x="44" y="150" width="120" height="12" rx="2" fill="${OR}" stroke="var(--fg)" stroke-width="1"/><rect x="44" y="168" width="120" height="12" rx="2" fill="${OR}" stroke="var(--fg)" stroke-width="1"/><rect x="44" y="186" width="120" height="12" rx="2" fill="${OR}" stroke="var(--fg)" stroke-width="1"/>`+
+  tx(180,160,R(l,'бруски 5–7 мм толщиной,','qalinligi 5–7 mm,'),{a:'start',s:11})+tx(180,176,R(l,'длиной 5–7 см','uzunligi 5–7 sm'),{a:'start',s:11})+tx(180,196,R(l,'не тереть на тёрке!','qirg\'ichda qirmang!'),{a:'start',s:11,w:700,c:RED})+tx(180,216,R(l,'Тонкая — разварится в кашу','Ingichkasi bo\'tqa bo\'lib ketadi'),{s:10,c:'var(--muted)'}),
+  R(l,"Размеры нарезки: брунуаз, мелкий кубик, кубик, жюльен, соломка, и морковь для плова брусками","To'g'rash o'lchamlari: brunuaz, mayda kubik, kubik, jyulyen, somoncha va osh uchun sabzi bruschalar bilan"),240),
+ table:{head:{ru:["Нарезка","Куда"],uz:["To'g'rash","Qayerga"]},rows:{
+  ru:[["Брунуаз 2–3 мм","Соусы, начинки, зажарка"],["Кубик 5 мм","Салаты, гарниры, мастава"],["Кубик 1–1,5 см","Лагман, шурпа, жаркое"],["Жюльен","Салаты, лапша, жарка в воке"],["Соломка, бруски","Картофель фри, морковь для плова"],["Полукольца","Лук для плова, шашлыка, ачичука"]],
+  uz:[["Brunuaz 2–3 mm","Souslar, ichliklar, qovurma"],["Kubik 5 mm","Salatlar, garnir, mastava"],["Kubik 1–1,5 sm","Lag'mon, sho'rva, qovurdoq"],["Jyulyen","Salatlar, lag'mon, vokda qovurish"],["Somoncha, bruschalar","Kartoshka fri, osh uchun sabzi"],["Yarim halqa","Osh, kabob, achchiq-chuchuk uchun piyoz"]]}},
+ steps:{ru:["Сначала сделайте у овоща <b>плоскую сторону</b>: срежьте ломтик и положите овощ на срез. Круглый овощ катается — так режут пальцы.","Режьте куски одного размера — тогда они приготовятся одновременно.","Кубик: сначала пласты нужной толщины, потом из них бруски, потом бруски поперёк.","Лук: срезать верх, корень оставить — он держит лук целым, пока режете.","Морковь для плова режут вручную брусками. Жёлтая морковь (сабзи) держит форму лучше.","Отходы складывайте в отдельный лоток, а не сдвигайте ножом-лезвием по доске — лезвие тупится."],
+       uz:["Avval sabzavotda <b>tekis tomon</b> qiling: bir bo'lak kesib, sabzavotni kesilgan joyiga qo'ying. Yumaloq sabzavot dumalaydi — barmoqlar shunday kesiladi.","Bir xil o'lchamda to'g'rang — shunda bir vaqtda pishadi.","Kubik: avval kerakli qalinlikda qatlamlar, keyin bruschalar, keyin bruschalarni ko'ndalangiga.","Piyoz: tepasini kesing, ildizini qoldiring — u to'g'rayotganda piyozni butun tutadi.","Osh uchun sabzi qo'lda bruschalar qilib to'g'raladi. Sariq sabzi shaklini yaxshiroq saqlaydi.","Chiqindini alohida idishga soling, pichoq tig'i bilan taxtada surmang — tig' o'tmaslashadi."]},
+ tip:{ru:"Скорость придёт сама. Сначала ровно и безопасно, потом быстро. Повара на тренировку берут мешок лука и режут его весь.",uz:"Tezlik o'zi keladi. Avval tekis va xavfsiz, keyin tez. Oshpazlar mashq uchun bir qop piyoz olib, hammasini to'g'raydi."},
+ quiz:[
+  {a:1,ru:{q:"Что сделать первым с круглым овощом?",o:["Резать сразу","Срезать бок, чтобы он лежал устойчиво","Натереть"],e:"Плоская сторона — овощ не катается."},uz:{q:"Yumaloq sabzavot bilan birinchi nima qilinadi?",o:["Darrov kesish","Barqaror yotishi uchun yon tomonini kesish","Qirg'ichdan o'tkazish"],e:"Tekis tomon — sabzavot dumalamaydi."}},
+  {a:2,ru:{q:"Как режут морковь для плова?",o:["На тёрке","Кубиком 2 мм","Брусками 5–7 мм"],e:"Тёртая морковь разварится в кашу."},uz:{q:"Osh uchun sabzi qanday to'g'raladi?",o:["Qirg'ichda","2 mm kubik","5–7 mm bruschalar"],e:"Qirilgan sabzi bo'tqa bo'lib ketadi."}},
+  {a:0,ru:{q:"Зачем резать куски одного размера?",o:["Чтобы приготовились одновременно","Только для красоты","Так быстрее мыть"],e:"Мелкие сгорят, крупные останутся сырыми."},uz:{q:"Nega bir xil o'lchamda to'g'rash kerak?",o:["Bir vaqtda pishishi uchun","Faqat chiroy uchun","Yuvish tezroq"],e:"Maydalari kuyadi, kattalari xom qoladi."}},
+  {a:1,ru:{q:"Что такое брунуаз?",o:["Длинная соломка","Очень мелкий кубик 2–3 мм","Кольца"],e:"Брунуаз — самый мелкий кубик."},uz:{q:"Brunuaz nima?",o:["Uzun somoncha","Juda mayda kubik 2–3 mm","Halqalar"],e:"Brunuaz — eng mayda kubik."}}]},
+
+{id:'b5',lv:0,min:6,nowarn:true,calc:true,
+ t:{ru:"Вес, брутто и нетто",uz:"Vazn, brutto va netto"},s:{ru:"Сколько уходит в отходы при очистке",uz:"Tozalashda qancha chiqindi ketadi"},
+ table:{head:{ru:["Продукт","Отходы, примерно"],uz:["Mahsulot","Chiqindi, taxminan"]},rows:{
+  ru:[["Картофель (молодой / к весне)","20 % / до 35–40 %"],["Морковь","20–25 %"],["Лук репчатый","16 %"],["Капуста белокочанная","20 %"],["Перец сладкий","25 %"],["Говядина на кости","25–30 % кости"],["Баранина на кости","30 % кости"],["Курица целая","30–35 % кости и кожи"]],
+  uz:[["Kartoshka (yangi / bahorga)","20 % / 35–40 % gacha"],["Sabzi","20–25 %"],["Piyoz","16 %"],["Oq karam","20 %"],["Shirin qalampir","25 %"],["Suyakli mol go'shti","25–30 % suyak"],["Suyakli qo'y go'shti","30 % suyak"],["Butun tovuq","30–35 % suyak va teri"]]}},
+ steps:{ru:["<b>Брутто</b> — вес продукта, как купили: с кожурой, костями, шелухой.","<b>Нетто</b> — вес после очистки, то, что пойдёт в котёл.","Нетто = брутто × (100 − % отходов) / 100. Например: 10 кг картофеля, 25 % отходов → 7,5 кг.","Мерить лучше весами, а не стаканами: стакан муки весит 130–160 г в зависимости от того, как насыпали.","Полезные мерки: столовая ложка соли ≈ 20–25 г, чайная ≈ 6–8 г; стакан 250 мл риса ≈ 200 г.","Записывайте, сколько реально уходит в отходы у ваших поставщиков, — так закупка будет точнее."],
+       uz:["<b>Brutto</b> — mahsulotning sotib olingandagi vazni: po'sti, suyagi, qobig'i bilan.","<b>Netto</b> — tozalangandan keyingi vazn, qozonga tushadigani.","Netto = brutto × (100 − chiqindi %) / 100. Masalan: 10 kg kartoshka, 25 % chiqindi → 7,5 kg.","Stakan bilan emas, tarozida o'lchash yaxshi: bir stakan un qanday solinganiga qarab 130–160 g bo'ladi.","Foydali o'lchovlar: osh qoshiq tuz ≈ 20–25 g, choy qoshiq ≈ 6–8 g; 250 ml stakan guruch ≈ 200 g.","Yetkazib beruvchilaringizda chiqindi qancha ketishini yozib boring — xarid aniqroq bo'ladi."]},
+ tip:{ru:"Когда покупаете, считайте цену за килограмм нетто, а не брутто. Дешёвая говядина с большой костью может выйти дороже.",uz:"Sotib olayotganda brutto emas, netto kilogrami narxini hisoblang. Katta suyakli arzon mol go'shti qimmatroqqa tushishi mumkin."},
+ quiz:[
+  {a:0,ru:{q:"Что такое нетто?",o:["Вес после очистки","Вес с упаковкой","Вес готового блюда"],e:"Нетто — то, что идёт в котёл."},uz:{q:"Netto nima?",o:["Tozalangandan keyingi vazn","Qadoq bilan vazn","Tayyor taom vazni"],e:"Netto — qozonga tushadigani."}},
+  {a:1,ru:{q:"10 кг моркови, отходы 20 %. Сколько нетто?",o:["10 кг","8 кг","2 кг"],e:"10 × 0,8 = 8 кг."},uz:{q:"10 kg sabzi, chiqindi 20 %. Netto qancha?",o:["10 kg","8 kg","2 kg"],e:"10 × 0,8 = 8 kg."}},
+  {a:2,ru:{q:"Чем точнее всего отмерить муку?",o:["Стаканом","Ложкой","Весами"],e:"Стакан муки весит по-разному."},uz:{q:"Unni eng aniq nima bilan o'lchash mumkin?",o:["Stakan","Qoshiq","Tarozi"],e:"Bir stakan un har xil og'irlikda bo'ladi."}},
+  {a:1,ru:{q:"Почему весной у картофеля больше отходов?",o:["Он тяжелее","Кожура толще, больше глазков и порчи","Это не так"],e:"К весне отходы растут до 35–40 %."},uz:{q:"Nega bahorda kartoshkada chiqindi ko'p?",o:["U og'irroq","Po'sti qalin, ko'zchalar va buzilish ko'p","Bunday emas"],e:"Bahorga kelib chiqindi 35–40 % gacha oshadi."}}]},
+
+/* ---------- INTERMEDIATE ---------- */
+{id:'m1',lv:1,min:8,
+ warnB:{ru:"Горящее масло не тушат водой.",uz:"Yonayotgan yog' suv bilan o'chirilmaydi."},warn:{ru:"Выключите огонь и накройте крышкой или противопожарным полотном. Вода вызовет огненный выброс.",uz:"Olovni o'chiring va qopqoq yoki yong'inga qarshi mato bilan yoping. Suv olovli otilish keltirib chiqaradi."},
+ t:{ru:"Способы тепловой обработки",uz:"Issiqlik bilan ishlov berish usullari"},s:{ru:"Варка, жарка, тушение, фритюр, пар",uz:"Qaynatish, qovurish, dimlash, frityur, bug'"},
+ svg:l=>svg(
+  flow(10,20,105,50,R(l,'Варка','Qaynatish'),'100 °C')+flow(127,20,105,50,R(l,'Пар','Bug\''),'100 °C')+flow(244,20,105,50,R(l,'Тушение','Dimlash'),R(l,'90–100 °C, крышка','90–100 °C, qopqoq'))+
+  flow(10,100,105,50,R(l,'Жарка','Qovurish'),'150–200 °C')+flow(127,100,105,50,R(l,'Фритюр','Frityur'),'160–180 °C')+flow(244,100,105,50,R(l,'Духовка','Duxovka'),'160–220 °C')+
+  flow(10,180,105,50,R(l,'Мангал','Mangal'),R(l,'угли, без огня','cho\'g\', olovsiz'))+flow(127,180,105,50,R(l,'Тандыр','Tandir'),'250–350 °C')+flow(244,180,105,50,R(l,'Казан','Qozon'),R(l,'жарка + тушение','qovurish + dimlash')),
+  R(l,"Способы тепловой обработки и их температуры","Issiqlik bilan ishlov berish usullari va haroratlari"),240),
+ table:{head:{ru:["Жир","Дым начинается, примерно"],uz:["Yog'","Tutun boshlanadi, taxminan"]},rows:{
+  ru:[["Подсолнечное рафинированное","~230 °C — для жарки и фритюра"],["Хлопковое рафинированное","~220 °C — классика для плова"],["Подсолнечное нерафинированное","~110 °C — только для салатов"],["Сливочное масло","~150 °C — горит, лучше топлёное"],["Топлёное масло, курдюк","~200–250 °C"]],
+  uz:[["Rafinatsiyalangan kungaboqar yog'i","~230 °C — qovurish va frityur uchun"],["Rafinatsiyalangan paxta yog'i","~220 °C — osh uchun klassika"],["Rafinatsiyalanmagan kungaboqar","~110 °C — faqat salatlar uchun"],["Sariyog'","~150 °C — kuyadi, eritilgani yaxshiroq"],["Eritilgan sariyog', dumba","~200–250 °C"]]}},
+ steps:{ru:["<b>Жарка:</b> сковорода и масло должны быть горячими до того, как положили продукт. Иначе мясо пустит сок и будет вариться, а не жариться.","Не перегружайте сковороду и казан. Жарьте партиями — так держится температура и образуется корочка.","<b>Тушение:</b> сначала обжарить, потом добавить немного жидкости, накрыть крышкой и держать на слабом огне.","<b>Фритюр:</b> продукт обсушить — вода в масле даёт брызги. Масло менять, когда темнеет, пенится и пахнет.","<b>Варка:</b> для бульона мясо кладут в холодную воду и снимают пену; для вкусного мяса — в кипящую.","Солите мясо при жарке в конце или прямо перед жаркой — заранее посоленное отдаёт сок."],
+       uz:["<b>Qovurish:</b> mahsulot solinishidan oldin tova va yog' qizigan bo'lishi kerak. Aks holda go'sht suv chiqarib, qovurilmasdan qaynaydi.","Tova va qozonni to'ldirib yubormang. Partiyalab qovuring — harorat saqlanadi va qobiq hosil bo'ladi.","<b>Dimlash:</b> avval qovuriladi, keyin ozroq suyuqlik qo'shiladi, qopqoq yopiladi va past olovda tutiladi.","<b>Frityur:</b> mahsulotni quriting — yog'dagi suv sachratadi. Yog' qorayganda, ko'piklanganda va hid chiqarganda almashtiriladi.","<b>Qaynatish:</b> bulyon uchun go'sht sovuq suvga solinadi va ko'pigi olinadi; mazali go'sht uchun — qaynoq suvga.","Go'shtni qovurishda oxirida yoki qovurishdan oldin tuzlang — oldindan tuzlangani suv chiqaradi."]},
+ tip:{ru:"Не доливайте свежее масло во фритюр со старым — старое быстро портит новое. Меняйте целиком.",uz:"Eski yog'li frityurga yangi yog' qo'shmang — eskisi yangisini tez buzadi. To'liq almashtiring."},
+ quiz:[
+  {a:1,ru:{q:"Горит масло на сковороде. Что делать?",o:["Залить водой","Выключить огонь и накрыть крышкой","Подуть"],e:"Вода вызывает огненный выброс."},uz:{q:"Tovada yog' yonyapti. Nima qilish kerak?",o:["Suv quyish","Olovni o'chirib, qopqoq bilan yopish","Puflash"],e:"Suv olovli otilish keltirib chiqaradi."}},
+  {a:0,ru:{q:"Почему мясо в сковороде «варится», а не жарится?",o:["Сковорода холодная или перегружена","Мало соли","Слишком острый нож"],e:"Жарьте партиями на горячей сковороде."},uz:{q:"Nega tovada go'sht qovurilmasdan «qaynaydi»?",o:["Tova sovuq yoki to'lib ketgan","Tuz kam","Pichoq juda o'tkir"],e:"Qizigan tovada partiyalab qovuring."}},
+  {a:2,ru:{q:"Какое масло нельзя для жарки?",o:["Рафинированное подсолнечное","Хлопковое рафинированное","Нерафинированное подсолнечное"],e:"Оно дымит уже около 110 °C."},uz:{q:"Qaysi yog' qovurishga yaramaydi?",o:["Rafinatsiyalangan kungaboqar","Rafinatsiyalangan paxta","Rafinatsiyalanmagan kungaboqar"],e:"U 110 °C atrofida tutay boshlaydi."}},
+  {a:1,ru:{q:"Для прозрачного бульона мясо кладут…",o:["в кипяток","в холодную воду и снимают пену","на сковороду"],e:"В холодной воде белок выходит в пену, её снимают."},uz:{q:"Tiniq bulyon uchun go'sht solinadi…",o:["qaynoq suvga","sovuq suvga va ko'pigi olinadi","tovaga"],e:"Sovuq suvda oqsil ko'pikka chiqadi, u olinadi."}}]},
+
+{id:'m2',lv:1,min:8,nowarn:true,
+ t:{ru:"Мясо и птица: готовность",uz:"Go'sht va parranda: pishganlik"},s:{ru:"Температура внутри, отдых, шашлык",uz:"Ichki harorat, dam berish, kabob"},
+ svg:l=>svg(
+  `<ellipse cx="100" cy="120" rx="85" ry="50" fill="#b5523b" stroke="var(--fg)" stroke-width="1.5"/><ellipse cx="100" cy="120" rx="48" ry="26" fill="#d98a7a"/>`+
+  line('M220 40L110 118',GREY,4)+circ(230,34,14,'var(--surface)')+tx(230,38,'°C',{s:10,w:700})+tx(100,190,R(l,'щуп — в самую толстую часть','shchup — eng qalin joyiga'),{s:10,c:'var(--muted)'})+
+  tx(256,90,R(l,'Курица','Tovuq'),{a:'start',s:11,w:600})+tx(354,90,'74°',{a:'end',s:12,w:700,c:RED})+
+  tx(256,114,R(l,'Фарш','Qiyma'),{a:'start',s:11,w:600})+tx(354,114,'71°',{a:'end',s:12,w:700,c:RED})+
+  tx(256,138,R(l,'Говядина','Mol'),{a:'start',s:11,w:600})+tx(354,138,'63°+',{a:'end',s:12,w:700,c:OR})+
+  tx(256,162,R(l,'Баранина','Qo\'y'),{a:'start',s:11,w:600})+tx(354,162,'63°+',{a:'end',s:12,w:700,c:OR})+
+  tx(256,186,R(l,'Рыба','Baliq'),{a:'start',s:11,w:600})+tx(354,186,'63°',{a:'end',s:12,w:700,c:OR}),
+  R(l,"Щуп-термометр в самой толстой части. Курица 74 градуса, фарш 71, говядина и баранина от 63, рыба 63","Shchup-termometr eng qalin joyda. Tovuq 74 daraja, qiyma 71, mol va qo'y 63 dan, baliq 63"),210),
+ table:{head:{ru:["Продукт","Готово, в центре"],uz:["Mahsulot","Tayyor, markazida"]},rows:{
+  ru:[["Курица, индейка","74 °C, сок прозрачный"],["Фарш: котлеты, люля, манты","71 °C, без розового"],["Говядина, баранина куском","63 °C и выше + отдых 3–5 минут"],["Рыба","63 °C, мякоть слоится"],["Разогретые блюда","75 °C"]],
+  uz:[["Tovuq, kurka","74 °C, suvi tiniq"],["Qiyma: kotlet, lyulya, manti","71 °C, pushti joysiz"],["Mol, qo'y go'shti bo'lak","63 °C va yuqori + 3–5 daqiqa dam"],["Baliq","63 °C, eti qatlam-qatlam ajraladi"],["Isitilgan taomlar","75 °C"]]}},
+ steps:{ru:["Курицу и фарш недожаренными не подают никогда. Микробы были на поверхности, а при измельчении попали внутрь.","Целый кусок говядины или баранины снаружи стерилен после обжарки, поэтому стейк может быть розовым внутри.","После жарки мясо «отдыхает» 3–5 минут: сок распределяется, температура внутри ещё поднимается.","Шашлык: маринад — лук, соль, перец, зира; 4–12 часов в холодильнике. Уксус не обязателен, много уксуса делает мясо сухим.","Мангал: жарят на углях, без открытого огня. Пламя от капающего жира тушат брызгалкой с водой.","Режьте мясо поперёк волокон — так оно мягче."],
+       uz:["Tovuq va qiymani chala qovurilgan holda hech qachon bermang. Mikroblar sirtda edi, maydalashda ichkariga tushdi.","Mol yoki qo'y go'shtining butun bo'lagi qovurilgandan keyin tashqaridan steril, shuning uchun steyk ichida pushti bo'lishi mumkin.","Qovurilgandan keyin go'sht 3–5 daqiqa «dam oladi»: suvi taqsimlanadi, ichki harorat yana ko'tariladi.","Kabob: marinad — piyoz, tuz, murch, zira; muzlatgichda 4–12 soat. Sirka shart emas, ko'p sirka go'shtni quruq qiladi.","Mangal: cho'g'da, ochiq olovsiz pishiriladi. Tomayotgan yog'dan chiqqan alanga suv purkagich bilan o'chiriladi.","Go'shtni tolalariga ko'ndalang kesing — shunda yumshoqroq."]},
+ tip:{ru:"Маринад из-под сырого мяса не используют как соус. Если очень нужно — прокипятите его 2–3 минуты.",uz:"Xom go'sht marinadini sous sifatida ishlatmang. Juda kerak bo'lsa — 2–3 daqiqa qaynating."},
+ quiz:[
+  {a:2,ru:{q:"До какой температуры в центре жарить курицу?",o:["50 °C","63 °C","74 °C"],e:"Птица — 74 °C, без исключений."},uz:{q:"Tovuqni markazida qancha haroratgacha qovurish kerak?",o:["50 °C","63 °C","74 °C"],e:"Parranda — 74 °C, istisnosiz."}},
+  {a:0,ru:{q:"Почему котлету из фарша нельзя подавать розовой, а стейк можно?",o:["В фарше микробы с поверхности попали внутрь","Фарш дешевле","Стейк солёный"],e:"У целого куска микробы только снаружи."},uz:{q:"Nega qiyma kotletini pushti berib bo'lmaydi, steykni esa mumkin?",o:["Qiymada sirtdagi mikroblar ichkariga tushgan","Qiyma arzonroq","Steyk sho'r"],e:"Butun bo'lakda mikroblar faqat tashqarida."}},
+  {a:1,ru:{q:"Как правильно резать готовое мясо?",o:["Вдоль волокон","Поперёк волокон","Неважно"],e:"Поперёк — короткие волокна, мясо мягче."},uz:{q:"Tayyor go'shtni qanday to'g'ri kesiladi?",o:["Tolalar bo'ylab","Tolalarga ko'ndalang","Farqi yo'q"],e:"Ko'ndalang — tolalar qisqa, go'sht yumshoq."}},
+  {a:1,ru:{q:"На мангале вспыхнул огонь от жира. Что делать?",o:["Добавить жира","Сбрызнуть водой из брызгалки","Оставить так"],e:"Шашлык жарят на углях, не на пламени."},uz:{q:"Mangalda yog'dan olov chiqdi. Nima qilish kerak?",o:["Yana yog' qo'shish","Purkagichdan suv sepish","Shunday qoldirish"],e:"Kabob olovda emas, cho'g'da pishiriladi."}}]},
+
+{id:'m3',lv:1,min:10,
+ warnB:{ru:"Осторожно с раскалённым маслом.",uz:"Qizigan yog'dan ehtiyot bo'ling."},warn:{ru:"Мясо и воду в казан кладите от себя, сухими руками и шумовкой. Детей и мокрые продукты держите подальше.",uz:"Go'sht va suvni qozonga o'zingizdan nariga, quruq qo'l va kapgir bilan soling. Bolalar va ho'l mahsulotlarni uzoqroq tuting."},
+ t:{ru:"Плов (ош) в казане",uz:"Qozonda osh (palov)"},s:{ru:"Зирвак, рис, пропорции 1 : 1 : 1",uz:"Zirvak, guruch, 1 : 1 : 1 nisbat"},calc:true,
+ svg:l=>svg(
+  `<path d="M40 60 H320 Q316 200 180 214 Q44 200 40 60Z" fill="#3a3a3a" stroke="var(--fg)" stroke-width="2"/>`+
+  `<path d="M52 72 H308 V92 H52Z" fill="none" stroke="#9ed6f0" stroke-width="1.5" stroke-dasharray="4 3"/>`+tx(180,86,R(l,'вода на 1,5–2 см выше риса','suv guruchdan 1,5–2 sm yuqori'),{s:10,c:'#e8f6ff'})+
+  `<rect x="54" y="94" width="252" height="34" fill="#f3ead8"/>`+tx(180,116,R(l,'рис (не мешать!)','guruch (aralashtirmang!)'),{s:11,w:700,c:'#3a2a10'})+
+  `<rect x="60" y="128" width="240" height="26" fill="${OR}"/>`+tx(180,146,R(l,'морковь','sabzi'),{s:11,w:700,c:'#2b1500'})+
+  `<path d="M66 154 H294 Q280 196 180 202 Q80 196 66 154Z" fill="#8a3f2a"/>`+tx(180,180,R(l,'мясо и лук в зирваке','zirvakda go\'sht va piyoz'),{s:11,w:700,c:'#fff'})+
+  circ(78,111,9,'#fafafa')+circ(282,111,9,'#fafafa')+tx(180,40,R(l,'чеснок головками — в рис','sarimsoq butun boshi — guruchga'),{s:10,c:'var(--muted)'})+line('M130 44L82 100',GREY,1.2)+line('M230 44L278 100',GREY,1.2)+
+  num(24,180,'1')+num(24,141,'2')+num(24,111,'3'),
+  R(l,"Слои плова в казане: внизу мясо и лук в зирваке, потом морковь, сверху рис, вода на 1,5–2 сантиметра выше риса","Qozonda osh qatlamlari: pastda zirvakda go'sht va piyoz, keyin sabzi, tepada guruch, suv guruchdan 1,5–2 santimetr yuqori"),225),
+ table:{head:{ru:["На 1 кг риса","Сколько"],uz:["1 kg guruchga","Qancha"]},rows:{
+  ru:[["Мясо (баранина или говядина)","1 кг"],["Морковь жёлтая и красная","1 кг"],["Лук","200–300 г (2–3 шт.)"],["Масло (хлопковое) или курдюк","250–300 мл"],["Соль","1,5–2 ст. ложки (по вкусу)"],["Зира, барбарис","1 ст. ложка зиры, 1 ч. ложка барбариса"],["Чеснок, нут (по желанию)","2 головки, 200 г замоченного нута"],["Порций","6–7 (по 150 г сухого риса)"]],
+  uz:[["Go'sht (qo'y yoki mol)","1 kg"],["Sariq va qizil sabzi","1 kg"],["Piyoz","200–300 g (2–3 dona)"],["Yog' (paxta) yoki dumba","250–300 ml"],["Tuz","1,5–2 osh qoshiq (ta'bga ko'ra)"],["Zira, zirk","1 osh qoshiq zira, 1 choy qoshiq zirk"],["Sarimsoq, no'xat (xohishga)","2 bosh, 200 g ivitilgan no'xat"],["Porsiya","6–7 (150 g quruq guruchdan)"]]}},
+ steps:{ru:["Рис (девзира, лазер) промыть 5–7 раз до прозрачной воды и замочить в тёплой подсоленной воде на 1 час.","Масло в казане раскалить до лёгкого дымка. Обжарить мясо до корочки, потом лук до золотистого цвета.","Добавить морковь, не мешать 2–3 минуты, затем жарить до мягкости. Залить горячей водой, положить зиру, соль, нут — это <b>зирвак</b>. Томить 40–60 минут.","Зирвак попробовать: он должен быть чуть пересолен — рис заберёт соль.","Рис слить, выложить ровным слоем, <b>не мешать</b>. Залить водой через шумовку на 1,5–2 см выше риса. Огонь сильный.","Когда вода ушла в рис, собрать рис горкой, сделать шумовкой дырки до дна, вложить чеснок. Закрыть крышкой, огонь самый слабый, 20–30 минут."],
+       uz:["Guruchni (devzira, lazer) suv tiniq bo'lguncha 5–7 marta yuving va iliq tuzli suvda 1 soat iviting.","Qozonda yog'ni yengil tutun chiqquncha qizdiring. Go'shtni qobiq hosil bo'lguncha, keyin piyozni oltin rangga qadar qovuring.","Sabzini soling, 2–3 daqiqa aralashtirmang, keyin yumshaguncha qovuring. Issiq suv quying, zira, tuz, no'xat soling — bu <b>zirvak</b>. 40–60 daqiqa dimlang.","Zirvakni tatib ko'ring: u biroz sho'rroq bo'lishi kerak — guruch tuzni oladi.","Guruch suvini to'kib, tekis qatlam qilib yoying, <b>aralashtirmang</b>. Kapgir orqali guruchdan 1,5–2 sm yuqori suv quying. Olov kuchli.","Suv guruchga singgach, guruchni tepalik qilib to'plang, kapgir bilan tubigacha teshiklar qiling, sarimsoq soling. Qopqoqni yoping, olov eng past, 20–30 daqiqa."]},
+ tip:{ru:"Главные ошибки: тёртая морковь, мешать рис после закладки и мало масла. Плов на свадьбу на 100 человек — это примерно 15 кг риса (по 150 г на гостя).",uz:"Asosiy xatolar: qirilgan sabzi, guruch solingandan keyin aralashtirish va yog' kam. 100 kishilik to'y oshi — taxminan 15 kg guruch (har mehmonga 150 g)."},
+ quiz:[
+  {a:1,ru:{q:"Что такое зирвак?",o:["Сорт риса","Основа плова: мясо, лук, морковь и специи в бульоне","Соус к шашлыку"],e:"Зирвак томят до закладки риса."},uz:{q:"Zirvak nima?",o:["Guruch navi","Osh asosi: sho'rvadagi go'sht, piyoz, sabzi va ziravorlar","Kabob sousi"],e:"Zirvak guruch solinishidan oldin dimlanadi."}},
+  {a:0,ru:{q:"Насколько выше риса наливают воду?",o:["На 1,5–2 см","На 10 см","Вода ниже риса"],e:"Девзира впитывает много, но лишняя вода сделает кашу."},uz:{q:"Suv guruchdan qancha yuqori quyiladi?",o:["1,5–2 sm","10 sm","Suv guruchdan past"],e:"Devzira ko'p shimadi, lekin ortiqcha suv bo'tqa qiladi."}},
+  {a:2,ru:{q:"Сколько моркови на 1 кг риса в классике?",o:["200 г","500 г","1 кг"],e:"Классическая пропорция 1 : 1 : 1."},uz:{q:"Klassikada 1 kg guruchga qancha sabzi?",o:["200 g","500 g","1 kg"],e:"Klassik nisbat 1 : 1 : 1."}},
+  {a:1,ru:{q:"Почему зирвак делают чуть пересоленным?",o:["Так дольше хранится","Рис потом заберёт соль","Чтобы пить воду"],e:"Без этого плов получится пресным."},uz:{q:"Nega zirvak biroz sho'rroq qilinadi?",o:["Shunday uzoq saqlanadi","Keyin guruch tuzni oladi","Suv ichish uchun"],e:"Busiz osh chuchuk chiqadi."}}]},
+
+{id:'m4',lv:1,min:9,nowarn:true,
+ t:{ru:"Тесто: лагман, манты, самса",uz:"Xamir: lag'mon, manti, somsa"},s:{ru:"Пропорции, расстойка, начинка",uz:"Nisbatlar, tindirish, ichlik"},
+ table:{head:{ru:["Тесто на 1 кг муки","Состав"],uz:["1 kg unga xamir","Tarkibi"]},rows:{
+  ru:[["Лагман (тянутый)","Вода 450–500 мл, соль 1 ч. л., шор (сода) ½ ч. л. в воде для смазки"],["Манты, чучвара","Вода 400–450 мл, яйцо 1 шт., соль 1 ч. л."],["Самса слоёная","Вода 450–500 мл, соль 1 ч. л., масло или маргарин для слоёв 150–200 г"],["Начинка для мантов/самсы","Мясо 1 кг, лук 0,7–1 кг, курдюк 200–300 г, зира, перец, соль ~20 г"]],
+  uz:[["Lag'mon (cho'zma)","Suv 450–500 ml, tuz 1 choy q., surtish uchun suvda ½ choy q. shor (soda)"],["Manti, chuchvara","Suv 400–450 ml, tuxum 1 dona, tuz 1 choy q."],["Qatlamli somsa","Suv 450–500 ml, tuz 1 choy q., qatlamlar uchun 150–200 g yog' yoki margarin"],["Manti/somsa ichligi","Go'sht 1 kg, piyoz 0,7–1 kg, dumba 200–300 g, zira, murch, tuz ~20 g"]]}},
+ steps:{ru:["Воду вливают в муку постепенно: мука разная, иногда нужно на 50 мл меньше или больше.","Тесто месят 10–15 минут до гладкости и оставляют «отдохнуть» под плёнкой 20–40 минут. Отдохнувшее тесто легче раскатать и не рвётся.","<b>Лагман:</b> тесто смазывают раствором шора и маслом, делят на жгуты, тянут и бьют о стол. Варят в подсоленной воде 2–3 минуты.","<b>Манты:</b> мясо и лук режут ножом мелким кубиком (не через мясорубку), курдюк — отдельно. Готовят на пару в мантоварке 40–45 минут.","<b>Самса:</b> тесто тонко раскатывают, смазывают маслом, сворачивают рулетом и режут на кружки. Тандыр или духовка 200–220 °C, 20–30 минут.","Сырой фарш и готовую выпечку на одном столе не держат."],
+       uz:["Suv unga asta-sekin quyiladi: un har xil, ba'zan 50 ml kam yoki ko'p kerak.","Xamir silliq bo'lguncha 10–15 daqiqa qoriladi va plyonka ostida 20–40 daqiqa «dam olishga» qo'yiladi. Dam olgan xamir oson yoyiladi va yirtilmaydi.","<b>Lag'mon:</b> xamirga shor eritmasi va yog' surtiladi, arqonchalarga bo'linadi, cho'ziladi va stolga uriladi. Tuzli suvda 2–3 daqiqa qaynatiladi.","<b>Manti:</b> go'sht va piyoz pichoqda mayda kubik qilib to'g'raladi (go'sht maydalagichdan emas), dumba — alohida. Mantiqasqonda bug'da 40–45 daqiqa pishiriladi.","<b>Somsa:</b> xamir yupqa yoyiladi, yog' surtiladi, rulet qilib o'raladi va doirachalarga kesiladi. Tandir yoki duxovka 200–220 °C, 20–30 daqiqa.","Xom qiyma va tayyor pishiriqni bitta stolda saqlamang."]},
+ tip:{ru:"Лук в начинке даёт сок — не жалейте его. Сухие манты чаще всего от того, что лука было мало или фарш прокрутили на мясорубке.",uz:"Ichlikdagi piyoz suv beradi — ayamang. Quruq manti ko'pincha piyoz kam bo'lgani yoki qiyma go'sht maydalagichdan o'tkazilganidan."},
+ quiz:[
+  {a:1,ru:{q:"Зачем тесту «отдыхать» 20–40 минут?",o:["Чтобы остыло","Чтобы легче раскатывалось и не рвалось","Чтобы подсохло"],e:"Клейковина расслабляется."},uz:{q:"Nega xamir 20–40 daqiqa «dam oladi»?",o:["Sovishi uchun","Oson yoyilishi va yirtilmasligi uchun","Qurishi uchun"],e:"Kleykovina bo'shashadi."}},
+  {a:0,ru:{q:"Сколько готовят манты на пару?",o:["40–45 минут","5 минут","2 часа"],e:"Сырой фарш внутри должен полностью дойти до 71 °C и выше."},uz:{q:"Manti bug'da qancha pishiriladi?",o:["40–45 daqiqa","5 daqiqa","2 soat"],e:"Ichidagi xom qiyma to'liq 71 °C va undan yuqori bo'lishi kerak."}},
+  {a:2,ru:{q:"Что добавляют в тесто для лагмана, чтобы оно тянулось?",o:["Сахар","Дрожжи","Шор (раствор соды)"],e:"Шор делает тесто эластичным."},uz:{q:"Lag'mon xamiri cho'zilishi uchun nima qo'shiladi?",o:["Shakar","Xamirturush","Shor (soda eritmasi)"],e:"Shor xamirni elastik qiladi."}},
+  {a:1,ru:{q:"Почему манты получились сухими?",o:["Много лука","Мало лука или фарш через мясорубку","Много курдюка"],e:"Лук и рубленое мясо дают сок."},uz:{q:"Nega manti quruq chiqdi?",o:["Piyoz ko'p","Piyoz kam yoki qiyma go'sht maydalagichdan","Dumba ko'p"],e:"Piyoz va to'g'ralgan go'sht suv beradi."}}]},
+
+/* ---------- ADVANCED ---------- */
+{id:'a1',lv:2,min:8,nowarn:true,calc:true,
+ t:{ru:"Технологическая карта и выход",uz:"Texnologik karta va chiqish"},s:{ru:"Брутто → нетто → выход, ужарка",uz:"Brutto → netto → chiqish, qovurilishda kamayish"},
+ svg:l=>svg(
+  flow(10,30,100,56,R(l,'Брутто','Brutto'),R(l,'как купили','sotib olingani'))+line('M112 58H140',GREY,2)+`<path d="M140 58l-8-5v10z" fill="${GREY}"/>`+
+  flow(146,30,100,56,R(l,'Нетто','Netto'),R(l,'после очистки','tozalangandan keyin'))+line('M248 58H276',GREY,2)+`<path d="M276 58l-8-5v10z" fill="${GREY}"/>`+
+  flow(282,30,72,56,R(l,'Выход','Chiqish'),R(l,'готовое','tayyor'))+
+  tx(128,108,R(l,'− отходы','− chiqindi'),{s:10,c:RED,w:600})+tx(264,108,R(l,'− ужарка','− kamayish'),{s:10,c:RED,w:600})+
+  box(10,130,340,96)+tx(20,152,R(l,'Пример: говядина для жаркого','Misol: qovurdoq uchun mol go\'shti'),{a:'start',s:11,w:700})+
+  tx(20,174,R(l,'Брутто 1,35 кг → кость 26 % → нетто 1,0 кг','Brutto 1,35 kg → suyak 26 % → netto 1,0 kg'),{a:'start',s:11})+
+  tx(20,194,R(l,'Жарка: ужарка 35 % → выход 0,65 кг','Qovurish: kamayish 35 % → chiqish 0,65 kg'),{a:'start',s:11})+
+  tx(20,214,R(l,'Порция 100 г → 6 порций','Porsiya 100 g → 6 porsiya'),{a:'start',s:11,w:700,c:GR}),
+  R(l,"Брутто минус отходы — нетто, нетто минус ужарка — выход готового блюда","Brutto minus chiqindi — netto, netto minus kamayish — tayyor taom chiqishi"),240),
+ table:{head:{ru:["При обработке","Изменение веса, примерно"],uz:["Ishlov berishda","Vazn o'zgarishi, taxminan"]},rows:{
+  ru:[["Мясо варёное","−38–40 %"],["Мясо жареное крупным куском","−35–40 %"],["Курица жареная / варёная","−30 % / −25 %"],["Лук пассерованный","−50 %"],["Рис варёный","× 2,5–3 (рис для плова × 2–2,5)"],["Макароны, лапша","× 2–3"]],
+  uz:[["Qaynatilgan go'sht","−38–40 %"],["Katta bo'lakda qovurilgan go'sht","−35–40 %"],["Qovurilgan / qaynatilgan tovuq","−30 % / −25 %"],["Passerovka qilingan piyoz","−50 %"],["Qaynatilgan guruch","× 2,5–3 (osh guruchi × 2–2,5)"],["Makaron, lag'mon","× 2–3"]]}},
+ steps:{ru:["<b>Техкарта</b> — документ на каждое блюдо: продукты брутто и нетто, как готовить, выход порции, подача.","По техкарте блюдо всегда одинаковое, кто бы ни готовил. И по ней же считают себестоимость.","Чтобы получить 100 г готового мяса, нужно примерно 160 г сырого нетто (ужарка 38 %).","Выход порции записывают через дробь: например, лагман 350/100 — 350 г лапши с соусом и 100 г мяса.","Проверяйте техкарту контрольной проработкой: приготовьте, взвесьте всё на каждом этапе, поправьте цифры.","Калькулятор в приложении считает брутто, нетто и выход по вашим процентам."],
+       uz:["<b>Texnologik karta</b> — har bir taom uchun hujjat: brutto va netto mahsulotlar, qanday tayyorlash, porsiya chiqishi, tortish.","Texnologik karta bo'yicha taom kim tayyorlamasin doim bir xil. Tannarx ham u bo'yicha hisoblanadi.","100 g tayyor go'sht olish uchun taxminan 160 g xom netto kerak (kamayish 38 %).","Porsiya chiqishi kasr bilan yoziladi: masalan, lag'mon 350/100 — 350 g sousli lag'mon va 100 g go'sht.","Texnologik kartani nazorat tayyorlash bilan tekshiring: tayyorlang, har bosqichda torting, raqamlarni to'g'rilang.","Ilovadagi kalkulyator foizlaringiz bo'yicha brutto, netto va chiqishni hisoblaydi."]},
+ tip:{ru:"Без техкарты повар кладёт «на глаз», а кафе теряет 10–20 % продуктов незаметно для себя.",uz:"Texnologik kartasiz oshpaz «ko'z bilan» soladi, kafe esa sezmasdan mahsulotlarning 10–20 % ini yo'qotadi."},
+ quiz:[
+  {a:1,ru:{q:"Что такое выход блюда?",o:["Вес сырых продуктов","Вес готовой порции","Цена блюда"],e:"Выход — то, что получает гость."},uz:{q:"Taom chiqishi nima?",o:["Xom mahsulotlar vazni","Tayyor porsiya vazni","Taom narxi"],e:"Chiqish — mehmon oladigan narsa."}},
+  {a:2,ru:{q:"1 кг мяса нетто, ужарка 35 %. Сколько выход?",o:["1,35 кг","0,35 кг","0,65 кг"],e:"1 × (1 − 0,35) = 0,65 кг."},uz:{q:"1 kg go'sht netto, kamayish 35 %. Chiqish qancha?",o:["1,35 kg","0,35 kg","0,65 kg"],e:"1 × (1 − 0,35) = 0,65 kg."}},
+  {a:0,ru:{q:"Зачем нужна техкарта?",o:["Блюдо всегда одинаковое и понятна себестоимость","Только для проверки","Для меню на стене"],e:"Это стандарт блюда и основа для расчёта цены."},uz:{q:"Texnologik karta nima uchun kerak?",o:["Taom doim bir xil va tannarx aniq","Faqat tekshiruv uchun","Devordagi menyu uchun"],e:"Bu taom standarti va narx hisobining asosi."}},
+  {a:1,ru:{q:"Во сколько раз увеличивается рис при варке?",o:["Не меняется","В 2,5–3 раза","В 10 раз"],e:"Рис впитывает воду."},uz:{q:"Guruch qaynatilganda necha barobar ko'payadi?",o:["O'zgarmaydi","2,5–3 barobar","10 barobar"],e:"Guruch suvni shimadi."}}]},
+
+{id:'a2',lv:2,min:8,nowarn:true,calc:true,
+ t:{ru:"Себестоимость и цена блюда",uz:"Taom tannarxi va narxi"},s:{ru:"Фудкост, наценка, меню",uz:"Fudkost, ustama, menyu"},
+ svg:l=>svg(
+  tx(180,28,R(l,'Из чего состоит цена порции 40 000 сум','40 000 so\'mlik porsiya narxi nimadan iborat'),{s:11,w:700})+
+  `<rect x="20" y="46" width="96" height="44" fill="${OR}" stroke="var(--fg)" stroke-width="1.5"/><rect x="116" y="46" width="64" height="44" fill="${BLUE}" stroke="var(--fg)" stroke-width="1.5"/><rect x="180" y="46" width="48" height="44" fill="${GREY}" stroke="var(--fg)" stroke-width="1.5"/><rect x="228" y="46" width="40" height="44" fill="#9a6fd0" stroke="var(--fg)" stroke-width="1.5"/><rect x="268" y="46" width="72" height="44" fill="${GR}" stroke="var(--fg)" stroke-width="1.5"/>`+
+  tx(68,73,'30 %',{w:700,s:12,c:'#2b1500'})+tx(148,73,'20 %',{w:700,s:12,c:'#fff'})+tx(204,73,'15 %',{w:700,s:12,c:'#fff'})+tx(248,73,'12 %',{w:700,s:12,c:'#fff'})+tx(304,73,'23 %',{w:700,s:12,c:'#fff'})+
+  tx(68,110,R(l,'продукты','mahsulot'),{s:10,w:600})+tx(68,124,'12 000',{s:10,c:'var(--muted)'})+tx(148,110,R(l,'зарплата','maosh'),{s:10,w:600})+tx(204,110,R(l,'аренда','ijara'),{s:9,w:600})+tx(248,110,R(l,'газ, свет','gaz, svet'),{s:9,w:600})+tx(304,110,R(l,'прибыль','foyda'),{s:10,w:600})+
+  box(20,146,320,80)+tx(36,170,R(l,'Фудкост = себестоимость ÷ цена × 100 %','Fudkost = tannarx ÷ narx × 100 %'),{a:'start',s:11,w:700})+
+  tx(36,192,R(l,'Цена = себестоимость ÷ фудкост','Narx = tannarx ÷ fudkost'),{a:'start',s:11})+tx(36,212,R(l,'12 000 ÷ 0,30 = 40 000 сум','12 000 ÷ 0,30 = 40 000 so\'m'),{a:'start',s:11,c:GR,w:700}),
+  R(l,"Цена порции: продукты 30 процентов, зарплата, аренда, коммунальные, прибыль","Porsiya narxi: mahsulot 30 foiz, maosh, ijara, kommunal, foyda"),240),
+ table:{head:{ru:["Что","Фудкост, обычно"],uz:["Nima","Fudkost, odatda"]},rows:{
+  ru:[["Плов, лагман, супы","25–35 %"],["Шашлык, мясные блюда","35–40 %"],["Салаты, выпечка, самса","20–30 %"],["Чай, напитки","10–20 %"],["Кафе в среднем","28–35 %"]],
+  uz:[["Osh, lag'mon, sho'rvalar","25–35 %"],["Kabob, go'shtli taomlar","35–40 %"],["Salatlar, pishiriq, somsa","20–30 %"],["Choy, ichimliklar","10–20 %"],["Kafe o'rtacha","28–35 %"]]}},
+ steps:{ru:["<b>Себестоимость порции</b> = сумма (вес брутто каждого продукта × цена за кг) ÷ число порций. Не забывайте масло, соль, специи, хлеб к блюду.","<b>Фудкост</b> — какая доля цены уходит на продукты. Для кафе в Узбекистане обычно 25–35 %.","<b>Наценка</b> = (цена − себестоимость) ÷ себестоимость. Фудкост 30 % — это наценка примерно 233 %.","Пересчитывайте себестоимость, когда растут цены на мясо и масло — раз в месяц или чаще.","Дорогие по продуктам блюда (шашлык) уравновешивают дешёвыми (салаты, чай, выпечка).","Калькулятор в приложении считает себестоимость порции и цену при нужном фудкосте."],
+       uz:["<b>Porsiya tannarxi</b> = (har bir mahsulot brutto vazni × kg narxi) yig'indisi ÷ porsiyalar soni. Yog', tuz, ziravor, taomga non ham unutmang.","<b>Fudkost</b> — narxning qancha qismi mahsulotga ketadi. O'zbekistondagi kafelar uchun odatda 25–35 %.","<b>Ustama</b> = (narx − tannarx) ÷ tannarx. 30 % fudkost — taxminan 233 % ustama.","Go'sht va yog' narxi oshganda tannarxni qayta hisoblang — oyda bir marta yoki tez-tez.","Mahsulot bo'yicha qimmat taomlar (kabob) arzonlari (salat, choy, pishiriq) bilan muvozanatlanadi.","Ilovadagi kalkulyator porsiya tannarxini va kerakli fudkostda narxni hisoblaydi."]},
+ tip:{ru:"Если вы повар и хотите стать шефом — умейте считать себестоимость. Владельцу кафе это важнее нового рецепта.",uz:"Oshpaz bo'lsangiz va shef bo'lmoqchi bo'lsangiz — tannarxni hisoblashni o'rganing. Kafe egasi uchun bu yangi retseptdan muhimroq."},
+ quiz:[
+  {a:1,ru:{q:"Себестоимость 15 000 сум, нужен фудкост 30 %. Какая цена?",o:["19 500 сум","50 000 сум","45 000 сум"],e:"15 000 ÷ 0,30 = 50 000."},uz:{q:"Tannarx 15 000 so'm, fudkost 30 % kerak. Narx qancha?",o:["19 500 so'm","50 000 so'm","45 000 so'm"],e:"15 000 ÷ 0,30 = 50 000."}},
+  {a:0,ru:{q:"Что такое фудкост?",o:["Доля продуктов в цене блюда","Зарплата повара","Налог"],e:"Себестоимость ÷ цена × 100 %."},uz:{q:"Fudkost nima?",o:["Taom narxidagi mahsulot ulushi","Oshpaz maoshi","Soliq"],e:"Tannarx ÷ narx × 100 %."}},
+  {a:2,ru:{q:"Что нужно включить в себестоимость плова?",o:["Только мясо и рис","Мясо, рис и морковь","Все продукты, включая масло, специи, чеснок"],e:"Масло в плове — заметная часть себестоимости."},uz:{q:"Osh tannarxiga nimani kiritish kerak?",o:["Faqat go'sht va guruch","Go'sht, guruch va sabzi","Barcha mahsulotlar, yog', ziravor, sarimsoq bilan"],e:"Oshda yog' — tannarxning sezilarli qismi."}},
+  {a:1,ru:{q:"Цены на мясо выросли на 20 %. Что сделать?",o:["Ничего","Пересчитать себестоимость и цены","Уменьшить порцию тайно"],e:"Пересчёт — регулярная работа шефа."},uz:{q:"Go'sht narxi 20 % oshdi. Nima qilish kerak?",o:["Hech narsa","Tannarx va narxlarni qayta hisoblash","Porsiyani yashirincha kamaytirish"],e:"Qayta hisoblash — shefning muntazam ishi."}}]},
+
+{id:'a3',lv:2,min:7,nowarn:true,
+ t:{ru:"Организация смены и заготовки",uz:"Smenani tashkil qilish va tayyorlamalar"},s:{ru:"Мизанплас, маркировка, поток",uz:"Mizanplas, belgilash, oqim"},
+ svg:l=>svg(
+  flow(10,30,100,50,R(l,'Приёмка','Qabul'),R(l,'вес, срок, t°','vazn, muddat, t°'))+line('M112 55H126',GREY,2)+
+  flow(128,30,100,50,R(l,'Хранение','Saqlash'),R(l,'склад, холод','ombor, sovuq'))+line('M230 55H244',GREY,2)+
+  flow(246,30,104,50,R(l,'Заготовка','Tayyorlash'),R(l,'сырой цех','xom sex'))+line('M298 82V104',GREY,2)+
+  flow(246,106,104,50,R(l,'Готовка','Pishirish'),R(l,'горячий цех','issiq sex'))+line('M244 131H230',GREY,2)+
+  flow(128,106,100,50,R(l,'Раздача','Tarqatish'),'≥63 °C')+line('M126 131H112',GREY,2)+
+  flow(10,106,100,50,R(l,'Гость','Mehmon'),'')+
+  tx(180,190,R(l,'Поток в одну сторону: сырое не идёт','Oqim bir tomonga: xom mahsulot'),{s:11,w:600})+tx(180,208,R(l,'обратно через зону готовой еды','tayyor ovqat zonasi orqali qaytmaydi'),{s:11,w:600}),
+  R(l,"Поток на кухне: приёмка, хранение, заготовка, готовка, раздача, гость, всегда в одну сторону","Oshxonadagi oqim: qabul, saqlash, tayyorlash, pishirish, tarqatish, mehmon, doim bir tomonga"),220),
+ table:{head:{ru:["Когда","Что сделать"],uz:["Qachon","Nima qilish"]},rows:{
+  ru:[["До открытия","Проверить холодильники (записать t° в журнал), заготовки по списку, ножи, чистоту"],["Во время смены","Пополнять заготовки до заказа, убирать по ходу, следить за FIFO"],["После смены","Промаркировать остатки, убрать в холод, списать просроченное, вымыть цех, заказать продукты"]],
+  uz:[["Ochilishdan oldin","Muzlatgichlarni tekshirish (t° ni jurnalga yozish), ro'yxat bo'yicha tayyorlamalar, pichoqlar, tozalik"],["Smena davomida","Buyurtmagacha tayyorlamalarni to'ldirish, ish davomida tozalash, FIFO ga qarash"],["Smenadan keyin","Qoldiqlarni belgilash, sovuqqa olish, muddati o'tganini hisobdan chiqarish, sexni yuvish, mahsulot buyurtma qilish"]]}},
+ steps:{ru:["<b>Мизанплас</b> («всё на своём месте») — до заказов нарезано, отмерено, разложено по гастроёмкостям рядом с плитой.","Лист заготовок: сколько чего нужно на смену, исходя из продаж прошлых дней. Лишняя заготовка — это выброшенные деньги.","Маркировка на каждой ёмкости: название, дата и время, кто сделал, до какого времени использовать.","Сроки хранения заготовок берите из норм заведения и СанПиН, а не «на нюх».","Сырой и горячий цех разделены. Сырые продукты не носят через зону раздачи.","В конце смены передайте следующему повару: что осталось, что заканчивается, что сломалось."],
+       uz:["<b>Mizanplas</b> («hamma narsa o'z joyida») — buyurtmalargacha to'g'ralgan, o'lchangan, plita yonida gastroyemkostlarga terilgan.","Tayyorlamalar varag'i: o'tgan kunlar savdosiga qarab smenaga nimadan qancha kerak. Ortiqcha tayyorlama — tashlangan pul.","Har bir idishda belgi: nomi, sana va vaqt, kim qilgan, qachongacha ishlatish.","Tayyorlamalarni saqlash muddatini «hid bilan» emas, muassasa me'yorlari va SanPiNdan oling.","Xom va issiq sex ajratilgan. Xom mahsulotlar tarqatish zonasi orqali olib o'tilmaydi.","Smena oxirida keyingi oshpazga topshiring: nima qoldi, nima tugayapti, nima buzildi."]},
+ tip:{ru:"Хороший повар в час пик не бегает: всё уже нарезано и стоит под рукой. Скорость делается до открытия.",uz:"Yaxshi oshpaz qizg'in paytda yugurmaydi: hammasi to'g'ralgan va qo'l ostida. Tezlik ochilishdan oldin yaratiladi."},
+ quiz:[
+  {a:0,ru:{q:"Что такое мизанплас?",o:["Подготовка всего до начала заказов","Вид соуса","Уборка после смены"],e:"«Всё на своём месте»."},uz:{q:"Mizanplas nima?",o:["Buyurtmalar boshlanishidan oldin hammasini tayyorlash","Sous turi","Smenadan keyin tozalash"],e:"«Hamma narsa o'z joyida»."}},
+  {a:2,ru:{q:"Что пишут на маркировке заготовки?",o:["Только название","Цену","Название, дату и время, срок, кто сделал"],e:"Так видно, что использовать первым и что выбросить."},uz:{q:"Tayyorlama belgisiga nima yoziladi?",o:["Faqat nomi","Narxi","Nomi, sana va vaqt, muddat, kim qilgan"],e:"Shunda nimani birinchi ishlatish va nimani tashlash ko'rinadi."}},
+  {a:1,ru:{q:"Как правильно идёт поток продуктов на кухне?",o:["Как удобно","В одну сторону: от сырого к готовому","Сырое через раздачу"],e:"Сырое не пересекается с готовым."},uz:{q:"Oshxonada mahsulot oqimi qanday to'g'ri yuradi?",o:["Qanday qulay bo'lsa","Bir tomonga: xomdan tayyorga","Xom tarqatish orqali"],e:"Xom tayyor bilan kesishmaydi."}},
+  {a:1,ru:{q:"Сколько делать заготовок на смену?",o:["Как можно больше","По листу заготовок, исходя из продаж","Всего по 10 кг"],e:"Лишнее уйдёт в мусор."},uz:{q:"Smenaga qancha tayyorlama qilish kerak?",o:["Iloji boricha ko'p","Savdoga qarab tayyorlamalar varag'i bo'yicha","Hammasidan 10 kg"],e:"Ortig'i axlatga ketadi."}}]},
+
+{id:'a4',lv:2,min:7,nowarn:true,
+ t:{ru:"Аллергены, журналы и проверки",uz:"Allergenlar, jurnallar va tekshiruvlar"},s:{ru:"Что спросит СЭС, как защитить гостя",uz:"SES nimani so'raydi, mehmonni qanday himoya qilish"},
+ table:{head:{ru:["Аллерген","Где прячется"],uz:["Allergen","Qayerda yashirinadi"]},rows:{
+  ru:[["Глютен (пшеница)","Тесто, лагман, панировка, соусы, загуститель"],["Орехи, арахис, кунжут","Выпечка, халва, посыпка на лепёшке, соусы"],["Молоко","Сливочное масло, каймак, сузьма, соусы"],["Яйца","Тесто для мантов, майонез, кляр"],["Рыба, креветки","Салаты, соусы"],["Соя, горчица, сельдерей","Соусы, маринады, приправы"]],
+  uz:[["Glyuten (bug'doy)","Xamir, lag'mon, panirovka, souslar, quyultirgich"],["Yong'oq, yeryong'oq, kunjut","Pishiriq, holva, non ustidagi sepki, souslar"],["Sut","Sariyog', qaymoq, suzma, souslar"],["Tuxum","Manti xamiri, mayonez, klyar"],["Baliq, krevetka","Salatlar, souslar"],["Soya, xantal, selderey","Souslar, marinadlar, ziravorlar"]]}},
+ steps:{ru:["Гость сказал «у меня аллергия» — передайте шефу и проверьте <b>все</b> ингредиенты, включая соусы и масло для жарки.","Для такого заказа — чистая доска, нож, сковорода и перчатки. Даже крошка ореха может вызвать тяжёлую реакцию.","Если не уверены, что в блюде нет аллергена, — честно скажите гостю. «Наверное, нет» — опасный ответ.","Журналы на кухне: температура холодильников (2 раза в день), бракеражный (проверка готовых блюд), здоровье сотрудников.","У каждого сотрудника — действующая медицинская книжка.","При проверке смотрят: маркировку и сроки, разделение сырого и готового, доски, чистоту, журналы, медкнижки."],
+       uz:["Mehmon «menda allergiya bor» dedi — shefga yetkazing va <b>barcha</b> ingredientlarni, souslar va qovurish yog'i bilan birga tekshiring.","Bunday buyurtma uchun — toza taxta, pichoq, tova va qo'lqop. Hatto yong'oq ushog'i ham og'ir reaksiya chiqarishi mumkin.","Taomda allergen yo'qligiga ishonchingiz komil bo'lmasa — mehmonga rostini ayting. «Yo'q bo'lsa kerak» — xavfli javob.","Oshxonadagi jurnallar: muzlatgichlar harorati (kuniga 2 marta), brakeraj (tayyor taomlarni tekshirish), xodimlar salomatligi.","Har bir xodimda — amaldagi tibbiy daftarcha.","Tekshiruvda qaraladi: belgilash va muddatlar, xom va tayyorning ajratilishi, taxtalar, tozalik, jurnallar, tibbiy daftarchalar."]},
+ tip:{ru:"Журналы заполняют каждый день, а не за неделю перед проверкой. Одинаковые цифры одной ручкой инспектор видит сразу.",uz:"Jurnallar tekshiruvdan bir hafta oldin emas, har kuni to'ldiriladi. Bitta ruchka bilan yozilgan bir xil raqamlarni inspektor darrov ko'radi."},
+ quiz:[
+  {a:1,ru:{q:"Гость с аллергией на орехи. Что главное?",o:["Убрать орехи сверху блюда","Проверить все ингредиенты и готовить на чистом инвентаре","Дать таблетку"],e:"Даже крошка может быть опасна."},uz:{q:"Mehmonda yong'oqqa allergiya. Asosiysi nima?",o:["Taom ustidagi yong'oqni olib tashlash","Barcha ingredientlarni tekshirib, toza jihozda tayyorlash","Dori berish"],e:"Hatto ushoq ham xavfli bo'lishi mumkin."}},
+  {a:0,ru:{q:"Как часто записывают температуру холодильников?",o:["Каждый день, обычно 2 раза","Раз в месяц","Только перед проверкой"],e:"Журнал ведут ежедневно."},uz:{q:"Muzlatgichlar harorati qanchalik tez-tez yoziladi?",o:["Har kuni, odatda 2 marta","Oyda bir marta","Faqat tekshiruvdan oldin"],e:"Jurnal har kuni yuritiladi."}},
+  {a:2,ru:{q:"Где может быть глютен?",o:["Только в хлебе","В мясе","В тесте, панировке и многих соусах"],e:"Мука часто прячется в соусах."},uz:{q:"Glyuten qayerda bo'lishi mumkin?",o:["Faqat nonda","Go'shtda","Xamir, panirovka va ko'p souslarda"],e:"Un ko'pincha souslarda yashirinadi."}},
+  {a:1,ru:{q:"Вы не уверены, есть ли в соусе аллерген. Что ответить гостю?",o:["«Наверное, нет»","Честно сказать, что не уверены, и уточнить у шефа","Промолчать"],e:"Ошибка может стоить здоровья гостя."},uz:{q:"Sousda allergen borligiga ishonchingiz yo'q. Mehmonga nima deysiz?",o:["«Yo'q bo'lsa kerak»","Ishonchim yo'q deb rostini aytish va shefdan aniqlash","Indamaslik"],e:"Xato mehmon salomatligiga tushishi mumkin."}}]}
+];
+
+// UI for Повар Pro (Oshpaz Pro). Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Повар Pro',tag:'Кухня, плов и себестоимость · 13 уроков',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Начальный','Средний','Продвинутый'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} уровень · урок ${n} · ~${m} мин`,
+ leg:{},
+ warnB:'Осторожно: горячее и острое.',warn:'Работайте в чистой форме, с вымытыми руками и без украшений.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ pT:'Плов на компанию',pSub:'Классика 1 : 1 : 1 для казана',ppl:'Человек',pr:'Порция',prO:['Малая','Обычная','Большая'],
+ rice:'Рис',meat:'Мясо',carrot:'Морковь',onion:'Лук',oil:'Масло',salt:'Соль',zira:'Зира',garlic:'Чеснок',chick:'Нут',kg:'кг',g:'г',l:'л',heads:'гол.',
+ pNote:k=>`Казан нужен примерно на ${k} л. Вода — на 1,5–2 см выше риса. Соль кладите постепенно и пробуйте зирвак.`,
+ yT:'Сколько купить продуктов',ySub:'Брутто по выходу порции, отходам и ужарке',y:'Выход порции, г',n:'Порций',w:'Отходы, %',lo:'Ужарка / уварка, %',
+ net:'Нетто',bru:'Брутто',ready:'Выход',
+ yNote:'Отходы и ужарку берите из таблиц уроков «Вес, брутто и нетто» и «Технологическая карта». Для риса и макарон ужарку ставьте 0 и делите выход на привар.',
+ cT:'Себестоимость и цена',cSub:'Сколько стоит порция и почём продавать',cost:'Продукты, сум',cn:'Порций',fc:'Фудкост, %',
+ cp:'Себест.',price:'Цена',mk:'Наценка',sum:'сум',
+ cNote:'Цена округлена вверх до 1 000 сум. Включайте все продукты: масло, специи, хлеб к блюду. Обычный фудкост для кафе — 25–35 %.',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Oshpaz Pro',tag:'Oshxona, palov va tannarx · 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Boshlang\'ich','O\'rta','Yuqori'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} daraja · ${n}-dars · ~${m} daq`,
+ leg:{},
+ warnB:'Ehtiyot bo\'ling: issiq va o\'tkir.',warn:'Toza kiyimda, yuvilgan qo\'llar bilan va taqinchoqlarsiz ishlang.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ pT:'Davra uchun osh',pSub:'Qozon uchun klassik 1 : 1 : 1',ppl:'Kishi soni',pr:'Porsiya',prO:['Kichik','Oddiy','Katta'],
+ rice:'Guruch',meat:'Go\'sht',carrot:'Sabzi',onion:'Piyoz',oil:'Yog\'',salt:'Tuz',zira:'Zira',garlic:'Sarimsoq',chick:'No\'xat',kg:'kg',g:'g',l:'l',heads:'bosh',
+ pNote:k=>`Taxminan ${k} litrli qozon kerak. Suv — guruchdan 1,5–2 sm yuqori. Tuzni asta-sekin soling va zirvakni tatib ko\'ring.`,
+ yT:'Qancha mahsulot sotib olish',ySub:'Porsiya chiqishi, chiqindi va kamayish bo\'yicha brutto',y:'Porsiya chiqishi, g',n:'Porsiyalar',w:'Chiqindi, %',lo:'Qovurilish / qaynash kamayishi, %',
+ net:'Netto',bru:'Brutto',ready:'Chiqish',
+ yNote:'Chiqindi va kamayishni «Vazn, brutto va netto» va «Texnologik karta» darslari jadvallaridan oling. Guruch va makaron uchun kamayishni 0 qo\'ying va chiqishni ko\'payish koeffitsiyentiga bo\'ling.',
+ cT:'Tannarx va narx',cSub:'Porsiya qancha turadi va qanchaga sotish kerak',cost:'Mahsulot, so\'m',cn:'Porsiya soni',fc:'Fudkost, %',
+ cp:'Tannarx',price:'Narx',mk:'Ustama',sum:'so\'m',
+ cNote:'Narx 1 000 so\'mgacha yuqoriga yaxlitlangan. Barcha mahsulotlarni qo\'shing: yog\', ziravor, taomga non. Kafe uchun odatiy fudkost — 25–35 %.',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (pv_)
+const pk=k=>(k==='lang'?'ep_':'pv_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{ppl:10,pr:1,y:250,n:10,w:20,lo:35,cost:300000,cn:25,fc:30}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14.5a4 4 0 0 1-.6-7.9A4.5 4.5 0 0 1 12 3.5a4.5 4.5 0 0 1 5.6 3.1A4 4 0 0 1 17 14.5V20H7z" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linejoin="round"/><path d="M7 17h10" stroke="var(--accent-ink)" stroke-width="2"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+const swatch={};
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    if(x.legend)h+=`<div class="legend">${x.legend.map(k=>`<span><i class="sw" style="background:${swatch[k]}"></i>${L.leg[k]}</span>`).join('')}</div>`;h+='</div>'}
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warnB?tr(x.warnB):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* calculators: plov for N people, how much to buy (brutto from yield), portion cost and price */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',').replace('-','−');
+const big=n=>Math.round(n).toLocaleString('ru-RU').replace(/ /g,' ');
+const numv=v=>+String(v).replace(',','.')||0;
+const seg=(k,opts)=>`<div class="seg" role="group">${opts.map((o,i)=>`<button type="button" data-seg="${k}" data-v="${i}" aria-pressed="${S.calc[k]===i}">${o}</button>`).join('')}</div>`;
+const fld=(id,lab,v,step=1)=>`<label class="fld" for="${id}">${lab}<input id="${id}" type="number" inputmode="decimal" min="0" step="${step}" value="${v}"></label>`;
+const cell=(t,v)=>`<div><span>${t}</span><b>${v}</b></div>`;
+function calcBlock(){const L=U();const c=S.calc;
+  return `<div class="card stack"><div><h3>${L.pT}</h3><p class="expl">${L.pSub}</p></div>
+  <div class="pair">${fld('cp1',L.ppl,c.ppl)}<div class="fld">${L.pr}${seg('pr',L.prO)}</div></div>
+  <div class="out" id="out1"></div><p class="expl" id="pn"></p></div>
+  <div class="card stack"><div><h3>${L.yT}</h3><p class="expl">${L.ySub}</p></div>
+  <div class="pair">${fld('cy',L.y,c.y,10)}${fld('cn1',L.n,c.n)}</div>
+  <div class="pair">${fld('cw',L.w,c.w)}${fld('clo',L.lo,c.lo)}</div>
+  <div class="out" id="out2"></div><p class="expl">${L.yNote}</p></div>
+  <div class="card stack"><div><h3>${L.cT}</h3><p class="expl">${L.cSub}</p></div>
+  <div class="pair">${fld('cc',L.cost,c.cost,1000)}${fld('ccn',L.cn,c.cn)}</div>
+  <div class="pair">${fld('cfc',L.fc,c.fc)}<div></div></div>
+  <div class="out" id="out3"></div><p class="expl" id="cv"></p><p class="expl">${L.cNote}</p></div>`}
+const kgf=(g,L)=>g>=1000?`${fmt(g/1000,g>=10000?1:2)} ${L.kg}`:`${fmt(Math.round(g/10)*10)} ${L.g}`;
+function paintCalc(){const L=U();const c=S.calc;const ru=lang==='ru';
+  // plov: rice per person 120/150/200 g dry
+  const p=Math.max(0,numv(c.ppl));const r=p*[120,150,200][c.pr];const k=r/1000;
+  $('#out1').innerHTML=cell(L.rice,kgf(r,L))+cell(L.meat,kgf(r,L))+cell(L.carrot,kgf(r,L))+cell(L.onion,kgf(r*0.25,L))+cell(L.oil,`${fmt(k*0.28,k*0.28<1?2:1)} ${L.l}`)+cell(L.salt,kgf(k*35,L))+cell(L.zira,kgf(k*8,L))+cell(L.garlic,`${fmt(Math.max(1,Math.round(k*2)))} ${L.heads}`)+cell(L.chick,kgf(r*0.2,L));
+  $('#pn').textContent=r>0?L.pNote(fmt(Math.max(4,Math.ceil(k*8/2)*2))):'';
+  // yield → netto → brutto
+  const y=Math.max(0,numv(c.y))*Math.max(0,numv(c.n));const w=Math.min(95,Math.max(0,numv(c.w)))/100;const lo=Math.min(95,Math.max(0,numv(c.lo)))/100;
+  const net=y/(1-lo),bru=net/(1-w);
+  $('#out2').innerHTML=cell(L.ready,kgf(y,L))+cell(L.net,kgf(net,L))+cell(L.bru,kgf(bru,L));
+  // cost and price
+  const cost=Math.max(0,numv(c.cost)),n=Math.max(0,numv(c.cn)),fc=Math.min(100,Math.max(0,numv(c.fc)));
+  const cp=n>0?cost/n:0;const price=fc>0?Math.ceil(cp/(fc/100)/1000)*1000:0;const mk=cp>0&&price>0?(price-cp)/cp*100:0;
+  $('#out3').innerHTML=cell(L.cp,n>0?big(cp):'—')+cell(L.price,price?big(price):'—')+cell(L.mk,price&&cp?fmt(mk)+' %':'—');
+  const v=$('#cv');
+  if(cp>0&&price>0){v.textContent=fc>40?(ru?'Фудкост выше 40 % — кафе почти не зарабатывает на этом блюде. Проверьте порцию или цену.':'Fudkost 40 % dan yuqori — kafe bu taomdan deyarli daromad olmaydi. Porsiya yoki narxni tekshiring.'):fc<20?(ru?'Фудкост ниже 20 % — цена может оказаться высокой для гостя. Сравните с соседними кафе.':'Fudkost 20 % dan past — narx mehmon uchun baland bo\'lishi mumkin. Qo\'shni kafelar bilan solishtiring.'):(ru?`Продавайте порцию примерно за ${big(price)} сум.`:`Porsiyani taxminan ${big(price)} so'mga soting.`);v.className='expl '+(fc>40||fc<20?'badc':'okc')}else v.textContent='';
+}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  on('#cp1','ppl');on('#cy','y');on('#cn1','n');on('#cw','w');on('#clo','lo');on('#cc','cost');on('#ccn','cn');on('#cfc','fc');
+  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const k=b.dataset.seg;S.calc[k]=+b.dataset.v;
+    document.querySelectorAll(`[data-seg="${k}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>
