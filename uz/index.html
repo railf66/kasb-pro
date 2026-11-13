@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kasb Pro — ishchi kasblar bo&#x27;yicha bepul darslar: elektrik, santexnik, payvandchi</title>
+<meta name="description" content="Elektrik, santexnik, payvandchi, avtoelektrik, konditsioner ustasi, hamshira va montajchilar uchun bepul onlayn darslar. Sxemalar, testlar va kalkulyatorlar o&#x27;zbek va rus tillarida. Telegramda ishlaydi.">
+<link rel="canonical" href="https://kasbpro.uz/uz/">
+<link rel="alternate" hreflang="ru" href="https://kasbpro.uz/">
+<link rel="alternate" hreflang="uz" href="https://kasbpro.uz/uz/">
+<link rel="alternate" hreflang="x-default" href="https://kasbpro.uz/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#123047">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:locale" content="uz_UZ">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:title" content="Kasb Pro — ishchi kasblar bo&#x27;yicha bepul darslar: elektrik, santexnik, payvandchi">
+<meta property="og:description" content="Elektrik, santexnik, payvandchi, avtoelektrik, konditsioner ustasi, hamshira va montajchilar uchun bepul onlayn darslar. Sxemalar, testlar va kalkulyatorlar o&#x27;zbek va rus tillarida. Telegramda ishlaydi.">
+<meta property="og:url" content="https://kasbpro.uz/uz/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "EducationalOrganization", "name": "Kasb Pro", "url": "https://kasbpro.uz/", "logo": "https://kasbpro.uz/og.png", "sameAs": ["https://t.me/kasbpro_uz_bot"], "areaServed": {"@type": "Country", "name": "Uzbekistan"}}, {"@context": "https://schema.org", "@type": "WebSite", "name": "Kasb Pro", "url": "https://kasbpro.uz/", "inLanguage": ["ru", "uz"]}, {"@context": "https://schema.org", "@type": "ItemList", "name": "Kasbni tanlang", "itemListElement": [{"@type": "ListItem", "position": 1, "url": "https://kasbpro.uz/elektrik/", "name": "Elektrik"}, {"@type": "ListItem", "position": 2, "url": "https://kasbpro.uz/santehnik/", "name": "Santexnik"}, {"@type": "ListItem", "position": 3, "url": "https://kasbpro.uz/medsestra/", "name": "Hamshira"}, {"@type": "ListItem", "position": 4, "url": "https://kasbpro.uz/optik/", "name": "Optika montajchisi"}, {"@type": "ListItem", "position": 5, "url": "https://kasbpro.uz/svarshik/", "name": "Payvandchi"}, {"@type": "ListItem", "position": 6, "url": "https://kasbpro.uz/holod/", "name": "Konditsioner va muzlatgich ustasi"}, {"@type": "ListItem", "position": 7, "url": "https://kasbpro.uz/avtoelektrik/", "name": "Avtoelektrik / diagnost"}, {"@type": "ListItem", "position": 8, "url": "https://kasbpro.uz/videonablyudenie/", "name": "Videokuzatuv o'rnatuvchisi"}]}]</script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a warm "live wire" amber accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#f2a516; --accent-ink:#2a1c00; --navy:#123047; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wL:#8a4b1f; --wN:#1e6fd0; --wPE1:#e3c400; --wPE2:#2f9e44;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f5b331; --accent-ink:#2a1c00; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wL:#b06a34; --wN:#4a90e8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f5b331; --accent-ink:#2a1c00; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wL:#b06a34; --wN:#4a90e8; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrapx{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:var(--navy);color:var(--navy-fg);padding-block:20px 36px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:20px}
+.logo i{width:36px;height:36px;border-radius:9px;background:var(--accent);display:grid;place-items:center;font-style:normal;color:var(--accent-ink)}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+h1{font-family:var(--display);font-size:clamp(26px,6vw,38px);line-height:1.15;margin:28px 0 10px;text-wrap:balance}
+.lead{margin:0;opacity:.85;max-width:52ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.facts span{font-size:13px;padding:5px 10px;border-radius:99px;background:color-mix(in srgb,var(--navy-fg) 12%,transparent)}
+main{padding-block:24px 48px;display:flex;flex-direction:column;gap:14px}
+h2{font-family:var(--display);font-size:15px;text-transform:uppercase;letter-spacing:.06em;margin:8px 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px}
+.card{display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:16px;background:var(--surface);border:1px solid var(--line);color:inherit;text-decoration:none}
+a.card:hover{border-color:var(--accent)}
+a.card:focus-visible,.lang button:focus-visible,.bot:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 20%,var(--surface))}
+.card b{font-size:18px}
+.card p{margin:0;font-size:14px;color:var(--muted);flex:1}
+.go{font-weight:700;color:var(--fg)}
+.soon .ico{background:var(--bg)}
+.soon{opacity:.75}
+.tag{align-self:flex-start;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--bg);color:var(--muted)}
+.bot{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-weight:700;text-decoration:none}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+</style>
+</head>
+<body>
+<header><div class="wrapx">
+ <div class="top"><div class="logo"><i>K</i>Kasb Pro</div>
+ <div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru">RU</button><button type="button" data-l="uz">UZ</button></div></div>
+ <h1 data-t="h1">Ishchi kasblar bo&#x27;yicha bepul darslar</h1><p class="lead" data-t="lead">Sxemalar, bosqichma-bosqich ko&#x27;rsatmalar, testlar va kalkulyatorlar. Telefondan qulay vaqtda o&#x27;rganing.</p>
+ <div class="facts"><span data-t="f1">O&#x27;zbek va rus tillari</span><span data-t="f2">Telegramda ishlaydi</span><span data-t="f3">Bepul</span></div>
+</div></header>
+<main class="wrapx">
+ <h2 data-t="choose">Kasbni tanlang</h2>
+ <div class="grid">
+  <a class="card" href="../elektrik/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="var(--fg)"/></svg></div><b data-t="el">Elektrik</b><p data-t="eld">13 ta dars: rozetka, avtomat va UZO, shit, uch faza, dvigatellar. Kabel kalkulyatori.</p><span class="go" data-t="open">Ochish ›</span></a>
+  <a class="card" href="../santehnik/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z" fill="var(--fg)"/></svg></div><b data-t="pl">Santexnik</b><p data-t="pld">13 ta dars: smesitel, tiqilish, unitaz, kanalizatsiya, quvur payvandlash, boyler, issiq pol. Qiyalik va qizish kalkulyatorlari.</p><span class="go" data-t="open">Ochish ›</span></a>
+  <a class="card" href="../medsestra/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z" fill="var(--fg)"/></svg></div><b data-t="md">Hamshira</b><p data-t="mdd">13 ta dars: qo&#x27;l gigiyenasi, bosim va puls, yotoq yaralari, ovqatlantirish, reanimatsiya, qon ketishi, kuyish. YO&#x27;R metronomi.</p><span class="go" data-t="open">Ochish ›</span></a>
+  <a class="card" href="../optik/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="var(--fg)" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="var(--fg)" stroke-width="1.6"/><circle cx="12" cy="12" r="2" fill="var(--fg)"/></svg></div><b data-t="op">Optika montajchisi</b><p data-t="opd">13 ta dars: kabel turlari, tolani payvandlash, konnektorlar, muftalar, GPON tarmog&#x27;i, reflektometr, uzilishni ta&#x27;mirlash. Yo&#x27;qotishlar byudjeti kalkulyatori.</p><span class="go" data-t="open">Ochish ›</span></a>
+  <a class="card" href="../svarshik/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l10 10" stroke="var(--fg)" stroke-width="2.6" stroke-linecap="round"/><path d="M16.5 16.5l3.5 1M16.5 16.5l1 3.5M16.5 16.5l3 -1.5M16.5 16.5l-1.5 3" stroke="var(--fg)" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="var(--fg)"/></svg></div><b data-t="sv">Payvandchi</b><p data-t="svd">13 ta dars: elektrod va tok, yoyni yoqish, chok turlari, nuqsonlar, yarimavtomat, quvurlar, yupqa metall, argon. Tok va elektrod sarfi kalkulyatori.</p><span class="go" data-t="open">Ochish ›</span></a>
+  <a class="card" href="../holod/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5" fill="none" stroke="var(--fg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><b data-t="ho">Konditsioner va muzlatgich ustasi</b><p data-t="hod">13 ta dars: sovutish sikli, freonlar, split-tizim o&#x27;rnatish, valsovka, vakuum, to&#x27;ldirish, diagnostika, muzlatgich ta&#x27;miri. Quvvat kalkulyatori.</p><span class="go" data-t="open">Ochish ›</span></a>
+  <a class="card" href="../avtoelektrik/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="7" width="19" height="13" rx="2" fill="none" stroke="var(--fg)" stroke-width="2"/><path d="M6 7V4.5h3V7M15 7V4.5h3V7M6 13.5h4M8 11.5v4M14 13.5h4" fill="none" stroke="var(--fg)" stroke-width="2" stroke-linecap="round"/></svg></div><b data-t="av">Avtoelektrik / diagnost</b><p data-t="avd">13 ta dars: multimetr, akkumulyator, rele, starter, generator, tok oqishi, OBD-II va xato kodlari, datchiklar, CAN-shina. Sim va saqlagich kalkulyatori.</p><span class="go" data-t="open">Ochish ›</span></a>
+  <a class="card" href="../videonablyudenie/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="14" height="8" rx="2" fill="none" stroke="var(--fg)" stroke-width="2"/><path d="M16 9.5l5-2.5v8l-5-2.5M6 15v4M3 19h6" fill="none" stroke="var(--fg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><b data-t="vn">Videokuzatuv o&#x27;rnatuvchisi</b><p data-t="vnd">13 ta dars: analog va IP, obyektivlar, RJ45 siqish, PoE, kamera montaji, registrator va disk, IP-manzillar, telefondan ko&#x27;rish, nosozliklar. Arxiv va PoE kalkulyatorlari.</p><span class="go" data-t="open">Ochish ›</span></a>
+ </div>
+ <a class="bot" href="https://t.me/kasbpro_uz_bot?start=site_uz" data-t="bot">Telegramda ochish</a>
+ <p class="note" data-t="note">Kasb Pro — yangi boshlovchidan ustagacha. Darslar o&#x27;qish va ishga ruxsatni almashtirmaydi.</p>
+</main>
+<script>
+const T={ru:{h1:'Бесплатные уроки по рабочим профессиям',lead:'Схемы, пошаговые инструкции, тесты и калькуляторы. Учитесь с телефона, когда удобно.',f1:'Русский и узбекский',f2:'Работает в Telegram',f3:'Бесплатно',choose:'Выберите профессию',
+ el:'Электрик',eld:'13 уроков: розетки, автоматы и УЗО, щиток, три фазы, двигатели. Калькулятор кабеля.',open:'Открыть ›',
+ pl:'Сантехник',pld:'13 уроков: смесители, засоры, унитаз, канализация, пайка труб, бойлер, тёплый пол. Калькуляторы уклона и нагрева.',md:'Медсестра / медбрат',mdd:'13 уроков: гигиена рук, давление и пульс, пролежни, кормление, реанимация, кровотечения, ожоги. Метроном для СЛР.',op:'Монтажник оптики',opd:'13 уроков: виды кабеля, сварка волокна, коннекторы, муфты, сеть GPON, рефлектометр, ремонт обрыва. Калькулятор бюджета потерь.',sv:'Сварщик',svd:'13 уроков: электроды и ток, зажигание дуги, виды швов, дефекты, полуавтомат, трубы, тонкий металл, аргон. Калькулятор тока и расхода электродов.',ho:'Мастер по кондиционерам и холодильникам',hod:'13 уроков: холодильный цикл, фреоны, монтаж сплит-системы, вальцовка, вакуум, заправка, диагностика, ремонт холодильника. Калькулятор мощности.',av:'Автоэлектрик / диагност',avd:'13 уроков: мультиметр, аккумулятор, реле, стартер, генератор, утечка тока, OBD-II и коды ошибок, датчики, CAN-шина. Калькулятор провода и предохранителя.',vn:'Установщик видеонаблюдения',vnd:'13 уроков: аналог и IP, объективы, обжимка RJ45, PoE, монтаж камер, регистратор и диск, IP-адреса, просмотр с телефона, поломки. Калькуляторы архива и PoE.',soon:'Скоро',
+ bot:'Открыть в Telegram',note:'Kasb Pro — от новичка до мастера. Уроки не заменяют обучение и допуск к работе.'},
+uz:{h1:'Ishchi kasblar bo\'yicha bepul darslar',lead:'Sxemalar, bosqichma-bosqich ko\'rsatmalar, testlar va kalkulyatorlar. Telefondan qulay vaqtda o\'rganing.',f1:'O\'zbek va rus tillari',f2:'Telegramda ishlaydi',f3:'Bepul',choose:'Kasbni tanlang',
+ el:'Elektrik',eld:'13 ta dars: rozetka, avtomat va UZO, shit, uch faza, dvigatellar. Kabel kalkulyatori.',open:'Ochish ›',
+ pl:'Santexnik',pld:'13 ta dars: smesitel, tiqilish, unitaz, kanalizatsiya, quvur payvandlash, boyler, issiq pol. Qiyalik va qizish kalkulyatorlari.',md:'Hamshira',mdd:'13 ta dars: qo\'l gigiyenasi, bosim va puls, yotoq yaralari, ovqatlantirish, reanimatsiya, qon ketishi, kuyish. YO\'R metronomi.',op:'Optika montajchisi',opd:'13 ta dars: kabel turlari, tolani payvandlash, konnektorlar, muftalar, GPON tarmog\'i, reflektometr, uzilishni ta\'mirlash. Yo\'qotishlar byudjeti kalkulyatori.',sv:'Payvandchi',svd:'13 ta dars: elektrod va tok, yoyni yoqish, chok turlari, nuqsonlar, yarimavtomat, quvurlar, yupqa metall, argon. Tok va elektrod sarfi kalkulyatori.',ho:'Konditsioner va muzlatgich ustasi',hod:'13 ta dars: sovutish sikli, freonlar, split-tizim o\'rnatish, valsovka, vakuum, to\'ldirish, diagnostika, muzlatgich ta\'miri. Quvvat kalkulyatori.',av:'Avtoelektrik / diagnost',avd:'13 ta dars: multimetr, akkumulyator, rele, starter, generator, tok oqishi, OBD-II va xato kodlari, datchiklar, CAN-shina. Sim va saqlagich kalkulyatori.',vn:'Videokuzatuv o\'rnatuvchisi',vnd:'13 ta dars: analog va IP, obyektivlar, RJ45 siqish, PoE, kamera montaji, registrator va disk, IP-manzillar, telefondan ko\'rish, nosozliklar. Arxiv va PoE kalkulyatorlari.',soon:'Tez kunda',
+ bot:'Telegramda ochish',note:'Kasb Pro — yangi boshlovchidan ustagacha. Darslar o\'qish va ishga ruxsatni almashtirmaydi.'}};
+const PAGE='uz',HREF={ru:'../?lang=ru'};let lang=PAGE;
+try{localStorage.setItem('ep_lang',JSON.stringify('uz'))}catch(e){}
+function render(){document.documentElement.lang=lang;document.querySelectorAll('[data-t]').forEach(e=>e.textContent=T[lang][e.dataset.t]);document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===lang))}
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{const l=b.dataset.l;try{localStorage.setItem('ep_lang',JSON.stringify(l))}catch(e){}if(l!==PAGE)location.href=HREF[l]});
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+render();
+</script>
+</body>
+</html>
