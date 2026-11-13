@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Собери щиток — игра для электриков · Kasb Pro</title>
+<meta name="description" content="Бесплатная игра для электриков: собери щиток за 2 минуты — подбери автоматы, УЗО и кабель, не попади под ток. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/elektrik/igra/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:title" content="Собери щиток — игра для электриков">
+<meta property="og:description" content="2 минуты, 3 жизни. Подбери автоматы и УЗО правильно — и не попади под ток.">
+<meta property="og:url" content="https://kasbpro.uz/elektrik/igra/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#eef1f4; --surface:#fff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#f2a516; --accent-ink:#2a1c00; --navy:#123047; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f;
+  --box:#c9d0d7; --plate:#e4e8ec; --rail:#9aa3ad; --mod:#fbfcfd; --modline:#b7bfc8;
+  --wL:#8a4b1f; --wN:#1e6fd0; --wPE1:#e3c400; --wPE2:#2f9e44;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f5b331; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f;
+  --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --mod:#e9edf1; --modline:#8d98a4;
+  --wL:#b06a34; --wN:#4a90e8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f5b331; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f;
+  --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --mod:#e9edf1; --modline:#8d98a4;
+  --wL:#b06a34; --wN:#4a90e8; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.bar{background:var(--navy);color:var(--navy-fg);padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:10px}
+.bar a{color:var(--navy-fg);opacity:.8;text-decoration:none;font-size:14px;white-space:nowrap}
+.bar .ttl{flex:1;font-family:var(--display);font-size:15px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:12px;font-weight:700;padding:5px 9px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.wrap{flex:1;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+h1{font-family:var(--display);font-size:26px;line-height:1.15;margin:0;text-align:center;text-wrap:balance}
+.lead{margin:0;text-align:center;color:var(--muted);text-wrap:balance}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.rules li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.rules li span{flex:none;width:28px;height:28px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:16px}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:17px;padding:15px;width:100%;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.btn.tg{background:#229ed9;color:#fff}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.small{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.best{text-align:center;font-size:14px;color:var(--muted)}
+.best b{color:var(--fg);font-variant-numeric:tabular-nums}
+.hero{display:flex;justify-content:center}
+.hero svg{width:150px;height:auto}
+/* game */
+.hud{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+.hud .sc{font-family:var(--display);font-size:20px;min-width:70px}
+.hud .lv{display:flex;gap:2px;font-size:18px}
+.hud .lv i{font-style:normal;transition:opacity .3s,filter .3s}
+.hud .lv i.off{opacity:.25;filter:grayscale(1)}
+.hud .tm{margin-left:auto;font-weight:700;font-size:18px}
+.hud .tm.low{color:var(--bad)}
+.tbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:-6px}
+.tbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.tbar i.low{background:var(--bad)}
+.pname{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted);margin-bottom:-8px}
+.pname b{color:var(--fg);font-size:14px}
+.combo{color:var(--accent);font-weight:700}
+.panel svg{width:100%;height:auto;display:block}
+.newmod{animation:drop .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes drop{from{transform:translateY(-26px);opacity:0}to{transform:none;opacity:1}}
+.slot{animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+.q{font-size:17px;font-weight:600;margin:0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;display:flex;align-items:center;gap:10px;min-height:50px}
+.opt:active{transform:scale(.985)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.opt .w{flex:none;width:30px;height:10px;border-radius:5px}
+.float{position:fixed;left:50%;top:42%;transform:translate(-50%,0);font-family:var(--display);font-size:28px;color:var(--ok);pointer-events:none;animation:up .8s ease-out forwards;z-index:30;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+@keyframes up{to{transform:translate(-50%,-60px);opacity:0}}
+.toast{position:fixed;left:50%;top:30%;transform:translateX(-50%);background:var(--navy);color:var(--navy-fg);padding:14px 20px;border-radius:14px;font-family:var(--display);font-size:17px;z-index:30;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);animation:pop .3s ease-out;white-space:nowrap}
+@keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
+/* shock overlay */
+.ov{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(8,14,20,.6)}
+.ov .sheet{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:sheet .3s ease-out}
+@keyframes sheet{from{transform:translateY(60%)}}
+.ov .who{display:flex;align-items:center;gap:12px}
+.ov .who svg{width:96px;height:auto;flex:none}
+.ov h2{font-family:var(--display);font-size:20px;margin:0;color:var(--bad);line-height:1.2}
+.ov .ans{font-size:15px;margin:0}
+.ov .ans b{color:var(--ok)}
+.ov .why{font-size:14px;color:var(--muted);margin:0}
+.flash{position:fixed;inset:0;z-index:35;pointer-events:none;animation:flash .5s steps(2) 2}
+@keyframes flash{0%{background:rgba(255,215,94,.85)}50%{background:rgba(10,10,10,.75)}}
+.flash.fire{animation:fire .7s ease-out}
+@keyframes fire{0%{background:rgba(255,120,30,.75)}100%{background:transparent}}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translate(-6px,2px)}40%{transform:translate(6px,-2px)}60%{transform:translate(-4px,1px)}80%{transform:translate(4px,0)}}
+.zap .bolt{animation:zap .18s steps(2) infinite}
+@keyframes zap{50%{opacity:0}}
+.zap .body{animation:jit .12s infinite}
+@keyframes jit{50%{transform:translate(2px,-1px)}}
+/* result */
+.big{font-family:var(--display);font-size:54px;text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+.rank{display:inline-block;margin:0 auto;background:color-mix(in srgb,var(--accent) 25%,transparent);padding:6px 14px;border-radius:99px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.stats b{display:block;font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// «Собери щиток» — mini-game for Kasb Pro electricians. Our own art and texts.
+const tg=window.Telegram&&window.Telegram.WebApp;
+if(tg){try{tg.ready();tg.expand();tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){}}
+const BOT='kasbpro_uz_bot';
+const GAME_TIME=120;
+let lang='ru';
+try{const v=JSON.parse(localStorage.getItem('ep_lang')||'null');lang=(v==='uz'||v==='ru')?v:((tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code==='uz')?'uz':'ru')}catch(e){}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+const UI={
+ru:{back:'‹ Электрик Pro',title:'Собери щиток',h1:'Собери щиток',lead:'Игра для электриков: подбери автоматы, УЗО и кабель правильно — и не попади под ток.',
+ r:[['⏱','2 минуты смены. Отвечайте быстрее — больше очков.'],['⚡','3 жизни. Ошибка — бьёт током или дымит кабель.'],['🧰','Каждый верный ответ ставит модуль в щиток. Собрали щиток — бонус +300.']],
+ play:'Играть',best:'Ваш рекорд',safe:'Это игра. В настоящем щитке работайте только при отключённом напряжении и после проверки индикатором.',
+ panel:(n,name)=>`Щиток ${n}: <b>${name}</b>`,combo:n=>`серия ×${n}`,
+ shock:['Бзз! Ударило током!','Ай-ай! Током дёрнуло!','Тр-р-р! Искры из глаз!'],fire:['Кабель задымился!','Пахнет гарью!'],
+ right:'Правильно:',next:'Понятно, дальше',built:'Щиток собран! +300',
+ over:'Смена окончена',overLives:'Жизни закончились',score:'очков',panels:'щитков',acc:'верно',rec:'Новый рекорд!',
+ ranks:['Ученик','Монтажник','Мастер','Профи-электрик'],
+ share:'Поделиться с друзьями',again:'Ещё раз',learn:'Учиться: 13 уроков Электрик Pro',
+ shareText:(s,p)=>`⚡ Я набрал ${s} очков и собрал ${p} ${p===1?'щиток':p>1&&p<5?'щитка':'щитков'} в игре «Собери щиток»! Сможешь лучше? Играть бесплатно в Telegram 👇`},
+uz:{back:'‹ Elektrik Pro',title:"Shitni yig'",h1:"Shitni yig'",lead:"Elektriklar uchun o'yin: avtomat, UZO va kabelni to'g'ri tanlang — tok urmasin.",
+ r:[['⏱',"2 daqiqalik smena. Tezroq javob bering — ko'proq ball."],['⚡',"3 ta jon. Xato — tok uradi yoki kabel tutaydi."],['🧰',"Har bir to'g'ri javob shitga modul qo'yadi. Shit yig'ildi — +300 bonus."]],
+ play:"O'ynash",best:'Rekordingiz',safe:"Bu o'yin. Haqiqiy shitda faqat kuchlanish o'chirilganda va indikator bilan tekshirgandan keyin ishlang.",
+ panel:(n,name)=>`${n}-shit: <b>${name}</b>`,combo:n=>`seriya ×${n}`,
+ shock:['Bzz! Tok urdi!','Voy! Tok chaqdi!','Trr! Ko\'zdan uchqun!'],fire:['Kabel tutayapti!','Kuygan hid keldi!'],
+ right:"To'g'ri javob:",next:'Tushunarli, davom',built:"Shit yig'ildi! +300",
+ over:'Smena tugadi',overLives:'Jonlar tugadi',score:'ball',panels:'shit',acc:"to'g'ri",rec:'Yangi rekord!',
+ ranks:['Shogird','Montajchi','Usta','Professional elektrik'],
+ share:"Do'stlarga ulashish",again:'Yana bir bor',learn:"O'rganish: Elektrik Pro'da 13 dars",
+ shareText:(s,p)=>`⚡ «Shitni yig'» o'yinida ${s} ball to'pladim va ${p} ta shit yig'dim! Sen ko'proq qila olasanmi? Telegramda bepul o'yna 👇`}
+};
+const U=()=>UI[lang];
+const tr=o=>typeof o==='string'?o:(o[lang]||o.ru);
+
+/* Content. o[0] is the correct answer (shuffled on screen). fx: 'shock' or 'fire'.
+   m = module put on the DIN rail when answered right: k '1' 1-pole, 'in' 2P input, '3' 3P input, 'd' RCBO 30 mA, 'r' RCD, 'lamp' phase lamps.
+   bus = which bus gets wired (N / PE). Values follow the Электрик Pro calculator: 1,5 mm²→10 A, 2,5→16 A, 4→25 A, 6→32 A (copper). */
+const W={L:{ru:'Коричневый — фаза L',uz:'Jigarrang — faza L',c:'var(--wL)'},N:{ru:'Синий — ноль N',uz:"Ko'k — nol N",c:'var(--wN)'},PE:{ru:'Жёлто-зелёный — земля PE',uz:"Sariq-yashil — yer PE",c:'pe'}};
+const TO={brk:{ru:'К автомату',uz:'Avtomatga'},N:{ru:'На шину N',uz:'N shinasiga'},PE:{ru:'На шину PE',uz:'PE shinasiga'}};
+const PANELS=[
+{name:{ru:'Квартира',uz:'Kvartira'},tasks:[
+ {q:{ru:'Начинаем работу в щитке. Что делаем первым?',uz:'Shitda ishni boshlaymiz. Birinchi navbatda nima qilamiz?'},
+  o:[{ru:'Отключаем вводной автомат и проверяем индикатором, что напряжения нет',uz:"Kirish avtomatini o'chiramiz va indikator bilan kuchlanish yo'qligini tekshiramiz"},
+     {ru:'Работаем быстро, пока никто не включил',uz:'Hech kim yoqmaguncha tez ishlaymiz'},
+     {ru:'Проверяем провод пальцем — пощиплет и ладно',uz:'Simni barmoq bilan tekshiramiz — chimchilasa mayli'},
+     {ru:'Надеваем перчатки и работаем под напряжением',uz:"Qo'lqop kiyib, kuchlanish ostida ishlaymiz"}],fx:'shock',
+  e:{ru:'Сначала отключить и проверить отсутствие напряжения на каждом проводе. Сам индикатор проверьте на рабочей розетке.',uz:"Avval o'chirish va har bir simda kuchlanish yo'qligini tekshirish kerak. Indikatorning o'zini ishlaydigan rozetkada tekshiring."},
+  m:{k:'in',a:'2P',s:{ru:'Ввод',uz:'Kirish'}}},
+ {q:{ru:'Линия освещения, медный кабель 1,5 мм². Какой автомат?',uz:'Yoritish liniyasi, mis kabel 1,5 mm². Qaysi avtomat?'},
+  o:['C10','C25','C32','C40'],fx:'fire',
+  e:{ru:'Автомат защищает кабель. Для 1,5 мм² — 10 А. С бо́льшим автоматом кабель перегреется раньше, чем автомат отключит.',uz:"Avtomat kabelni himoya qiladi. 1,5 mm² uchun — 10 A. Kattaroq avtomatda kabel avtomat o'chirishidan oldin qizib ketadi."},
+  m:{k:'1',a:'C10',s:{ru:'Свет',uz:'Chiroq'}}},
+ {q:{ru:'Розетки в комнатах, медный кабель 2,5 мм². Какой автомат?',uz:'Xonalardagi rozetkalar, mis kabel 2,5 mm². Qaysi avtomat?'},
+  o:['C16','C32','C40','C50'],fx:'fire',
+  e:{ru:'На кабель 2,5 мм² ставят автомат 16 А. 32 А и больше — кабель будет греться и может загореться.',uz:"2,5 mm² kabelga 16 A avtomat qo'yiladi. 32 A va undan katta bo'lsa, kabel qiziydi va yonib ketishi mumkin."},
+  m:{k:'1',a:'C16',s:{ru:'Розетки',uz:'Rozetka'}}},
+ {q:{ru:'Розетки в ванной. Какую защиту ставим?',uz:'Vannaxonadagi rozetkalar. Qanday himoya qo\'yamiz?'},
+  o:[{ru:'Дифавтомат 16 А, 30 мА',uz:'Difavtomat 16 A, 30 mA'},{ru:'Обычный автомат 16 А, без УЗО',uz:'Oddiy avtomat 16 A, UZOsiz'},{ru:'Дифавтомат 16 А, 300 мА',uz:'Difavtomat 16 A, 300 mA'},{ru:'Автомат 32 А',uz:'Avtomat 32 A'}],fx:'shock',
+  e:{ru:'Во влажных помещениях нужна защита от утечки 30 мА — она отключит линию раньше, чем ток станет смертельным. 300 мА — только противопожарная, человека не спасёт.',uz:"Nam xonalarda 30 mA sizib chiqish himoyasi kerak — u tok xavfli bo'lishidan oldin liniyani o'chiradi. 300 mA — faqat yong'inga qarshi, odamni qutqarmaydi."},
+  m:{k:'d',a:'16A',s:{ru:'Ванная',uz:'Vanna'}}},
+ {wire:'PE',q:{ru:'Жёлто-зелёный провод от розеток. Куда подключаем?',uz:'Rozetkalardan kelgan sariq-yashil sim. Qayerga ulaymiz?'},
+  o:[TO.PE,TO.N,TO.brk],fx:'shock',
+  e:{ru:'Жёлто-зелёный — всегда земля PE и только на шину PE. Через автомат землю не пропускают.',uz:"Sariq-yashil — har doim yer PE va faqat PE shinasiga. Yerni avtomat orqali o'tkazilmaydi."},bus:'PE'},
+ {wire:'N',q:{ru:'Синий провод линии освещения (без УЗО). Куда подключаем?',uz:"Yoritish liniyasining ko'k simi (UZOsiz). Qayerga ulaymiz?"},
+  o:[TO.N,TO.PE,TO.brk],fx:'shock',
+  e:{ru:'Синий — рабочий ноль N, идёт на шину N. Ноль и землю не путаем: у каждого своя шина.',uz:"Ko'k — ishchi nol N, N shinasiga ulanadi. Nol bilan yerni adashtirmaymiz: har birining o'z shinasi bor."},bus:'N'},
+ {q:{ru:'Кондиционер 2,5 кВт. Какой кабель и автомат?',uz:'Konditsioner 2,5 kVt. Qaysi kabel va avtomat?'},
+  o:[{ru:'2,5 мм² и 16 А',uz:'2,5 mm² va 16 A'},{ru:'1,5 мм² и 25 А',uz:'1,5 mm² va 25 A'},{ru:'1 мм² и 16 А',uz:'1 mm² va 16 A'},{ru:'2,5 мм² и 40 А',uz:'2,5 mm² va 40 A'}],fx:'fire',
+  e:{ru:'Ток ≈ 2500 / 220 ≈ 11 А. Значит, автомат 16 А и кабель 2,5 мм².',uz:"Tok ≈ 2500 / 220 ≈ 11 A. Demak, 16 A avtomat va 2,5 mm² kabel."},
+  m:{k:'1',a:'C16',s:{ru:'Кондиц.',uz:'Konditsioner'}}}
+]},
+{name:{ru:'Частный дом, 3 фазы',uz:'Xususiy uy, 3 faza'},tasks:[
+ {q:{ru:'В дом заходят три фазы. Какого цвета провода L1, L2, L3?',uz:'Uyga uchta faza kiradi. L1, L2, L3 simlari qanday rangda?'},
+  o:[{ru:'Коричневый, чёрный, серый',uz:'Jigarrang, qora, kulrang'},{ru:'Синий, коричневый, жёлто-зелёный',uz:"Ko'k, jigarrang, sariq-yashil"},{ru:'Все три синие',uz:"Uchalasi ham ko'k"},{ru:'Жёлто-зелёный, синий, чёрный',uz:"Sariq-yashil, ko'k, qora"}],fx:'shock',
+  e:{ru:'Фазы: коричневый, чёрный, серый. Синий — ноль N, жёлто-зелёный — земля PE. В старой проводке цвета могут быть любыми — всегда проверяйте индикатором.',uz:"Fazalar: jigarrang, qora, kulrang. Ko'k — nol N, sariq-yashil — yer PE. Eski simlarda ranglar har xil bo'lishi mumkin — doim indikator bilan tekshiring."},
+  m:{k:'3',a:'3P',s:{ru:'Ввод',uz:'Kirish'}}},
+ {q:{ru:'Какое напряжение между двумя фазами?',uz:"Ikki faza orasidagi kuchlanish qancha?"},
+  o:['380 V','220 V','110 V','12 V'],fx:'shock',
+  e:{ru:'Между фазой и нулём — 220 В, между двумя фазами — 380 В. Это ещё опаснее.',uz:"Faza va nol orasida — 220 V, ikki faza orasida — 380 V. Bu yanada xavfli."},
+  m:{k:'lamp',a:'L1-3',s:{ru:'Лампы',uz:'Lampa'}}},
+ {q:{ru:'Электроплита 7 кВт на одну фазу. Какой кабель и автомат?',uz:'Elektr plita 7 kVt, bitta fazaga. Qaysi kabel va avtomat?'},
+  o:[{ru:'6 мм² и 32 А',uz:'6 mm² va 32 A'},{ru:'2,5 мм² и 32 А',uz:'2,5 mm² va 32 A'},{ru:'4 мм² и 50 А',uz:'4 mm² va 50 A'},{ru:'1,5 мм² и 40 А',uz:'1,5 mm² va 40 A'}],fx:'fire',
+  e:{ru:'Ток ≈ 7000 / 220 ≈ 32 А. Автомат 32 А, кабель 6 мм². Тонкий кабель на мощном автомате — это пожар.',uz:"Tok ≈ 7000 / 220 ≈ 32 A. 32 A avtomat, 6 mm² kabel. Kuchli avtomatda ingichka kabel — bu yong'in."},
+  m:{k:'1',a:'C32',s:{ru:'Плита',uz:'Plita'}}},
+ {q:{ru:'Розетки в гараже и во дворе. Какая защита?',uz:'Garaj va hovlidagi rozetkalar. Qanday himoya?'},
+  o:[{ru:'Дифавтомат 16 А, 30 мА',uz:'Difavtomat 16 A, 30 mA'},{ru:'Только автомат 25 А',uz:'Faqat avtomat 25 A'},{ru:'УЗО 300 мА',uz:'UZO 300 mA'},{ru:'Ничего, это же улица',uz:"Hech narsa, bu ko'cha-ku"}],fx:'shock',
+  e:{ru:'На улице и в гараже сыро, а пол бетонный или земля. Нужна защита 30 мА, иначе при утечке ударит.',uz:"Ko'chada va garajda nam, pol beton yoki tuproq. 30 mA himoya kerak, aks holda sizib chiqishda tok uradi."},
+  m:{k:'d',a:'16A',s:{ru:'Двор',uz:'Hovli'}}},
+ {q:{ru:'В частном доме (система TN-C-S) где делят PEN на N и PE?',uz:'Xususiy uyda (TN-C-S tizimi) PEN qayerda N va PE ga ajratiladi?'},
+  o:[{ru:'Один раз — во вводном щите. Дальше N и PE не соединяют',uz:"Bir marta — kirish shitida. Keyin N va PE ulanmaydi"},{ru:'В каждой розетке перемычкой',uz:'Har bir rozetkada peremichka bilan'},{ru:'Нигде, землю не делаем',uz:"Hech qayerda, yerga ulamaymiz"},{ru:'После каждого УЗО',uz:'Har bir UZOdan keyin'}],fx:'shock',
+  e:{ru:'PEN делят один раз на вводе. Перемычка «ноль на землю» в розетке опасна: при обрыве нуля на корпусе прибора окажется фаза.',uz:"PEN kirishda bir marta ajratiladi. Rozetkada «nolni yerga» peremichka xavfli: nol uzilsa, asbob korpusida faza paydo bo'ladi."},bus:'NPE'},
+ {q:{ru:'Выключатель света должен разрывать…',uz:"Chiroq o'chirgichi nimani uzishi kerak?"},
+  o:[{ru:'Фазу L',uz:'Faza L ni'},{ru:'Ноль N',uz:'Nol N ni'},{ru:'Землю PE',uz:'Yer PE ni'}],fx:'shock',
+  e:{ru:'Если разрывать ноль, на патроне останется фаза даже при выключенном свете — при замене лампы ударит.',uz:"Agar nol uzilsa, chiroq o'chiq bo'lsa ham patronda faza qoladi — lampani almashtirganda tok uradi."},
+  m:{k:'1',a:'C10',s:{ru:'Свет',uz:'Chiroq'}}},
+ {q:{ru:'Бойлер 2 кВт в ванной. Что выбираем?',uz:'Vannaxonada 2 kVt boyler. Nimani tanlaymiz?'},
+  o:[{ru:'Кабель 2,5 мм², дифавтомат 16 А 30 мА',uz:'Kabel 2,5 mm², difavtomat 16 A 30 mA'},{ru:'Кабель 1,5 мм², автомат 32 А',uz:'Kabel 1,5 mm², avtomat 32 A'},{ru:'Кабель 2,5 мм², автомат 50 А',uz:'Kabel 2,5 mm², avtomat 50 A'},{ru:'Кабель 1 мм², без автомата',uz:'Kabel 1 mm², avtomatsiz'}],fx:'fire',
+  e:{ru:'Ток ≈ 9 А → автомат 16 А, кабель 2,5 мм². Вода рядом — значит, ещё и защита 30 мА.',uz:"Tok ≈ 9 A → 16 A avtomat, 2,5 mm² kabel. Yonida suv bor — demak, 30 mA himoya ham kerak."},
+  m:{k:'d',a:'16A',s:{ru:'Бойлер',uz:'Boyler'}}}
+]},
+{name:{ru:'Мастерская',uz:'Ustaxona'},tasks:[
+ {q:{ru:'От чего в первую очередь защищает автомат?',uz:'Avtomat birinchi navbatda nimadan himoya qiladi?'},
+  o:[{ru:'Защищает кабель от перегрузки и короткого замыкания',uz:'Kabelni ortiqcha yuklama va qisqa tutashuvdan'},{ru:'Защищает человека от удара током',uz:'Odamni tok urishidan'},{ru:'Экономит электричество',uz:'Elektr energiyasini tejaydi'},{ru:'Защищает лампочки от перегорания',uz:'Lampalarni kuyishdan'}],fx:'shock',
+  e:{ru:'Автомат бережёт кабель. Человека от удара током защищает УЗО (или дифавтомат) 30 мА.',uz:"Avtomat kabelni asraydi. Odamni tok urishidan 30 mA UZO (yoki difavtomat) himoya qiladi."},
+  m:{k:'in',a:'2P',s:{ru:'Ввод',uz:'Kirish'}}},
+ {q:{ru:'Что делает УЗО на 30 мА?',uz:'30 mA li UZO nima qiladi?'},
+  o:[{ru:'Отключает при утечке тока — спасает человека',uz:"Tok sizib chiqqanda o'chiradi — odamni qutqaradi"},{ru:'Защищает от перегрузки',uz:'Ortiqcha yuklamadan himoya qiladi'},{ru:'Понижает напряжение',uz:'Kuchlanishni pasaytiradi'},{ru:'Заменяет заземление',uz:'Yerga ulash o\'rnini bosadi'}],fx:'shock',
+  e:{ru:'УЗО сравнивает ток в фазе и нуле. Если часть тока ушла «на сторону» (через человека), оно отключает за доли секунды. Нажимайте кнопку «Т» раз в месяц.',uz:"UZO faza va noldagi tokni solishtiradi. Tokning bir qismi «chetga» (odam orqali) ketsa, soniyaning bir qismida o'chiradi. «T» tugmasini oyiga bir marta bosing."},
+  m:{k:'r',a:'30mA',s:{ru:'УЗО',uz:'UZO'}}},
+ {q:{ru:'Медный кабель 4 мм² к станку. Какой автомат подходит?',uz:"Dastgohga mis kabel 4 mm². Qaysi avtomat to'g'ri keladi?"},
+  o:['C25','C40','C50','C63'],fx:'fire',
+  e:{ru:'Для 4 мм² — до 25 А. Больше — кабель перегреется.',uz:"4 mm² uchun — 25 A gacha. Kattasi — kabel qizib ketadi."},
+  m:{k:'1',a:'C25',s:{ru:'Станок',uz:'Dastgoh'}}},
+ {wire:'L',q:{ru:'Коричневый провод розеточной линии. Куда подключаем?',uz:'Rozetka liniyasining jigarrang simi. Qayerga ulaymiz?'},
+  o:[TO.brk,TO.N,TO.PE],fx:'shock',
+  e:{ru:'Фаза L идёт через автомат — так он сможет отключить линию.',uz:"Faza L avtomat orqali o'tadi — shunda u liniyani o'chira oladi."},
+  m:{k:'1',a:'C16',s:{ru:'Розетки',uz:'Rozetka'}}},
+ {q:{ru:'Из розетки искрит и пахнет гарью. Что делаем?',uz:'Rozetkadan uchqun chiqyapti va kuygan hid kelyapti. Nima qilamiz?'},
+  o:[{ru:'Отключаем автомат этой линии и ищем причину',uz:"Shu liniya avtomatini o'chiramiz va sababini qidiramiz"},{ru:'Заливаем водой',uz:'Suv sepamiz'},{ru:'Работаем дальше, само пройдёт',uz:"Ishni davom ettiramiz, o'zi o'tib ketadi"},{ru:'Подкладываем картон',uz:'Karton qistiramiz'}],fx:'shock',
+  e:{ru:'Сначала обесточить. Воду на проводку под напряжением лить нельзя — ударит током. Обычно причина — слабый контакт или перегрузка.',uz:"Avval tokni o'chirish kerak. Kuchlanish ostidagi simlarga suv sepish mumkin emas — tok uradi. Odatda sababi — bo'sh kontakt yoki ortiqcha yuklama."}},
+ {wire:'PE',q:{ru:'Провод от металлического корпуса станка. Куда?',uz:'Dastgohning metall korpusidan kelgan sim. Qayerga?'},
+  o:[TO.PE,TO.N,TO.brk],fx:'shock',
+  e:{ru:'Корпус заземляют на шину PE. Тогда при пробое изоляции сработает защита, а не человек.',uz:"Korpus PE shinasiga ulanadi. Shunda izolyatsiya teshilsa, odam emas, himoya ishga tushadi."},bus:'PE'},
+ {wire:'N',q:{ru:'Синий провод линии освещения мастерской (без УЗО). Куда?',uz:"Ustaxona yoritish liniyasining ko'k simi (UZOsiz). Qayerga?"},
+  o:[TO.N,TO.brk,TO.PE],fx:'shock',
+  e:{ru:'Ноль N — на шину N. На шину PE ноль не сажают.',uz:"Nol N — N shinasiga. Nolni PE shinasiga ulamaydi."},bus:'N'}
+]}
+];
+
+/* ---------- art (our own mascot: usta in a yellow helmet) ---------- */
+function usta(mood){
+  const shock=mood==='shock',fire=mood==='fire';
+  const face=fire?'#6b5a4e':'#f2c79b',ink='#2a1c00';
+  const eyes=shock?`<path d="M52 62l10 10M62 62l-10 10M78 62l10 10M88 62l-10 10" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>`
+    :fire?`<circle cx="57" cy="67" r="6" fill="#fff"/><circle cx="83" cy="67" r="6" fill="#fff"/><circle cx="57" cy="68" r="2.5" fill="${ink}"/><circle cx="83" cy="68" r="2.5" fill="${ink}"/>`
+    :`<circle cx="57" cy="67" r="4.5" fill="${ink}"/><circle cx="83" cy="67" r="4.5" fill="${ink}"/><circle cx="58.5" cy="65.5" r="1.4" fill="#fff"/><circle cx="84.5" cy="65.5" r="1.4" fill="#fff"/>`;
+  const mouth=shock?`<path d="M56 96l6-6 6 6 6-6 6 6 6-6" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linejoin="round"/>`
+    :fire?`<ellipse cx="70" cy="95" rx="7" ry="5" fill="${ink}"/>`
+    :`<path d="M56 90q14 12 28 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+  const hair=shock?`<path d="M30 52l-12-10 14 2-10-14 16 8-2-16 12 14M110 52l12-10-14 2 10-14-16 8 2-16-12 14" fill="none" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>`:'';
+  const hy=shock?-14:0;
+  const bolts=shock?`<g class="bolt" fill="#ffd75e" stroke="${ink}" stroke-width="2" stroke-linejoin="round"><path d="M8 80l14-4-6 10 14-3"/><path d="M132 80l-14-4 6 10-14-3"/><path d="M20 120l12-6-3 9 11-5"/></g>`:'';
+  const smoke=fire?`<g fill="#9aa3ad" opacity=".85"><circle cx="40" cy="18" r="9"/><circle cx="52" cy="10" r="7"/><circle cx="96" cy="16" r="8"/><circle cx="106" cy="6" r="6"/></g>`:'';
+  return `<svg viewBox="0 0 140 150" role="img" aria-label="usta" class="${shock?'zap':''}">${smoke}${bolts}<g class="body">
+  <path d="M30 150q0-26 40-26t40 26z" fill="#1e5aa8"/><path d="M58 124h24l-12 14z" fill="#f2a516"/>
+  ${hair}<ellipse cx="70" cy="76" rx="40" ry="38" fill="${face}"/>
+  <ellipse cx="30" cy="78" rx="6" ry="9" fill="${face}"/><ellipse cx="110" cy="78" rx="6" ry="9" fill="${face}"/>
+  ${eyes}<path d="M50 84q10-6 20 0 10-6 20 0q-10 6-20 1-10 5-20-1z" fill="${fire?'#2a2a2a':'#4a2e1a'}"/>${mouth}
+  <g transform="translate(0 ${hy})"><path d="M26 56q4-36 44-36t44 36z" fill="#f2a516"/><rect x="20" y="52" width="100" height="9" rx="4.5" fill="#d98e0b"/><rect x="64" y="16" width="12" height="10" rx="3" fill="#d98e0b"/><path d="M73 28l-9 14h7l-3 11 10-15h-7l3-10z" fill="#123047"/></g>
+  </g></svg>`}
+
+/* ---------- panel drawing ---------- */
+const MW={'1':34,'in':56,'3':80,'d':56,'r':56,'lamp':32};
+function modSVG(m,x,isNew){
+  const w=MW[m.k],y=30,h=82;let g=`<g${isNew?' class="newmod"':''}>`;
+  g+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="var(--mod)" stroke="var(--modline)"/>`;
+  g+=`<rect x="${x}" y="${y}" width="${w}" height="9" rx="2" fill="#dfe4e9"/><rect x="${x}" y="${y+h-9}" width="${w}" height="9" rx="2" fill="#dfe4e9"/>`;
+  const poles=m.k==='3'?3:(m.k==='in'||m.k==='d'||m.k==='r')?2:1;
+  for(let i=0;i<poles;i++){const cx=x+w/poles*(i+.5);g+=`<circle cx="${cx}" cy="${y+4.5}" r="2.6" fill="#8d969f"/><circle cx="${cx}" cy="${y+h-4.5}" r="2.6" fill="#8d969f"/>`}
+  if(m.k==='lamp'){['#c4392f','#2a2a2a','#8d969f'].forEach((c,i)=>g+=`<circle cx="${x+w/2}" cy="${y+22+i*14}" r="4.5" fill="#ffd75e" stroke="${c}" stroke-width="2"/>`)}
+  else{const lw=Math.min(w-10,poles>1?w-12:16);g+=`<rect x="${x+(w-lw)/2}" y="${y+22}" width="${lw}" height="18" rx="3" fill="#2b3640"/><rect x="${x+(w-lw)/2+2}" y="${y+24}" width="${lw-4}" height="7" rx="2" fill="#5d6b78"/>`}
+  if(m.k==='d'||m.k==='r')g+=`<rect x="${x+w-14}" y="${y+46}" width="9" height="9" rx="2" fill="#f2c400"/><text x="${x+w-9.5}" y="${y+53.5}" font-size="7" font-weight="700" text-anchor="middle" fill="#2a1c00">T</text>`;
+  g+=`<text x="${x+(m.k==='d'||m.k==='r'?w/2-6:w/2)}" y="${y+56}" font-size="${m.a.length>4?8:10}" font-weight="700" text-anchor="middle" fill="#14202b" font-family="Golos Text,system-ui">${m.a}</text>`;
+  if(m.k==='d')g+=`<text x="${x+w/2-6}" y="${y+65}" font-size="7" text-anchor="middle" fill="#5b6876">30mA</text>`;
+  const s=tr(m.s);g+=`<text x="${x+w/2}" y="${y+h+13}" font-size="${s.length>7?7.5:9}" text-anchor="middle" fill="var(--fg)" font-family="Golos Text,system-ui">${s}</text>`;
+  return g+'</g>'}
+function panelSVG(){
+  const P=G.panel,mods=[];let w=0;
+  P.src.forEach(t=>{if(t.m){mods.push(t);w+=MW[t.m.k]+3}});
+  let x=(340-w)/2,s='';
+  mods.forEach(t=>{const placed=G.placed.includes(t),cur=t===G.task&&!G.complete;
+    if(placed)s+=modSVG(t.m,x,t===G.justPlaced);
+    else s+=`<rect${cur?' class="slot"':''} x="${x+1}" y="31" width="${MW[t.m.k]-2}" height="80" rx="3" fill="none" stroke="${cur?'var(--accent)':'var(--rail)'}" stroke-width="${cur?2.5:1.2}" stroke-dasharray="5 4" opacity="${cur?1:.7}"/>`;
+    x+=MW[t.m.k]+3});
+  const nOn=G.bus.N,peOn=G.bus.PE;
+  const bus=(y,on,fill,label)=>{let b=`<rect x="70" y="${y}" width="200" height="10" rx="3" fill="${on?fill:'var(--rail)'}" opacity="${on?1:.45}"/>`;
+    for(let i=0;i<8;i++)b+=`<circle cx="${86+i*24}" cy="${y+5}" r="2.6" fill="${on?'#fff':'var(--plate)'}" opacity=".9"/>`;
+    return b+`<text x="62" y="${y+8.5}" font-size="10" font-weight="700" text-anchor="end" fill="var(--fg)">${label}</text>`};
+  const wire=(y,c,on)=>on?`<path d="M318 ${y-30} C 300 ${y-30}, 300 ${y+5}, 272 ${y+5}" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/>`:'';
+  return `<svg viewBox="0 0 340 196" role="img" aria-label="${tr(P.name)}">
+  <defs><pattern id="pe" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#2f9e44"/><rect width="5" height="10" fill="#e3c400"/></pattern></defs>
+  <rect x="2" y="2" width="336" height="192" rx="12" fill="var(--box)"/><rect x="12" y="12" width="316" height="172" rx="8" fill="var(--plate)"/>
+  <rect x="14" y="62" width="312" height="18" rx="2" fill="var(--rail)"/><rect x="14" y="66" width="312" height="10" fill="var(--box)" opacity=".5"/>
+  ${s}${bus(150,nOn,'#1e6fd0','N')}${bus(168,peOn,'url(#pe)','PE')}${wire(150,'#1e6fd0',nOn)}${wire(168,'url(#pe)',peOn)}
+  </svg>`}
+
+/* ---------- game state ---------- */
+let G=null,timer=null;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+function newGame(){
+  G={score:0,lives:3,combo:0,t:GAME_TIME,right:0,total:0,panels:0,pn:0,order:shuffle([0,1,2]),busy:false};
+  loadPanel();render();
+  clearInterval(timer);let last=Date.now();
+  timer=setInterval(()=>{const now=Date.now(),dt=(now-last)/1000;last=now;if(G.busy||document.hidden)return;
+    G.t-=dt;if(G.t<=0){G.t=0;end('time')}else paintTime()},200)}
+function loadPanel(){
+  if(G.pn>0&&G.pn%3===0)G.order=shuffle([0,1,2]);
+  const P=PANELS[G.order[G.pn%3]];
+  G.panel={name:P.name,src:P.tasks,tasks:shuffle(P.tasks)};G.ti=0;G.complete=false;G.placed=[];G.bus={N:false,PE:false};G.justPlaced=null;nextTask(true)}
+function nextTask(first){
+  if(!first)G.ti++;
+  if(G.ti>=G.panel.tasks.length){G.complete=true;G.panels++;G.score+=300;toast(U().built);haptic('success');G.pn++;G.busy=true;
+    setTimeout(()=>{if(!G||G.over)return;G.busy=false;loadPanel();render()},1100);return}
+  G.task=G.panel.tasks[G.ti];
+  G.opts=shuffle(G.task.o.map((o,i)=>({o,ok:i===0})));G.shown=Date.now()}
+
+/* ---------- screens ---------- */
+const app=document.getElementById('app');
+const $=s=>document.querySelector(s);
+function bar(){const L=U();return `<header class="bar"><a href="../">${L.back}</a><div class="ttl">⚡ ${L.title}</div><div class="lang" role="group" aria-label="Til"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div></header>`}
+function bindBar(){document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('ep_lang',JSON.stringify(lang));document.documentElement.lang=lang;render()})}
+let screen='start',result=null;
+function render(){document.documentElement.lang=lang;
+  if(screen==='start')startScr();else if(screen==='game')gameScr();else endScr();bindBar()}
+function startScr(){const L=U();const best=+store.get('kp_igra_best')||0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${usta('ok')}</div><h1>${L.h1}</h1><p class="lead">${L.lead}</p>
+  <div class="card"><ul class="rules">${L.r.map(r=>`<li><span>${r[0]}</span><div>${r[1]}</div></li>`).join('')}</ul></div>
+  ${best?`<div class="best">${L.best}: <b>${best}</b></div>`:''}
+  <button class="btn" id="play" type="button">${L.play}</button><p class="small">${L.safe}</p></main>`;
+  $('#play').onclick=()=>{screen='game';newGame()}}
+function gameScr(){const L=U();const t=G.task;
+  let opts='';
+  G.opts.forEach((x,i)=>{let sw='';
+    if(t.wire&&x.o===TO.N)sw=`<span class="w" style="background:var(--wN)"></span>`;
+    else if(t.wire&&x.o===TO.PE)sw=`<span class="w" style="background:repeating-linear-gradient(45deg,#e3c400 0 5px,#2f9e44 5px 10px)"></span>`;
+    else if(t.wire&&x.o===TO.brk)sw=`<span class="w" style="background:#2b3640"></span>`;
+    opts+=`<button class="opt" type="button" data-i="${i}">${sw}<span>${tr(x.o)}</span></button>`});
+  const wireTag=t.wire?`<div class="small" style="text-align:left;display:flex;align-items:center;gap:8px"><span class="w" style="display:inline-block;width:40px;height:10px;border-radius:5px;background:${W[t.wire].c==='pe'?'repeating-linear-gradient(45deg,#e3c400 0 5px,#2f9e44 5px 10px)':W[t.wire].c}"></span>${tr(W[t.wire])}</div>`:'';
+  app.innerHTML=bar()+`<main class="wrap" id="gw">
+  <div class="hud"><span class="sc" id="sc">${G.score}</span><span class="lv" aria-label="lives">${[0,1,2].map(i=>`<i class="${i<G.lives?'':'off'}">⚡</i>`).join('')}</span><span class="tm" id="tm"></span></div>
+  <div class="tbar"><i id="tb"></i></div>
+  <div class="pname"><span>${L.panel(G.panels+1,tr(G.panel.name))}</span>${G.combo>1?`<span class="combo">${L.combo(Math.min(G.combo,5))}</span>`:''}</div>
+  <div class="panel">${panelSVG()}</div>
+  ${G.complete?'':`${wireTag}<p class="q">${tr(t.q)}</p><div class="opts">${opts}</div>`}</main>`;
+  G.justPlaced=null;paintTime();
+  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>answer(+b.dataset.i,b))}
+function paintTime(){const tm=$('#tm'),tb=$('#tb');if(!tm)return;const s=Math.ceil(G.t);
+  tm.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;tm.classList.toggle('low',s<=15);
+  tb.style.width=(G.t/GAME_TIME*100)+'%';tb.classList.toggle('low',s<=15)}
+function answer(i,btn){if(G.busy)return;const x=G.opts[i],t=G.task;G.total++;
+  if(x.ok){G.right++;G.combo++;const fast=(Date.now()-G.shown)<5000;
+    const pts=100+25*Math.min(G.combo-1,4)+(fast?50:0);G.score+=pts;
+    if(t.m){G.placed.push(t);G.justPlaced=t}
+    if(t.bus){if(t.bus.includes('N'))G.bus.N=true;if(t.bus.includes('PE'))G.bus.PE=true}
+    btn.classList.add('right');floatTxt('+'+pts);haptic('light');G.busy=true;
+    setTimeout(()=>{if(G.over)return;G.busy=false;nextTask();render()},380)}
+  else{G.combo=0;G.lives--;G.busy=true;G.panel.tasks.push(t); // wrong task comes back later in this panel
+haptic('error');shockFx(t)}}
+function shockFx(t){const L=U();const fire=t.fx==='fire';
+  const f=document.createElement('div');f.className='flash'+(fire?' fire':'');document.body.appendChild(f);setTimeout(()=>f.remove(),900);
+  const gw=$('#gw');if(gw){gw.classList.add('shake')}
+  const titles=fire?L.fire:L.shock;const title=titles[Math.random()*titles.length|0];
+  const ov=document.createElement('div');ov.className='ov';
+  ov.innerHTML=`<div class="sheet" role="alertdialog" aria-live="assertive"><div class="who">${usta(fire?'fire':'shock')}<h2>${title}</h2></div>
+  <p class="ans">${L.right} <b>${tr(t.o[0])}</b></p><p class="why">${tr(t.e)}</p><button class="btn" type="button" id="ovn">${L.next}</button></div>`;
+  setTimeout(()=>{document.body.appendChild(ov);$('#ovn').focus()},350);
+  ov.querySelector('#ovn').onclick=()=>{ov.remove();G.busy=false;if(G.lives<=0){end('lives');return}nextTask();render()}}
+function floatTxt(s){const d=document.createElement('div');d.className='float';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),800)}
+function toast(s){const d=document.createElement('div');d.className='toast';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),1100)}
+function haptic(k){try{const h=tg&&tg.HapticFeedback;if(!h)return;if(k==='light')h.impactOccurred('light');else h.notificationOccurred(k)}catch(e){}}
+function end(why){if(!G||G.over)return;G.over=true;clearInterval(timer);
+  document.querySelectorAll('.ov').forEach(o=>o.remove());
+  const prev=+store.get('kp_igra_best')||0;const rec=G.score>prev;if(rec)store.set('kp_igra_best',G.score);
+  result={score:G.score,panels:G.panels,right:G.right,total:G.total,why,rec,best:Math.max(prev,G.score)};
+  screen='end';render()}
+function rankOf(s){return s<1200?0:s<2400?1:s<3600?2:3}
+function endScr(){const L=U(),r=result;const acc=r.total?Math.round(r.right/r.total*100):0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${usta(r.why==='lives'?'shock':'ok')}</div>
+  <h1>${r.why==='lives'?L.overLives:L.over}</h1>
+  <div class="big">${r.score}</div><div class="center"><span class="rank">${L.ranks[rankOf(r.score)]}</span></div>
+  ${r.rec&&r.score>0?`<p class="lead"><b>🏆 ${L.rec}</b></p>`:`<div class="best">${L.best}: <b>${r.best}</b></div>`}
+  <div class="stats"><div><b>${r.score}</b><span>${L.score}</span></div><div><b>${r.panels}</b><span>${L.panels}</span></div><div><b>${acc}%</b><span>${L.acc}</span></div></div>
+  <button class="btn tg" id="share" type="button">📤 ${L.share}</button>
+  <button class="btn" id="again" type="button">${L.again}</button>
+  <a class="btn ghost" href="../">📘 ${L.learn}</a></main>`;
+  $('#again').onclick=()=>{screen='game';newGame()};
+  $('#share').onclick=share}
+function share(){const r=result;const url=`https://t.me/${BOT}?start=igra`;
+  const link=`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(U().shareText(r.score,r.panels))}`;
+  try{if(tg&&tg.initData&&tg.openTelegramLink){tg.openTelegramLink(link);return}}catch(e){}
+  window.open(link,'_blank','noopener')}
+render();
+</script>
+</body>
+</html>

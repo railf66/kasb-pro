@@ -8,6 +8,7 @@
 
 - `index.html` — главная страница с профессиями
 - `elektrik/` — приложение для электриков (собирается из репозитория railf66/elektrik-pro: `python3 build.py`, затем копия `index.html` с `window.KASB_HUB="../"`)
+- `elektrik/igra/` — игра «Собери щиток» (RU/UZ, 2 минуты, 3 жизни): подбор автоматов, УЗО, кабеля и подключение проводов. Один файл `index.html`, копия в папке проекта elektrik-game. Кнопка «Поделиться» ведёт в бот `t.me/kasbpro_uz_bot?start=igra`. Ссылка на игру есть на главном экране Электрик Pro.
 - `santehnik/` — приложение для сантехников (исходники: папка проекта santehnik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`)
 - `medsestra/` — приложение для медсестёр и медбратьев (исходники: папка проекта medsestra-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`). Только уход, первая помощь и санитария, без лекарств и доз.
 - `optik/` — приложение для монтажников оптики (исходники: папка проекта optik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
