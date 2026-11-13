@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Расставь камеры — игра для установщиков видеонаблюдения · Kasb Pro</title>
+<meta name="description" content="Бесплатная игра для монтажников видеонаблюдения: расставь камеры без слепых зон за 2 минуты. Объективы, PoE, архив, сеть. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/videonablyudenie/igra/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:title" content="Расставь камеры — игра для установщиков видеонаблюдения">
+<meta property="og:description" content="2 минуты, 3 жизни. Расставь камеры так, чтобы вор не прошёл незамеченным.">
+<meta property="og:url" content="https://kasbpro.uz/videonablyudenie/igra/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{--bg:#eef1f4; --surface:#fff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2; --accent:#3ccf8e; --accent-ink:#04261a; --navy:#13222e; --navy-fg:#f4f7fa; --ok:#1f8a4c; --bad:#c4392f; --box:#c9d0d7; --plate:#e4e8ec; --rail:#9aa3ad; --unitc:#fbfcfd; --modline:#b7bfc8; --wall:#b9a48a; --floor:#f7f9fb;--display:"Unbounded","Golos Text",system-ui,sans-serif; --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543; --accent:#4fdc9c; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f; --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --unitc:#e9edf1; --modline:#8d98a4; --wall:#6b5b48; --floor:#223040; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543; --accent:#4fdc9c; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f; --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --unitc:#e9edf1; --modline:#8d98a4; --wall:#6b5b48; --floor:#223040; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.bar{background:var(--navy);color:var(--navy-fg);padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:10px}
+.bar a{color:var(--navy-fg);opacity:.8;text-decoration:none;font-size:14px;white-space:nowrap}
+.bar .ttl{flex:1;font-family:var(--display);font-size:15px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:12px;font-weight:700;padding:5px 9px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.wrap{flex:1;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+h1{font-family:var(--display);font-size:26px;line-height:1.15;margin:0;text-align:center;text-wrap:balance}
+.lead{margin:0;text-align:center;color:var(--muted);text-wrap:balance}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.rules li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.rules li span{flex:none;width:28px;height:28px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:16px}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:17px;padding:15px;width:100%;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.btn.tg{background:#229ed9;color:#fff}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.small{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.best{text-align:center;font-size:14px;color:var(--muted)}
+.best b{color:var(--fg);font-variant-numeric:tabular-nums}
+.hero{display:flex;justify-content:center}
+.hero svg{width:150px;height:auto}
+.hud{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+.hud .sc{font-family:var(--display);font-size:20px;min-width:70px}
+.hud .lv{display:flex;gap:2px;font-size:18px}
+.hud .lv i{font-style:normal;transition:opacity .3s,filter .3s}
+.hud .lv i.off{opacity:.25;filter:grayscale(1)}
+.hud .tm{margin-left:auto;font-weight:700;font-size:18px}
+.hud .tm.low{color:var(--bad)}
+.tbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:-6px}
+.tbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.tbar i.low{background:var(--bad)}
+.pname{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted);margin-bottom:-8px;gap:8px}
+.pname b{color:var(--fg);font-size:14px}
+.combo{color:var(--accent);font-weight:700;white-space:nowrap}
+.panel svg{width:100%;height:auto;display:block}
+.newmod{animation:drop .45s cubic-bezier(.3,1.6,.5,1);transform-box:fill-box;transform-origin:center}
+@keyframes drop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+.slot{animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+.q{font-size:17px;font-weight:600;margin:0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;display:flex;align-items:center;gap:10px;min-height:50px}
+.opt:active{transform:scale(.985)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.float{position:fixed;left:50%;top:42%;transform:translate(-50%,0);font-family:var(--display);font-size:28px;color:var(--ok);pointer-events:none;animation:up .8s ease-out forwards;z-index:30;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+@keyframes up{to{transform:translate(-50%,-60px);opacity:0}}
+.toast{position:fixed;left:50%;top:58%;transform:translateX(-50%);background:var(--navy);color:var(--navy-fg);padding:14px 20px;border-radius:14px;font-family:var(--display);font-size:17px;z-index:30;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);animation:pop .3s ease-out;max-width:calc(100% - 32px)}
+@keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
+.ov{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(8,14,20,.6)}
+.ov .sheet{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:sheet .3s ease-out}
+@keyframes sheet{from{transform:translateY(60%)}}
+.ov .who{display:flex;align-items:center;gap:12px}
+.ov .who svg{width:96px;height:auto;flex:none}
+.ov h2{font-family:var(--display);font-size:20px;margin:0;color:var(--bad);line-height:1.2}
+.ov .ans{font-size:15px;margin:0}
+.ov .ans b{color:var(--ok)}
+.ov .why{font-size:14px;color:var(--muted);margin:0}
+.flash{position:fixed;inset:0;z-index:35;pointer-events:none;animation:flash .5s steps(2) 2}
+@keyframes flash{0%{background:rgba(255,215,94,.85)}50%{background:rgba(10,10,10,.75)}}
+.flash.fire{animation:fire .7s ease-out}
+@keyframes fire{0%{background:rgba(255,120,30,.75)}100%{background:transparent}}
+.flash.frost{animation:frost .9s ease-out}
+@keyframes frost{0%{background:rgba(220,242,255,.95)}100%{background:transparent}}
+.flash.gas{animation:gas 1s ease-out}
+@keyframes gas{0%{background:rgba(170,190,150,.85)}100%{background:transparent}}
+.flash.water{animation:water .9s ease-out}
+@keyframes water{0%{background:rgba(60,140,230,.75)}100%{background:transparent}}
+.flash.thief{animation:thiefbg 1s ease-out}
+@keyframes thiefbg{0%{background:rgba(10,14,20,.85)}100%{background:transparent}}
+.runner{position:fixed;bottom:22%;left:0;z-index:36;width:120px;pointer-events:none;animation:run 1.1s linear forwards}
+@keyframes run{from{transform:translateX(-130px)}to{transform:translateX(calc(100vw + 10px))}}
+.runner svg{width:100%;height:auto;animation:hop .18s ease-in-out infinite alternate}
+@keyframes hop{to{transform:translateY(-8px)}}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translate(-6px,2px)}40%{transform:translate(6px,-2px)}60%{transform:translate(-4px,1px)}80%{transform:translate(4px,0)}}
+.zap .bolt{animation:zap .18s steps(2) infinite}
+@keyframes zap{50%{opacity:0}}
+.zap .body,.shiver .body{animation:jit .12s infinite}
+@keyframes jit{50%{transform:translate(2px,-1px)}}
+.drops circle,.drops path{animation:fall .7s linear infinite}
+@keyframes fall{from{transform:translateY(-10px);opacity:1}to{transform:translateY(16px);opacity:0}}
+.puff{animation:puff 1.4s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes puff{from{transform:scale(.6);opacity:.95}to{transform:scale(1.25);opacity:.25}}
+.big{font-family:var(--display);font-size:54px;text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+.rank{display:inline-block;margin:0 auto;background:color-mix(in srgb,var(--accent) 25%,transparent);padding:6px 14px;border-radius:99px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.stats b{display:block;font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.spin{animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.air{animation:blink 1s ease-in-out infinite}
+.drive{animation:drive 1.4s ease-in .2s forwards}
+@keyframes drive{to{transform:translateX(360px)}}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.chip{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;border:1.5px dashed var(--line);color:var(--muted);min-width:28px;text-align:center}
+.chip.ok{border-style:solid;border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface));color:var(--fg)}
+.chip.cur{border-style:solid;border-color:var(--accent);color:var(--fg);animation:blink 1.2s ease-in-out infinite}
+.newchip{animation:pop2 .4s ease-out}
+@keyframes pop2{from{transform:scale(.5);opacity:0}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+/* Board helpers shared by the games: part markers that turn into green checks. */
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const TX=(x,y,s,o={})=>`<text x="${x}" y="${y}" font-size="${o.s||9}" font-weight="${o.w||600}" text-anchor="${o.a||'middle'}" fill="${o.c||'var(--fg)'}" font-family="Golos Text,system-ui"${o.halo===false?'':' stroke="var(--plate)" stroke-width="3" paint-order="stroke" stroke-linejoin="round"'}>${esc(s)}</text>`;
+function badge(x,y,label,isNew,lp){
+  const [dx,dy]=lp||[0,19];
+  return `<g${isNew?' class="newmod"':''}><circle cx="${x}" cy="${y}" r="9" fill="var(--ok)" stroke="#fff" stroke-width="2"/><path d="M${x-4} ${y}l3 3 5-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>${TX(x+dx,y+dy,label,{s:8.5,a:dx>0?'start':dx<0?'end':'middle'})}</g>`}
+function ring(x,y){return `<g class="slot"><circle cx="${x}" cy="${y}" r="13" fill="color-mix(in srgb,var(--accent) 22%,transparent)" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="5 3"/><text x="${x}" y="${y+4.5}" font-size="13" font-weight="800" text-anchor="middle" fill="var(--accent-ink)" stroke="var(--accent)" stroke-width="3" paint-order="stroke">?</text></g>`}
+function marks(G,POS,nolabel){let s='';
+  G.panel.src.forEach(t=>{if(!t.m)return;const p=POS[t.m.p];if(!p)return;
+    if(G.placed.includes(t))s+=badge(p[0],p[1],nolabel?'':tr(t.m.s),t===G.justPlaced,p[2]);
+    else if(t===G.task&&!G.complete)s+=ring(p[0],p[1]);
+    else s+=`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="none" stroke="var(--rail)" stroke-width="1.5" stroke-dasharray="3 3" opacity=".8"/>`});
+  return s}
+const doneShare=G=>{const n=G.panel.src.filter(t=>t.m).length;return n?G.placed.length/n:0};
+/* work-order chips under the picture: done items show their label, the rest stay hidden */
+function chips(G){const all=G.panel.src.filter(t=>t.m);
+  return `<div class="chips">${all.map(t=>G.placed.includes(t)?`<span class="chip ok${t===G.justPlaced?' newchip':''}">✓ ${esc(tr(t.m.s))}</span>`:t===G.task&&!G.complete?'<span class="chip cur">?</span>':'<span class="chip">·</span>').join('')}</div>`}
+
+// «Расставь камеры» — mini-game for Видеонаблюдение Pro. Facts follow the Видеонаблюдение Pro lessons and calculators.
+const GAME={key:'videonablyudenie',start:'igra_videonablyudenie',icon:'📹',life:'📹',loseMood:'thief',
+hat:{cap:'#3ccf8e',dark:'#25a86e',shirt:'#13222e',logo:'<g fill="#13222e"><rect x="0" y="6" width="16" height="12" rx="3"/><path d="M16 10l8-4v12l-8-4z"/></g>'},
+ranks:[1200,2400,3600],
+UI:{
+ru:{back:'‹ Уроки',title:'Расставь камеры',h1:'Расставь камеры',lead:'Игра для монтажников видеонаблюдения: закрой объект камерами без слепых зон, чтобы вор не прошёл незамеченным.',
+ r:[['⏱','2 минуты смены. Отвечайте быстрее — больше очков.'],['📹','3 жизни. Ошибка — вор проскочил, вода в разъёме или камеры погасли.'],['🛡','Каждый верный ответ ставит камеру или оборудование. Объект под охраной — бонус +300.']],
+ play:'Играть',best:'Ваш рекорд',safe:'Это игра. На объекте работайте с устойчивой стремянки, а блоки питания подключайте при выключенном автомате.',
+ panel:(n,name)=>`Объект ${n}: <b>${name}</b>`,combo:n=>`серия ×${n}`,
+ fails:{thief:['Вор проскочил!','Слепая зона! Вор ушёл!','Лица не видно, вор доволен!'],shock:['Камеры погасли!','Бзз! Питание пропало!'],water:['Вода в разъёме!','Камера утонула!'],angry:['Соседи пожаловались!']},
+ right:'Правильно:',next:'Понятно, дальше',built:'Объект под охраной! +300',
+ over:'Смена окончена',overLives:'Жизни закончились',score:'очков',panels:'объектов',acc:'верно',rec:'Новый рекорд!',
+ ranks:['Ученик','Монтажник','Мастер','Профи-установщик'],
+ share:'Поделиться с друзьями',again:'Ещё раз',learn:'Учиться: 13 уроков Видеонаблюдение Pro',
+ shareText:(s,p)=>`📹 Я набрал ${s} очков и взял под охрану ${p} ${p===1?'объект':p>1&&p<5?'объекта':'объектов'} в игре «Расставь камеры»! Сможешь лучше? Играть бесплатно в Telegram 👇`},
+uz:{back:'‹ Darslar',title:'Kameralarni joyla',h1:'Kameralarni joyla',lead:"Videokuzatuv montajchilari uchun o'yin: obyektni ko'r zonalarsiz kameralar bilan yoping, o'g'ri bilinmay o'tib ketmasin.",
+ r:[['⏱',"2 daqiqalik smena. Tezroq javob bering — ko'proq ball."],['📹',"3 ta jon. Xato — o'g'ri o'tib ketdi, razyomga suv kirdi yoki kameralar o'chdi."],['🛡',"Har bir to'g'ri javob kamera yoki uskuna qo'yadi. Obyekt qo'riqlovda — +300 bonus."]],
+ play:"O'ynash",best:'Rekordingiz',safe:"Bu o'yin. Obyektda mustahkam narvonda ishlang, quvvat bloklarini avtomat o'chirilganda ulang.",
+ panel:(n,name)=>`${n}-obyekt: <b>${name}</b>`,combo:n=>`seriya ×${n}`,
+ fails:{thief:["O'g'ri o'tib ketdi!","Ko'r zona! O'g'ri qochdi!","Yuz ko'rinmaydi, o'g'ri xursand!"],shock:["Kameralar o'chdi!",'Bzz! Quvvat yo\'qoldi!'],water:['Razyomga suv kirdi!','Kamera cho\'kdi!'],angry:["Qo'shnilar shikoyat qildi!"]},
+ right:"To'g'ri javob:",next:'Tushunarli, davom',built:"Obyekt qo'riqlovda! +300",
+ over:'Smena tugadi',overLives:'Jonlar tugadi',score:'ball',panels:'obyekt',acc:"to'g'ri",rec:'Yangi rekord!',
+ ranks:['Shogird','Montajchi','Usta','Professional montajchi'],
+ share:"Do'stlarga ulashish",again:'Yana bir bor',learn:"O'rganish: Videokuzatuv Pro'da 13 dars",
+ shareText:(s,p)=>`📹 «Kameralarni joyla» o'yinida ${s} ball to'pladim va ${p} ta obyektni qo'riqlovga oldim! Sen ko'proq qila olasanmi? Telegramda bepul o'yna 👇`}
+},
+/* o[0] is the correct answer (shuffled on screen). fx: thief | shock | water | angry. m.p = camera or device slot on the plan. */
+PANELS:[
+{name:{ru:'Магазин',uz:"Do'kon"},plan:'shop',tasks:[
+ {q:{ru:'Камера над кассой: видеть всю кассу и руки продавца вблизи. Какой объектив?',uz:"Kassa ustidagi kamera: butun kassani va sotuvchi qo'llarini yaqindan ko'rish. Qaysi obyektiv?"},
+  o:[{ru:'2,8 мм (~100°)',uz:'2,8 mm (~100°)'},{ru:'12 мм (~25°)',uz:'12 mm (~25°)'},{ru:'6 мм (~50°)',uz:'6 mm (~50°)'},{ru:'Любой, неважно',uz:'Istalgani, farqi yo\'q'}],fx:'thief',
+  e:{ru:'Чем меньше миллиметров, тем шире угол. 2,8 мм — комната, касса. 12 мм — дальний въезд и номера машин.',uz:"Millimetr qancha kam bo'lsa, burchak shuncha keng. 2,8 mm — xona, kassa. 12 mm — uzoq kirish va mashina raqamlari."},
+  m:{p:'kassa',s:{ru:'Касса',uz:'Kassa'}}},
+ {q:{ru:'Камера 2 Мп на вход должна узнавать лица. Какой ширины кадр у двери?',uz:"Kirishdagi 2 Mp kamera yuzlarni tanishi kerak. Eshik oldida kadr kengligi qancha?"},
+  o:[{ru:'Не шире 7–8 м',uz:'7–8 m dan keng emas'},{ru:'20 м — чем шире, тем лучше',uz:"20 m — qancha keng bo'lsa, shuncha yaxshi"},{ru:'Не меньше 15 м',uz:'Kamida 15 m'},{ru:'Любой',uz:'Istalgan'}],fx:'thief',
+  e:{ru:'Для лица нужно около 250 точек на метр. 1920 точек / 250 ≈ 7,7 м. Шире — человек есть, а лица не узнать.',uz:"Yuz uchun metriga taxminan 250 nuqta kerak. 1920 nuqta / 250 ≈ 7,7 m. Kengroq bo'lsa — odam ko'rinadi, lekin yuzini tanib bo'lmaydi."},
+  m:{p:'door',s:{ru:'Вход',uz:'Kirish'}}},
+ {q:{ru:'На какой высоте вешаем камеру в зале?',uz:'Zalda kamerani qanday balandlikka osamiz?'},
+  o:[{ru:'2,5–3,5 м',uz:'2,5–3,5 m'},{ru:'5 м, под самый потолок',uz:'5 m, eng shiftga'},{ru:'1,5 м, на уровне глаз',uz:"1,5 m, ko'z darajasida"},{ru:'На полу, в углу',uz:'Polda, burchakda'}],fx:'thief',
+  e:{ru:'Рукой не достать, а лица ещё видно. Выше 4 м камера видит только макушки.',uz:"Qo'l yetmaydi, yuzlar esa hali ko'rinadi. 4 m dan baland bo'lsa, kamera faqat tepalarni ko'radi."},
+  m:{p:'hall',s:{ru:'Зал',uz:'Zal'}}},
+ {q:{ru:'У входа стеклянная витрина и яркое солнце. Как направить камеру?',uz:"Kirishda shisha vitrina va yorqin quyosh. Kamerani qanday yo'naltiramiz?"},
+  o:[{ru:'Не на солнце и окно — спиной к свету',uz:"Quyosh va derazaga emas — yorug'likka orqa qilib"},{ru:'Прямо на витрину, против солнца',uz:"To'g'ri vitrinaga, quyoshga qarshi"},{ru:'На солнце, но с козырьком',uz:'Quyoshga, lekin soyabon bilan'},{ru:'Неважно куда',uz:"Qayerga bo'lsa ham farqi yo'q"}],fx:'thief',
+  e:{ru:'Против света днём будет засветка, а вечером — силуэты вместо лиц.',uz:"Yorug'likka qarshi kunduzi yorug'lik bosadi, kechqurun esa yuz o'rniga qora siluet bo'ladi."},
+  m:{p:'win',s:{ru:'Витрина',uz:'Vitrina'}}},
+ {q:{ru:'Где поставить регистратор?',uz:"Registratorni qayerga qo'yamiz?"},
+  o:[{ru:'В закрытом шкафу или подсобке',uz:'Yopiq shkafda yoki omborxonada'},{ru:'На кассе, на виду',uz:"Kassada, ko'rinadigan joyda"},{ru:'У входной двери',uz:'Kirish eshigi yonida'},{ru:'На полке в зале',uz:'Zaldagi tokchada'}],fx:'thief',
+  e:{ru:'Если вор унесёт регистратор, вместе с ним уйдёт и вся запись.',uz:"O'g'ri registratorni olib ketsa, u bilan birga butun yozuv ham ketadi."},
+  m:{p:'nvr',s:{ru:'Регистратор',uz:'Registrator'}}},
+ {q:{ru:'Какой архив записи предложить магазину?',uz:"Do'konga qancha kunlik yozuv arxivini taklif qilamiz?"},
+  o:[{ru:'Минимум 14–30 дней, с перезаписью',uz:"Kamida 14–30 kun, ustidan yozish bilan"},{ru:'1 день',uz:'1 kun'},{ru:'3 часа',uz:'3 soat'},{ru:'Архив не нужен, смотрим онлайн',uz:"Arxiv kerak emas, onlayn ko'ramiz"}],fx:'thief',
+  e:{ru:'О краже часто узнают не сразу. Режим перезаписи стирает старое, иначе на полном диске запись просто остановится.',uz:"O'g'irlik haqida ko'pincha darhol bilishmaydi. Ustidan yozish eskisini o'chiradi, aks holda disk to'lsa yozuv to'xtaydi."},
+  m:{p:'hdd',s:{ru:'Архив',uz:'Arxiv'}}},
+ {q:{ru:'Новый магазин, кабеля ещё нет. Какие камеры брать?',uz:"Yangi do'kon, kabel hali yo'q. Qanday kameralar olamiz?"},
+  o:[{ru:'IP-камеры с питанием PoE по витой паре',uz:"Vitaya para orqali PoE quvvatli IP-kameralar"},{ru:'Муляжи — дешевле',uz:'Muljalar — arzonroq'},{ru:'Камеры на батарейках без записи',uz:'Batareyali, yozuvsiz kameralar'},{ru:'Любые, всё равно',uz:"Istalgan, farqi yo'q"}],fx:'shock',
+  e:{ru:'Для нового объекта — IP: один кабель на камеру, питание PoE, лучше картинка и удобный просмотр с телефона.',uz:"Yangi obyekt uchun — IP: har bir kameraga bitta kabel, PoE quvvat, rasm yaxshiroq va telefondan ko'rish qulay."},
+  m:{p:'sw',s:{ru:'PoE',uz:'PoE'}}}
+]},
+{name:{ru:'Частный дом',uz:'Xususiy uy'},plan:'house',tasks:[
+ {q:{ru:'Калитка: видеть лица тех, кто звонит. Какой объектив?',uz:"Darvozacha: qo'ng'iroq qilayotganlarning yuzini ko'rish. Qaysi obyektiv?"},
+  o:[{ru:'6 мм (~50°)',uz:'6 mm (~50°)'},{ru:'2,8 мм с другого конца двора',uz:"Hovlining narigi chetidan 2,8 mm"},{ru:'12 мм вплотную',uz:'Yaqin masofada 12 mm'},{ru:'Камера 0,3 Мп',uz:'0,3 Mp kamera'}],fx:'thief',
+  e:{ru:'6 мм (~50°) — ворота, вход, узкий двор. Широкий объектив издалека даст мелкое лицо.',uz:"6 mm (~50°) — darvoza, kirish, tor hovli. Uzoqdan keng obyektiv yuzni mayda qilib ko'rsatadi."},
+  m:{p:'gate',s:{ru:'Калитка',uz:'Darvozacha'}}},
+ {q:{ru:'Клиент хочет одной камерой видеть весь двор и лица у калитки. Что предложить?',uz:"Mijoz bitta kamera bilan butun hovlini va darvozachadagi yuzlarni ko'rmoqchi. Nima taklif qilamiz?"},
+  o:[{ru:'Две: широкую на двор и узкую на калитку',uz:"Ikkita: hovliga keng va darvozachaga tor"},{ru:'Одну 8 Мп — хватит на всё',uz:'Bitta 8 Mp — hammasiga yetadi'},{ru:'Одну с 12 мм на весь двор',uz:'Butun hovliga bitta 12 mm'},{ru:'Одну и муляж',uz:'Bitta kamera va mulja'}],fx:'thief',
+  e:{ru:'Одна широкая камера на всё не узнает лица. Мегапиксели не главное: важны угол и точки на метр.',uz:"Hammasiga bitta keng kamera yuzlarni tanimaydi. Megapiksel asosiy emas: burchak va metrdagi nuqtalar muhim."},
+  m:{p:'yard',s:{ru:'Двор',uz:'Hovli'}}},
+ {q:{ru:'Дальний въезд, нужно читать номера машин. Какой объектив?',uz:"Uzoq kirish, mashina raqamlarini o'qish kerak. Qaysi obyektiv?"},
+  o:[{ru:'12 мм (~25°)',uz:'12 mm (~25°)'},{ru:'2,8 мм (~100°)',uz:'2,8 mm (~100°)'},{ru:'3,6 мм (~80°)',uz:'3,6 mm (~80°)'},{ru:'Любой',uz:'Istalgan'}],fx:'thief',
+  e:{ru:'Чем больше миллиметров, тем уже угол и дальше видно. 12 мм — дальний въезд, номера.',uz:"Millimetr qancha ko'p bo'lsa, burchak shuncha tor va uzoqni ko'radi. 12 mm — uzoq kirish, raqamlar."},
+  m:{p:'drive',s:{ru:'Номера',uz:'Raqamlar'}}},
+ {q:{ru:'Кабель с улицы заходит в стену. Как его вести?',uz:"Ko'chadan kelgan kabel devorga kiradi. Uni qanday olib boramiz?"},
+  o:[{ru:'Петлёй вниз перед вводом (капельная петля)',uz:"Kirishdan oldin pastga halqa (tomchi halqasi)"},{ru:'Прямо сверху в стену',uz:"To'g'ri tepadan devorga"},{ru:'Натянуть как струну',uz:'Tor kabi tarang tortish'},{ru:'Через открытое окно',uz:'Ochiq deraza orqali'}],fx:'water',
+  e:{ru:'Вода стечёт с нижней точки петли, а не уйдёт по кабелю в камеру или в стену.',uz:"Suv halqaning pastki nuqtasidan oqib tushadi, kabel bo'ylab kameraga yoki devorga kirmaydi."},
+  m:{p:'loop',s:{ru:'Петля',uz:'Halqa'}}},
+ {q:{ru:'Разъём RJ45 на улице. Что с ним делаем?',uz:"Ko'chadagi RJ45 razyomi. U bilan nima qilamiz?"},
+  o:[{ru:'Закрываем гермовводом или прячем в коробку',uz:"Germovvod bilan yopamiz yoki qutiga yashiramiz"},{ru:'Оставляем как есть',uz:"O'z holicha qoldiramiz"},{ru:'Обматываем изолентой',uz:'Izolenta bilan o\'raymiz'},{ru:'Кладём в пакет',uz:"Paketga solamiz"}],fx:'water',
+  e:{ru:'Открытый RJ45 под дождём окисляется за месяц: зелёный налёт, камера пропадает.',uz:"Yomg'irda ochiq RJ45 bir oyda oksidlanadi: yashil qatlam, kamera yo'qoladi."},
+  m:{p:'box',s:{ru:'Гермоввод',uz:'Germovvod'}}},
+ {q:{ru:'Камера на углу дома смотрит во двор соседей. Что делаем?',uz:"Uy burchagidagi kamera qo'shnilar hovlisiga qarab turibdi. Nima qilamiz?"},
+  o:[{ru:'Ограничиваем кадр или ставим маску',uz:"Kadrni cheklaymiz yoki niqob qo'yamiz"},{ru:'Ничего, так даже лучше',uz:"Hech narsa, shunisi yaxshi"},{ru:'Поворачиваем прямо к соседям',uz:"To'g'ri qo'shnilarga buramiz"},{ru:'Выключаем запись ночью',uz:"Kechasi yozuvni o'chiramiz"}],fx:'angry',
+  e:{ru:'Чужие окна и двор в кадре — нарушение частной жизни и частая причина жалоб. Лишнюю часть закрывают маской в настройках.',uz:"Kadrda begona derazalar va hovli — shaxsiy hayotga tajovuz va shikoyatlarning tez-tez sababi. Ortiqcha qism sozlamalarda niqob bilan yopiladi."},
+  m:{p:'back',s:{ru:'Маска',uz:'Niqob'}}},
+ {q:{ru:'Камеры пропадают только ночью. В чём дело?',uz:"Kameralar faqat kechasi yo'qoladi. Gap nimada?"},
+  o:[{ru:'Не хватает питания, когда включается ИК',uz:"IK yoqilganda quvvat yetmaydi"},{ru:'Ночью камеры спят',uz:"Kechasi kameralar uxlaydi"},{ru:'Сломался жёсткий диск',uz:'Qattiq disk buzilgan'},{ru:'Мешает луна',uz:'Oy xalaqit beradi'}],fx:'shock',
+  e:{ru:'Ночью с ИК-подсветкой камера берёт на 30–50% больше. Проверьте бюджет PoE, длину и сечение кабеля, блок 12 В.',uz:"Kechasi IK yoritgich bilan kamera 30–50% ko'proq oladi. PoE byudjeti, kabel uzunligi va kesimi, 12 V blokni tekshiring."},
+  m:{p:'psu',s:{ru:'Питание',uz:'Quvvat'}}}
+]},
+{name:{ru:'Склад',uz:'Ombor'},plan:'store',tasks:[
+ {q:{ru:'10 камер по 6 Вт (ночью), коммутатор PoE на 60 Вт. Хватит?',uz:'10 ta kamera 6 Vt dan (kechasi), PoE kommutator 60 Vt. Yetadimi?'},
+  o:[{ru:'Нет: 10 × 6 × 1,2 = 72 Вт, нужен мощнее',uz:"Yo'q: 10 × 6 × 1,2 = 72 Vt, kuchlirog'i kerak"},{ru:'Да, 60 Вт как раз',uz:"Ha, 60 Vt aynan"},{ru:'Да, запас не нужен',uz:'Ha, zaxira kerak emas'},{ru:'Да, если ночью выключить запись',uz:"Ha, kechasi yozuvni o'chirsa"}],fx:'shock',
+  e:{ru:'Сумма всех камер плюс 20% запаса должна влезать в бюджет PoE. Не хватает — коммутатор мощнее.',uz:"Barcha kameralar yig'indisi va 20% zaxira PoE byudjetiga sig'ishi kerak. Yetmasa — kuchliroq kommutator."},
+  m:{p:'sw',s:{ru:'Бюджет PoE',uz:'PoE byudjeti'}}},
+ {q:{ru:'Камера стоит в 130 м от коммутатора. Как запитать по PoE?',uz:"Kamera kommutatordan 130 m uzoqda. PoE orqali qanday quvvat beramiz?"},
+  o:[{ru:'Промежуточный коммутатор или PoE-удлинитель',uz:"Oraliq kommutator yoki PoE-uzaytirgich"},{ru:'Просто тянем 130 м кабеля',uz:'Shunchaki 130 m kabel tortamiz'},{ru:'Берём дешёвый кабель CCA',uz:'Arzon CCA kabel olamiz'},{ru:'Две вилки в одну розетку',uz:'Bitta rozetkaga ikkita vilka'}],fx:'shock',
+  e:{ru:'От PoE-порта до камеры — не больше 100 м. Дальше ставят промежуточный коммутатор или удлинитель.',uz:"PoE portidan kameragacha — 100 m dan oshmasin. Undan uzoqda oraliq kommutator yoki uzaytirgich qo'yiladi."},
+  m:{p:'far',s:{ru:'130 м',uz:'130 m'}}},
+ {q:{ru:'Обжимаем RJ45 по T568B. Первые четыре жилы?',uz:"RJ45 ni T568B bo'yicha qisamiz. Birinchi to'rtta sim?"},
+  o:[{ru:'Бело-оранжевый, оранжевый, бело-зелёный, синий',uz:"Oq-to'q sariq, to'q sariq, oq-yashil, ko'k"},{ru:'Синий, бело-синий, зелёный, бело-зелёный',uz:"Ko'k, oq-ko'k, yashil, oq-yashil"},{ru:'Коричневый, бело-коричневый, оранжевый, синий',uz:"Jigarrang, oq-jigarrang, to'q sariq, ko'k"},{ru:'Как получится, тестер разберётся',uz:'Qanday chiqsa, tester aniqlaydi'}],fx:'shock',
+  e:{ru:'T568B: бело-оранжевый, оранжевый, бело-зелёный, синий, бело-синий, зелёный, бело-коричневый, коричневый. Тестер: лампочки 1–8 по порядку.',uz:"T568B: oq-to'q sariq, to'q sariq, oq-yashil, ko'k, oq-ko'k, yashil, oq-jigarrang, jigarrang. Tester: 1–8 lampochkalar tartib bilan."},
+  m:{p:'aisle',s:{ru:'RJ45',uz:'RJ45'}}},
+ {q:{ru:'8 камер 4 Мп, H.265 (3 Мбит/с), архив 30 дней. Какой диск?',uz:'8 ta 4 Mp kamera, H.265 (3 Mbit/s), arxiv 30 kun. Qaysi disk?'},
+  o:[{ru:'10 ТБ',uz:'10 TB'},{ru:'1 ТБ',uz:'1 TB'},{ru:'2 ТБ',uz:'2 TB'},{ru:'500 ГБ',uz:'500 GB'}],fx:'thief',
+  e:{ru:'3 × 10,8 × 8 × 30 ≈ 7,8 ТБ, с запасом 10% ≈ 8,6 ТБ. Ставим диск 10 ТБ для видеонаблюдения.',uz:"3 × 10,8 × 8 × 30 ≈ 7,8 TB, 10% zaxira bilan ≈ 8,6 TB. Videokuzatuv uchun 10 TB disk qo'yamiz."},
+  m:{p:'hdd',s:{ru:'Диск 10 ТБ',uz:'10 TB disk'}}},
+ {q:{ru:'Чем кодек H.265 лучше H.264?',uz:'H.265 kodeki H.264 dan nimasi bilan yaxshi?'},
+  o:[{ru:'Сжимает примерно в 2 раза лучше — вдвое больше дней',uz:"Taxminan 2 baravar yaxshi siqadi — 2 baravar ko'p kun"},{ru:'Ярче картинка ночью',uz:'Kechasi rasm yorqinroq'},{ru:'Камера меньше греется',uz:'Kamera kamroq qiziydi'},{ru:'Ничем',uz:'Hech narsasi bilan'}],fx:'thief',
+  e:{ru:'На тот же диск с H.265 влезает примерно в 2 раза больше дней архива.',uz:"H.265 bilan o'sha diskka taxminan 2 baravar ko'p kunlik arxiv sig'adi."},
+  m:{p:'nvr',s:{ru:'H.265',uz:'H.265'}}},
+ {q:{ru:'Все новые камеры одной марки пришли с одинаковым IP. Как подключать?',uz:"Bir markadagi barcha yangi kameralar bir xil IP bilan keldi. Qanday ulaymiz?"},
+  o:[{ru:'По одной и сразу меняем адрес',uz:"Bittadan va darhol manzilni o'zgartiramiz"},{ru:'Все сразу — сами разберутся',uz:"Hammasini birdan — o'zlari hal qiladi"},{ru:'Меняем адрес только у роутера',uz:"Faqat routerning manzilini o'zgartiramiz"},{ru:'Отключаем регистратор',uz:"Registratorni o'chiramiz"}],fx:'shock',
+  e:{ru:'Два одинаковых адреса — конфликт: камера то есть, то нет. Первые три числа общие, последнее у каждого своё.',uz:"Ikkita bir xil manzil — ziddiyat: kamera goh bor, goh yo'q. Dastlabki uchta raqam umumiy, oxirgisi har biriniki alohida."},
+  m:{p:'aisle2',s:{ru:'IP-адреса',uz:'IP-manzillar'}}},
+ {q:{ru:'Настраиваем регистратор. Какой пароль?',uz:"Registratorni sozlaymiz. Qanday parol?"},
+  o:[{ru:'Свой сложный; клиенту — пользователь только для просмотра',uz:"O'zining murakkab paroli; mijozga — faqat ko'rish uchun foydalanuvchi"},{ru:'admin',uz:'admin'},{ru:'12345',uz:'12345'},{ru:'Без пароля, так удобнее',uz:'Parolsiz, shunisi qulay'}],fx:'thief',
+  e:{ru:'Слабый пароль и старая прошивка — главные дыры, через которые взламывают камеры. Учётную запись в облаке создавайте на клиента.',uz:"Kuchsiz parol va eski proshivka — kameralarni buzishning asosiy teshiklari. Bulutdagi hisobni mijoz nomiga oching."},
+  m:{p:'phone',s:{ru:'Пароль',uz:'Parol'}}}
+]}
+],
+board(G){return planSVG(G)+chips(G)}
+};
+
+/* ---------- art: top-view plans; each camera lights up its zone ---------- */
+const PLANS={
+shop:{slots:{kassa:{x:30,y:112,a:40,f:100,r:62},door:{x:224,y:176,a:-150,f:50,r:110},hall:{x:236,y:96,a:180,f:80,r:120},win:{x:30,y:24,a:35,f:80,r:110},nvr:{x:300,y:34,d:'nvr'},hdd:{x:272,y:34,d:'hdd'},sw:{x:286,y:62,d:'sw'}},
+ draw:()=>`<rect x="20" y="16" width="300" height="168" rx="4" fill="var(--floor)" stroke="var(--fg)" stroke-width="3"/>
+  <rect x="250" y="16" width="70" height="66" fill="color-mix(in srgb,var(--fg) 8%,var(--floor))" stroke="var(--fg)" stroke-width="2"/><path d="M250 70v12" stroke="var(--floor)" stroke-width="4"/>
+  <path d="M130 184h80" stroke="#7cc0ff" stroke-width="5"/><path d="M20 60v50" stroke="#7cc0ff" stroke-width="5"/>
+  <rect x="34" y="128" width="62" height="26" rx="3" fill="var(--rail)"/><rect x="120" y="36" width="12" height="96" rx="2" fill="var(--rail)"/><rect x="170" y="36" width="12" height="96" rx="2" fill="var(--rail)"/>
+  ${TX(65,145,lang==='uz'?'Kassa':'Касса',{s:9,halo:false,c:'#fff'})}${TX(170,196,lang==='uz'?'Kirish':'Вход',{s:9})}`},
+house:{slots:{gate:{x:172,y:118,a:30,f:50,r:150},yard:{x:100,y:120,a:90,f:100,r:62},drive:{x:24,y:168,a:0,f:25,r:280},loop:{x:172,y:70,d:'loop'},box:{x:150,y:30,d:'box'},back:{x:172,y:34,a:20,f:60,r:110},psu:{x:60,y:56,d:'sw'}},
+ draw:()=>`<rect x="14" y="12" width="312" height="176" rx="4" fill="color-mix(in srgb,#3dbb72 16%,var(--floor))" stroke="var(--rail)" stroke-width="2" stroke-dasharray="6 3"/>
+  <rect x="40" y="26" width="130" height="92" rx="3" fill="var(--floor)" stroke="var(--fg)" stroke-width="3"/>
+  <rect x="14" y="156" width="312" height="26" fill="color-mix(in srgb,var(--fg) 10%,var(--floor))"/><path d="M300 150v38" stroke="var(--fg)" stroke-width="4"/>
+  <rect x="236" y="12" width="90" height="40" fill="color-mix(in srgb,var(--bad) 14%,var(--floor))"/>
+  ${TX(105,76,lang==='uz'?'Uy':'Дом',{s:10,halo:false})}${TX(281,36,lang==='uz'?"Qo'shnilar":'Соседи',{s:9,halo:false})}${TX(310,146,lang==='uz'?'Darvozacha':'Калитка',{s:8.5,a:'end'})}`},
+store:{slots:{sw:{x:40,y:160,d:'sw'},hdd:{x:64,y:160,d:'hdd'},nvr:{x:88,y:160,d:'nvr'},far:{x:310,y:26,a:140,f:80,r:110},aisle:{x:28,y:52,a:0,f:40,r:290},aisle2:{x:28,y:116,a:0,f:40,r:290},phone:{x:300,y:166,d:'phone'}},
+ draw:()=>`<rect x="18" y="14" width="304" height="172" rx="4" fill="var(--floor)" stroke="var(--fg)" stroke-width="3"/>
+  ${[34,72,96,134].map(y=>`<rect x="70" y="${y}" width="200" height="12" rx="2" fill="var(--rail)"/>`).join('')}
+  <rect x="18" y="142" width="96" height="44" fill="color-mix(in srgb,var(--fg) 8%,var(--floor))" stroke="var(--fg)" stroke-width="2"/>
+  ${TX(66,180,lang==='uz'?'Server xona':'Серверная',{s:8,halo:false,c:'var(--muted)'})}`}
+};
+function cone(s,on,isNew){const a1=(s.a-s.f/2)*Math.PI/180,a2=(s.a+s.f/2)*Math.PI/180;
+  const p1=[s.x+s.r*Math.cos(a1),s.y+s.r*Math.sin(a1)],p2=[s.x+s.r*Math.cos(a2),s.y+s.r*Math.sin(a2)];
+  return `<path${isNew?' class="newmod"':''} d="M${s.x} ${s.y}L${p1[0].toFixed(1)} ${p1[1].toFixed(1)}A${s.r} ${s.r} 0 0 1 ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}z" fill="${on?'color-mix(in srgb,#ffd75e 45%,transparent)':'none'}" stroke="${on?'#e0b020':'none'}" stroke-width="1"/>`}
+function camIcon(s){return `<g transform="translate(${s.x} ${s.y}) rotate(${s.a})"><rect x="-6" y="-5" width="14" height="10" rx="3" fill="#2b3640" stroke="#fff" stroke-width="1.2"/><rect x="8" y="-3" width="4" height="6" rx="1" fill="#2b3640"/></g>`}
+const DEV={nvr:'<rect x="-10" y="-6" width="20" height="12" rx="2" fill="#2b3640"/><circle cx="6" cy="0" r="1.6" fill="#3dbb72"/>',hdd:'<rect x="-7" y="-9" width="14" height="18" rx="2" fill="#5d6b78"/><circle cx="0" cy="-1" r="4" fill="#9aa3ad"/>',sw:'<rect x="-11" y="-5" width="22" height="10" rx="2" fill="#2b3640"/><path d="M-7 0h2M-3 0h2M1 0h2M5 0h2" stroke="#3dbb72" stroke-width="2"/>',loop:'<path d="M-8 -9v8q0 8 8 8t8-8v-6" fill="none" stroke="#2b3640" stroke-width="3"/><path d="M0 9q2 3 0 5q-2-2 0-5z" fill="#4a90e8"/>',box:'<rect x="-8" y="-7" width="16" height="14" rx="3" fill="#9aa3ad" stroke="#2b3640"/>',phone:'<rect x="-6" y="-10" width="12" height="20" rx="3" fill="#2b3640"/><rect x="-4" y="-7" width="8" height="12" fill="#7cc0ff"/>'};
+function planSVG(G){const P=PLANS[G.panel.P.plan],done=G.complete;let cones='',icons='';
+  G.panel.src.forEach(t=>{const s=t.m&&P.slots[t.m.p];if(!s)return;const placed=G.placed.includes(t),isNew=t===G.justPlaced;
+    if(s.d){if(placed)icons+=`<g transform="translate(${s.x} ${s.y})"${isNew?' class="newmod"':''}>${DEV[s.d]}</g>`}
+    else{if(placed){cones+=cone(s,true,isNew);icons+=camIcon(s)}}});
+  const shade=done?'':`<rect x="2" y="2" width="336" height="196" rx="12" fill="rgba(8,14,30,.18)" pointer-events="none"/>`;
+  const shield=done?`<g class="newmod"><path d="M170 70l30 10v22q0 22-30 34q-30-12-30-34V80z" fill="var(--ok)" stroke="#fff" stroke-width="3"/><path d="M157 102l9 9 17-19" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>`:'';
+  return `<svg viewBox="0 0 340 200" role="img" aria-label="plan"><rect x="2" y="2" width="336" height="196" rx="12" fill="var(--box)"/>
+  ${P.draw()}${cones}${shade}${icons}${done?'':marksDot(G,P.slots)}${shield}</svg>`}
+// on the plan: blinking ring where the next camera or device goes; placed items show by themselves
+function marksDot(G,slots){const t=G.task;const s=t&&t.m&&slots[t.m.p];return s?ring(s.x,s.y):''}
+
+// Kasb Pro mini-game engine (shared by the profession games). Our own art and texts.
+// Needs a global GAME = {key, start, back, life, hat, UI:{ru,uz}, PANELS, board(G), ranks:[a,b,c]}.
+const tg=window.Telegram&&window.Telegram.WebApp;
+if(tg){try{tg.ready();tg.expand();tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){}}
+const BOT='kasbpro_uz_bot';
+const GAME_TIME=120;
+let lang='ru';
+try{const v=JSON.parse(localStorage.getItem('ep_lang')||'null');lang=(v==='uz'||v==='ru')?v:((tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code==='uz')?'uz':'ru')}catch(e){}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const BEST_KEY='kp_igra_'+GAME.key+'_best';
+const U=()=>GAME.UI[lang];
+const tr=o=>o==null?'':typeof o==='string'?o:(o[lang]||o.ru);
+const PANELS=GAME.PANELS;
+
+/* ---------- mascot: our usta in a work cap; mood = ok | shock | fire | frost | gas | water | thief ---------- */
+function usta(mood){
+  const H=GAME.hat,ink='#2a1c00';
+  const face={fire:'#6b5a4e',frost:'#bfe0f2',gas:'#cfe0a6'}[mood]||'#f2c79b';
+  let eyes=`<circle cx="57" cy="67" r="4.5" fill="${ink}"/><circle cx="83" cy="67" r="4.5" fill="${ink}"/><circle cx="58.5" cy="65.5" r="1.4" fill="#fff"/><circle cx="84.5" cy="65.5" r="1.4" fill="#fff"/>`;
+  let mouth=`<path d="M56 90q14 12 28 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+  let extra='',hair='',hy=0,cls='';
+  if(mood==='shock'){cls='zap';hy=-14;
+    eyes=`<path d="M52 62l10 10M62 62l-10 10M78 62l10 10M88 62l-10 10" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>`;
+    mouth=`<path d="M56 96l6-6 6 6 6-6 6 6 6-6" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linejoin="round"/>`;
+    hair=`<path d="M30 52l-12-10 14 2-10-14 16 8-2-16 12 14M110 52l12-10-14 2 10-14-16 8 2-16-12 14" fill="none" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>`;
+    extra=`<g class="bolt" fill="#ffd75e" stroke="${ink}" stroke-width="2" stroke-linejoin="round"><path d="M8 80l14-4-6 10 14-3"/><path d="M132 80l-14-4 6 10-14-3"/><path d="M20 120l12-6-3 9 11-5"/></g>`}
+  else if(mood==='fire'){
+    eyes=`<circle cx="57" cy="67" r="6" fill="#fff"/><circle cx="83" cy="67" r="6" fill="#fff"/><circle cx="57" cy="68" r="2.5" fill="${ink}"/><circle cx="83" cy="68" r="2.5" fill="${ink}"/>`;
+    mouth=`<ellipse cx="70" cy="95" rx="7" ry="5" fill="${ink}"/>`;
+    extra=`<g fill="#9aa3ad" opacity=".85"><circle class="puff" cx="40" cy="18" r="9"/><circle cx="52" cy="10" r="7"/><circle class="puff" cx="96" cy="16" r="8"/><circle cx="106" cy="6" r="6"/></g>`}
+  else if(mood==='frost'){cls='shiver';
+    eyes=`<circle cx="57" cy="67" r="6" fill="#fff"/><circle cx="83" cy="67" r="6" fill="#fff"/><circle cx="57" cy="66" r="2.5" fill="${ink}"/><circle cx="83" cy="66" r="2.5" fill="${ink}"/>`;
+    mouth=`<rect x="56" y="88" width="28" height="11" rx="3" fill="#fff" stroke="${ink}" stroke-width="2.5"/><path d="M63 88v11M70 88v11M77 88v11" stroke="${ink}" stroke-width="1.5"/>`;
+    extra=`<g fill="#e8f6ff" stroke="#7cc0ff" stroke-width="1.5"><path d="M30 61l4 12 4-12z"/><path d="M48 61l3 9 3-9z"/><path d="M90 61l3 10 3-10z"/><path d="M104 61l4 12 4-12z"/></g><g stroke="#7cc0ff" stroke-width="2.5" stroke-linecap="round"><path d="M14 40v16M6 48h16M8 42l12 12M20 42L8 54"/><path d="M124 96v14M117 103h14M119 98l10 10M129 98l-10 10"/></g>`}
+  else if(mood==='gas'){
+    eyes=`<path d="M51 64l10 4-10 4M89 64l-10 4 10 4" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    mouth=`<path d="M56 94q4-5 7 0t7 0 7 0 7 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+    extra=`<g fill="#b9c9a3" opacity=".9"><circle class="puff" cx="22" cy="96" r="12"/><circle cx="14" cy="76" r="8"/><circle class="puff" cx="118" cy="104" r="13"/><circle cx="128" cy="82" r="8"/><circle class="puff" cx="70" cy="132" r="10"/></g>`}
+  else if(mood==='water'){
+    eyes=`<path d="M51 68q6-6 12 0M77 68q6-6 12 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+    mouth=`<ellipse cx="70" cy="94" rx="6" ry="7" fill="${ink}"/>`;
+    extra=`<g class="drops" fill="#4a90e8"><path d="M30 8q5 8 0 12q-5-4 0-12z"/><path d="M58 0q5 8 0 12q-5-4 0-12z"/><path d="M84 6q5 8 0 12q-5-4 0-12z"/><path d="M110 2q5 8 0 12q-5-4 0-12z"/><path d="M18 50q5 8 0 12q-5-4 0-12z"/><path d="M124 46q5 8 0 12q-5-4 0-12z"/></g>`}
+  else if(mood==='thief'){
+    eyes=`<circle cx="57" cy="67" r="6.5" fill="#fff"/><circle cx="83" cy="67" r="6.5" fill="#fff"/><circle cx="61" cy="67" r="3" fill="${ink}"/><circle cx="87" cy="67" r="3" fill="${ink}"/>`;
+    mouth=`<ellipse cx="70" cy="95" rx="6" ry="6" fill="${ink}"/>`;
+    extra=`<text x="118" y="44" font-size="34" font-weight="900" fill="#c4392f" font-family="system-ui">!</text><text x="8" y="44" font-size="30" font-weight="900" fill="#c4392f" font-family="system-ui">?</text>`}
+  return `<svg viewBox="0 0 140 150" role="img" aria-label="usta" class="${cls}">${extra}<g class="body">
+  <path d="M30 150q0-26 40-26t40 26z" fill="${H.shirt}"/><path d="M58 124h24l-12 14z" fill="${H.cap}"/>
+  ${hair}<ellipse cx="70" cy="76" rx="40" ry="38" fill="${face}"/>
+  <ellipse cx="30" cy="78" rx="6" ry="9" fill="${face}"/><ellipse cx="110" cy="78" rx="6" ry="9" fill="${face}"/>
+  ${eyes}<path d="M50 84q10-6 20 0 10-6 20 0q-10 6-20 1-10 5-20-1z" fill="${mood==='fire'?'#2a2a2a':'#4a2e1a'}"/>${mouth}
+  <g transform="translate(0 ${hy})"><path d="M28 58q2-36 42-36t42 36z" fill="${H.cap}"/><path d="M24 54h92q8 0 8 6v2H20v-2q0-6 4-6z" fill="${H.dark}"/><g transform="translate(58 28)">${H.logo}</g></g>
+  </g>${mood==='frost'?`<g fill="#e8f6ff" stroke="#7cc0ff" stroke-width="1.5" transform="translate(0 ${hy})"><path d="M30 62l4 12 4-12z"/><path d="M104 62l4 12 4-12z"/></g>`:''}</svg>`}
+const THIEF=`<svg viewBox="0 0 120 110" aria-hidden="true"><ellipse cx="60" cy="104" rx="34" ry="5" fill="rgba(0,0,0,.25)"/>
+ <path d="M38 98l10-30M76 98l-8-30" stroke="#1d232b" stroke-width="10" stroke-linecap="round"/><rect x="40" y="40" width="40" height="34" rx="12" fill="#2b323b"/>
+ <path d="M42 50h36M42 60h36" stroke="#e7edf3" stroke-width="4"/><circle cx="60" cy="26" r="17" fill="#f2c79b"/><path d="M43 22h34v8H43z" fill="#1d232b"/>
+ <circle cx="53" cy="26" r="3" fill="#fff"/><circle cx="67" cy="26" r="3" fill="#fff"/><path d="M44 14q16-14 32 0z" fill="#1d232b"/>
+ <path d="M80 48l18 8" stroke="#2b323b" stroke-width="8" stroke-linecap="round"/><path d="M96 46q16 4 14 22q-2 14-16 12q-12-2-10-18q2-16 12-16z" fill="#c9a26a"/><text x="99" y="70" font-size="14" font-weight="800" text-anchor="middle" fill="#6b4a1f">$</text></svg>`;
+
+/* ---------- game state ---------- */
+let G=null,timer=null;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const NP=PANELS.length,IDX=PANELS.map((_,i)=>i);
+function newGame(){
+  G={score:0,lives:3,combo:0,t:GAME_TIME,right:0,total:0,panels:0,pn:0,order:shuffle(IDX),busy:false};
+  loadPanel();render();
+  clearInterval(timer);let last=Date.now();
+  timer=setInterval(()=>{const now=Date.now(),dt=(now-last)/1000;last=now;if(G.busy||document.hidden)return;
+    G.t-=dt;if(G.t<=0){G.t=0;end('time')}else paintTime()},200)}
+function loadPanel(){
+  if(G.pn>0&&G.pn%NP===0)G.order=shuffle(IDX);
+  const P=PANELS[G.order[G.pn%NP]];
+  G.panel={P,name:P.name,src:P.tasks,tasks:shuffle(P.tasks)};G.ti=0;G.complete=false;G.placed=[];G.justPlaced=null;nextTask(true)}
+function nextTask(first){
+  if(!first)G.ti++;
+  if(G.ti>=G.panel.tasks.length){G.complete=true;G.panels++;G.score+=300;render();toast(tr(G.panel.P.done)||U().built);haptic('success');G.pn++;G.busy=true;
+    setTimeout(()=>{if(!G||G.over)return;G.busy=false;loadPanel();render()},1600);return}
+  G.task=G.panel.tasks[G.ti];
+  G.opts=shuffle(G.task.o.map((o,i)=>({o,ok:i===0})));G.shown=Date.now()}
+
+/* ---------- screens ---------- */
+const app=document.getElementById('app');
+const $=s=>document.querySelector(s);
+function bar(){const L=U();return `<header class="bar"><a href="../">${L.back}</a><div class="ttl">${GAME.icon} ${L.title}</div><div class="lang" role="group" aria-label="Til"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div></header>`}
+function bindBar(){document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('ep_lang',JSON.stringify(lang));document.documentElement.lang=lang;render()})}
+let screen='start',result=null;
+function render(){document.documentElement.lang=lang;
+  if(screen==='start')startScr();else if(screen==='game')gameScr();else endScr();bindBar()}
+function startScr(){const L=U();const best=+store.get(BEST_KEY)||0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${usta('ok')}</div><h1>${L.h1}</h1><p class="lead">${L.lead}</p>
+  <div class="card"><ul class="rules">${L.r.map(r=>`<li><span>${r[0]}</span><div>${r[1]}</div></li>`).join('')}</ul></div>
+  ${best?`<div class="best">${L.best}: <b>${best}</b></div>`:''}
+  <button class="btn" id="play" type="button">${L.play}</button><p class="small">${L.safe}</p></main>`;
+  $('#play').onclick=()=>{screen='game';newGame()}}
+function gameScr(){const L=U();const t=G.task;
+  const opts=G.opts.map((x,i)=>`<button class="opt" type="button" data-i="${i}"><span>${tr(x.o)}</span></button>`).join('');
+  app.innerHTML=bar()+`<main class="wrap" id="gw">
+  <div class="hud"><span class="sc" id="sc">${G.score}</span><span class="lv" aria-label="lives">${[0,1,2].map(i=>`<i class="${i<G.lives?'':'off'}">${GAME.life}</i>`).join('')}</span><span class="tm" id="tm"></span></div>
+  <div class="tbar"><i id="tb"></i></div>
+  <div class="pname"><span>${L.panel(G.panels+1,tr(G.panel.name))}</span>${G.combo>1?`<span class="combo">${L.combo(Math.min(G.combo,5))}</span>`:''}</div>
+  <div class="panel">${GAME.board(G)}</div>
+  ${G.complete?'':`<p class="q">${tr(t.q)}</p><div class="opts">${opts}</div>`}</main>`;
+  G.justPlaced=null;paintTime();
+  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>answer(+b.dataset.i,b))}
+function paintTime(){const tm=$('#tm'),tb=$('#tb');if(!tm)return;const s=Math.ceil(G.t);
+  tm.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;tm.classList.toggle('low',s<=15);
+  tb.style.width=(G.t/GAME_TIME*100)+'%';tb.classList.toggle('low',s<=15)}
+function answer(i,btn){if(G.busy)return;const x=G.opts[i],t=G.task;G.total++;
+  if(x.ok){G.right++;G.combo++;const fast=(Date.now()-G.shown)<5000;
+    const pts=100+25*Math.min(G.combo-1,4)+(fast?50:0);G.score+=pts;
+    if(t.m){G.placed.push(t);G.justPlaced=t}
+    btn.classList.add('right');floatTxt('+'+pts);haptic('light');G.busy=true;
+    setTimeout(()=>{if(G.over)return;G.busy=false;nextTask();render()},380)}
+  else{G.combo=0;G.lives--;G.busy=true;G.panel.tasks.push(t); // wrong task comes back later in this panel
+    haptic('error');failFx(t)}}
+function failFx(t){const L=U();const fx=t.fx||'shock',mood=fx==='angry'?'thief':fx;
+  const f=document.createElement('div');f.className='flash'+(fx==='shock'?'':' '+(fx==='angry'?'thief':fx));document.body.appendChild(f);setTimeout(()=>f.remove(),1000);
+  if(fx==='thief'){const r=document.createElement('div');r.className='runner';r.innerHTML=THIEF;document.body.appendChild(r);setTimeout(()=>r.remove(),1200)}
+  const gw=$('#gw');if(gw)gw.classList.add('shake');
+  const titles=t.ft?[tr(t.ft)]:L.fails[fx];const title=titles[Math.random()*titles.length|0];
+  const ov=document.createElement('div');ov.className='ov';
+  ov.innerHTML=`<div class="sheet" role="alertdialog" aria-live="assertive"><div class="who">${usta(mood)}<h2>${title}</h2></div>
+  <p class="ans">${L.right} <b>${tr(t.o[0])}</b></p><p class="why">${tr(t.e)}</p><button class="btn" type="button" id="ovn">${L.next}</button></div>`;
+  setTimeout(()=>{document.body.appendChild(ov);$('#ovn').focus()},fx==='thief'?700:350);
+  ov.querySelector('#ovn').onclick=()=>{ov.remove();G.busy=false;if(G.lives<=0){end('lives');return}nextTask();render()}}
+function floatTxt(s){const d=document.createElement('div');d.className='float';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),800)}
+function toast(s){const d=document.createElement('div');d.className='toast';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),1500)}
+function haptic(k){try{const h=tg&&tg.HapticFeedback;if(!h)return;if(k==='light')h.impactOccurred('light');else h.notificationOccurred(k)}catch(e){}}
+function end(why){if(!G||G.over)return;G.over=true;clearInterval(timer);
+  document.querySelectorAll('.ov').forEach(o=>o.remove());
+  const prev=+store.get(BEST_KEY)||0;const rec=G.score>prev;if(rec)store.set(BEST_KEY,G.score);
+  result={score:G.score,panels:G.panels,right:G.right,total:G.total,why,rec,best:Math.max(prev,G.score)};
+  screen='end';render()}
+function rankOf(s){const r=GAME.ranks||[1200,2400,3600];return s<r[0]?0:s<r[1]?1:s<r[2]?2:3}
+function endScr(){const L=U(),r=result;const acc=r.total?Math.round(r.right/r.total*100):0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${usta(r.why==='lives'?GAME.loseMood:'ok')}</div>
+  <h1>${r.why==='lives'?L.overLives:L.over}</h1>
+  <div class="big">${r.score}</div><div class="center"><span class="rank">${L.ranks[rankOf(r.score)]}</span></div>
+  ${r.rec&&r.score>0?`<p class="lead"><b>🏆 ${L.rec}</b></p>`:`<div class="best">${L.best}: <b>${r.best}</b></div>`}
+  <div class="stats"><div><b>${r.score}</b><span>${L.score}</span></div><div><b>${r.panels}</b><span>${L.panels}</span></div><div><b>${acc}%</b><span>${L.acc}</span></div></div>
+  <button class="btn tg" id="share" type="button">📤 ${L.share}</button>
+  <button class="btn" id="again" type="button">${L.again}</button>
+  <a class="btn ghost" href="../">📘 ${L.learn}</a></main>`;
+  $('#again').onclick=()=>{screen='game';newGame()};
+  $('#share').onclick=share}
+function share(){const r=result;const url=`https://t.me/${BOT}?start=${GAME.start}`;
+  const link=`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(U().shareText(r.score,r.panels))}`;
+  try{if(tg&&tg.initData&&tg.openTelegramLink){tg.openTelegramLink(link);return}}catch(e){}
+  window.open(link,'_blank','noopener')}
+render();
+
+</script>
+</body>
+</html>

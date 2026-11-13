@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Найди поломку — игра для автоэлектриков · Kasb Pro</title>
+<meta name="description" content="Бесплатная игра для автоэлектриков: найди поломку машины за 2 минуты. АКБ, стартер, генератор, утечка тока, OBD-II, CAN. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/avtoelektrik/igra/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:title" content="Найди поломку — игра для автоэлектриков">
+<meta property="og:description" content="2 минуты, 3 жизни. Найди поломку по симптомам и заведи машину.">
+<meta property="og:url" content="https://kasbpro.uz/avtoelektrik/igra/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{--bg:#eef1f4; --surface:#fff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2; --accent:#9bcf2f; --accent-ink:#172400; --navy:#1d2530; --navy-fg:#f4f7fa; --ok:#1f8a4c; --bad:#c4392f; --box:#c9d0d7; --plate:#e4e8ec; --rail:#9aa3ad; --unitc:#fbfcfd; --modline:#b7bfc8; --wall:#b9a48a; --floor:#f7f9fb;--display:"Unbounded","Golos Text",system-ui,sans-serif; --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543; --accent:#b2e04a; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f; --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --unitc:#e9edf1; --modline:#8d98a4; --wall:#6b5b48; --floor:#223040; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543; --accent:#b2e04a; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f; --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --unitc:#e9edf1; --modline:#8d98a4; --wall:#6b5b48; --floor:#223040; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.bar{background:var(--navy);color:var(--navy-fg);padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:10px}
+.bar a{color:var(--navy-fg);opacity:.8;text-decoration:none;font-size:14px;white-space:nowrap}
+.bar .ttl{flex:1;font-family:var(--display);font-size:15px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:12px;font-weight:700;padding:5px 9px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.wrap{flex:1;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+h1{font-family:var(--display);font-size:26px;line-height:1.15;margin:0;text-align:center;text-wrap:balance}
+.lead{margin:0;text-align:center;color:var(--muted);text-wrap:balance}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.rules li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.rules li span{flex:none;width:28px;height:28px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:16px}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:17px;padding:15px;width:100%;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.btn.tg{background:#229ed9;color:#fff}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.small{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.best{text-align:center;font-size:14px;color:var(--muted)}
+.best b{color:var(--fg);font-variant-numeric:tabular-nums}
+.hero{display:flex;justify-content:center}
+.hero svg{width:150px;height:auto}
+.hud{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+.hud .sc{font-family:var(--display);font-size:20px;min-width:70px}
+.hud .lv{display:flex;gap:2px;font-size:18px}
+.hud .lv i{font-style:normal;transition:opacity .3s,filter .3s}
+.hud .lv i.off{opacity:.25;filter:grayscale(1)}
+.hud .tm{margin-left:auto;font-weight:700;font-size:18px}
+.hud .tm.low{color:var(--bad)}
+.tbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:-6px}
+.tbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.tbar i.low{background:var(--bad)}
+.pname{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted);margin-bottom:-8px;gap:8px}
+.pname b{color:var(--fg);font-size:14px}
+.combo{color:var(--accent);font-weight:700;white-space:nowrap}
+.panel svg{width:100%;height:auto;display:block}
+.newmod{animation:drop .45s cubic-bezier(.3,1.6,.5,1);transform-box:fill-box;transform-origin:center}
+@keyframes drop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+.slot{animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+.q{font-size:17px;font-weight:600;margin:0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;display:flex;align-items:center;gap:10px;min-height:50px}
+.opt:active{transform:scale(.985)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.float{position:fixed;left:50%;top:42%;transform:translate(-50%,0);font-family:var(--display);font-size:28px;color:var(--ok);pointer-events:none;animation:up .8s ease-out forwards;z-index:30;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+@keyframes up{to{transform:translate(-50%,-60px);opacity:0}}
+.toast{position:fixed;left:50%;top:58%;transform:translateX(-50%);background:var(--navy);color:var(--navy-fg);padding:14px 20px;border-radius:14px;font-family:var(--display);font-size:17px;z-index:30;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);animation:pop .3s ease-out;max-width:calc(100% - 32px)}
+@keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
+.ov{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(8,14,20,.6)}
+.ov .sheet{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:sheet .3s ease-out}
+@keyframes sheet{from{transform:translateY(60%)}}
+.ov .who{display:flex;align-items:center;gap:12px}
+.ov .who svg{width:96px;height:auto;flex:none}
+.ov h2{font-family:var(--display);font-size:20px;margin:0;color:var(--bad);line-height:1.2}
+.ov .ans{font-size:15px;margin:0}
+.ov .ans b{color:var(--ok)}
+.ov .why{font-size:14px;color:var(--muted);margin:0}
+.flash{position:fixed;inset:0;z-index:35;pointer-events:none;animation:flash .5s steps(2) 2}
+@keyframes flash{0%{background:rgba(255,215,94,.85)}50%{background:rgba(10,10,10,.75)}}
+.flash.fire{animation:fire .7s ease-out}
+@keyframes fire{0%{background:rgba(255,120,30,.75)}100%{background:transparent}}
+.flash.frost{animation:frost .9s ease-out}
+@keyframes frost{0%{background:rgba(220,242,255,.95)}100%{background:transparent}}
+.flash.gas{animation:gas 1s ease-out}
+@keyframes gas{0%{background:rgba(170,190,150,.85)}100%{background:transparent}}
+.flash.water{animation:water .9s ease-out}
+@keyframes water{0%{background:rgba(60,140,230,.75)}100%{background:transparent}}
+.flash.thief{animation:thiefbg 1s ease-out}
+@keyframes thiefbg{0%{background:rgba(10,14,20,.85)}100%{background:transparent}}
+.runner{position:fixed;bottom:22%;left:0;z-index:36;width:120px;pointer-events:none;animation:run 1.1s linear forwards}
+@keyframes run{from{transform:translateX(-130px)}to{transform:translateX(calc(100vw + 10px))}}
+.runner svg{width:100%;height:auto;animation:hop .18s ease-in-out infinite alternate}
+@keyframes hop{to{transform:translateY(-8px)}}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translate(-6px,2px)}40%{transform:translate(6px,-2px)}60%{transform:translate(-4px,1px)}80%{transform:translate(4px,0)}}
+.zap .bolt{animation:zap .18s steps(2) infinite}
+@keyframes zap{50%{opacity:0}}
+.zap .body,.shiver .body{animation:jit .12s infinite}
+@keyframes jit{50%{transform:translate(2px,-1px)}}
+.drops circle,.drops path{animation:fall .7s linear infinite}
+@keyframes fall{from{transform:translateY(-10px);opacity:1}to{transform:translateY(16px);opacity:0}}
+.puff{animation:puff 1.4s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes puff{from{transform:scale(.6);opacity:.95}to{transform:scale(1.25);opacity:.25}}
+.big{font-family:var(--display);font-size:54px;text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+.rank{display:inline-block;margin:0 auto;background:color-mix(in srgb,var(--accent) 25%,transparent);padding:6px 14px;border-radius:99px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.stats b{display:block;font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.spin{animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.air{animation:blink 1s ease-in-out infinite}
+.drive{animation:drive 1.4s ease-in .2s forwards}
+@keyframes drive{to{transform:translateX(360px)}}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.chip{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;border:1.5px dashed var(--line);color:var(--muted);min-width:28px;text-align:center}
+.chip.ok{border-style:solid;border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface));color:var(--fg)}
+.chip.cur{border-style:solid;border-color:var(--accent);color:var(--fg);animation:blink 1.2s ease-in-out infinite}
+.newchip{animation:pop2 .4s ease-out}
+@keyframes pop2{from{transform:scale(.5);opacity:0}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+/* Board helpers shared by the games: part markers that turn into green checks. */
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const TX=(x,y,s,o={})=>`<text x="${x}" y="${y}" font-size="${o.s||9}" font-weight="${o.w||600}" text-anchor="${o.a||'middle'}" fill="${o.c||'var(--fg)'}" font-family="Golos Text,system-ui"${o.halo===false?'':' stroke="var(--plate)" stroke-width="3" paint-order="stroke" stroke-linejoin="round"'}>${esc(s)}</text>`;
+function badge(x,y,label,isNew,lp){
+  const [dx,dy]=lp||[0,19];
+  return `<g${isNew?' class="newmod"':''}><circle cx="${x}" cy="${y}" r="9" fill="var(--ok)" stroke="#fff" stroke-width="2"/><path d="M${x-4} ${y}l3 3 5-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>${TX(x+dx,y+dy,label,{s:8.5,a:dx>0?'start':dx<0?'end':'middle'})}</g>`}
+function ring(x,y){return `<g class="slot"><circle cx="${x}" cy="${y}" r="13" fill="color-mix(in srgb,var(--accent) 22%,transparent)" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="5 3"/><text x="${x}" y="${y+4.5}" font-size="13" font-weight="800" text-anchor="middle" fill="var(--accent-ink)" stroke="var(--accent)" stroke-width="3" paint-order="stroke">?</text></g>`}
+function marks(G,POS,nolabel){let s='';
+  G.panel.src.forEach(t=>{if(!t.m)return;const p=POS[t.m.p];if(!p)return;
+    if(G.placed.includes(t))s+=badge(p[0],p[1],nolabel?'':tr(t.m.s),t===G.justPlaced,p[2]);
+    else if(t===G.task&&!G.complete)s+=ring(p[0],p[1]);
+    else s+=`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="none" stroke="var(--rail)" stroke-width="1.5" stroke-dasharray="3 3" opacity=".8"/>`});
+  return s}
+const doneShare=G=>{const n=G.panel.src.filter(t=>t.m).length;return n?G.placed.length/n:0};
+/* work-order chips under the picture: done items show their label, the rest stay hidden */
+function chips(G){const all=G.panel.src.filter(t=>t.m);
+  return `<div class="chips">${all.map(t=>G.placed.includes(t)?`<span class="chip ok${t===G.justPlaced?' newchip':''}">✓ ${esc(tr(t.m.s))}</span>`:t===G.task&&!G.complete?'<span class="chip cur">?</span>':'<span class="chip">·</span>').join('')}</div>`}
+
+// «Найди поломку» — mini-game for Автоэлектрик Pro. Facts follow the Автоэлектрик Pro lessons and calculators.
+const GAME={key:'avtoelektrik',start:'igra_avtoelektrik',icon:'🔧',life:'🔋',loseMood:'shock',
+hat:{cap:'#9bcf2f',dark:'#76a51c',shirt:'#1d2530',logo:'<path d="M17 2a5 5 0 0 0-4.6 6.9L3.5 17.8a2 2 0 0 0 2.8 2.8l8.9-8.9A5 5 0 0 0 22 7l-3 3-3-1-1-3 3-3a5 5 0 0 0-1-1z" fill="#1d2530"/>'},
+ranks:[1200,2400,3600],
+UI:{
+ru:{back:'‹ Уроки',title:'Найди поломку',h1:'Найди поломку',lead:'Игра для автоэлектриков: найди причину по симптомам, почини машину и не спали проводку.',
+ r:[['⏱','2 минуты смены. Отвечайте быстрее — больше очков.'],['🔋','3 жизни. Ошибка — искры, дым и сгоревший блок.'],['🚗','Каждый верный ответ — найденная поломка. Машина поехала — бонус +300.']],
+ play:'Играть',best:'Ваш рекорд',safe:'Это игра. В настоящей машине перед работой с проводкой снимайте минусовую клемму АКБ.',
+ panel:(n,name)=>`Машина ${n}: <b>${name}</b>`,combo:n=>`серия ×${n}`,
+ fails:{shock:['Искры! Коротнуло!','Бах! Предохранитель сгорел!','Тр-р-р! Искры из глаз!'],fire:['Задымилась проводка!','Пахнет горелым блоком!']},
+ right:'Правильно:',next:'Понятно, дальше',built:'Машина поехала! +300',
+ over:'Смена окончена',overLives:'Жизни закончились',score:'очков',panels:'машин',acc:'верно',rec:'Новый рекорд!',
+ ranks:['Ученик','Автоэлектрик','Мастер-диагност','Профи-автоэлектрик'],
+ share:'Поделиться с друзьями',again:'Ещё раз',learn:'Учиться: 13 уроков Автоэлектрик Pro',
+ shareText:(s,p)=>`🔧 Я набрал ${s} очков и починил ${p} ${p===1?'машину':p>1&&p<5?'машины':'машин'} в игре «Найди поломку»! Сможешь лучше? Играть бесплатно в Telegram 👇`},
+uz:{back:'‹ Darslar',title:'Nosozlikni top',h1:'Nosozlikni top',lead:"Avtoelektriklar uchun o'yin: belgilariga qarab sababini toping, mashinani tuzating va simlarni kuydirmang.",
+ r:[['⏱',"2 daqiqalik smena. Tezroq javob bering — ko'proq ball."],['🔋',"3 ta jon. Xato — uchqun, tutun va kuygan blok."],['🚗',"Har bir to'g'ri javob — topilgan nosozlik. Mashina yurdi — +300 bonus."]],
+ play:"O'ynash",best:'Rekordingiz',safe:"Bu o'yin. Haqiqiy mashinada simlar bilan ishlashdan oldin AKB minus klemmasini yeching.",
+ panel:(n,name)=>`${n}-mashina: <b>${name}</b>`,combo:n=>`seriya ×${n}`,
+ fails:{shock:['Uchqun! Qisqa tutashuv!','Bax! Saqlagich kuydi!','Trr! Ko\'zdan uchqun!'],fire:['Simlar tutayapti!','Kuygan blok hidi!']},
+ right:"To'g'ri javob:",next:'Tushunarli, davom',built:'Mashina yurdi! +300',
+ over:'Smena tugadi',overLives:'Jonlar tugadi',score:'ball',panels:'mashina',acc:"to'g'ri",rec:'Yangi rekord!',
+ ranks:['Shogird','Avtoelektrik','Usta-diagnost','Professional avtoelektrik'],
+ share:"Do'stlarga ulashish",again:'Yana bir bor',learn:"O'rganish: Avtoelektrik Pro'da 13 dars",
+ shareText:(s,p)=>`🔧 «Nosozlikni top» o'yinida ${s} ball to'pladim va ${p} ta mashinani tuzatdim! Sen ko'proq qila olasanmi? Telegramda bepul o'yna 👇`}
+},
+/* o[0] is the correct answer (shuffled on screen). fx: shock | fire. m.p = spot on the car that gets a green check. */
+PANELS:[
+{name:{ru:'Не заводится',uz:'Ot olmayapti'},done:{ru:'Завелась и поехала! +300',uz:'Ot oldi va yurdi! +300'},tasks:[
+ {q:{ru:'Начинаем работу с проводкой. Что делаем первым?',uz:'Simlar bilan ishni boshlaymiz. Birinchi nima qilamiz?'},
+  o:[{ru:'Снимаем минусовую клемму АКБ',uz:'AKB minus klemmasini yechamiz'},{ru:'Снимаем плюсовую клемму ключом',uz:'Plyus klemmasini kalit bilan yechamiz'},{ru:'Ничего, 12 вольт не опасно',uz:'Hech narsa, 12 volt xavfli emas'},{ru:'Проверяем провод «на искру» о кузов',uz:"Simni kuzovga tekkizib «uchqunga» tekshiramiz"}],fx:'shock',
+  e:{ru:'Без минуса случайное касание ключом кузова ничего не замкнёт. Ключ между «+» и кузовом даёт сотни ампер: ожог и расплавленный металл.',uz:"Minus yechilsa, kalit kuzovga tegib ketsa ham hech narsa tutashmaydi. «+» va kuzov orasidagi kalit yuzlab amper beradi: kuyish va erigan metall."},
+  m:{p:'bat',s:{ru:'Минус АКБ',uz:'AKB minus'}}},
+ {q:{ru:'АКБ отдохнул после поездки, тестер показывает 12,3 В. Что это?',uz:"AKB safardan keyin dam oldi, tester 12,3 V ko'rsatyapti. Bu nima?"},
+  o:[{ru:'Заряжен примерно на 50 %, надо зарядить',uz:"Taxminan 50 % zaryadlangan, zaryadlash kerak"},{ru:'Заряжен на 100 %',uz:'100 % zaryadlangan'},{ru:'Перезаряд, АКБ «кипит»',uz:'Ortiqcha zaryad, AKB «qaynayapti»'},{ru:'АКБ мёртвый, только менять',uz:"AKB o'lgan, faqat almashtirish"}],fx:'shock',
+  e:{ru:'12,7 В и выше — 100 %, 12,5 В — около 75 %, 12,3 В — около 50 %. Мерить через 2–3 часа после поездки.',uz:"12,7 V va undan yuqori — 100 %, 12,5 V — taxminan 75 %, 12,3 V — taxminan 50 %. Safardan 2–3 soat keyin o'lchash kerak."},
+  m:{p:'meter',s:{ru:'Заряд АКБ',uz:'AKB zaryadi'}}},
+ {q:{ru:'АКБ заряжен, а на ключ — одиночный щелчок, стартер не крутит. Что проверяем первым?',uz:"AKB zaryadlangan, kalit burilganda — bitta chiqillash, starter aylanmaydi. Avval nimani tekshiramiz?"},
+  o:[{ru:'Массу: провод АКБ — кузов и кузов — двигатель',uz:'Massani: AKB — kuzov va kuzov — dvigatel simini'},{ru:'Меняем АКБ на новый',uz:'AKB ni yangisiga almashtiramiz'},{ru:'Сразу меняем двигатель',uz:'Darhol dvigatelni almashtiramiz'},{ru:'Ставим предохранитель побольше',uz:"Kattaroq saqlagich qo'yamiz"}],fx:'fire',
+  e:{ru:'Окисленная масса — самая частая причина щелчка. Падение напряжения на массе при прокрутке больше 0,3–0,5 В — плохая масса.',uz:"Oksidlangan massa — chiqillashning eng ko'p sababi. Aylantirishda massadagi kuchlanish tushishi 0,3–0,5 V dan ko'p bo'lsa — massa yomon."},
+  m:{p:'mass',s:{ru:'Масса',uz:'Massa'}}},
+ {q:{ru:'Поворачиваем ключ, а на контакте 50 стартера 0 В. Где ищем?',uz:"Kalitni buraymiz, starterning 50-kontaktida 0 V. Qayerdan qidiramiz?"},
+  o:[{ru:'Реле стартера, замок зажигания, датчик нейтрали АКПП',uz:"Starter relesi, o't oldirish qulfi, AKPP neytral datchigi"},{ru:'Генератор',uz:'Generator'},{ru:'Фары',uz:'Faralar'},{ru:'Свечи зажигания',uz:"O't oldirish shamlari"}],fx:'shock',
+  e:{ru:'Контакт 50 — команда на стартер. На нём при повороте ключа должно быть больше 10 В. Нет — ищем цепь управления.',uz:"50-kontakt — starterga buyruq. Kalit burilganda unda 10 V dan ko'p bo'lishi kerak. Yo'q bo'lsa — boshqaruv zanjirini qidiramiz."},
+  m:{p:'key',s:{ru:'Замок',uz:'Qulf'}}},
+ {q:{ru:'Стартер воет, но мотор не крутит. Что сломалось?',uz:"Starter g'uvillaydi, lekin motor aylanmaydi. Nima buzilgan?"},
+  o:[{ru:'Бендикс (обгонная муфта)',uz:'Bendiks (quvib o\'tish muftasi)'},{ru:'Разряжен АКБ',uz:'AKB zaryadsiz'},{ru:'Сгорела лампа',uz:'Lampa kuygan'},{ru:'Датчик температуры',uz:'Harorat datchigi'}],fx:'fire',
+  e:{ru:'Якорь стартера крутится, а шестерня не цепляет маховик — это бендикс. Тишина и гаснущие лампы — уже АКБ или клеммы.',uz:"Starter yakori aylanadi, lekin shesterna maxovikka ilinmaydi — bu bendiks. Jimlik va o'chayotgan lampalar — bu AKB yoki klemmalar."},
+  m:{p:'start',s:{ru:'Бендикс',uz:'Bendiks'}}},
+ {q:{ru:'Прикуриваем от другой машины. Куда минус донора?',uz:"Boshqa mashinadan quvvat olamiz. Donor minusi qayerga?"},
+  o:[{ru:'На массу мотора разряженной машины, подальше от АКБ',uz:"Zaryadsiz mashina motor massasiga, AKBdan uzoqroq"},{ru:'На плюс разряженного АКБ',uz:'Zaryadsiz AKB plyusiga'},{ru:'Прямо на минус АКБ, искрой',uz:'To\'g\'ri AKB minusiga, uchqun bilan'},{ru:'На провод фары',uz:'Fara simiga'}],fx:'fire',
+  e:{ru:'АКБ выделяет водород — он взрывается от искры. Поэтому последний контакт делаем подальше от АКБ. Отключаем в обратном порядке.',uz:"AKB vodorod chiqaradi — u uchqundan portlaydi. Shuning uchun oxirgi ulanishni AKBdan uzoqroqda qilamiz. Teskari tartibda uzamiz."},
+  m:{p:'eng',s:{ru:'Прикуривание',uz:'Prikurivanie'}}}
+]},
+{name:{ru:'АКБ садится',uz:'AKB tez tugayapti'},done:{ru:'Зарядка в норме! +300',uz:'Zaryadlash joyida! +300'},tasks:[
+ {q:{ru:'Мотор работает, на клеммах АКБ 12,9 В. Что это?',uz:'Motor ishlayapti, AKB klemmalarida 12,9 V. Bu nima?'},
+  o:[{ru:'Генератор не заряжает: ремень, щётки, регулятор',uz:"Generator zaryadlamayapti: tasma, cho'tkalar, regulyator"},{ru:'Норма',uz:"Me'yor"},{ru:'Перезаряд',uz:'Ortiqcha zaryad'},{ru:'Сломан стартер',uz:'Starter buzilgan'}],fx:'shock',
+  e:{ru:'На заведённом моторе должно быть 13,8–14,7 В. Ниже 13,5 В — недозаряд.',uz:"Ishlayotgan motorda 13,8–14,7 V bo'lishi kerak. 13,5 V dan past — zaryad yetmaydi."},
+  m:{p:'gen',s:{ru:'Генератор',uz:'Generator'}}},
+ {q:{ru:'Можно снять клемму АКБ на работающем моторе, чтобы проверить генератор?',uz:"Generatorni tekshirish uchun ishlayotgan motorda AKB klemmasini yechsa bo'ladimi?"},
+  o:[{ru:'Нельзя: скачок напряжения сожжёт блоки',uz:"Mumkin emas: kuchlanish sakrashi bloklarni kuydiradi"},{ru:'Можно, это старый способ',uz:"Bo'ladi, bu eski usul"},{ru:'Можно, если быстро',uz:"Tez qilsa bo'ladi"},{ru:'Можно на холостых',uz:"Salt yurishda bo'ladi"}],fx:'fire',
+  e:{ru:'Генератор проверяют тестером на клеммах: 13,8–14,7 В на холостых. Снятая клемма — дорогой ремонт блока управления.',uz:"Generator klemmalarda tester bilan tekshiriladi: salt yurishda 13,8–14,7 V. Yechilgan klemma — boshqaruv blokining qimmat ta'miri."},
+  m:{p:'ecu',s:{ru:'Блоки',uz:'Bloklar'}}},
+ {q:{ru:'Ищем утечку тока. Как подключить тестер?',uz:'Tok oqishini qidiramiz. Testerni qanday ulaymiz?'},
+  o:[{ru:'Режим 10 A, в разрыв: между минусом АКБ и клеммой',uz:"10 A rejimi, uzilishga: AKB minusi va klemma orasiga"},{ru:'Щупы в режиме A прямо на клеммы АКБ',uz:"A rejimida shchuplarni to'g'ri AKB klemmalariga"},{ru:'Режим Ω на работающем моторе',uz:'Ishlayotgan motorda Ω rejimi'},{ru:'Режим V~ на предохранитель',uz:'Saqlagichga V~ rejimi'}],fx:'shock',
+  e:{ru:'Ток меряют последовательно, в разрыв цепи. Щупы в режиме A на клеммах АКБ — короткое замыкание, сгорит предохранитель тестера.',uz:"Tok ketma-ket, zanjir uzilishida o'lchanadi. A rejimida shchuplar AKB klemmalarida — qisqa tutashuv, tester saqlagichi kuyadi."},
+  m:{p:'meter',s:{ru:'Тестер',uz:'Tester'}}},
+ {q:{ru:'Через 40 минут ток утечки всё ещё 0,8 А. Что дальше?',uz:"40 daqiqadan keyin ham oqish toki 0,8 A. Keyin nima?"},
+  o:[{ru:'Вынимаем предохранители по одному',uz:"Saqlagichlarni bittadan sug'uramiz"},{ru:'Меняем АКБ',uz:'AKB ni almashtiramiz'},{ru:'Это норма',uz:"Bu me'yor"},{ru:'Ставим АКБ побольше',uz:"Kattaroq AKB qo'yamiz"}],fx:'fire',
+  e:{ru:'Норма — до 30–50 мА. Вынули предохранитель и ток резко упал — нашли цепь. По схеме смотрим, что на ней.',uz:"Me'yor — 30–50 mA gacha. Saqlagich sug'urilganda tok keskin tushsa — zanjir topildi. Sxemadan unda nima borligini qaraymiz."},
+  m:{p:'fuse',s:{ru:'Предохранители',uz:'Saqlagichlar'}}},
+ {q:{ru:'Поставили новый предохранитель — он сразу сгорел снова. Что делаем?',uz:"Yangi saqlagich qo'ydik — u darhol yana kuydi. Nima qilamiz?"},
+  o:[{ru:'Ищем короткое замыкание: перетёртый провод',uz:"Qisqa tutashuvni qidiramiz: ishqalanib yeyilgan sim"},{ru:'Ставим предохранитель побольше',uz:"Kattaroq saqlagich qo'yamiz"},{ru:'Ставим проволоку вместо него',uz:"O'rniga sim qo'yamiz"},{ru:'Ставим два сразу',uz:"Ikkitasini birdan qo'yamiz"}],fx:'fire',
+  e:{ru:'Предохранитель защищает провод. Больший номинал или «жучок» — и провод загорится раньше, чем что-то сработает.',uz:"Saqlagich simni himoya qiladi. Kattaroq nominal yoki «jukchok» — sim biror narsa ishlashidan oldin yonib ketadi."},
+  m:{p:'wire',s:{ru:'Проводка',uz:'Simlar'}}},
+ {q:{ru:'Магнитолу подключили на постоянный плюс (30) вместо 15. Что будет?',uz:"Magnitola 15 o'rniga doimiy plyusga (30) ulangan. Nima bo'ladi?"},
+  o:[{ru:'Будет тянуть ток и сажать АКБ за ночь',uz:"Tok tortadi va AKB ni bir kechada tugatadi"},{ru:'Будет громче играть',uz:'Balandroq chaladi'},{ru:'Ничего',uz:'Hech narsa'},{ru:'Генератор будет заряжать сильнее',uz:"Generator kuchliroq zaryadlaydi"}],fx:'shock',
+  e:{ru:'30 — постоянный плюс, 15 — плюс после замка зажигания. Неправильно подключённая магнитола и дешёвая сигнализация — частые виновники утечки.',uz:"30 — doimiy plyus, 15 — o't oldirish qulfidan keyingi plyus. Noto'g'ri ulangan magnitola va arzon signalizatsiya — oqishning tez-tez aybdorlari."},
+  m:{p:'radio',s:{ru:'Магнитола',uz:'Magnitola'}}}
+]},
+{name:{ru:'Горит Check Engine',uz:'Check Engine yonyapti'},done:{ru:'Ошибок нет, машина поехала! +300',uz:"Xato yo'q, mashina yurdi! +300"},tasks:[
+ {q:{ru:'Где обычно разъём OBD-II для сканера?',uz:'Skaner uchun OBD-II razyomi odatda qayerda?'},
+  o:[{ru:'Под рулём слева',uz:'Rul ostida, chapda'},{ru:'В багажнике',uz:'Yukxonada'},{ru:'На аккумуляторе',uz:'Akkumulyator ustida'},{ru:'Под задним сиденьем',uz:"Orqa o'rindiq ostida"}],fx:'shock',
+  e:{ru:'OBD-II есть у всех машин примерно с 2000-х, обычно под рулём слева. Подключили сканер — включили зажигание.',uz:"OBD-II taxminan 2000-yillardan beri barcha mashinalarda bor, odatda rul ostida chapda. Skanerni uladik — o't oldirishni yoqdik."},
+  m:{p:'obd',s:{ru:'OBD-II',uz:'OBD-II'}}},
+ {q:{ru:'Сканер показал P0302. Что это значит?',uz:"Skaner P0302 ni ko'rsatdi. Bu nimani anglatadi?"},
+  o:[{ru:'Пропуски зажигания во 2-м цилиндре',uz:"2-silindrda o't oldirish uzilishlari"},{ru:'Бедная смесь',uz:'Kambag\'al aralashma'},{ru:'Нет связи с блоком',uz:"Blok bilan aloqa yo'q"},{ru:'Низкое напряжение АКБ',uz:'AKB kuchlanishi past'}],fx:'fire',
+  e:{ru:'P0300 — случайные пропуски, P0301–P0304 — в цилиндре 1–4. Мотор трясёт и мигает Check Engine — долго не ездить, сгорит катализатор.',uz:"P0300 — tasodifiy uzilishlar, P0301–P0304 — 1–4-silindrda. Motor silkinsa va Check Engine miltillasa — uzoq yurmang, katalizator kuyadi."},
+  m:{p:'dash',s:{ru:'Код P0302',uz:'P0302 kodi'}}},
+ {q:{ru:'Как быстро проверить, виновата ли катушка 2-го цилиндра?',uz:"2-silindr katushkasi aybdormi, tez qanday tekshiramiz?"},
+  o:[{ru:'Переставить катушку на соседний цилиндр и стереть ошибку',uz:"Katushkani qo'shni silindrga o'tkazib, xatoni o'chirish"},{ru:'Сразу купить 4 новые катушки',uz:'Darhol 4 ta yangi katushka sotib olish'},{ru:'Проверить «на искру» о кузов',uz:'Kuzovga tekkizib «uchqunga» tekshirish'},{ru:'Снять клемму на ходу',uz:'Yurganda klemmani yechish'}],fx:'shock',
+  e:{ru:'Ошибка «переехала» в другой цилиндр — виновата катушка. Осталась — проверяем свечу, форсунку, потом компрессию.',uz:"Xato boshqa silindrga «ko'chsa» — katushka aybdor. Qolsa — shamni, forsunkani, keyin kompressiyani tekshiramiz."},
+  m:{p:'coil',s:{ru:'Катушка',uz:'Katushka'}}},
+ {q:{ru:'Код P0171 — бедная смесь. С чего начать?',uz:"P0171 kodi — kambag'al aralashma. Nimadan boshlaymiz?"},
+  o:[{ru:'Ищем подсос воздуха',uz:"Havo so'rilishini qidiramiz"},{ru:'Сразу меняем ДМРВ',uz:'Darhol DMRV ni almashtiramiz'},{ru:'Меняем АКБ',uz:'AKB ni almashtiramiz'},{ru:'Стираем код и забываем',uz:"Kodni o'chirib, unutamiz"}],fx:'fire',
+  e:{ru:'Код показывает, что заметил блок, а не какую деталь менять. P0171 — сначала подсос воздуха, потом ДМРВ и давление топлива.',uz:"Kod blok nimani sezganini ko'rsatadi, qaysi detalni almashtirishni emas. P0171 — avval havo so'rilishi, keyin DMRV va yoqilg'i bosimi."},
+  m:{p:'air',s:{ru:'Подсос',uz:"Havo so'rilishi"}}},
+ {q:{ru:'В сканере датчик температуры (ДТОЖ) показывает −40 °C на тёплом моторе. Что это?',uz:"Skanerda harorat datchigi (DTOJ) issiq motorda −40 °C ko'rsatyapti. Bu nima?"},
+  o:[{ru:'Обрыв цепи датчика',uz:'Datchik zanjiri uzilgan'},{ru:'Замыкание цепи',uz:'Zanjir tutashgan'},{ru:'На улице мороз',uz:'Tashqarida sovuq'},{ru:'Всё в норме',uz:"Hammasi me'yorida"}],fx:'shock',
+  e:{ru:'−40 °C на тёплом моторе — обрыв цепи ДТОЖ, +130 °C — замыкание. Сначала проверяем 5 В и массу на разъёме.',uz:"Issiq motorda −40 °C — DTOJ zanjiri uzilgan, +130 °C — tutashuv. Avval razyomda 5 V va massani tekshiramiz."},
+  m:{p:'sens',s:{ru:'ДТОЖ',uz:'DTOJ'}}},
+ {q:{ru:'Много ламп на панели, коды U0…. Между контактами 6 и 14 OBD — 120 Ом. Что это?',uz:"Panelda ko'p lampa, U0… kodlari. OBD 6 va 14 kontaktlari orasida 120 Om. Bu nima?"},
+  o:[{ru:'Обрыв CAN-шины или нет одного терминатора',uz:"CAN-shina uzilgan yoki bitta terminator yo'q"},{ru:'Шина в норме',uz:"Shina me'yorida"},{ru:'CAN-H и CAN-L замкнуты',uz:'CAN-H va CAN-L tutashgan'},{ru:'Разряжен АКБ',uz:'AKB zaryadsiz'}],fx:'shock',
+  e:{ru:'Норма около 60 Ом: два резистора по 120 Ом параллельно. 120 Ом — обрыв или нет терминатора, около 0 — провода замкнуты.',uz:"Me'yor taxminan 60 Om: parallel ikkita 120 Om rezistor. 120 Om — uzilish yoki terminator yo'q, 0 ga yaqin — simlar tutashgan."},
+  m:{p:'can',s:{ru:'CAN-шина',uz:'CAN-shina'}}},
+ {q:{ru:'Чем проверять сигнал датчика на линии 5 В?',uz:"5 V liniyadagi datchik signalini nima bilan tekshiramiz?"},
+  o:[{ru:'Тестером или осциллографом',uz:'Tester yoki ostsillograf bilan'},{ru:'Лампой 21 Вт',uz:'21 Vt lampa bilan'},{ru:'Искрой о кузов',uz:'Kuzovga uchqun bilan'},{ru:'Языком',uz:'Til bilan'}],fx:'fire',
+  e:{ru:'Лампа нагружает линию 5 В и может сжечь выход блока управления. Только тестер или осциллограф.',uz:"Lampa 5 V liniyani yuklaydi va boshqaruv bloki chiqishini kuydirishi mumkin. Faqat tester yoki ostsillograf."},
+  m:{p:'ecu',s:{ru:'Блок',uz:'Blok'}}}
+]}
+],
+board(G){return carSVG(G)+chips(G)}
+};
+
+/* ---------- art: our own car, side view, engine bay cut open ---------- */
+const CAR_POS={bat:[312,114],gen:[272,114],air:[292,114],coil:[252,114],sens:[252,138],start:[272,138],mass:[292,138],eng:[312,138],ecu:[228,124],obd:[196,128],key:[206,104],dash:[214,82],radio:[176,96],fuse:[150,126],can:[118,118],wire:[96,140]};
+const METER_POS={meter:[36,170]};
+function carSVG(G){const done=G.complete;
+  const wheel=x=>`<g><circle cx="${x}" cy="160" r="22" fill="#1d232b"/><circle cx="${x}" cy="160" r="10" fill="#9aa3ad"/><circle cx="${x}" cy="160" r="3" fill="#1d232b"/></g>`;
+  const beam=done?`<path d="M328 116L392 98V140z" fill="#ffd75e" opacity=".6"/>`:'';
+  return `<svg viewBox="0 0 340 200" role="img" aria-label="car" style="overflow:hidden">
+  <rect x="2" y="2" width="336" height="196" rx="12" fill="var(--box)"/><rect x="10" y="10" width="320" height="182" rx="8" fill="var(--plate)"/>
+  <rect x="10" y="182" width="320" height="10" fill="var(--rail)" opacity=".5"/>
+  <g class="${done?'drive':''}">
+  ${beam}
+  <path d="M18 152V120q2-14 16-16l42-4 36-34q6-6 16-6h78q10 0 18 8l26 32 64 6q14 2 14 16v26z" fill="var(--accent)" stroke="var(--accent-ink)" stroke-width="1.5" opacity=".95"/>
+  <path d="M84 98l32-30h38v30zM162 68h40q6 0 10 5l20 25h-70z" fill="color-mix(in srgb,#7cc0ff 55%,var(--plate))" stroke="var(--accent-ink)" stroke-width="1.2"/>
+  <path d="M158 100v50" stroke="var(--accent-ink)" stroke-width="1.2" opacity=".5"/>
+  <circle cx="196" cy="88" r="9" fill="none" stroke="var(--accent-ink)" stroke-width="2.5"/>
+  <rect x="238" y="102" width="88" height="48" rx="6" fill="#2b3640" stroke="#fff" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <rect x="246" y="122" width="40" height="24" rx="3" fill="#5d6b78"/><rect x="302" y="106" width="20" height="16" rx="2" fill="#14202b" stroke="#9aa3ad"/><path d="M306 104v3M318 104v3" stroke="#9aa3ad" stroke-width="2"/>
+  <circle cx="272" cy="112" r="6" fill="#9aa3ad"/>
+  <rect x="320" y="110" width="8" height="10" rx="2" fill="${done?'#ffd75e':'#e8eef3'}"/><rect x="18" y="114" width="6" height="10" rx="2" fill="#c4392f"/>
+  ${wheel(84)}${wheel(262)}
+  ${marks(G,CAR_POS,true)}
+  </g>
+  <g transform="translate(22 150)"><rect width="28" height="40" rx="5" fill="#f2c400" stroke="#2a1c00" stroke-width="1.2"/><rect x="4" y="5" width="20" height="10" rx="2" fill="#cfe3a8"/><circle cx="14" cy="27" r="6" fill="#2b3640"/></g>
+  ${marks(G,METER_POS,true)}
+  </svg>`}
+
+// Kasb Pro mini-game engine (shared by the profession games). Our own art and texts.
+// Needs a global GAME = {key, start, back, life, hat, UI:{ru,uz}, PANELS, board(G), ranks:[a,b,c]}.
+const tg=window.Telegram&&window.Telegram.WebApp;
+if(tg){try{tg.ready();tg.expand();tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){}}
+const BOT='kasbpro_uz_bot';
+const GAME_TIME=120;
+let lang='ru';
+try{const v=JSON.parse(localStorage.getItem('ep_lang')||'null');lang=(v==='uz'||v==='ru')?v:((tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code==='uz')?'uz':'ru')}catch(e){}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const BEST_KEY='kp_igra_'+GAME.key+'_best';
+const U=()=>GAME.UI[lang];
+const tr=o=>o==null?'':typeof o==='string'?o:(o[lang]||o.ru);
+const PANELS=GAME.PANELS;
+
+/* ---------- mascot: our usta in a work cap; mood = ok | shock | fire | frost | gas | water | thief ---------- */
+function usta(mood){
+  const H=GAME.hat,ink='#2a1c00';
+  const face={fire:'#6b5a4e',frost:'#bfe0f2',gas:'#cfe0a6'}[mood]||'#f2c79b';
+  let eyes=`<circle cx="57" cy="67" r="4.5" fill="${ink}"/><circle cx="83" cy="67" r="4.5" fill="${ink}"/><circle cx="58.5" cy="65.5" r="1.4" fill="#fff"/><circle cx="84.5" cy="65.5" r="1.4" fill="#fff"/>`;
+  let mouth=`<path d="M56 90q14 12 28 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+  let extra='',hair='',hy=0,cls='';
+  if(mood==='shock'){cls='zap';hy=-14;
+    eyes=`<path d="M52 62l10 10M62 62l-10 10M78 62l10 10M88 62l-10 10" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>`;
+    mouth=`<path d="M56 96l6-6 6 6 6-6 6 6 6-6" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linejoin="round"/>`;
+    hair=`<path d="M30 52l-12-10 14 2-10-14 16 8-2-16 12 14M110 52l12-10-14 2 10-14-16 8 2-16-12 14" fill="none" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>`;
+    extra=`<g class="bolt" fill="#ffd75e" stroke="${ink}" stroke-width="2" stroke-linejoin="round"><path d="M8 80l14-4-6 10 14-3"/><path d="M132 80l-14-4 6 10-14-3"/><path d="M20 120l12-6-3 9 11-5"/></g>`}
+  else if(mood==='fire'){
+    eyes=`<circle cx="57" cy="67" r="6" fill="#fff"/><circle cx="83" cy="67" r="6" fill="#fff"/><circle cx="57" cy="68" r="2.5" fill="${ink}"/><circle cx="83" cy="68" r="2.5" fill="${ink}"/>`;
+    mouth=`<ellipse cx="70" cy="95" rx="7" ry="5" fill="${ink}"/>`;
+    extra=`<g fill="#9aa3ad" opacity=".85"><circle class="puff" cx="40" cy="18" r="9"/><circle cx="52" cy="10" r="7"/><circle class="puff" cx="96" cy="16" r="8"/><circle cx="106" cy="6" r="6"/></g>`}
+  else if(mood==='frost'){cls='shiver';
+    eyes=`<circle cx="57" cy="67" r="6" fill="#fff"/><circle cx="83" cy="67" r="6" fill="#fff"/><circle cx="57" cy="66" r="2.5" fill="${ink}"/><circle cx="83" cy="66" r="2.5" fill="${ink}"/>`;
+    mouth=`<rect x="56" y="88" width="28" height="11" rx="3" fill="#fff" stroke="${ink}" stroke-width="2.5"/><path d="M63 88v11M70 88v11M77 88v11" stroke="${ink}" stroke-width="1.5"/>`;
+    extra=`<g fill="#e8f6ff" stroke="#7cc0ff" stroke-width="1.5"><path d="M30 61l4 12 4-12z"/><path d="M48 61l3 9 3-9z"/><path d="M90 61l3 10 3-10z"/><path d="M104 61l4 12 4-12z"/></g><g stroke="#7cc0ff" stroke-width="2.5" stroke-linecap="round"><path d="M14 40v16M6 48h16M8 42l12 12M20 42L8 54"/><path d="M124 96v14M117 103h14M119 98l10 10M129 98l-10 10"/></g>`}
+  else if(mood==='gas'){
+    eyes=`<path d="M51 64l10 4-10 4M89 64l-10 4 10 4" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    mouth=`<path d="M56 94q4-5 7 0t7 0 7 0 7 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+    extra=`<g fill="#b9c9a3" opacity=".9"><circle class="puff" cx="22" cy="96" r="12"/><circle cx="14" cy="76" r="8"/><circle class="puff" cx="118" cy="104" r="13"/><circle cx="128" cy="82" r="8"/><circle class="puff" cx="70" cy="132" r="10"/></g>`}
+  else if(mood==='water'){
+    eyes=`<path d="M51 68q6-6 12 0M77 68q6-6 12 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+    mouth=`<ellipse cx="70" cy="94" rx="6" ry="7" fill="${ink}"/>`;
+    extra=`<g class="drops" fill="#4a90e8"><path d="M30 8q5 8 0 12q-5-4 0-12z"/><path d="M58 0q5 8 0 12q-5-4 0-12z"/><path d="M84 6q5 8 0 12q-5-4 0-12z"/><path d="M110 2q5 8 0 12q-5-4 0-12z"/><path d="M18 50q5 8 0 12q-5-4 0-12z"/><path d="M124 46q5 8 0 12q-5-4 0-12z"/></g>`}
+  else if(mood==='thief'){
+    eyes=`<circle cx="57" cy="67" r="6.5" fill="#fff"/><circle cx="83" cy="67" r="6.5" fill="#fff"/><circle cx="61" cy="67" r="3" fill="${ink}"/><circle cx="87" cy="67" r="3" fill="${ink}"/>`;
+    mouth=`<ellipse cx="70" cy="95" rx="6" ry="6" fill="${ink}"/>`;
+    extra=`<text x="118" y="44" font-size="34" font-weight="900" fill="#c4392f" font-family="system-ui">!</text><text x="8" y="44" font-size="30" font-weight="900" fill="#c4392f" font-family="system-ui">?</text>`}
+  return `<svg viewBox="0 0 140 150" role="img" aria-label="usta" class="${cls}">${extra}<g class="body">
+  <path d="M30 150q0-26 40-26t40 26z" fill="${H.shirt}"/><path d="M58 124h24l-12 14z" fill="${H.cap}"/>
+  ${hair}<ellipse cx="70" cy="76" rx="40" ry="38" fill="${face}"/>
+  <ellipse cx="30" cy="78" rx="6" ry="9" fill="${face}"/><ellipse cx="110" cy="78" rx="6" ry="9" fill="${face}"/>
+  ${eyes}<path d="M50 84q10-6 20 0 10-6 20 0q-10 6-20 1-10 5-20-1z" fill="${mood==='fire'?'#2a2a2a':'#4a2e1a'}"/>${mouth}
+  <g transform="translate(0 ${hy})"><path d="M28 58q2-36 42-36t42 36z" fill="${H.cap}"/><path d="M24 54h92q8 0 8 6v2H20v-2q0-6 4-6z" fill="${H.dark}"/><g transform="translate(58 28)">${H.logo}</g></g>
+  </g>${mood==='frost'?`<g fill="#e8f6ff" stroke="#7cc0ff" stroke-width="1.5" transform="translate(0 ${hy})"><path d="M30 62l4 12 4-12z"/><path d="M104 62l4 12 4-12z"/></g>`:''}</svg>`}
+const THIEF=`<svg viewBox="0 0 120 110" aria-hidden="true"><ellipse cx="60" cy="104" rx="34" ry="5" fill="rgba(0,0,0,.25)"/>
+ <path d="M38 98l10-30M76 98l-8-30" stroke="#1d232b" stroke-width="10" stroke-linecap="round"/><rect x="40" y="40" width="40" height="34" rx="12" fill="#2b323b"/>
+ <path d="M42 50h36M42 60h36" stroke="#e7edf3" stroke-width="4"/><circle cx="60" cy="26" r="17" fill="#f2c79b"/><path d="M43 22h34v8H43z" fill="#1d232b"/>
+ <circle cx="53" cy="26" r="3" fill="#fff"/><circle cx="67" cy="26" r="3" fill="#fff"/><path d="M44 14q16-14 32 0z" fill="#1d232b"/>
+ <path d="M80 48l18 8" stroke="#2b323b" stroke-width="8" stroke-linecap="round"/><path d="M96 46q16 4 14 22q-2 14-16 12q-12-2-10-18q2-16 12-16z" fill="#c9a26a"/><text x="99" y="70" font-size="14" font-weight="800" text-anchor="middle" fill="#6b4a1f">$</text></svg>`;
+
+/* ---------- game state ---------- */
+let G=null,timer=null;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const NP=PANELS.length,IDX=PANELS.map((_,i)=>i);
+function newGame(){
+  G={score:0,lives:3,combo:0,t:GAME_TIME,right:0,total:0,panels:0,pn:0,order:shuffle(IDX),busy:false};
+  loadPanel();render();
+  clearInterval(timer);let last=Date.now();
+  timer=setInterval(()=>{const now=Date.now(),dt=(now-last)/1000;last=now;if(G.busy||document.hidden)return;
+    G.t-=dt;if(G.t<=0){G.t=0;end('time')}else paintTime()},200)}
+function loadPanel(){
+  if(G.pn>0&&G.pn%NP===0)G.order=shuffle(IDX);
+  const P=PANELS[G.order[G.pn%NP]];
+  G.panel={P,name:P.name,src:P.tasks,tasks:shuffle(P.tasks)};G.ti=0;G.complete=false;G.placed=[];G.justPlaced=null;nextTask(true)}
+function nextTask(first){
+  if(!first)G.ti++;
+  if(G.ti>=G.panel.tasks.length){G.complete=true;G.panels++;G.score+=300;render();toast(tr(G.panel.P.done)||U().built);haptic('success');G.pn++;G.busy=true;
+    setTimeout(()=>{if(!G||G.over)return;G.busy=false;loadPanel();render()},1600);return}
+  G.task=G.panel.tasks[G.ti];
+  G.opts=shuffle(G.task.o.map((o,i)=>({o,ok:i===0})));G.shown=Date.now()}
+
+/* ---------- screens ---------- */
+const app=document.getElementById('app');
+const $=s=>document.querySelector(s);
+function bar(){const L=U();return `<header class="bar"><a href="../">${L.back}</a><div class="ttl">${GAME.icon} ${L.title}</div><div class="lang" role="group" aria-label="Til"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div></header>`}
+function bindBar(){document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('ep_lang',JSON.stringify(lang));document.documentElement.lang=lang;render()})}
+let screen='start',result=null;
+function render(){document.documentElement.lang=lang;
+  if(screen==='start')startScr();else if(screen==='game')gameScr();else endScr();bindBar()}
+function startScr(){const L=U();const best=+store.get(BEST_KEY)||0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${usta('ok')}</div><h1>${L.h1}</h1><p class="lead">${L.lead}</p>
+  <div class="card"><ul class="rules">${L.r.map(r=>`<li><span>${r[0]}</span><div>${r[1]}</div></li>`).join('')}</ul></div>
+  ${best?`<div class="best">${L.best}: <b>${best}</b></div>`:''}
+  <button class="btn" id="play" type="button">${L.play}</button><p class="small">${L.safe}</p></main>`;
+  $('#play').onclick=()=>{screen='game';newGame()}}
+function gameScr(){const L=U();const t=G.task;
+  const opts=G.opts.map((x,i)=>`<button class="opt" type="button" data-i="${i}"><span>${tr(x.o)}</span></button>`).join('');
+  app.innerHTML=bar()+`<main class="wrap" id="gw">
+  <div class="hud"><span class="sc" id="sc">${G.score}</span><span class="lv" aria-label="lives">${[0,1,2].map(i=>`<i class="${i<G.lives?'':'off'}">${GAME.life}</i>`).join('')}</span><span class="tm" id="tm"></span></div>
+  <div class="tbar"><i id="tb"></i></div>
+  <div class="pname"><span>${L.panel(G.panels+1,tr(G.panel.name))}</span>${G.combo>1?`<span class="combo">${L.combo(Math.min(G.combo,5))}</span>`:''}</div>
+  <div class="panel">${GAME.board(G)}</div>
+  ${G.complete?'':`<p class="q">${tr(t.q)}</p><div class="opts">${opts}</div>`}</main>`;
+  G.justPlaced=null;paintTime();
+  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>answer(+b.dataset.i,b))}
+function paintTime(){const tm=$('#tm'),tb=$('#tb');if(!tm)return;const s=Math.ceil(G.t);
+  tm.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;tm.classList.toggle('low',s<=15);
+  tb.style.width=(G.t/GAME_TIME*100)+'%';tb.classList.toggle('low',s<=15)}
+function answer(i,btn){if(G.busy)return;const x=G.opts[i],t=G.task;G.total++;
+  if(x.ok){G.right++;G.combo++;const fast=(Date.now()-G.shown)<5000;
+    const pts=100+25*Math.min(G.combo-1,4)+(fast?50:0);G.score+=pts;
+    if(t.m){G.placed.push(t);G.justPlaced=t}
+    btn.classList.add('right');floatTxt('+'+pts);haptic('light');G.busy=true;
+    setTimeout(()=>{if(G.over)return;G.busy=false;nextTask();render()},380)}
+  else{G.combo=0;G.lives--;G.busy=true;G.panel.tasks.push(t); // wrong task comes back later in this panel
+    haptic('error');failFx(t)}}
+function failFx(t){const L=U();const fx=t.fx||'shock',mood=fx==='angry'?'thief':fx;
+  const f=document.createElement('div');f.className='flash'+(fx==='shock'?'':' '+(fx==='angry'?'thief':fx));document.body.appendChild(f);setTimeout(()=>f.remove(),1000);
+  if(fx==='thief'){const r=document.createElement('div');r.className='runner';r.innerHTML=THIEF;document.body.appendChild(r);setTimeout(()=>r.remove(),1200)}
+  const gw=$('#gw');if(gw)gw.classList.add('shake');
+  const titles=t.ft?[tr(t.ft)]:L.fails[fx];const title=titles[Math.random()*titles.length|0];
+  const ov=document.createElement('div');ov.className='ov';
+  ov.innerHTML=`<div class="sheet" role="alertdialog" aria-live="assertive"><div class="who">${usta(mood)}<h2>${title}</h2></div>
+  <p class="ans">${L.right} <b>${tr(t.o[0])}</b></p><p class="why">${tr(t.e)}</p><button class="btn" type="button" id="ovn">${L.next}</button></div>`;
+  setTimeout(()=>{document.body.appendChild(ov);$('#ovn').focus()},fx==='thief'?700:350);
+  ov.querySelector('#ovn').onclick=()=>{ov.remove();G.busy=false;if(G.lives<=0){end('lives');return}nextTask();render()}}
+function floatTxt(s){const d=document.createElement('div');d.className='float';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),800)}
+function toast(s){const d=document.createElement('div');d.className='toast';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),1500)}
+function haptic(k){try{const h=tg&&tg.HapticFeedback;if(!h)return;if(k==='light')h.impactOccurred('light');else h.notificationOccurred(k)}catch(e){}}
+function end(why){if(!G||G.over)return;G.over=true;clearInterval(timer);
+  document.querySelectorAll('.ov').forEach(o=>o.remove());
+  const prev=+store.get(BEST_KEY)||0;const rec=G.score>prev;if(rec)store.set(BEST_KEY,G.score);
+  result={score:G.score,panels:G.panels,right:G.right,total:G.total,why,rec,best:Math.max(prev,G.score)};
+  screen='end';render()}
+function rankOf(s){const r=GAME.ranks||[1200,2400,3600];return s<r[0]?0:s<r[1]?1:s<r[2]?2:3}
+function endScr(){const L=U(),r=result;const acc=r.total?Math.round(r.right/r.total*100):0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${usta(r.why==='lives'?GAME.loseMood:'ok')}</div>
+  <h1>${r.why==='lives'?L.overLives:L.over}</h1>
+  <div class="big">${r.score}</div><div class="center"><span class="rank">${L.ranks[rankOf(r.score)]}</span></div>
+  ${r.rec&&r.score>0?`<p class="lead"><b>🏆 ${L.rec}</b></p>`:`<div class="best">${L.best}: <b>${r.best}</b></div>`}
+  <div class="stats"><div><b>${r.score}</b><span>${L.score}</span></div><div><b>${r.panels}</b><span>${L.panels}</span></div><div><b>${acc}%</b><span>${L.acc}</span></div></div>
+  <button class="btn tg" id="share" type="button">📤 ${L.share}</button>
+  <button class="btn" id="again" type="button">${L.again}</button>
+  <a class="btn ghost" href="../">📘 ${L.learn}</a></main>`;
+  $('#again').onclick=()=>{screen='game';newGame()};
+  $('#share').onclick=share}
+function share(){const r=result;const url=`https://t.me/${BOT}?start=${GAME.start}`;
+  const link=`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(U().shareText(r.score,r.panels))}`;
+  try{if(tg&&tg.initData&&tg.openTelegramLink){tg.openTelegramLink(link);return}}catch(e){}
+  window.open(link,'_blank','noopener')}
+render();
+
+</script>
+</body>
+</html>
