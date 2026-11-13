@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Подключи домофон и сигнализацию — игра для слаботочников · Kasb Pro</title>
+<meta name="description" content="Бесплатная игра для слаботочников: подключи видеодомофон, охранную сигнализацию и СКУД без замыканий и ложных тревог. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/slabotochnik/igra/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:title" content="Подключи домофон и сигнализацию — игра для слаботочников">
+<meta property="og:description" content="2 минуты, 3 жизни. Без искр и ложных тревог!">
+<meta property="og:url" content="https://kasbpro.uz/slabotochnik/igra/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#eef1f4; --surface:#fff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#e8649f; --accent-ink:#3a0820; --navy:#13222e; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --warn:#c77f06;
+  --box:#c9d0d7; --plate:#e4e8ec; --rail:#9aa3ad; --dev:#fbfcfd; --devline:#8d98a4;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f07db0; --accent-ink:#3a0820; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f; --warn:#f0b24a;
+  --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --dev:#26333f; --devline:#6b7a88; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f07db0; --accent-ink:#3a0820; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f; --warn:#f0b24a;
+  --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --dev:#26333f; --devline:#6b7a88; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.bar{background:var(--navy);color:var(--navy-fg);padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:10px}
+.bar a{color:var(--navy-fg);opacity:.8;text-decoration:none;font-size:14px;white-space:nowrap}
+.bar .ttl{flex:1;font-family:var(--display);font-size:15px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:12px;font-weight:700;padding:5px 9px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.wrap{flex:1;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+h1{font-family:var(--display);font-size:26px;line-height:1.15;margin:0;text-align:center;text-wrap:balance}
+.lead{margin:0;text-align:center;color:var(--muted);text-wrap:balance}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.rules li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.rules li span{flex:none;width:28px;height:28px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:16px}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:17px;padding:15px;width:100%;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.btn.tg{background:#229ed9;color:#fff}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.small{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.best{text-align:center;font-size:14px;color:var(--muted)}
+.best b{color:var(--fg);font-variant-numeric:tabular-nums}
+.hero{display:flex;justify-content:center}
+.hero svg{width:150px;height:auto}
+.hud{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+.hud .sc{font-family:var(--display);font-size:20px;min-width:70px}
+.hud .lv{display:flex;gap:2px;font-size:18px}
+.hud .lv i{font-style:normal;transition:opacity .3s,filter .3s}
+.hud .lv i.off{opacity:.25;filter:grayscale(1)}
+.hud .tm{margin-left:auto;font-weight:700;font-size:18px}
+.hud .tm.low{color:var(--bad)}
+.tbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:-6px}
+.tbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.tbar i.low{background:var(--bad)}
+.pname{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px;color:var(--muted);margin-bottom:-8px}
+.pname b{color:var(--fg);font-size:14px}
+.combo{color:var(--accent);font-weight:700;white-space:nowrap}
+.panel svg{width:100%;height:auto;display:block}
+.newmod{animation:drop .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes drop{from{transform:translateY(-22px);opacity:0}to{transform:none;opacity:1}}
+.slot{animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+.flow{stroke-dasharray:6 6;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-12}}
+.q{font-size:17px;font-weight:600;margin:0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;display:flex;align-items:center;gap:10px;min-height:50px}
+.opt:active{transform:scale(.985)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.float{position:fixed;left:50%;top:42%;transform:translate(-50%,0);font-family:var(--display);font-size:28px;color:var(--ok);pointer-events:none;animation:up .8s ease-out forwards;z-index:30;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+@keyframes up{to{transform:translate(-50%,-60px);opacity:0}}
+.toast{position:fixed;left:50%;top:30%;transform:translateX(-50%);background:var(--navy);color:var(--navy-fg);padding:14px 20px;border-radius:14px;font-family:var(--display);font-size:17px;z-index:30;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);animation:pop .3s ease-out;white-space:nowrap}
+@keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
+.ov{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(8,14,20,.6)}
+.ov .sheet{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:sheet .3s ease-out}
+@keyframes sheet{from{transform:translateY(60%)}}
+.ov .who{display:flex;align-items:center;gap:12px}
+.ov .who svg{width:96px;height:auto;flex:none}
+.ov h2{font-family:var(--display);font-size:20px;margin:0;color:var(--bad);line-height:1.2}
+.ov .ans{font-size:15px;margin:0}
+.ov .ans b{color:var(--ok)}
+.ov .why{font-size:14px;color:var(--muted);margin:0}
+.flash{position:fixed;inset:0;z-index:35;pointer-events:none}
+.flash.f-spark{animation:fspark .5s steps(2) 2}
+@keyframes fspark{0%{background:rgba(255,215,94,.85)}50%{background:rgba(10,10,10,.75)}}
+.flash.f-red{animation:fred .8s ease-out}
+@keyframes fred{0%{background:rgba(220,40,40,.7)}100%{background:transparent}}
+.flash.f-siren{animation:fsiren .3s steps(2) 3}
+@keyframes fsiren{0%{background:rgba(230,40,40,.65)}50%{background:rgba(40,90,230,.65)}}
+.flash.f-dark{animation:fdark .9s ease-out}
+@keyframes fdark{0%{background:rgba(5,8,12,.92)}60%{background:rgba(5,8,12,.8)}100%{background:transparent}}
+.flash.f-laser{animation:flaser .6s steps(3) 1}
+@keyframes flaser{0%{background:rgba(190,40,255,.6)}50%{background:rgba(255,255,255,.8)}100%{background:transparent}}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translate(-6px,2px)}40%{transform:translate(6px,-2px)}60%{transform:translate(-4px,1px)}80%{transform:translate(4px,0)}}
+.zap .bolt{animation:zap .18s steps(2) infinite}
+@keyframes zap{50%{opacity:0}}
+.zap .body{animation:jit .12s infinite}
+@keyframes jit{50%{transform:translate(2px,-1px)}}
+.wob .body{animation:wob .6s ease-in-out infinite;transform-origin:70px 140px}
+@keyframes wob{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+.big{font-family:var(--display);font-size:54px;text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+.rank{display:inline-block;margin:0 auto;background:color-mix(in srgb,var(--accent) 25%,transparent);padding:6px 14px;border-radius:99px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.stats b{display:block;font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Kasb Pro profession mini-game (engine shared with «Собери щиток»). Our own art and texts.
+const tg=window.Telegram&&window.Telegram.WebApp;
+if(tg){try{tg.ready();tg.expand();tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){}}
+const BOT='kasbpro_uz_bot';
+const GAME_TIME=120;
+let lang='ru';
+try{const v=JSON.parse(localStorage.getItem('ep_lang')||'null');lang=(v==='uz'||v==='ru')?v:((tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code==='uz')?'uz':'ru')}catch(e){}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const tr=o=>o==null?'':typeof o==='string'?o:(o[lang]||o.ru);
+const COMMON={
+ru:{right:'Правильно:',next:'Понятно, дальше',over:'Смена окончена',overLives:'Жизни закончились',score:'очков',acc:'верно',rec:'Новый рекорд!',
+ share:'Поделиться с друзьями',again:'Ещё раз',best:'Ваш рекорд',play:'Играть',combo:n=>`серия ×${n}`,
+ built:b=>b>=300?`Без ошибок! +${b}`:`Готово! +${b}`,
+ rules:life=>[['⏱','2 минуты смены. Отвечайте быстрее — больше очков.'],[life,'3 жизни. Ошибка — мультяшная авария и объяснение, как правильно.']]},
+uz:{right:"To'g'ri javob:",next:'Tushunarli, davom',over:'Smena tugadi',overLives:'Jonlar tugadi',score:'ball',acc:"to'g'ri",rec:'Yangi rekord!',
+ share:"Do'stlarga ulashish",again:'Yana bir bor',best:'Rekordingiz',play:"O'ynash",combo:n=>`seriya ×${n}`,
+ built:b=>b>=300?`Xatosiz! +${b}`:`Tayyor! +${b}`,
+ rules:life=>[['⏱',"2 daqiqalik smena. Tezroq javob bering — ko'proq ball."],[life,"3 ta jon. Xato — multfilmdagidek falokat va qanday to'g'ri ekanini tushuntirish."]]}
+};
+/* Shared mascot: usta in a helmet. o: helmet colours, badge, shirt, fx1/fx2 extras. mood: ok | bad1 (zapped) | bad2 (dizzy/sooty) */
+function ustaArt(mood,o){
+  const b1=mood==='bad1',b2=mood==='bad2';
+  const face=b2&&o.soot?'#6b5a4e':'#f2c79b',ink='#2a1c00';
+  const eyes=b1?`<path d="M52 62l10 10M62 62l-10 10M78 62l10 10M88 62l-10 10" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>`
+    :b2?`<circle cx="57" cy="67" r="6" fill="#fff"/><circle cx="83" cy="67" r="6" fill="#fff"/><circle cx="57" cy="68" r="2.5" fill="${ink}"/><circle cx="83" cy="68" r="2.5" fill="${ink}"/>`
+    :`<circle cx="57" cy="67" r="4.5" fill="${ink}"/><circle cx="83" cy="67" r="4.5" fill="${ink}"/><circle cx="58.5" cy="65.5" r="1.4" fill="#fff"/><circle cx="84.5" cy="65.5" r="1.4" fill="#fff"/>`;
+  const mouth=b1?`<path d="M56 96l6-6 6 6 6-6 6 6 6-6" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linejoin="round"/>`
+    :b2?`<ellipse cx="70" cy="95" rx="7" ry="5" fill="${ink}"/>`
+    :`<path d="M56 90q14 12 28 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+  const hair=b1?`<path d="M30 52l-12-10 14 2-10-14 16 8-2-16 12 14M110 52l12-10-14 2 10-14-16 8 2-16-12 14" fill="none" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>`:'';
+  const hy=b1?-14:0;
+  const fx=b1?(o.fx1||''):b2?(o.fx2||''):'';
+  return `<svg viewBox="0 0 140 150" role="img" aria-label="usta" class="${b1?'zap':b2?'wob':''}">${fx}<g class="body">
+  <path d="M30 150q0-26 40-26t40 26z" fill="${o.shirt||'#1e5aa8'}"/><path d="M58 124h24l-12 14z" fill="${o.helmet}"/>
+  ${hair}<ellipse cx="70" cy="76" rx="40" ry="38" fill="${face}"/>
+  <ellipse cx="30" cy="78" rx="6" ry="9" fill="${face}"/><ellipse cx="110" cy="78" rx="6" ry="9" fill="${face}"/>
+  ${eyes}<path d="M50 84q10-6 20 0 10-6 20 0q-10 6-20 1-10 5-20-1z" fill="${b2&&o.soot?'#2a2a2a':'#4a2e1a'}"/>${mouth}
+  <g transform="translate(0 ${hy})"><path d="M26 56q4-36 44-36t44 36z" fill="${o.helmet}"/><rect x="20" y="52" width="100" height="9" rx="4.5" fill="${o.helmetDark}"/><rect x="64" y="16" width="12" height="10" rx="3" fill="${o.helmetDark}"/>${o.badge||''}</g>
+  </g></svg>`}
+</script>
+<script>
+// «Подключи домофон и сигнализацию» — game for low-voltage installers (Слаботочник Pro). Facts follow the app lessons:
+// PSU on with breaker off, 4 intercom wires, panel 1,5–1,6 m, maglock opens without power, NC in series, EOL at the last sensor,
+// battery Ah = I×h (+alarm) ×1,25, PSU by alarm current +30%, fuse on +, 13,5–13,8 V idle, controller on the protected side, Wiegand D0/D1.
+const GAME={
+id:'slabotochnik',start:'igra_slabotochnik',bestKey:'kp_igra_slabotochnik_best',icon:'🔌',lifeIcon:'🔋',
+UI:{
+ru:{back:'‹ Слаботочник Pro',title:'Подключи',h1:'Подключи домофон и сигнализацию',lead:'Игра для слаботочников: смонтируй видеодомофон, охранку и СКУД — без искр, помех и ложных тревог.',
+ r3:['🧰','Каждый верный ответ ставит прибор на стену и тянет кабель. Всё без ошибок — бонус +300.'],
+ safe:'Это игра. В жизни блоки питания подключайте только при выключенном автомате, а пожарную сигнализацию делает лицензированная организация по проекту.',
+ scene:(n,name)=>`Объект ${n}: <b>${name}</b>`,doneW:'объектов',
+ ranks:['Ученик','Монтажник','Мастер слаботочки','Профи-слаботочник'],learn:'Учиться: 13 уроков Слаботочник Pro',
+ out:'Улица',inn:'Внутри',
+ shareText:(s,p)=>`🔌 Я набрал ${s} очков и сдал ${p} ${p===1?'объект':p>1&&p<5?'объекта':'объектов'} в игре «Подключи домофон и сигнализацию»! Сможешь лучше? Играть бесплатно в Telegram 👇`},
+uz:{back:'‹ Slabotochnik Pro',title:'Ulab chiq',h1:'Domofon va signalizatsiyani ula',lead:"Kam tokli tizimlar ustalari uchun o'yin: videodomofon, qo'riqlash signalizatsiyasi va SKUDni o'rnating — uchqun, xalaqit va soxta xavotirsiz.",
+ r3:['🧰',"Har bir to'g'ri javob devorga asbob qo'yadi va kabel tortadi. Hammasi xatosiz — +300 bonus."],
+ safe:"Bu o'yin. Hayotda quvvat blokini faqat avtomat o'chirilganda ulang, yong'in signalizatsiyasini esa litsenziyali tashkilot loyiha bo'yicha qiladi.",
+ scene:(n,name)=>`${n}-obyekt: <b>${name}</b>`,doneW:'obyekt',
+ ranks:['Shogird','Montajchi','Kam tok ustasi','Professional slabotochnik'],learn:"O'rganish: Slabotochnik Pro'da 13 dars",
+ out:"Ko'cha",inn:'Ichkari',
+ shareText:(s,p)=>`🔌 «Domofon va signalizatsiyani ula» o'yinida ${s} ball to'pladim va ${p} ta obyekt topshirdim! Sen ko'proq qila olasanmi? Telegramda bepul o'yna 👇`}
+},
+FX:{
+ spark:{flash:'spark',mood:'bad1',titles:{ru:['Пшш! Короткое замыкание!','Искры! Предохранитель сгорел!','Бах! Задымилось!'],uz:["Pshh! Qisqa tutashuv!","Uchqun! Saqlagich kuydi!","Bax! Tutab ketdi!"]}},
+ siren:{flash:'siren',mood:'bad2',titles:{ru:['Уиу-уиу! Ложная тревога!','Сирена воет — клиент звонит!','Помехи! Ничего не работает!'],uz:["Uiu-uiu! Soxta xavotir!","Sirena chalyapti — mijoz qo'ng'iroq qilyapti!","Xalaqit! Hech narsa ishlamayapti!"]}}
+},
+SCENES:[
+{name:{ru:'Видеодомофон в квартире',uz:'Kvartirada videodomofon'},wall:118,door:true,
+ pieces:[{id:'psu',k:'psu',x:282,y:40,lab:{ru:'БП 12 В',uz:'BP 12 V'}},{id:'panel',k:'panel',x:58,y:92,lab:{ru:'Вызывная',uz:'Chaqiruv'}},
+   {id:'mon',k:'mon',x:226,y:110,lab:{ru:'Монитор',uz:'Monitor'}},{id:'lock',k:'lock',x:148,y:38,lab:{ru:'Магнит',uz:'Magnit'}}],
+ edges:[['psu','mon'],['mon','panel'],['psu','lock']],
+ tasks:[
+ {m:'psu',fx:'spark',q:{ru:'Ставим блок питания 220 → 12 В. Когда подключаем его к сети?',uz:"220 → 12 V quvvat blokini o'rnatamiz. Uni tarmoqqa qachon ulaymiz?"},
+  o:[{ru:'При выключенном автомате',uz:"Avtomat o'chirilganda"},{ru:'Под напряжением, так быстрее',uz:"Kuchlanish ostida, tezroq"},{ru:'Неважно, там же 12 В',uz:"Farqi yo'q, u yerda 12 V-ku"},{ru:'Когда хозяин уйдёт',uz:"Uy egasi ketganda"}],
+  e:{ru:'Выход у блока 12 В, но вход — 220 В. Отключаем автомат и проверяем индикатором.',uz:"Blok chiqishi 12 V, lekin kirishi — 220 V. Avtomatni o'chiramiz va indikator bilan tekshiramiz."}},
+ {fx:'spark',q:{ru:'Нужно просверлить стену под кабель. Что делаем перед этим?',uz:"Kabel uchun devorni teshish kerak. Undan oldin nima qilamiz?"},
+  o:[{ru:'Проверяем стену детектором проводки',uz:"Devorni simlar detektori bilan tekshiramiz"},{ru:'Мочим стену водой',uz:"Devorni suv bilan namlaymiz"},{ru:'Ничего, сверлим',uz:"Hech narsa, teshaveramiz"},{ru:'Стучим молотком',uz:"Bolg'a bilan taqillatamiz"}],
+  e:{ru:'В стене может быть скрытая проводка 220 В. Попасть в неё сверлом — удар током и замыкание.',uz:"Devorda yashirin 220 V simlar bo'lishi mumkin. Parma bilan tegib ketsa — tok urishi va qisqa tutashuv."}},
+ {m:'panel',fx:'siren',q:{ru:'На какой высоте вешаем вызывную панель?',uz:"Chaqiruv panelini qanday balandlikka osamiz?"},
+  o:[{ru:'1,5–1,6 м',uz:'1,5–1,6 m'},{ru:'0,8 м',uz:'0,8 m'},{ru:'2,5 м',uz:'2,5 m'},{ru:'Под потолком',uz:'Shift tagida'}],
+  e:{ru:'Камера панели должна видеть лицо гостя, а не макушку или живот.',uz:"Panel kamerasi mehmonning yuzini ko'rishi kerak, tepasini yoki qornini emas."}},
+ {m:'mon',fx:'siren',q:{ru:'Сколько проводов обычно идёт от вызывной панели к монитору?',uz:"Chaqiruv panelidan monitorga odatda nechta sim boradi?"},
+  o:[{ru:'4: +12 В, общий, аудио, видео',uz:"4: +12 V, umumiy, audio, video"},{ru:'2: фаза и ноль',uz:"2: faza va nol"},{ru:'8, как в интернете',uz:"8, internetdagidek"},{ru:'1 провод',uz:'1 ta sim'}],
+  e:{ru:'Классический видеодомофон — 4 провода. Часто для них берут КСПВ 4×0,5.',uz:"Klassik videodomofon — 4 ta sim. Ko'pincha KSPV 4×0,5 ishlatiladi."}},
+ {fx:'siren',q:{ru:'Кабель домофона должен пересечь силовой кабель 220 В. Как?',uz:"Domofon kabeli 220 V kuch kabelini kesib o'tishi kerak. Qanday?"},
+  o:[{ru:'Под прямым углом',uz:"To'g'ri burchak ostida"},{ru:'Вдоль, в одной гофре',uz:"Bo'ylab, bitta gofrada"},{ru:'Примотать изолентой',uz:"Izolenta bilan o'rab qo'yish"},{ru:'Под любым углом',uz:"Istalgan burchakda"}],
+  e:{ru:'Так наводки от 220 В минимальны. Вдоль силового кабеля держим не ближе 15 см.',uz:"Shunda 220 V dan xalaqit eng kam bo'ladi. Kuch kabeli bo'ylab 15 sm dan yaqin bo'lmasin."}},
+ {fx:'siren',q:{ru:'Линия до панели 40 м, на мониторе картинка с помехами. Что делаем?',uz:"Panelgacha liniya 40 m, monitorda tasvir xalaqit bilan. Nima qilamiz?"},
+  o:[{ru:'Видео тянем отдельной парой или коаксиалом',uz:"Videoni alohida juftlik yoki koaksial bilan tortamiz"},{ru:'Меняем монитор',uz:"Monitorni almashtiramiz"},{ru:'Добавляем изоленты',uz:"Izolenta qo'shamiz"},{ru:'Включаем яркость на максимум',uz:"Yorqinlikni maksimal qilamiz"}],
+  e:{ru:'На длинной линии видеосигнал нужно вести отдельно.',uz:"Uzun liniyada video signalni alohida olib borish kerak."}},
+ {m:'lock',fx:'siren',q:{ru:'У электромагнитного замка пропало питание. Дверь…',uz:"Elektromagnit qulfning quvvati o'chdi. Eshik…"},
+  o:[{ru:'Открыта: магнит держит только под током',uz:"Ochiq: magnit faqat tok bo'lganda ushlaydi"},{ru:'Закрыта навсегда',uz:"Butunlay yopiq"},{ru:'Пищит и закрыта',uz:"Chiyillaydi va yopiq"},{ru:'Открывается только ключом',uz:"Faqat kalit bilan ochiladi"}],
+  e:{ru:'Поэтому магнитный замок ставят там, где люди должны выйти даже без света.',uz:"Shuning uchun magnit qulf odamlar tok bo'lmasa ham chiqishi kerak bo'lgan joyga qo'yiladi."}},
+ {fx:'siren',q:{ru:'Клиент жалуется: домофон гудит. Что проверяем первым?',uz:"Mijoz shikoyat qilyapti: domofon g'o'ng'illayapti. Avval nimani tekshiramiz?"},
+  o:[{ru:'Не идёт ли кабель рядом с 220 В, контакт GND',uz:"Kabel 220 V yonidan o'tmayaptimi, GND kontakti"},{ru:'Яркость монитора',uz:"Monitor yorqinligi"},{ru:'Пароль от Wi-Fi',uz:"Wi-Fi paroli"},{ru:'Цвет корпуса',uz:"Korpus rangi"}],
+  e:{ru:'Фон наводят силовые провода и плохой общий провод.',uz:"Fonni kuch simlari va yomon umumiy sim keltirib chiqaradi."}}
+ ]},
+{name:{ru:'Сигнализация в магазине',uz:"Do'konda signalizatsiya"},
+ pieces:[{id:'ppk',k:'ppk',x:56,y:62,lab:{ru:'ППК',uz:'PPK'}},{id:'s1',k:'pir',x:160,y:44,lab:{ru:'ИК-датчик',uz:'IK datchik'}},
+   {id:'s2',k:'reed',x:240,y:44,lab:{ru:'Геркон',uz:'Gerkon'}},{id:'eol',k:'eol',x:306,y:84,lab:{ru:'Резистор',uz:'Rezistor'}},
+   {id:'akb',k:'akb',x:56,y:128,lab:{ru:'АКБ',uz:'AKB'}},{id:'sir',k:'siren',x:170,y:128,lab:{ru:'Сирена',uz:'Sirena'}}],
+ edges:[['ppk','s1'],['s1','s2'],['s2','eol'],['ppk','akb'],['ppk','sir']],
+ tasks:[
+ {m:'ppk',fx:'siren',q:{ru:'Зачем охранной сигнализации аккумулятор?',uz:"Qo'riqlash signalizatsiyasiga akkumulyator nima uchun kerak?"},
+  o:[{ru:'Чтобы работала без света',uz:"Tok bo'lmasa ham ishlashi uchun"},{ru:'Чтобы сирена была громче',uz:"Sirena balandroq bo'lishi uchun"},{ru:'Для красоты',uz:"Chiroy uchun"},{ru:'Он не нужен',uz:"U kerak emas"}],
+  e:{ru:'Злоумышленник может сначала отключить свет. Без АКБ охрана просто погаснет.',uz:"Jinoyatchi avval tokni o'chirishi mumkin. AKBsiz qo'riqlash shunchaki o'chib qoladi."}},
+ {m:'s1',fx:'siren',q:{ru:'Куда нельзя направлять ИК-датчик движения?',uz:"IK harakat datchigini qayerga qaratib bo'lmaydi?"},
+  o:[{ru:'На окно и батарею',uz:"Deraza va batareyaga"},{ru:'На входную дверь',uz:"Kirish eshigiga"},{ru:'Вдоль прохода',uz:"Yo'lak bo'ylab"},{ru:'В угол комнаты',uz:"Xona burchagiga"}],
+  e:{ru:'Солнце и потоки тёплого воздуха дают ложные тревоги.',uz:"Quyosh va iliq havo oqimi soxta xavotir beradi."}},
+ {m:'s2',fx:'siren',q:{ru:'Как соединяем нормально замкнутые (NC) контакты датчиков в шлейфе?',uz:"Shleyfda datchiklarning normal yopiq (NC) kontaktlarini qanday ulaymiz?"},
+  o:[{ru:'Последовательно',uz:"Ketma-ket"},{ru:'Параллельно',uz:"Parallel"},{ru:'Не соединяем',uz:"Ulamaymiz"},{ru:'Через блок питания',uz:"Quvvat bloki orqali"}],
+  e:{ru:'Любой сработавший датчик рвёт цепь — прибор видит тревогу.',uz:"Har qanday ishga tushgan datchik zanjirni uzadi — asbob xavotirni ko'radi."}},
+ {m:'eol',fx:'siren',q:{ru:'Где ставим оконечный резистор шлейфа?',uz:"Shleyf oxirgi rezistorini qayerga qo'yamiz?"},
+  o:[{ru:'У последнего датчика в шлейфе',uz:"Shleyfdagi oxirgi datchik yoniga"},{ru:'Прямо у прибора',uz:"To'g'ridan-to'g'ri asbob yoniga"},{ru:'Где удобно',uz:"Qayerda qulay bo'lsa"},{ru:'Не ставим',uz:"Qo'ymaymiz"}],
+  e:{ru:'Так прибор контролирует весь кабель: и обрыв, и замыкание.',uz:"Shunda asbob butun kabelni nazorat qiladi: uzilishni ham, tutashuvni ham."}},
+ {fx:'spark',q:{ru:'Когда можно мерить сопротивление шлейфа мультиметром?',uz:"Shleyf qarshiligini multimetr bilan qachon o'lchash mumkin?"},
+  o:[{ru:'При выключенном питании прибора',uz:"Asbob quvvati o'chirilganda"},{ru:'Под напряжением',uz:"Kuchlanish ostida"},{ru:'Во время тревоги',uz:"Xavotir paytida"},{ru:'Когда угодно',uz:"Istalgan vaqtda"}],
+  e:{ru:'Под напряжением замер неверный и может испортить прибор.',uz:"Kuchlanish ostida o'lchov noto'g'ri va asbobni buzishi mumkin."}},
+ {m:'akb',fx:'siren',q:{ru:'Дежурный ток 0,15 А, нужно 24 часа без света. Сколько А·ч без запаса?',uz:"Navbatchi tok 0,15 A, tok bo'lmasa 24 soat ishlashi kerak. Zaxirasiz necha A·soat?"},
+  o:[{ru:'3,6 А·ч',uz:'3,6 A·soat'},{ru:'0,6 А·ч',uz:'0,6 A·soat'},{ru:'24 А·ч',uz:'24 A·soat'},{ru:'0,15 А·ч',uz:'0,15 A·soat'}],
+  e:{ru:'0,15 × 24 = 3,6 А·ч. Потом добавляем ток тревоги и запас 25% — так считает калькулятор в приложении.',uz:"0,15 × 24 = 3,6 A·soat. Keyin xavotir toki va 25% zaxira qo'shiladi — ilovadagi kalkulyator shunday hisoblaydi."}},
+ {m:'sir',fx:'spark',q:{ru:'По какому току выбираем блок питания?',uz:"Quvvat blokini qaysi tok bo'yicha tanlaymiz?"},
+  o:[{ru:'По току в тревоге + 30% запаса',uz:"Xavotirdagi tok + 30% zaxira bo'yicha"},{ru:'По току в покое',uz:"Tinch holatdagi tok bo'yicha"},{ru:'По размеру корпуса',uz:"Korpus o'lchami bo'yicha"},{ru:'По цене',uz:"Narxi bo'yicha"}],
+  e:{ru:'В тревоге включаются сирена и GSM — ток вырастает в разы.',uz:"Xavotirda sirena va GSM yoqiladi — tok bir necha barobar oshadi."}},
+ {fx:'spark',q:{ru:'Что ставим на «плюсовой» провод от аккумулятора?',uz:"Akkumulyatorning «plyus» simiga nima qo'yamiz?"},
+  o:[{ru:'Предохранитель',uz:'Saqlagich'},{ru:'Ничего',uz:"Hech narsa"},{ru:'Резистор 4,7 кОм',uz:"4,7 kOm rezistor"},{ru:'Изоленту',uz:'Izolenta'}],
+  e:{ru:'Ток замыкания АКБ — сотни ампер: провод раскалится. Предохранитель его спасёт.',uz:"AKB qisqa tutashuv toki — yuzlab amper: sim qizib ketadi. Saqlagich uni qutqaradi."}}
+ ]},
+{name:{ru:'СКУД на двери офиса',uz:'Ofis eshigida SKUD'},wall:118,door:true,
+ pieces:[{id:'rd',k:'reader',x:58,y:86,lab:{ru:'Считыватель',uz:"O'quvchi"}},{id:'ctl',k:'ctrl',x:216,y:58,lab:{ru:'Контроллер',uz:'Kontroller'}},
+   {id:'lock',k:'lock',x:148,y:38,lab:{ru:'Замок',uz:'Qulf'}},{id:'psu',k:'psu',x:296,y:58,lab:{ru:'БП 12 В',uz:'BP 12 V'}},{id:'akb',k:'akb',x:296,y:128,lab:{ru:'АКБ',uz:'AKB'}}],
+ edges:[['rd','ctl'],['ctl','lock'],['psu','ctl'],['psu','akb']],
+ tasks:[
+ {m:'rd',fx:'siren',q:{ru:'Офис просит СКУД. Что это?',uz:"Ofis SKUD so'rayapti. Bu nima?"},
+  o:[{ru:'Контроль доступа: карта, брелок, код',uz:"Kirishni nazorat qilish: karta, brelok, kod"},{ru:'Кабельное телевидение',uz:"Kabel televideniyesi"},{ru:'Пожарная сигнализация',uz:"Yong'in signalizatsiyasi"},{ru:'Видеонаблюдение',uz:"Videokuzatuv"}],
+  e:{ru:'Система контроля и управления доступом: считыватель, контроллер, замок, питание.',uz:"Kirishni nazorat qilish va boshqarish tizimi: o'quvchi, kontroller, qulf, quvvat."}},
+ {fx:'siren',q:{ru:'По какому протоколу чаще всего подключают считыватель к контроллеру?',uz:"O'quvchi kontrollerga ko'pincha qaysi protokol bilan ulanadi?"},
+  o:[{ru:'Wiegand (D0, D1)',uz:'Wiegand (D0, D1)'},{ru:'HDMI',uz:'HDMI'},{ru:'Wi-Fi',uz:'Wi-Fi'},{ru:'Bluetooth колонки',uz:"Bluetooth kolonka"}],
+  e:{ru:'Wiegand — самый распространённый: линии D0 и D1 плюс питание.',uz:"Wiegand — eng keng tarqalgan: D0 va D1 liniyalari va quvvat."}},
+ {m:'ctl',fx:'siren',q:{ru:'Где ставим контроллер СКУД?',uz:"SKUD kontrollerini qayerga qo'yamiz?"},
+  o:[{ru:'На защищённой стороне двери',uz:"Eshikning himoyalangan tomoniga"},{ru:'Снаружи, рядом со считывателем',uz:"Tashqarida, o'quvchi yonida"},{ru:'На улице на столбе',uz:"Ko'chada ustunda"},{ru:'Где ближе розетка',uz:"Rozetka yaqin joyga"}],
+  e:{ru:'Снаружи дверь можно открыть, просто замкнув провода контроллера.',uz:"Tashqarida eshikni kontroller simlarini tutashtirib ochish mumkin."}},
+ {m:'lock',fx:'siren',q:{ru:'Дверь на пути эвакуации. Какой замок ставим?',uz:"Eshik evakuatsiya yo'lida. Qanday qulf qo'yamiz?"},
+  o:[{ru:'Открывающийся без питания (электромагнитный)',uz:"Quvvatsiz ochiladigan (elektromagnit)"},{ru:'Электромеханический, закрытый без питания',uz:"Elektromexanik, quvvatsiz yopiq"},{ru:'Навесной',uz:"Osma qulf"},{ru:'Любой',uz:"Istalgan"}],
+  e:{ru:'При пожаре и без света люди должны выйти. Такой замок называют fail-safe.',uz:"Yong'inda va tok bo'lmasa odamlar chiqa olishi kerak. Bunday qulf fail-safe deyiladi."}},
+ {fx:'spark',q:{ru:'Зачем диод параллельно катушке замка?',uz:"Qulf g'altagiga parallel diod nima uchun?"},
+  o:[{ru:'Гасит скачок напряжения, бережёт реле',uz:"Kuchlanish sakrashini so'ndiradi, releni asraydi"},{ru:'Для подсветки',uz:"Yoritish uchun"},{ru:'Чтобы замок держал сильнее',uz:"Qulf kuchliroq ushlashi uchun"},{ru:'Он не нужен',uz:"U kerak emas"}],
+  e:{ru:'При отключении катушка даёт выброс напряжения — контакты реле обгорают.',uz:"O'chirilganda g'altak kuchlanish otilishini beradi — rele kontaktlari kuyadi."}},
+ {m:'psu',fx:'spark',q:{ru:'Сколько должен показывать блок питания 12 В без нагрузки?',uz:"12 V quvvat bloki yuklamasiz qancha ko'rsatishi kerak?"},
+  o:[{ru:'13,5–13,8 В',uz:'13,5–13,8 V'},{ru:'5 В',uz:'5 V'},{ru:'220 В',uz:'220 V'},{ru:'Ровно 10 В',uz:"Roppa-rosa 10 V"}],
+  e:{ru:'Блоки для охраны и СКУД выдают чуть больше 12 В, чтобы заряжать аккумулятор.',uz:"Qo'riqlash va SKUD bloklari akkumulyatorni zaryadlash uchun 12 V dan biroz ko'p beradi."}},
+ {fx:'siren',q:{ru:'Замок далеко, кабель тонкий — замок еле держит. Вероятная причина?',uz:"Qulf uzoqda, kabel ingichka — qulf zo'rg'a ushlayapti. Ehtimoliy sabab?"},
+  o:[{ru:'Падение напряжения в кабеле — нужно сечение больше',uz:"Kabelda kuchlanish tushishi — kattaroq kesim kerak"},{ru:'Замок обиделся',uz:"Qulf xafa bo'ldi"},{ru:'Слишком толстая дверь',uz:"Eshik juda qalin"},{ru:'Нужен Wi-Fi',uz:"Wi-Fi kerak"}],
+  e:{ru:'Падение = 2 · L · I · 0,0175 / S. Больше 10% — берите кабель толще. Это считает калькулятор в приложении.',uz:"Tushish = 2 · L · I · 0,0175 / S. 10% dan ko'p bo'lsa — qalinroq kabel oling. Buni ilovadagi kalkulyator hisoblaydi."}},
+ {m:'akb',fx:'siren',q:{ru:'Как часто менять аккумулятор в системе?',uz:"Tizimdagi akkumulyatorni qanchalik tez-tez almashtirish kerak?"},
+  o:[{ru:'Раз в 3–5 лет',uz:"3–5 yilda bir marta"},{ru:'Каждый месяц',uz:"Har oy"},{ru:'Никогда',uz:"Hech qachon"},{ru:'Когда сгорит',uz:"Kuyganda"}],
+  e:{ru:'Со временем ёмкость падает, даже если АКБ выглядит «живым».',uz:"Vaqt o'tishi bilan sig'im kamayadi, hatto AKB «tirik» ko'rinsa ham."}}
+ ]}
+],
+mascot(mood){return ustaArt(mood,{helmet:'#e8649f',helmetDark:'#c4467f',shirt:'#13222e',soot:false,
+  badge:`<path d="M60 40a14 14 0 0 1 20 0M64 44a8 8 0 0 1 12 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="70" cy="48" r="2.6" fill="#fff"/>`,
+  fx1:`<g class="bolt" fill="#ffd75e" stroke="#2a1c00" stroke-width="2" stroke-linejoin="round"><path d="M8 80l14-4-6 10 14-3"/><path d="M132 80l-14-4 6 10-14-3"/><path d="M20 120l12-6-3 9 11-5"/></g>`,
+  fx2:`<g class="bolt"><path d="M100 4h20l4 14h-28z" fill="#e33"/><path d="M8 4h20l4 14H4z" fill="#36f"/></g><g fill="#9aa3ad" opacity=".8"><circle cx="40" cy="22" r="7"/><circle cx="100" cy="24" r="6"/></g>`})},
+draw(G){
+  const S=G.scene,L=GAME.UI[lang];let s='';
+  const pc=id=>S.pieces.find(p=>p.id===id);
+  if(S.wall){s+=`<rect x="${S.wall-4}" y="8" width="8" height="150" fill="var(--box)"/><text x="${S.wall-12}" y="152" font-size="9" text-anchor="end" fill="var(--muted)">${L.out}</text><text x="${S.wall+12}" y="152" font-size="9" fill="var(--muted)">${L.inn}</text>`}
+  if(S.door)s+=`<rect x="${S.wall+6}" y="48" width="46" height="110" rx="2" fill="none" stroke="var(--rail)" stroke-width="2"/><circle cx="${S.wall+44}" cy="104" r="3" fill="var(--rail)"/>`;
+  S.edges.forEach(([a,b])=>{const A=pc(a),B=pc(b);if(!(G.placed[a]&&G.placed[b]))return;
+    s+=`<path d="M${A.x} ${A.y}V${(A.y+B.y)/2}H${B.x}V${B.y}" fill="none" stroke="var(--accent)" stroke-width="3" class="flow" stroke-linejoin="round"/>`});
+  S.pieces.forEach(p=>{const st=G.placed[p.id],cur=G.task&&G.task.m===p.id&&!G.complete;
+    if(st)s+=`<g${G.justPlaced===p.id?' class="newmod"':''}>${this.glyph(p,st)}</g>`;
+    else s+=`<rect${cur?' class="slot"':''} x="${p.x-18}" y="${p.y-16}" width="36" height="32" rx="7" fill="var(--plate)" stroke="${cur?'var(--accent)':'var(--rail)'}" stroke-width="${cur?2.5:1.2}" stroke-dasharray="5 4"/>`;
+    s+=`<text x="${p.x}" y="${p.y+28}" font-size="9" font-weight="600" text-anchor="middle" fill="${st?'var(--fg)':'var(--muted)'}">${tr(p.lab)}</text>`});
+  return `<svg viewBox="0 0 340 166" role="img" aria-label="${tr(S.name)}"><rect x="1" y="1" width="338" height="164" rx="12" fill="var(--surface)" stroke="var(--line)"/>${s}</svg>`},
+glyph(p,st){const {x,y}=p,help=st==='help',ring=help?'var(--warn)':'var(--devline)',sw=help?2.5:1.5;
+  const box=(w,h,f)=>`<rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="5" fill="${f||'var(--dev)'}" stroke="${ring}" stroke-width="${sw}"/>`;
+  const t=(s,c,fs)=>`<text x="${x}" y="${y+3.5}" font-size="${fs||9}" font-weight="700" text-anchor="middle" fill="${c||'var(--fg)'}" font-family="Golos Text,system-ui">${s}</text>`;
+  switch(p.k){
+  case 'psu':return box(36,26)+t('12V','var(--accent)',10);
+  case 'panel':return box(22,36,'#2b3640')+`<circle cx="${x}" cy="${y-9}" r="4.5" fill="#14202b" stroke="#5d6b78"/><circle cx="${x}" cy="${y-9}" r="1.6" fill="#5fb7ff"/><rect x="${x-5}" y="${y+3}" width="10" height="8" rx="2" fill="#e8649f"/>`;
+  case 'mon':return box(40,30,'#2b3640')+`<rect x="${x-15}" y="${y-11}" width="24" height="20" rx="2" fill="#5fb7ff" opacity=".85"/><circle cx="${x+14}" cy="${y-4}" r="2" fill="#e8649f"/><circle cx="${x+14}" cy="${y+4}" r="2" fill="#3dbb72"/>`;
+  case 'lock':return box(38,14,'#9aa3ad')+`<rect x="${x-15}" y="${y-3}" width="30" height="6" rx="2" fill="#5d6b78"/>`;
+  case 'ppk':return box(38,32)+[0,1,2].map(i=>`<circle cx="${x-10+i*10}" cy="${y-6}" r="2.6" fill="${['#3dbb72','#f0b24a','#ef6a5f'][i]}"/>`).join('')+`<rect x="${x-12}" y="${y+2}" width="24" height="7" rx="2" fill="var(--box)"/>`;
+  case 'pir':return `<path d="M${x-14} ${y-10}h28v6a14 14 0 0 1-28 0z" fill="var(--dev)" stroke="${ring}" stroke-width="${sw}"/><circle cx="${x}" cy="${y}" r="6" fill="#e9d7f0" stroke="#8d969f"/>`;
+  case 'reed':return `<rect x="${x-16}" y="${y-5}" width="18" height="10" rx="2" fill="var(--dev)" stroke="${ring}" stroke-width="${sw}"/><rect x="${x+4}" y="${y-5}" width="12" height="10" rx="2" fill="var(--dev)" stroke="${ring}" stroke-width="${sw}"/>`;
+  case 'eol':return `<path d="M${x-16} ${y}h6l3-6 4 12 4-12 4 12 3-6h6" fill="none" stroke="${help?'var(--warn)':'var(--fg)'}" stroke-width="2" stroke-linejoin="round"/>`;
+  case 'akb':return box(34,22,'#2b3640')+`<rect x="${x-11}" y="${y-15}" width="6" height="4" fill="#ef6a5f"/><rect x="${x+5}" y="${y-15}" width="6" height="4" fill="#9aa3ad"/>`+t('12V','#fff',9);
+  case 'siren':return `<path d="M${x-14} ${y-6}h8l12-10v32l-12-10h-8z" fill="#ef6a5f" stroke="${ring}" stroke-width="${sw}" stroke-linejoin="round"/><path d="M${x+10} ${y-6}q5 6 0 12" fill="none" stroke="var(--fg)" stroke-width="2"/>`;
+  case 'reader':return box(22,34,'#2b3640')+`<rect x="${x-7}" y="${y-11}" width="14" height="10" rx="2" fill="#5fb7ff" opacity=".7"/><circle cx="${x}" cy="${y+8}" r="3" fill="#3dbb72"/>`;
+  case 'ctrl':return box(38,28,'#1f6b4a')+`<rect x="${x-12}" y="${y-7}" width="10" height="10" fill="#14202b"/>`+[0,1,2,3].map(i=>`<rect x="${x+2+i*4}" y="${y+6}" width="3" height="5" fill="#f0b24a"/>`).join('');
+  }return ''}
+};
+
+</script>
+<script>
+/* ---------- engine ---------- */
+const U=()=>Object.assign({},COMMON[lang],GAME.UI[lang]);
+let G=null,timer=null;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const NS=GAME.SCENES.length,ORD=()=>shuffle([...Array(NS).keys()]);
+function newGame(){
+  G={score:0,lives:3,combo:0,t:GAME_TIME,right:0,total:0,done:0,pn:0,order:ORD(),busy:false};
+  loadScene();render();
+  clearInterval(timer);let last=Date.now();
+  timer=setInterval(()=>{const now=Date.now(),dt=(now-last)/1000;last=now;if(G.busy||document.hidden)return;
+    G.t-=dt;if(G.t<=0){G.t=0;end('time')}else paintTime()},200)}
+function loadScene(){
+  if(G.pn>0&&G.pn%NS===0)G.order=ORD();
+  G.scene=GAME.SCENES[G.order[G.pn%NS]];G.ti=0;G.complete=false;G.placed={};G.miss=0;G.justPlaced=null;nextTask(true)}
+function nextTask(first){
+  if(!first)G.ti++;
+  if(G.ti>=G.scene.tasks.length){G.complete=true;G.done++;const bonus=G.miss?100:300;G.score+=bonus;
+    toast(U().built(bonus));haptic('success');G.pn++;G.busy=true;render();
+    setTimeout(()=>{if(!G||G.over)return;G.busy=false;loadScene();render()},1300);return}
+  G.task=G.scene.tasks[G.ti];
+  G.opts=shuffle(G.task.o.map((o,i)=>({o,ok:i===0})));G.shown=Date.now()}
+const app=document.getElementById('app');
+const $=s=>document.querySelector(s);
+function bar(){const L=U();return `<header class="bar"><a href="../">${L.back}</a><div class="ttl">${GAME.icon} ${L.title}</div><div class="lang" role="group" aria-label="Til"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div></header>`}
+function bindBar(){document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('ep_lang',JSON.stringify(lang));document.documentElement.lang=lang;render()})}
+let screen='start',result=null;
+function render(){document.documentElement.lang=lang;
+  if(screen==='start')startScr();else if(screen==='game')gameScr();else endScr();bindBar()}
+function startScr(){const L=U();const best=+store.get(GAME.bestKey)||0;
+  const rules=L.rules(GAME.lifeIcon).concat([L.r3]);
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${GAME.mascot('ok')}</div><h1>${L.h1}</h1><p class="lead">${L.lead}</p>
+  <div class="card"><ul class="rules">${rules.map(r=>`<li><span>${r[0]}</span><div>${r[1]}</div></li>`).join('')}</ul></div>
+  ${best?`<div class="best">${L.best}: <b>${best}</b></div>`:''}
+  <button class="btn" id="play" type="button">${L.play}</button><p class="small">${L.safe}</p></main>`;
+  $('#play').onclick=()=>{screen='game';newGame()}}
+function gameScr(){const L=U();const t=G.task;
+  const opts=G.opts.map((x,i)=>`<button class="opt" type="button" data-i="${i}"><span>${tr(x.o)}</span></button>`).join('');
+  app.innerHTML=bar()+`<main class="wrap" id="gw">
+  <div class="hud"><span class="sc" id="sc">${G.score}</span><span class="lv" aria-label="lives">${[0,1,2].map(i=>`<i class="${i<G.lives?'':'off'}">${GAME.lifeIcon}</i>`).join('')}</span><span class="tm" id="tm"></span></div>
+  <div class="tbar"><i id="tb"></i></div>
+  <div class="pname"><span>${L.scene(G.done+1,tr(G.scene.name))}</span>${G.combo>1?`<span class="combo">${L.combo(Math.min(G.combo,5))}</span>`:''}</div>
+  <div class="panel">${GAME.draw(G)}</div>
+  ${G.complete?'':`<p class="q">${tr(t.q)}</p><div class="opts">${opts}</div>`}</main>`;
+  G.justPlaced=null;paintTime();
+  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>answer(+b.dataset.i,b))}
+function paintTime(){const tm=$('#tm'),tb=$('#tb');if(!tm)return;const s=Math.ceil(G.t);
+  tm.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;tm.classList.toggle('low',s<=15);
+  tb.style.width=(G.t/GAME_TIME*100)+'%';tb.classList.toggle('low',s<=15)}
+function answer(i,btn){if(G.busy)return;const x=G.opts[i],t=G.task;G.total++;
+  if(x.ok){G.right++;G.combo++;const fast=(Date.now()-G.shown)<5000;
+    const pts=100+25*Math.min(G.combo-1,4)+(fast?50:0);G.score+=pts;
+    if(t.m){G.placed[t.m]='ok';G.justPlaced=t.m}
+    btn.classList.add('right');floatTxt('+'+pts);haptic('light');G.busy=true;
+    setTimeout(()=>{if(G.over)return;G.busy=false;nextTask();render()},380)}
+  else{G.combo=0;G.lives--;G.miss++;G.busy=true;
+    if(t.m)G.placed[t.m]='help'; // steps go in order: the mentor fixes it (orange), you go on
+    haptic('error');failFx(t)}}
+function failFx(t){const L=U();const F=GAME.FX[t.fx]||Object.values(GAME.FX)[0];
+  const f=document.createElement('div');f.className='flash f-'+F.flash;document.body.appendChild(f);setTimeout(()=>f.remove(),1000);
+  const gw=$('#gw');if(gw)gw.classList.add('shake');
+  const titles=F.titles[lang]||F.titles.ru;const title=titles[Math.random()*titles.length|0];
+  const ov=document.createElement('div');ov.className='ov';
+  ov.innerHTML=`<div class="sheet" role="alertdialog" aria-live="assertive"><div class="who">${GAME.mascot(F.mood)}<h2>${title}</h2></div>
+  <p class="ans">${L.right} <b>${tr(t.o[0])}</b></p><p class="why">${tr(t.e)}</p><button class="btn" type="button" id="ovn">${L.next}</button></div>`;
+  setTimeout(()=>{document.body.appendChild(ov);$('#ovn').focus()},350);
+  ov.querySelector('#ovn').onclick=()=>{ov.remove();G.busy=false;if(G.lives<=0){end('lives');return}G.justPlaced=t.m||null;nextTask();render()}}
+function floatTxt(s){const d=document.createElement('div');d.className='float';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),800)}
+function toast(s){const d=document.createElement('div');d.className='toast';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),1300)}
+function haptic(k){try{const h=tg&&tg.HapticFeedback;if(!h)return;if(k==='light')h.impactOccurred('light');else h.notificationOccurred(k)}catch(e){}}
+function end(why){if(!G||G.over)return;G.over=true;clearInterval(timer);
+  document.querySelectorAll('.ov').forEach(o=>o.remove());
+  const prev=+store.get(GAME.bestKey)||0;const rec=G.score>prev;if(rec)store.set(GAME.bestKey,G.score);
+  result={score:G.score,done:G.done,right:G.right,total:G.total,why,rec,best:Math.max(prev,G.score)};
+  screen='end';render()}
+function rankOf(s){return s<1200?0:s<2400?1:s<3600?2:3}
+function endScr(){const L=U(),r=result;const acc=r.total?Math.round(r.right/r.total*100):0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${GAME.mascot(r.why==='lives'?'bad1':'ok')}</div>
+  <h1>${r.why==='lives'?L.overLives:L.over}</h1>
+  <div class="big">${r.score}</div><div class="center"><span class="rank">${L.ranks[rankOf(r.score)]}</span></div>
+  ${r.rec&&r.score>0?`<p class="lead"><b>🏆 ${L.rec}</b></p>`:`<div class="best">${L.best}: <b>${r.best}</b></div>`}
+  <div class="stats"><div><b>${r.score}</b><span>${L.score}</span></div><div><b>${r.done}</b><span>${L.doneW}</span></div><div><b>${acc}%</b><span>${L.acc}</span></div></div>
+  <button class="btn tg" id="share" type="button">📤 ${L.share}</button>
+  <button class="btn" id="again" type="button">${L.again}</button>
+  <a class="btn ghost" href="../">📘 ${L.learn}</a></main>`;
+  $('#again').onclick=()=>{screen='game';newGame()};
+  $('#share').onclick=share}
+function share(){const r=result;const url=`https://t.me/${BOT}?start=${GAME.start}`;
+  const link=`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(U().shareText(r.score,r.done))}`;
+  try{if(tg&&tg.initData&&tg.openTelegramLink){tg.openTelegramLink(link);return}}catch(e){}
+  window.open(link,'_blank','noopener')}
+render();
+</script>
+</body>
+</html>

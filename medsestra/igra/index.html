@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Первая помощь — игра для медсестёр · Kasb Pro</title>
+<meta name="description" content="Бесплатная игра по первой помощи: реанимация 30:2, подавился, кровотечение, ожог, обморок — выбери правильный порядок действий. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/medsestra/igra/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:title" content="Первая помощь — игра для медсестёр">
+<meta property="og:description" content="2 минуты, 3 жизни. Правильный порядок действий спасает жизнь.">
+<meta property="og:url" content="https://kasbpro.uz/medsestra/igra/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#eef1f4; --surface:#fff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#1fae93; --accent-ink:#00261e; --navy:#123a3c; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --warn:#c77f06;
+  --box:#c9d0d7; --plate:#e4e8ec; --rail:#9aa3ad; --dev:#fbfcfd; --devline:#8d98a4;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#3cc9ad; --accent-ink:#00261e; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f; --warn:#f0b24a;
+  --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --dev:#26333f; --devline:#6b7a88; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#3cc9ad; --accent-ink:#00261e; --navy:#0a1118; --navy-fg:#e7edf3; --ok:#3dbb72; --bad:#ef6a5f; --warn:#f0b24a;
+  --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --dev:#26333f; --devline:#6b7a88; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.bar{background:var(--navy);color:var(--navy-fg);padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:10px}
+.bar a{color:var(--navy-fg);opacity:.8;text-decoration:none;font-size:14px;white-space:nowrap}
+.bar .ttl{flex:1;font-family:var(--display);font-size:15px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:12px;font-weight:700;padding:5px 9px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.wrap{flex:1;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+h1{font-family:var(--display);font-size:26px;line-height:1.15;margin:0;text-align:center;text-wrap:balance}
+.lead{margin:0;text-align:center;color:var(--muted);text-wrap:balance}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.rules li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.rules li span{flex:none;width:28px;height:28px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:16px}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:17px;padding:15px;width:100%;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.btn.tg{background:#229ed9;color:#fff}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.small{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.best{text-align:center;font-size:14px;color:var(--muted)}
+.best b{color:var(--fg);font-variant-numeric:tabular-nums}
+.hero{display:flex;justify-content:center}
+.hero svg{width:150px;height:auto}
+.hud{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+.hud .sc{font-family:var(--display);font-size:20px;min-width:70px}
+.hud .lv{display:flex;gap:2px;font-size:18px}
+.hud .lv i{font-style:normal;transition:opacity .3s,filter .3s}
+.hud .lv i.off{opacity:.25;filter:grayscale(1)}
+.hud .tm{margin-left:auto;font-weight:700;font-size:18px}
+.hud .tm.low{color:var(--bad)}
+.tbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:-6px}
+.tbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.tbar i.low{background:var(--bad)}
+.pname{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px;color:var(--muted);margin-bottom:-8px}
+.pname b{color:var(--fg);font-size:14px}
+.combo{color:var(--accent);font-weight:700;white-space:nowrap}
+.panel svg{width:100%;height:auto;display:block}
+.newmod{animation:drop .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes drop{from{transform:translateY(-22px);opacity:0}to{transform:none;opacity:1}}
+.slot{animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+.flow{stroke-dasharray:6 6;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-12}}
+.q{font-size:17px;font-weight:600;margin:0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;display:flex;align-items:center;gap:10px;min-height:50px}
+.opt:active{transform:scale(.985)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.float{position:fixed;left:50%;top:42%;transform:translate(-50%,0);font-family:var(--display);font-size:28px;color:var(--ok);pointer-events:none;animation:up .8s ease-out forwards;z-index:30;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+@keyframes up{to{transform:translate(-50%,-60px);opacity:0}}
+.toast{position:fixed;left:50%;top:30%;transform:translateX(-50%);background:var(--navy);color:var(--navy-fg);padding:14px 20px;border-radius:14px;font-family:var(--display);font-size:17px;z-index:30;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);animation:pop .3s ease-out;white-space:nowrap}
+@keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
+.ov{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(8,14,20,.6)}
+.ov .sheet{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:sheet .3s ease-out}
+@keyframes sheet{from{transform:translateY(60%)}}
+.ov .who{display:flex;align-items:center;gap:12px}
+.ov .who svg{width:96px;height:auto;flex:none}
+.ov h2{font-family:var(--display);font-size:20px;margin:0;color:var(--bad);line-height:1.2}
+.ov .ans{font-size:15px;margin:0}
+.ov .ans b{color:var(--ok)}
+.ov .why{font-size:14px;color:var(--muted);margin:0}
+.flash{position:fixed;inset:0;z-index:35;pointer-events:none}
+.flash.f-spark{animation:fspark .5s steps(2) 2}
+@keyframes fspark{0%{background:rgba(255,215,94,.85)}50%{background:rgba(10,10,10,.75)}}
+.flash.f-red{animation:fred .8s ease-out}
+@keyframes fred{0%{background:rgba(220,40,40,.7)}100%{background:transparent}}
+.flash.f-siren{animation:fsiren .3s steps(2) 3}
+@keyframes fsiren{0%{background:rgba(230,40,40,.65)}50%{background:rgba(40,90,230,.65)}}
+.flash.f-dark{animation:fdark .9s ease-out}
+@keyframes fdark{0%{background:rgba(5,8,12,.92)}60%{background:rgba(5,8,12,.8)}100%{background:transparent}}
+.flash.f-laser{animation:flaser .6s steps(3) 1}
+@keyframes flaser{0%{background:rgba(190,40,255,.6)}50%{background:rgba(255,255,255,.8)}100%{background:transparent}}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translate(-6px,2px)}40%{transform:translate(6px,-2px)}60%{transform:translate(-4px,1px)}80%{transform:translate(4px,0)}}
+.zap .bolt{animation:zap .18s steps(2) infinite}
+@keyframes zap{50%{opacity:0}}
+.zap .body{animation:jit .12s infinite}
+@keyframes jit{50%{transform:translate(2px,-1px)}}
+.wob .body{animation:wob .6s ease-in-out infinite;transform-origin:70px 140px}
+@keyframes wob{25%{transform:rotate(-4deg)}75%{transform:rotate(4deg)}}
+.big{font-family:var(--display);font-size:54px;text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+.rank{display:inline-block;margin:0 auto;background:color-mix(in srgb,var(--accent) 25%,transparent);padding:6px 14px;border-radius:99px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.stats b{display:block;font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Kasb Pro profession mini-game (engine shared with «Собери щиток»). Our own art and texts.
+const tg=window.Telegram&&window.Telegram.WebApp;
+if(tg){try{tg.ready();tg.expand();tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){}}
+const BOT='kasbpro_uz_bot';
+const GAME_TIME=120;
+let lang='ru';
+try{const v=JSON.parse(localStorage.getItem('ep_lang')||'null');lang=(v==='uz'||v==='ru')?v:((tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code==='uz')?'uz':'ru')}catch(e){}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const tr=o=>o==null?'':typeof o==='string'?o:(o[lang]||o.ru);
+const COMMON={
+ru:{right:'Правильно:',next:'Понятно, дальше',over:'Смена окончена',overLives:'Жизни закончились',score:'очков',acc:'верно',rec:'Новый рекорд!',
+ share:'Поделиться с друзьями',again:'Ещё раз',best:'Ваш рекорд',play:'Играть',combo:n=>`серия ×${n}`,
+ built:b=>b>=300?`Без ошибок! +${b}`:`Готово! +${b}`,
+ rules:life=>[['⏱','2 минуты смены. Отвечайте быстрее — больше очков.'],[life,'3 жизни. Ошибка — мультяшная авария и объяснение, как правильно.']]},
+uz:{right:"To'g'ri javob:",next:'Tushunarli, davom',over:'Smena tugadi',overLives:'Jonlar tugadi',score:'ball',acc:"to'g'ri",rec:'Yangi rekord!',
+ share:"Do'stlarga ulashish",again:'Yana bir bor',best:'Rekordingiz',play:"O'ynash",combo:n=>`seriya ×${n}`,
+ built:b=>b>=300?`Xatosiz! +${b}`:`Tayyor! +${b}`,
+ rules:life=>[['⏱',"2 daqiqalik smena. Tezroq javob bering — ko'proq ball."],[life,"3 ta jon. Xato — multfilmdagidek falokat va qanday to'g'ri ekanini tushuntirish."]]}
+};
+/* Shared mascot: usta in a helmet. o: helmet colours, badge, shirt, fx1/fx2 extras. mood: ok | bad1 (zapped) | bad2 (dizzy/sooty) */
+function ustaArt(mood,o){
+  const b1=mood==='bad1',b2=mood==='bad2';
+  const face=b2&&o.soot?'#6b5a4e':'#f2c79b',ink='#2a1c00';
+  const eyes=b1?`<path d="M52 62l10 10M62 62l-10 10M78 62l10 10M88 62l-10 10" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>`
+    :b2?`<circle cx="57" cy="67" r="6" fill="#fff"/><circle cx="83" cy="67" r="6" fill="#fff"/><circle cx="57" cy="68" r="2.5" fill="${ink}"/><circle cx="83" cy="68" r="2.5" fill="${ink}"/>`
+    :`<circle cx="57" cy="67" r="4.5" fill="${ink}"/><circle cx="83" cy="67" r="4.5" fill="${ink}"/><circle cx="58.5" cy="65.5" r="1.4" fill="#fff"/><circle cx="84.5" cy="65.5" r="1.4" fill="#fff"/>`;
+  const mouth=b1?`<path d="M56 96l6-6 6 6 6-6 6 6 6-6" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linejoin="round"/>`
+    :b2?`<ellipse cx="70" cy="95" rx="7" ry="5" fill="${ink}"/>`
+    :`<path d="M56 90q14 12 28 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+  const hair=b1?`<path d="M30 52l-12-10 14 2-10-14 16 8-2-16 12 14M110 52l12-10-14 2 10-14-16 8 2-16-12 14" fill="none" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>`:'';
+  const hy=b1?-14:0;
+  const fx=b1?(o.fx1||''):b2?(o.fx2||''):'';
+  return `<svg viewBox="0 0 140 150" role="img" aria-label="usta" class="${b1?'zap':b2?'wob':''}">${fx}<g class="body">
+  <path d="M30 150q0-26 40-26t40 26z" fill="${o.shirt||'#1e5aa8'}"/><path d="M58 124h24l-12 14z" fill="${o.helmet}"/>
+  ${hair}<ellipse cx="70" cy="76" rx="40" ry="38" fill="${face}"/>
+  <ellipse cx="30" cy="78" rx="6" ry="9" fill="${face}"/><ellipse cx="110" cy="78" rx="6" ry="9" fill="${face}"/>
+  ${eyes}<path d="M50 84q10-6 20 0 10-6 20 0q-10 6-20 1-10 5-20-1z" fill="${b2&&o.soot?'#2a2a2a':'#4a2e1a'}"/>${mouth}
+  <g transform="translate(0 ${hy})"><path d="M26 56q4-36 44-36t44 36z" fill="${o.helmet}"/><rect x="20" y="52" width="100" height="9" rx="4.5" fill="${o.helmetDark}"/><rect x="64" y="16" width="12" height="10" rx="3" fill="${o.helmetDark}"/>${o.badge||''}</g>
+  </g></svg>`}
+</script>
+<script>
+// «Первая помощь» — game for nurses/caregivers (Медсестра Pro). Facts follow the app lessons:
+// CPR 30:2, 5–6 cm, 100–120/min, breathing check ≤10 s, ambulance 103; choking 5 back blows + 5 abdominal thrusts;
+// bleeding: direct pressure, add layers, tourniquet time; burns 20 min cool water; fainting legs up; recovery position. No medicines, no doses.
+const GAME={
+id:'medsestra',start:'igra_medsestra',bestKey:'kp_igra_medsestra_best',icon:'💚',lifeIcon:'💚',
+UI:{
+ru:{back:'‹ Медсестра Pro',title:'Первая помощь',h1:'Первая помощь',lead:'Игра для медсестёр и сиделок: выбери правильный порядок действий — и спаси человека.',
+ r3:['🩺','Каждый верный ответ — шаг алгоритма. Пройдите все шаги без ошибок — бонус +300.'],
+ safe:'Это игра, а не замена обучению. В жизни сразу вызывайте скорую: 103 (или 112). Лекарства и дозы назначает только врач.',
+ scene:(n,name)=>`Случай ${n}: <b>${name}</b>`,doneW:'случаев',
+ ranks:['Новичок','Помощник','Медсестра','Профи первой помощи'],learn:'Учиться: 13 уроков Медсестра Pro',
+ st:'Состояние',stOk:'стабильно',stGo:'помогаем…',
+ shareText:(s,p)=>`💚 Я набрал(а) ${s} очков и спас(ла) ${p} ${p===1?'человека':'человек'} в игре «Первая помощь»! Сможешь лучше? Играть бесплатно в Telegram 👇`},
+uz:{back:'‹ Hamshira Pro',title:'Birinchi yordam',h1:'Birinchi yordam',lead:"Hamshira va qarovchilar uchun o'yin: harakatlarning to'g'ri tartibini tanlang — va odamni qutqaring.",
+ r3:['🩺',"Har bir to'g'ri javob — algoritmning bir qadami. Barcha qadamlarni xatosiz o'ting — +300 bonus."],
+ safe:"Bu o'yin, o'qish o'rnini bosmaydi. Hayotda darhol tez yordam chaqiring: 103 (yoki 112). Dori va dozani faqat shifokor belgilaydi.",
+ scene:(n,name)=>`${n}-holat: <b>${name}</b>`,doneW:'holat',
+ ranks:['Shogird','Qarovchi','Hamshira','Birinchi yordam ustasi'],learn:"O'rganish: Hamshira Pro'da 13 dars",
+ st:'Holati',stOk:'barqaror',stGo:'yordam beryapmiz…',
+ shareText:(s,p)=>`💚 «Birinchi yordam» o'yinida ${s} ball to'pladim va ${p} ta odamni qutqardim! Sen ko'proq qila olasanmi? Telegramda bepul o'yna 👇`}
+},
+FX:{
+ worse:{flash:'red',mood:'bad1',titles:{ru:['Ой! Пострадавшему хуже!','Пульс скачет — не так!','Тревога! Ошибка!'],uz:["Voy! Jabrlanuvchiga yomonroq!","Puls sakrayapti — bunday emas!","Xavf! Xato!"]}},
+ oops:{flash:'dark',mood:'bad2',titles:{ru:['Ох, так делать нельзя!','Мимо! Теряем время!'],uz:["Oh, bunday qilish mumkin emas!","Noto'g'ri! Vaqt ketyapti!"]}}
+},
+SCENES:[
+{name:{ru:'Человек упал на улице',uz:"Ko'chada odam yiqildi"},tasks:[
+ {lab:{ru:'Безопасно?',uz:'Xavfsizmi?'},fx:'oops',q:{ru:'На тротуаре лежит человек. Что делаем первым?',uz:"Trotuarda odam yotibdi. Birinchi nima qilamiz?"},
+  o:[{ru:'Убеждаемся, что безопасно: машины, провода, огонь',uz:"Xavfsizligiga ishonch hosil qilamiz: mashinalar, simlar, olov"},{ru:'Бежим к нему через дорогу не глядя',uz:"Qaramasdan yo'ldan unga yuguramiz"},{ru:'Снимаем на телефон',uz:'Telefonga olamiz'},{ru:'Сразу тащим его домой',uz:"Darhol uyga sudraymiz"}],
+  e:{ru:'Если пострадает спасатель, помогать будет некому. Сначала оглядеться.',uz:"Agar qutqaruvchi jabrlansa, yordam beradigan odam qolmaydi. Avval atrofga qarash kerak."}},
+ {lab:{ru:'Окликнуть',uz:"Chaqirish"},fx:'oops',q:{ru:'Подошли. Как проверить сознание?',uz:"Yaqinlashdik. Hushini qanday tekshiramiz?"},
+  o:[{ru:'Громко окликнуть и потрясти за плечи',uz:"Baland ovozda chaqirish va yelkasidan silkitish"},{ru:'Плеснуть в лицо водой',uz:"Yuziga suv sepish"},{ru:'Бить по щекам',uz:"Yuziga urish"},{ru:'Ждать, пока очнётся сам',uz:"O'zi o'ziga kelguncha kutish"}],
+  e:{ru:'Окликаем и аккуратно трясём за плечи. Не отвечает — зовём людей на помощь.',uz:"Chaqiramiz va yelkasidan ehtiyotkorlik bilan silkitamiz. Javob bermasa — odamlarni yordamga chaqiramiz."}},
+ {lab:{ru:'Дыхание ≤10 с',uz:'Nafas ≤10 s'},fx:'worse',q:{ru:'Не отвечает. Сколько времени проверяем дыхание?',uz:"Javob bermayapti. Nafasni qancha vaqt tekshiramiz?"},
+  o:[{ru:'Не больше 10 секунд',uz:"10 soniyadan ko'p emas"},{ru:'1 минуту',uz:'1 daqiqa'},{ru:'3 минуты',uz:'3 daqiqa'},{ru:'Пока не приедет скорая',uz:'Tez yordam kelguncha'}],
+  e:{ru:'Запрокинуть голову, поднять подбородок, смотреть-слушать-чувствовать до 10 секунд. Каждая лишняя секунда снижает шансы.',uz:"Boshini orqaga egish, iyagini ko'tarish, 10 soniyagacha qarash-eshitish-sezish. Har ortiqcha soniya imkoniyatni kamaytiradi."}},
+ {lab:{ru:'103',uz:'103'},fx:'worse',q:{ru:'Он редко «всхлипывает» ртом. Это…',uz:"U og'zi bilan kamdan-kam «xo'rsinyapti». Bu…"},
+  o:[{ru:'Не нормальное дыхание: звонить 103 и начинать реанимацию',uz:"Normal nafas emas: 103 ga qo'ng'iroq va reanimatsiyani boshlash"},{ru:'Нормальное дыхание: ждать',uz:"Normal nafas: kutish"},{ru:'Он спит, не трогать',uz:"U uxlayapti, tegmaslik"},{ru:'Нужно дать воды',uz:"Suv berish kerak"}],
+  e:{ru:'Судорожные редкие вдохи бывают при остановке сердца. Громкая связь на телефоне — и сразу к груди.',uz:"Kamdan-kam talvasali nafas yurak to'xtaganda bo'ladi. Telefonni baland ovozga qo'yib — darhol ko'krakka."}},
+ {lab:{ru:'Центр груди',uz:"Ko'krak o'rtasi"},fx:'worse',q:{ru:'Куда ставим руки для нажатий?',uz:"Bosish uchun qo'llarni qayerga qo'yamiz?"},
+  o:[{ru:'В центр груди, на нижнюю половину грудины',uz:"Ko'krak o'rtasiga, to'sh suyagining pastki yarmiga"},{ru:'На живот',uz:'Qoringa'},{ru:'Под левый сосок',uz:"Chap ko'krak uchi ostiga"},{ru:'На шею',uz:"Bo'yinga"}],
+  e:{ru:'Основание ладони — в центр груди, вторая рука сверху, руки прямые.',uz:"Kaft asosi — ko'krak o'rtasiga, ikkinchi qo'l ustiga, qo'llar tik."}},
+ {lab:{ru:'5–6 см',uz:'5–6 sm'},fx:'worse',q:{ru:'Как глубоко и как часто давить?',uz:"Qanchalik chuqur va qanchalik tez bosish kerak?"},
+  o:[{ru:'5–6 см, 100–120 раз в минуту',uz:"5–6 sm, daqiqasiga 100–120 marta"},{ru:'1–2 см, 30 раз в минуту',uz:"1–2 sm, daqiqasiga 30 marta"},{ru:'10 см, 200 раз в минуту',uz:"10 sm, daqiqasiga 200 marta"},{ru:'Как получится',uz:"Qanday bo'lsa"}],
+  e:{ru:'Мельче — кровь не идёт к мозгу. Глубже и чаще — травмы и усталость. Метроном в Медсестра Pro даёт 110 в минуту.',uz:"Sayozroq — qon miyaga bormaydi. Chuqurroq va tezroq — jarohat va charchash. Hamshira Pro metronomi daqiqasiga 110 beradi."}},
+ {lab:{ru:'30 : 2',uz:'30 : 2'},fx:'worse',q:{ru:'Соотношение нажатий и вдохов у взрослого?',uz:"Kattalarda bosish va nafas nisbati?"},
+  o:['30 : 2','15 : 1','5 : 5','2 : 30'],
+  e:{ru:'30 нажатий, затем 2 вдоха. Если не умеете делать вдохи — просто давите без остановки.',uz:"30 ta bosish, keyin 2 ta nafas. Nafas berishni bilmasangiz — to'xtovsiz bosing."}},
+ {lab:{ru:'До скорой',uz:'Tez yordamgacha'},fx:'oops',q:{ru:'Когда можно прекратить реанимацию?',uz:"Reanimatsiyani qachon to'xtatish mumkin?"},
+  o:[{ru:'Когда приедет скорая, человек задышит или нет сил',uz:"Tez yordam kelganda, odam nafas olganda yoki kuch qolmaganda"},{ru:'Через 2 минуты',uz:"2 daqiqadan keyin"},{ru:'Если устала рука',uz:"Qo'l charchasa"},{ru:'Если никто не смотрит',uz:"Hech kim qaramasa"}],
+  e:{ru:'Меняйтесь с помощником каждые 2 минуты, но не останавливайтесь до приезда скорой.',uz:"Har 2 daqiqada yordamchi bilan almashing, lekin tez yordam kelguncha to'xtamang."}}
+]},
+{name:{ru:'Подавился в кафе',uz:"Kafeda tiqilib qoldi"},tasks:[
+ {lab:{ru:'Кашель',uz:"Yo'tal"},fx:'oops',q:{ru:'Гость схватился за горло, но громко кашляет. Что делаем?',uz:"Mehmon tomog'ini ushladi, lekin qattiq yo'talyapti. Nima qilamiz?"},
+  o:[{ru:'Поощряем кашель и наблюдаем',uz:"Yo'talishga undaymiz va kuzatamiz"},{ru:'Сразу бьём по спине',uz:"Darhol orqasiga uramiz"},{ru:'Даём запить водой',uz:"Suv ichiramiz"},{ru:'Лезем пальцами в рот',uz:"Og'ziga barmoq tiqamiz"}],
+  e:{ru:'Сильный кашель — лучший способ вытолкнуть кусок. Вода и пальцы могут протолкнуть его глубже.',uz:"Kuchli yo'tal — bo'lakni chiqarishning eng yaxshi yo'li. Suv va barmoqlar uni chuqurroq itarishi mumkin."}},
+ {lab:{ru:'Наклон вперёд',uz:"Oldinga egish"},fx:'worse',q:{ru:'Кашель стал беззвучным, говорить не может. Дальше?',uz:"Yo'tal ovozsiz bo'ldi, gapira olmayapti. Keyin?"},
+  o:[{ru:'Наклонить вперёд и 5 ударов между лопатками',uz:"Oldinga egib, kuraklar orasiga 5 marta urish"},{ru:'Уложить на спину',uz:"Chalqancha yotqizish"},{ru:'Дать хлеба, чтобы протолкнуть',uz:"Itarib yuborish uchun non berish"},{ru:'Ждать, само пройдёт',uz:"Kutish, o'zi o'tadi"}],
+  e:{ru:'Наклон вперёд, чтобы кусок выпал наружу, а не ушёл глубже.',uz:"Bo'lak chuqurga emas, tashqariga tushishi uchun oldinga egiladi."}},
+ {lab:{ru:'Ладонью',uz:'Kaft bilan'},fx:'oops',q:{ru:'Чем и куда бьём?',uz:"Nima bilan va qayerga uramiz?"},
+  o:[{ru:'Основанием ладони между лопатками',uz:"Kaft asosi bilan kuraklar orasiga"},{ru:'Кулаком по пояснице',uz:"Musht bilan belga"},{ru:'По затылку',uz:"Ensaga"},{ru:'Легонько гладим',uz:"Sekin silaymiz"}],
+  e:{ru:'Резкие удары основанием ладони между лопатками, сверху вниз.',uz:"Kaft asosi bilan kuraklar orasiga keskin, yuqoridan pastga zarba."}},
+ {lab:{ru:'Кулак',uz:'Musht'},fx:'worse',q:{ru:'5 ударов не помогли. Куда ставим кулак для толчков в живот?',uz:"5 ta zarba yordam bermadi. Qoringa turtish uchun mushtni qayerga qo'yamiz?"},
+  o:[{ru:'Между пупком и нижним концом грудины',uz:"Kindik bilan to'sh suyagining pastki uchi orasiga"},{ru:'Ниже пупка',uz:"Kindikdan pastga"},{ru:'На грудину',uz:"To'sh suyagiga"},{ru:'На горло',uz:"Tomoqqa"}],
+  e:{ru:'Толчок внутрь и вверх выталкивает воздух из лёгких вместе с куском.',uz:"Ichkariga va yuqoriga turtish o'pkadagi havoni bo'lak bilan birga chiqaradi."}},
+ {lab:{ru:'5 + 5',uz:'5 + 5'},fx:'oops',q:{ru:'Сколько толчков и что потом?',uz:"Necha marta turtamiz va keyin nima?"},
+  o:[{ru:'5 толчков, потом снова 5 ударов — чередуем',uz:"5 ta turtish, keyin yana 5 ta zarba — almashtiramiz"},{ru:'1 толчок и ждём',uz:"1 ta turtish va kutamiz"},{ru:'50 толчков подряд',uz:"Ketma-ket 50 ta turtish"},{ru:'Хватит, ждём скорую',uz:"Yetarli, tez yordamni kutamiz"}],
+  e:{ru:'Чередуем 5 ударов и 5 толчков, пока кусок не выйдет или человек не потеряет сознание.',uz:"Bo'lak chiqquncha yoki odam hushini yo'qotguncha 5 zarba va 5 turtishni almashtiramiz."}},
+ {lab:{ru:'103 + реанимация',uz:'103 + reanimatsiya'},fx:'worse',q:{ru:'Человек обмяк и потерял сознание. Что делаем?',uz:"Odam bo'shashib hushini yo'qotdi. Nima qilamiz?"},
+  o:[{ru:'Опустить на пол, звонить 103, начать реанимацию',uz:"Polga yotqizish, 103 ga qo'ng'iroq, reanimatsiyani boshlash"},{ru:'Продолжать толчки стоя',uz:"Tik turgan holda turtishni davom ettirish"},{ru:'Посадить на стул',uz:"Stulga o'tqazish"},{ru:'Дать понюхать нашатырь и ждать',uz:"Novshadil hidlatib kutish"}],
+  e:{ru:'Нажатия на грудь тоже помогают вытолкнуть кусок. Перед вдохами загляните в рот.',uz:"Ko'krakka bosish ham bo'lakni chiqarishga yordam beradi. Nafas berishdan oldin og'ziga qarang."}},
+ {lab:{ru:'К врачу',uz:'Shifokorga'},fx:'oops',q:{ru:'Кусок вышел, человек дышит. Что дальше?',uz:"Bo'lak chiqdi, odam nafas olyapti. Keyin nima?"},
+  o:[{ru:'Показать врачу: после толчков в живот нужен осмотр',uz:"Shifokorga ko'rsatish: qoringa turtishdan keyin ko'rik kerak"},{ru:'Ничего, пусть доедает',uz:"Hech narsa, ovqatini yeyaversin"},{ru:'Дать таблетку',uz:"Tabletka berish"},{ru:'Отправить домой пешком',uz:"Uyiga piyoda jo'natish"}],
+  e:{ru:'Толчки в живот могут повредить внутренние органы, поэтому нужен осмотр врача. Лекарства сами не даём.',uz:"Qoringa turtish ichki a'zolarga zarar yetkazishi mumkin, shuning uchun shifokor ko'rigi kerak. O'zimiz dori bermaymiz."}}
+]},
+{name:{ru:'Кухня: порез и ожог',uz:'Oshxona: kesik va kuyish'},tasks:[
+ {lab:{ru:'Перчатки',uz:"Qo'lqop"},fx:'oops',q:{ru:'Повар сильно порезал руку. Что сделать до того, как трогать рану?',uz:"Oshpaz qo'lini qattiq kesib oldi. Yaraga tegishdan oldin nima qilinadi?"},
+  o:[{ru:'Надеть перчатки, если они есть',uz:"Bo'lsa, qo'lqop kiyish"},{ru:'Ничего, некогда',uz:"Hech narsa, vaqt yo'q"},{ru:'Помыть рану мылом 5 минут',uz:"Yarani 5 daqiqa sovun bilan yuvish"},{ru:'Найти зелёнку',uz:"Brilliant yashili topish"}],
+  e:{ru:'Перчатки защищают и вас, и пострадавшего. Нет перчаток — подойдёт чистый пакет.',uz:"Qo'lqop sizni ham, jabrlanuvchini ham himoya qiladi. Qo'lqop yo'q bo'lsa — toza paket ham bo'ladi."}},
+ {lab:{ru:'Прижать',uz:'Bosish'},fx:'worse',q:{ru:'Кровь течёт сильно. Первое действие?',uz:"Qon qattiq oqyapti. Birinchi harakat?"},
+  o:[{ru:'Сильно прижать рану чистой салфеткой',uz:"Yarani toza salfetka bilan qattiq bosish"},{ru:'Сразу наложить жгут',uz:"Darhol jgut qo'yish"},{ru:'Промыть и ждать',uz:"Yuvib kutish"},{ru:'Присыпать мукой',uz:"Un sepish"}],
+  e:{ru:'Прямое давление останавливает большинство кровотечений. Руку можно поднять выше сердца.',uz:"To'g'ridan-to'g'ri bosish ko'pchilik qon ketishni to'xtatadi. Qo'lni yurakdan yuqori ko'tarish mumkin."}},
+ {lab:{ru:'Слой сверху',uz:"Ustidan qatlam"},fx:'worse',q:{ru:'Повязка промокла кровью. Что делаем?',uz:"Bog'lam qonga to'ldi. Nima qilamiz?"},
+  o:[{ru:'Не снимая, кладём сверху ещё и давим сильнее',uz:"Yechmasdan, ustidan yana qo'yamiz va kuchliroq bosamiz"},{ru:'Снимаем и кладём новую',uz:"Yechib, yangisini qo'yamiz"},{ru:'Оставляем и не трогаем',uz:"Qoldiramiz va tegmaymiz"},{ru:'Поливаем водой',uz:"Suv quyamiz"}],
+  e:{ru:'Снимая повязку, вы срываете сгусток, и кровь пойдёт снова.',uz:"Bog'lamni yechsangiz, laxtani uzasiz va qon yana oqadi."}},
+ {lab:{ru:'Время жгута',uz:'Jgut vaqti'},fx:'oops',q:{ru:'Кровь бьёт струёй, давление не помогло, наложили жгут. Что обязательно?',uz:"Qon otilib chiqyapti, bosish yordam bermadi, jgut qo'yildi. Albatta nima qilinadi?"},
+  o:[{ru:'Записать время наложения',uz:"Qo'yilgan vaqtni yozish"},{ru:'Ослабить через 5 минут',uz:"5 daqiqadan keyin bo'shatish"},{ru:'Снять самому через час',uz:"Bir soatdan keyin o'zi yechish"},{ru:'Спрятать под одеждой',uz:"Kiyim ostiga yashirish"}],
+  e:{ru:'Врач должен знать, сколько времени рука без крови. Жгут снимает только врач.',uz:"Shifokor qo'l qancha vaqt qonsiz qolganini bilishi kerak. Jgutni faqat shifokor yechadi."}},
+ {lab:{ru:'20 минут',uz:'20 daqiqa'},fx:'worse',q:{ru:'Другой повар обжёг руку кипятком. Сколько охлаждать водой?',uz:"Boshqa oshpaz qo'lini qaynoq suvda kuydirdi. Suv bilan qancha sovutish kerak?"},
+  o:[{ru:'20 минут прохладной водой',uz:"20 daqiqa salqin suv bilan"},{ru:'1 минуту',uz:'1 daqiqa'},{ru:'Приложить лёд на час',uz:"Bir soat muz qo'yish"},{ru:'Не охлаждать',uz:"Sovutmaslik"}],
+  e:{ru:'20 минут прохладной (не ледяной) воды уменьшают глубину ожога. Кольца и часы снять сразу.',uz:"20 daqiqa salqin (muzdek emas) suv kuyish chuqurligini kamaytiradi. Uzuk va soatni darhol yechish kerak."}},
+ {lab:{ru:'Повязка',uz:"Bog'lam"},fx:'worse',q:{ru:'Ожог охладили. Что дальше?',uz:"Kuyish sovutildi. Keyin nima?"},
+  o:[{ru:'Закрыть чистой нетугой повязкой или плёнкой',uz:"Toza, tor bo'lmagan bog'lam yoki plyonka bilan yopish"},{ru:'Намазать маслом',uz:"Yog' surtish"},{ru:'Проколоть пузыри',uz:"Pufakchalarni teshish"},{ru:'Намазать зубной пастой',uz:"Tish pastasi surtish"}],
+  e:{ru:'Масло держит жар в коже, а через проколотый пузырь попадает инфекция.',uz:"Yog' issiqni terida ushlab turadi, teshilgan pufakdan esa infeksiya kiradi."}},
+ {lab:{ru:'Ноги вверх',uz:"Oyoq tepaga"},fx:'oops',q:{ru:'Официант от вида крови упал в обморок. Что делаем?',uz:"Ofitsiant qonni ko'rib hushidan ketdi. Nima qilamiz?"},
+  o:[{ru:'Уложить и поднять ноги',uz:"Yotqizib, oyoqlarini ko'tarish"},{ru:'Посадить и дать воды',uz:"O'tqazib, suv berish"},{ru:'Бить по щекам',uz:"Yuziga urish"},{ru:'Поставить на ноги',uz:"Oyoqqa turg'izish"}],
+  e:{ru:'Поднятые ноги возвращают кровь к мозгу. Расстегнуть тесный воротник, дать воздух.',uz:"Ko'tarilgan oyoqlar qonni miyaga qaytaradi. Tor yoqani yechish, havo berish."}},
+ {lab:{ru:'На бок',uz:'Yonboshga'},fx:'worse',q:{ru:'Он не приходит в себя, но дышит нормально. Как положить?',uz:"U o'ziga kelmayapti, lekin normal nafas olyapti. Qanday yotqizamiz?"},
+  o:[{ru:'На бок, в устойчивое боковое положение',uz:"Yonboshga, barqaror yon holatga"},{ru:'На спину, под голову подушку',uz:"Chalqancha, boshi ostiga yostiq"},{ru:'Посадить',uz:"O'tqazish"},{ru:'На живот лицом вниз',uz:"Yuzini pastga qilib qorniga"}],
+  e:{ru:'На боку язык не западает, а рвота не попадёт в лёгкие. Звоним 103 и следим за дыханием.',uz:"Yonboshda til orqaga ketmaydi, qusuq o'pkaga tushmaydi. 103 ga qo'ng'iroq qilamiz va nafasni kuzatamiz."}}
+]}
+],
+mascot(mood){
+  const b1=mood==='bad1',b2=mood==='bad2',ink='#1c2a2a',skin='#f4cba6';
+  const eyes=b1?`<path d="M50 64q6-8 12 0M78 64q6-8 12 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/><path d="M52 70l8 6M60 70l-8 6M80 70l8 6M88 70l-8 6" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`
+    :b2?`<circle cx="56" cy="70" r="6.5" fill="#fff" stroke="${ink}" stroke-width="1.5"/><circle cx="84" cy="70" r="6.5" fill="#fff" stroke="${ink}" stroke-width="1.5"/><circle cx="56" cy="71" r="2.6" fill="${ink}"/><circle cx="84" cy="71" r="2.6" fill="${ink}"/>`
+    :`<path d="M50 70q6-7 12 0M78 70q6-7 12 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+  const mouth=b1?`<path d="M58 98q12-10 24 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`
+    :b2?`<ellipse cx="70" cy="96" rx="6" ry="7" fill="${ink}"/>`
+    :`<path d="M56 90q14 13 28 0" fill="#fff" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>`;
+  const fx=b1?`<g class="bolt" fill="#5fb7ff"><path d="M112 58q6 9 0 13q-6-4 0-13z"/><path d="M24 64q5 8 0 11q-5-3 0-11z"/></g><g class="bolt" stroke="#ef6a5f" stroke-width="3" fill="none" stroke-linecap="round"><path d="M4 30h10l4-10 6 20 4-10h10"/></g>`
+    :b2?`<text x="112" y="34" font-size="26" font-weight="700" fill="#1fae93">!</text><g fill="#5fb7ff"><path d="M114 62q6 9 0 13q-6-4 0-13z"/></g>`:'';
+  return `<svg viewBox="0 0 140 150" role="img" aria-label="hamshira" class="${b1?'zap':b2?'wob':''}">${fx}<g class="body">
+  <path d="M28 150q0-28 42-28t42 28z" fill="#1fae93"/><path d="M58 122l12 16 12-16z" fill="#fff"/>
+  <circle cx="102" cy="46" r="14" fill="#3a2418"/>
+  <ellipse cx="70" cy="78" rx="38" ry="37" fill="${skin}"/>
+  <path d="M32 72q0-36 38-36t38 36q-8-20-38-20t-38 20z" fill="#3a2418"/>
+  <ellipse cx="33" cy="80" rx="5" ry="8" fill="${skin}"/><ellipse cx="107" cy="80" rx="5" ry="8" fill="${skin}"/>
+  <circle cx="48" cy="86" r="5" fill="#f29a8e" opacity=".5"/><circle cx="92" cy="86" r="5" fill="#f29a8e" opacity=".5"/>
+  ${eyes}${mouth}
+  <path d="M40 40q30-22 60 0l-4 10q-26-12-52 0z" fill="#fff" stroke="#1fae93" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M70 30c-3-4-9-2-8 3 1 4 8 7 8 7s7-3 8-7c1-5-5-7-8-3z" fill="#1fae93"/>
+  </g></svg>`},
+draw(G){
+  const S=G.scene,ts=S.tasks,n=ts.length,cols=4,rows=Math.ceil(n/cols);
+  const done=ts.filter(t=>G.placed[t.m]).length,L=GAME.UI[lang];
+  const W=74,H=50,gx=8,gy=10,x0=(340-(cols*W+(cols-1)*gx))/2,y0=72;
+  let s='';
+  // ECG strip: grey baseline, coloured part grows with progress
+  const ecg='M14 42h40l6-14 6 26 6-12h40l6-14 6 26 6-12h40l6-14 6 26 6-12h40l6-14 6 26 6-12h40';
+  const pw=done/n*312;
+  const st=G.miss>=2?'var(--bad)':G.miss?'var(--warn)':'var(--ok)';
+  s+=`<defs><clipPath id="ecgc"><rect x="14" y="18" width="${pw}" height="40"/></clipPath></defs>`;
+  s+=`<path d="${ecg}" fill="none" stroke="var(--rail)" stroke-width="2" opacity=".5"/><path d="${ecg}" fill="none" stroke="${st}" stroke-width="3" stroke-linejoin="round" clip-path="url(#ecgc)"/>`;
+  s+=`<text x="170" y="17" font-size="11" font-weight="700" text-anchor="middle" fill="${st}" font-family="Golos Text,system-ui">${L.st}: ${G.complete?L.stOk:L.stGo}</text>`;
+  ts.forEach((t,i)=>{const r=Math.floor(i/cols),c=i%cols,x=x0+c*(W+gx),y=y0+r*(H+gy);const p=G.placed[t.m],cur=G.task===t&&!G.complete;
+    const lab=tr(t.lab);
+    if(p){const help=p==='help';
+      s+=`<g${G.justPlaced===t.m?' class="newmod"':''}><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9" fill="color-mix(in srgb,${help?'var(--warn)':'var(--accent)'} 18%,var(--surface))" stroke="${help?'var(--warn)':'var(--accent)'}" stroke-width="1.8"/>
+      <circle cx="${x+12}" cy="${y+12}" r="8" fill="${help?'var(--warn)':'var(--accent)'}"/><text x="${x+12}" y="${y+15.5}" font-size="10" font-weight="700" text-anchor="middle" fill="#fff">${help?'!':'✓'}</text>
+      <text x="${x+W/2}" y="${y+38}" font-size="${lab.length>11?8.5:10}" font-weight="700" text-anchor="middle" fill="var(--fg)" font-family="Golos Text,system-ui">${lab}</text></g>`}
+    else s+=`<rect${cur?' class="slot"':''} x="${x}" y="${y}" width="${W}" height="${H}" rx="9" fill="var(--plate)" stroke="${cur?'var(--accent)':'var(--rail)'}" stroke-width="${cur?2.5:1.2}" stroke-dasharray="5 4"/><text x="${x+W/2}" y="${y+H/2+6}" font-size="17" font-weight="700" text-anchor="middle" fill="${cur?'var(--accent)':'var(--muted)'}" opacity=".8">${i+1}</text>`;
+    if(c<cols-1&&i<n-1)s+=`<path d="M${x+W+1} ${y+H/2}h${gx-2}" stroke="var(--rail)" stroke-width="1.5"/>`});
+  const h=y0+rows*(H+gy)+4;
+  return `<svg viewBox="0 0 340 ${h}" role="img" aria-label="${tr(S.name)}"><rect x="1" y="1" width="338" height="${h-2}" rx="12" fill="var(--surface)" stroke="var(--line)"/>${s}</svg>`}
+};
+GAME.SCENES.forEach(s=>s.tasks.forEach((t,i)=>t.m='s'+i));
+
+</script>
+<script>
+/* ---------- engine ---------- */
+const U=()=>Object.assign({},COMMON[lang],GAME.UI[lang]);
+let G=null,timer=null;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const NS=GAME.SCENES.length,ORD=()=>shuffle([...Array(NS).keys()]);
+function newGame(){
+  G={score:0,lives:3,combo:0,t:GAME_TIME,right:0,total:0,done:0,pn:0,order:ORD(),busy:false};
+  loadScene();render();
+  clearInterval(timer);let last=Date.now();
+  timer=setInterval(()=>{const now=Date.now(),dt=(now-last)/1000;last=now;if(G.busy||document.hidden)return;
+    G.t-=dt;if(G.t<=0){G.t=0;end('time')}else paintTime()},200)}
+function loadScene(){
+  if(G.pn>0&&G.pn%NS===0)G.order=ORD();
+  G.scene=GAME.SCENES[G.order[G.pn%NS]];G.ti=0;G.complete=false;G.placed={};G.miss=0;G.justPlaced=null;nextTask(true)}
+function nextTask(first){
+  if(!first)G.ti++;
+  if(G.ti>=G.scene.tasks.length){G.complete=true;G.done++;const bonus=G.miss?100:300;G.score+=bonus;
+    toast(U().built(bonus));haptic('success');G.pn++;G.busy=true;render();
+    setTimeout(()=>{if(!G||G.over)return;G.busy=false;loadScene();render()},1300);return}
+  G.task=G.scene.tasks[G.ti];
+  G.opts=shuffle(G.task.o.map((o,i)=>({o,ok:i===0})));G.shown=Date.now()}
+const app=document.getElementById('app');
+const $=s=>document.querySelector(s);
+function bar(){const L=U();return `<header class="bar"><a href="../">${L.back}</a><div class="ttl">${GAME.icon} ${L.title}</div><div class="lang" role="group" aria-label="Til"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div></header>`}
+function bindBar(){document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('ep_lang',JSON.stringify(lang));document.documentElement.lang=lang;render()})}
+let screen='start',result=null;
+function render(){document.documentElement.lang=lang;
+  if(screen==='start')startScr();else if(screen==='game')gameScr();else endScr();bindBar()}
+function startScr(){const L=U();const best=+store.get(GAME.bestKey)||0;
+  const rules=L.rules(GAME.lifeIcon).concat([L.r3]);
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${GAME.mascot('ok')}</div><h1>${L.h1}</h1><p class="lead">${L.lead}</p>
+  <div class="card"><ul class="rules">${rules.map(r=>`<li><span>${r[0]}</span><div>${r[1]}</div></li>`).join('')}</ul></div>
+  ${best?`<div class="best">${L.best}: <b>${best}</b></div>`:''}
+  <button class="btn" id="play" type="button">${L.play}</button><p class="small">${L.safe}</p></main>`;
+  $('#play').onclick=()=>{screen='game';newGame()}}
+function gameScr(){const L=U();const t=G.task;
+  const opts=G.opts.map((x,i)=>`<button class="opt" type="button" data-i="${i}"><span>${tr(x.o)}</span></button>`).join('');
+  app.innerHTML=bar()+`<main class="wrap" id="gw">
+  <div class="hud"><span class="sc" id="sc">${G.score}</span><span class="lv" aria-label="lives">${[0,1,2].map(i=>`<i class="${i<G.lives?'':'off'}">${GAME.lifeIcon}</i>`).join('')}</span><span class="tm" id="tm"></span></div>
+  <div class="tbar"><i id="tb"></i></div>
+  <div class="pname"><span>${L.scene(G.done+1,tr(G.scene.name))}</span>${G.combo>1?`<span class="combo">${L.combo(Math.min(G.combo,5))}</span>`:''}</div>
+  <div class="panel">${GAME.draw(G)}</div>
+  ${G.complete?'':`<p class="q">${tr(t.q)}</p><div class="opts">${opts}</div>`}</main>`;
+  G.justPlaced=null;paintTime();
+  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>answer(+b.dataset.i,b))}
+function paintTime(){const tm=$('#tm'),tb=$('#tb');if(!tm)return;const s=Math.ceil(G.t);
+  tm.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;tm.classList.toggle('low',s<=15);
+  tb.style.width=(G.t/GAME_TIME*100)+'%';tb.classList.toggle('low',s<=15)}
+function answer(i,btn){if(G.busy)return;const x=G.opts[i],t=G.task;G.total++;
+  if(x.ok){G.right++;G.combo++;const fast=(Date.now()-G.shown)<5000;
+    const pts=100+25*Math.min(G.combo-1,4)+(fast?50:0);G.score+=pts;
+    if(t.m){G.placed[t.m]='ok';G.justPlaced=t.m}
+    btn.classList.add('right');floatTxt('+'+pts);haptic('light');G.busy=true;
+    setTimeout(()=>{if(G.over)return;G.busy=false;nextTask();render()},380)}
+  else{G.combo=0;G.lives--;G.miss++;G.busy=true;
+    if(t.m)G.placed[t.m]='help'; // steps go in order: the mentor fixes it (orange), you go on
+    haptic('error');failFx(t)}}
+function failFx(t){const L=U();const F=GAME.FX[t.fx]||Object.values(GAME.FX)[0];
+  const f=document.createElement('div');f.className='flash f-'+F.flash;document.body.appendChild(f);setTimeout(()=>f.remove(),1000);
+  const gw=$('#gw');if(gw)gw.classList.add('shake');
+  const titles=F.titles[lang]||F.titles.ru;const title=titles[Math.random()*titles.length|0];
+  const ov=document.createElement('div');ov.className='ov';
+  ov.innerHTML=`<div class="sheet" role="alertdialog" aria-live="assertive"><div class="who">${GAME.mascot(F.mood)}<h2>${title}</h2></div>
+  <p class="ans">${L.right} <b>${tr(t.o[0])}</b></p><p class="why">${tr(t.e)}</p><button class="btn" type="button" id="ovn">${L.next}</button></div>`;
+  setTimeout(()=>{document.body.appendChild(ov);$('#ovn').focus()},350);
+  ov.querySelector('#ovn').onclick=()=>{ov.remove();G.busy=false;if(G.lives<=0){end('lives');return}G.justPlaced=t.m||null;nextTask();render()}}
+function floatTxt(s){const d=document.createElement('div');d.className='float';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),800)}
+function toast(s){const d=document.createElement('div');d.className='toast';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),1300)}
+function haptic(k){try{const h=tg&&tg.HapticFeedback;if(!h)return;if(k==='light')h.impactOccurred('light');else h.notificationOccurred(k)}catch(e){}}
+function end(why){if(!G||G.over)return;G.over=true;clearInterval(timer);
+  document.querySelectorAll('.ov').forEach(o=>o.remove());
+  const prev=+store.get(GAME.bestKey)||0;const rec=G.score>prev;if(rec)store.set(GAME.bestKey,G.score);
+  result={score:G.score,done:G.done,right:G.right,total:G.total,why,rec,best:Math.max(prev,G.score)};
+  screen='end';render()}
+function rankOf(s){return s<1200?0:s<2400?1:s<3600?2:3}
+function endScr(){const L=U(),r=result;const acc=r.total?Math.round(r.right/r.total*100):0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${GAME.mascot(r.why==='lives'?'bad1':'ok')}</div>
+  <h1>${r.why==='lives'?L.overLives:L.over}</h1>
+  <div class="big">${r.score}</div><div class="center"><span class="rank">${L.ranks[rankOf(r.score)]}</span></div>
+  ${r.rec&&r.score>0?`<p class="lead"><b>🏆 ${L.rec}</b></p>`:`<div class="best">${L.best}: <b>${r.best}</b></div>`}
+  <div class="stats"><div><b>${r.score}</b><span>${L.score}</span></div><div><b>${r.done}</b><span>${L.doneW}</span></div><div><b>${acc}%</b><span>${L.acc}</span></div></div>
+  <button class="btn tg" id="share" type="button">📤 ${L.share}</button>
+  <button class="btn" id="again" type="button">${L.again}</button>
+  <a class="btn ghost" href="../">📘 ${L.learn}</a></main>`;
+  $('#again').onclick=()=>{screen='game';newGame()};
+  $('#share').onclick=share}
+function share(){const r=result;const url=`https://t.me/${BOT}?start=${GAME.start}`;
+  const link=`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(U().shareText(r.score,r.done))}`;
+  try{if(tg&&tg.initData&&tg.openTelegramLink){tg.openTelegramLink(link);return}}catch(e){}
+  window.open(link,'_blank','noopener')}
+render();
+</script>
+</body>
+</html>
