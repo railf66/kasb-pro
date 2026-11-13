@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#fde7ef">
+<meta name="robots" content="noindex">
+<title>Тортик-студия</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap">
+<style>
+:root{--bg:#fde7ef;--bg2:#fff6f9;--ink:#4a2a3a;--muted:#9a7486;--pink:#ff6f9f;--pink2:#ffb3cb;--mint:#7fd8b5;--gold:#ffb938;--card:#ffffff;--line:#f3c9d8}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden;touch-action:manipulation}
+body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeating-linear-gradient(45deg,transparent 0 22px,rgba(255,255,255,.35) 22px 44px),var(--bg)}
+#app{height:100%;display:flex;flex-direction:column;max-width:520px;margin:0 auto;padding:max(8px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));gap:8px}
+.bar{display:flex;align-items:center;gap:8px}
+.pill{background:var(--card);border-radius:999px;padding:6px 12px;font-weight:900;font-size:16px;box-shadow:0 2px 0 var(--line);display:flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.pill.low{color:#e2365b}
+.sp{flex:1}
+#hearts{letter-spacing:2px;color:var(--pink)}
+.lang{border:0;background:var(--card);border-radius:999px;padding:6px 10px;font:800 13px Nunito,sans-serif;color:var(--ink);box-shadow:0 2px 0 var(--line);cursor:pointer}
+/* customer */
+#customer{display:flex;gap:10px;align-items:flex-start;min-height:118px}
+#face{width:78px;height:78px;flex:none;transition:transform .3s}
+#face.pop{animation:pop .4s}
+@keyframes pop{0%{transform:translateX(-120px);opacity:0}100%{transform:none;opacity:1}}
+.bubble{position:relative;flex:1;background:var(--card);border-radius:16px;padding:10px 12px;box-shadow:0 3px 0 var(--line);display:flex;gap:10px;align-items:center}
+.bubble:before{content:"";position:absolute;left:-8px;top:24px;border:8px solid transparent;border-right-color:var(--card);border-left:0}
+#say{font-weight:800;font-size:15px;line-height:1.3;flex:1}
+#say small{display:block;color:var(--muted);font-size:12px;font-weight:700;margin-bottom:2px}
+#want{width:64px;height:64px;flex:none;background:var(--bg2);border-radius:12px}
+#patience{height:6px;border-radius:3px;background:#f6d5e1;margin-top:6px;overflow:hidden}
+#patience i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--mint),#b9e769);transition:width .2s linear}
+#patience i.low{background:linear-gradient(90deg,#ff6f6f,var(--gold))}
+/* stage */
+#stage{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center}
+#cake{width:100%;height:100%;max-height:300px}
+#float{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-weight:900;font-size:30px;color:var(--pink);text-shadow:0 2px 0 #fff;pointer-events:none;opacity:0}
+#float.show{animation:up 1s forwards}
+@keyframes up{0%{opacity:0;transform:translate(-50%,-30%) scale(.7)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}100%{opacity:0;transform:translate(-50%,-110%)}}
+/* controls */
+#controls{background:var(--card);border-radius:20px;padding:10px;box-shadow:0 3px 0 var(--line);display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:6px}
+.row b{width:56px;font-size:12px;color:var(--muted);font-weight:800;flex:none;line-height:1.1}
+.opts{display:flex;gap:6px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.opts::-webkit-scrollbar{display:none}
+.opt{flex:none;border:2px solid var(--line);background:var(--bg2);border-radius:14px;width:47px;height:50px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s}
+.opt:active{transform:scale(.92)}
+.opt.on{border-color:var(--pink);background:#ffe3ee;box-shadow:0 0 0 2px #ffd0e0}
+.opt svg{width:38px;height:38px}
+.acts{display:flex;gap:8px}
+.btn{border:0;border-radius:16px;font:900 18px Nunito,sans-serif;padding:13px;cursor:pointer}
+#serve{flex:1;background:linear-gradient(180deg,#ff8db2,var(--pink));color:#fff;box-shadow:0 4px 0 #d94f7f}
+#serve:active{transform:translateY(2px);box-shadow:0 2px 0 #d94f7f}
+#clear{background:var(--bg2);color:var(--muted);border:2px solid var(--line);font-size:15px;padding:13px 14px}
+/* screens */
+.screen{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:rgba(253,231,239,.94);padding:16px}
+.panel{background:var(--card);border-radius:28px;padding:24px 20px;max-width:380px;width:100%;text-align:center;box-shadow:0 6px 0 var(--line)}
+.title{font-size:34px;font-weight:900;line-height:1;color:var(--pink);text-wrap:balance}
+.title span{display:block;font-size:15px;color:var(--muted);margin-top:8px;font-weight:800}
+.panel p{margin:14px 0;font-weight:700;line-height:1.45;color:var(--ink)}
+.panel .big{width:100%;background:linear-gradient(180deg,#ff8db2,var(--pink));color:#fff;box-shadow:0 4px 0 #d94f7f;font-size:20px}
+.res{display:flex;gap:8px;justify-content:center;margin:16px 0}
+.res div{background:var(--bg2);border-radius:16px;padding:10px 6px;flex:1}
+.res b{display:block;font-size:26px}
+.res small{font-size:12px;color:var(--muted);font-weight:800}
+.hidden{display:none!important}
+#hero{width:150px;height:150px;margin:0 auto 6px;display:block}
+.muted{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="bar">
+    <div class="pill" id="timer">⏱ 2:00</div>
+    <div class="pill" id="coins">🪙 0</div>
+    <div class="pill" id="hearts">♥♥♥</div>
+    <div class="sp"></div>
+    <button class="lang" id="langBtn">UZ</button>
+  </div>
+  <div id="customer">
+    <svg id="face" viewBox="0 0 80 80"></svg>
+    <div style="flex:1">
+      <div class="bubble"><div id="say"></div><svg id="want" viewBox="0 0 200 200"></svg></div>
+      <div id="patience"><i></i></div>
+    </div>
+  </div>
+  <div id="stage"><svg id="cake" viewBox="0 0 200 200"></svg><div id="float"></div></div>
+  <div id="controls">
+    <div class="row"><b data-t="shape"></b><div class="opts" id="o-shape"></div></div>
+    <div class="row"><b data-t="tiers"></b><div class="opts" id="o-tiers"></div></div>
+    <div class="row"><b data-t="cream"></b><div class="opts" id="o-cream"></div></div>
+    <div class="row"><b data-t="top"></b><div class="opts" id="o-top"></div></div>
+    <div class="acts"><button class="btn" id="clear" data-t="clear"></button><button class="btn" id="serve" data-t="serve"></button></div>
+  </div>
+</div>
+
+<div id="menu" class="screen">
+  <div class="panel">
+    <svg id="hero" viewBox="0 0 200 200"></svg>
+    <div class="title" id="mTitle"></div>
+    <p id="mText"></p>
+    <button class="btn big" id="play" data-t="play"></button>
+    <p class="muted" id="mBest"></p>
+  </div>
+</div>
+<div id="over" class="screen hidden">
+  <div class="panel">
+    <div class="title" id="oTitle"></div>
+    <div class="res">
+      <div><b id="rC">0</b><small data-t="coinsL"></small></div>
+      <div><b id="rS">0</b><small data-t="servedL"></small></div>
+      <div><b id="rP">0</b><small data-t="perfectL"></small></div>
+    </div>
+    <p id="oBest"></p>
+    <button class="btn big" id="again" data-t="again"></button>
+  </div>
+</div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+let lang = 'ru';
+try { lang = localStorage.getItem('ep_lang') === 'uz' ? 'uz' : 'ru'; } catch (e) {}
+
+const T = {
+  ru: { shape: 'Форма', tiers: 'Ярусы', cream: 'Крем', top: 'Декор', clear: 'Сброс', serve: 'Подать торт', play: 'Открыть студию', again: 'Ещё раз',
+    title: 'Тортик-студия', sub: 'Кондитерская на 2 минуты',
+    intro: 'Клиенты приходят с заказом. Соберите точно такой торт, как на картинке, и нажмите «Подать торт». Чем точнее и быстрее, тем больше монет!',
+    coinsL: 'монет', servedL: 'тортов', perfectL: 'идеальных', over: 'Студия закрыта!', timeup: 'Время вышло!', best: 'Рекорд: ', newBest: '🏆 Новый рекорд!',
+    perfect: 'Идеально!', good: 'Почти!', bad: 'Не то…', left: 'Ушла…', order: 'Заказ' },
+  uz: { shape: 'Shakl', tiers: 'Qavat', cream: 'Krem', top: 'Bezak', clear: 'Tozalash', serve: 'Tortni berish', play: 'Studiyani ochish', again: 'Yana o‘ynash',
+    title: 'Tortik studiyasi', sub: '2 daqiqalik qandolatxona',
+    intro: 'Mijozlar buyurtma bilan keladi. Rasmdagidek tort yig‘ing va «Tortni berish» tugmasini bosing. Qancha aniq va tez bo‘lsa, shuncha ko‘p tanga!',
+    coinsL: 'tanga', servedL: 'tort', perfectL: 'a’lo', over: 'Studiya yopildi!', timeup: 'Vaqt tugadi!', best: 'Rekord: ', newBest: '🏆 Yangi rekord!',
+    perfect: 'A’lo!', good: 'Deyarli!', bad: 'Bu emas…', left: 'Ketib qoldi…', order: 'Buyurtma' }
+};
+const SHAPES = ['round', 'square', 'heart'];
+const CREAMS = { pink: '#f9a8c6', choco: '#8a5434', vanilla: '#fbe6b0', mint: '#a6e6cc', berry: '#b48ae0' };
+const TOPS = ['straw', 'candle', 'sprinkle', 'cherry'];
+const W = {
+  ru: { shape: { round: 'круглый торт', square: 'квадратный торт', heart: 'торт-сердечко' }, two: 'двухъярусный ',
+        cream: { pink: 'розовым', choco: 'шоколадным', vanilla: 'ванильным', mint: 'мятным', berry: 'черничным' },
+        top: { straw: 'клубникой', candle: 'свечками', sprinkle: 'посыпкой', cherry: 'вишней' } },
+  uz: { shape: { round: 'dumaloq tort', square: 'kvadrat tort', heart: 'yurak shaklidagi tort' }, two: 'ikki qavatli ',
+        cream: { pink: 'pushti', choco: 'shokoladli', vanilla: 'vanilli', mint: 'yalpizli', berry: 'qorag‘atli' },
+        top: { straw: 'qulupnay', candle: 'shamlar', sprinkle: 'rangli sepma', cherry: 'olcha' } }
+};
+const NAMES = ['Малика', 'Дилноза', 'Сабина', 'Камила', 'Нигора', 'Лола', 'Мадина', 'Шахзода', 'Зарина', 'Севара', 'Амир', 'Тимур'];
+const NAMES_UZ = ['Malika', 'Dilnoza', 'Sabina', 'Kamila', 'Nigora', 'Lola', 'Madina', 'Shahzoda', 'Zarina', 'Sevara', 'Amir', 'Temur'];
+const t = k => T[lang][k];
+
+// ---------- drawing ----------
+function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; }
+function shade(hex, f) { const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = n >> 8 & 255, b = n & 255; r = Math.round(r * f); g = Math.round(g * f); b = Math.round(b * f); return `rgb(${Math.min(255, r)},${Math.min(255, g)},${Math.min(255, b)})`; }
+function heartPt(tt, s) { const x = 16 * Math.pow(Math.sin(tt), 3), y = 13 * Math.cos(tt) - 5 * Math.cos(2 * tt) - 2 * Math.cos(3 * tt) - Math.cos(4 * tt); return [x / 17 * s, -(y + 2.5) / 17 * s]; }
+function shapePath(shape, cx, cy, s) {
+  if (shape === 'round') return `M${cx - s},${cy} a${s},${s * .82} 0 1,0 ${2 * s},0 a${s},${s * .82} 0 1,0 ${-2 * s},0Z`;
+  if (shape === 'square') { const r = s * .18, w = s * .92, h = s * .78; return `M${cx - w + r},${cy - h} H${cx + w - r} Q${cx + w},${cy - h} ${cx + w},${cy - h + r} V${cy + h - r} Q${cx + w},${cy + h} ${cx + w - r},${cy + h} H${cx - w + r} Q${cx - w},${cy + h} ${cx - w},${cy + h - r} V${cy - h + r} Q${cx - w},${cy - h} ${cx - w + r},${cy - h}Z`; }
+  let d = ''; for (let i = 0; i <= 60; i++) { const [x, y] = heartPt(i / 60 * Math.PI * 2, s); d += (i ? 'L' : 'M') + (cx + x).toFixed(1) + ',' + (cy + y * .85).toFixed(1); } return d + 'Z';
+}
+function ringPts(shape, cx, cy, s, n) {
+  const pts = [];
+  for (let k = 0; k < n; k++) {
+    const a = k / n * Math.PI * 2 + .3;
+    if (shape === 'round') pts.push([cx + Math.cos(a) * s * .68, cy + Math.sin(a) * s * .56]);
+    else if (shape === 'square') { const c = Math.cos(a), si = Math.sin(a), m = Math.max(Math.abs(c), Math.abs(si)); pts.push([cx + c / m * s * .66, cy + si / m * s * .54]); }
+    else { const [x, y] = heartPt(k / n * Math.PI * 2, s * .62); pts.push([cx + x, cy + y * .85 - s * .04]); }
+  }
+  return pts;
+}
+function drawTopping(g, kind, x, y, sc = 1, i = 0) {
+  if (kind === 'straw') {
+    el('path', { d: `M${x},${y + 7 * sc} C${x - 8 * sc},${y} ${x - 6 * sc},${y - 7 * sc} ${x},${y - 6 * sc} C${x + 6 * sc},${y - 7 * sc} ${x + 8 * sc},${y} ${x},${y + 7 * sc}Z`, fill: '#ef3b5a', stroke: '#b81e3c', 'stroke-width': .8 * sc }, g);
+    el('path', { d: `M${x - 4 * sc},${y - 6 * sc} L${x},${y - 3 * sc} L${x + 4 * sc},${y - 6 * sc} L${x},${y - 8 * sc}Z`, fill: '#4cb85a' }, g);
+    [[-2, -1], [2, 0], [0, 3]].forEach(([a, b]) => el('circle', { cx: x + a * sc, cy: y + b * sc, r: .8 * sc, fill: '#ffe08a' }, g));
+  } else if (kind === 'cherry') {
+    el('path', { d: `M${x},${y - 3 * sc} q${3 * sc},${-7 * sc} ${7 * sc},${-9 * sc}`, stroke: '#5b7b2a', 'stroke-width': 1.4 * sc, fill: 'none' }, g);
+    el('circle', { cx: x, cy: y, r: 5 * sc, fill: '#b0102e' }, g); el('circle', { cx: x - 1.6 * sc, cy: y - 1.6 * sc, r: 1.4 * sc, fill: '#ff8fa3' }, g);
+  } else if (kind === 'candle') {
+    const cols = ['#7cc7ff', '#ffd25e', '#ff8fb8', '#9be38c'];
+    el('rect', { x: x - 2.4 * sc, y: y - 14 * sc, width: 4.8 * sc, height: 14 * sc, rx: 1.2 * sc, fill: cols[i % 4], stroke: 'rgba(0,0,0,.15)', 'stroke-width': .6 }, g);
+    el('path', { d: `M${x},${y - 22 * sc} q${3.5 * sc},${4 * sc} 0,${7 * sc} q${-3.5 * sc},${-3 * sc} 0,${-7 * sc}Z`, fill: '#ffb21e' }, g);
+    el('circle', { cx: x, cy: y - 17 * sc, r: 1.3 * sc, fill: '#fff6c2' }, g);
+  } else if (kind === 'sprinkle') {
+    const cols = ['#ff5c8a', '#4fc3f7', '#ffd54f', '#81c784', '#ba68c8'];
+    for (let j = 0; j < 5; j++) { const a = (i * 5 + j) * 2.4, r = 6 * sc; const px = x + Math.cos(a) * r * (j % 3) / 2, py = y + Math.sin(a) * r * (j % 3) / 2; el('rect', { x: px - 2.5 * sc, y: py - .9 * sc, width: 5 * sc, height: 1.8 * sc, rx: .9 * sc, fill: cols[(i + j) % 5], transform: `rotate(${(i * 47 + j * 73) % 180} ${px} ${py})` }, g); }
+  }
+}
+function drawCake(svg, c, opts = {}) {
+  svg.innerHTML = '';
+  const g = el('g', {}, svg);
+  el('ellipse', { cx: 100, cy: 128, rx: 92, ry: 66, fill: '#ffffff', stroke: '#f0c6d6', 'stroke-width': 3 }, g);
+  el('ellipse', { cx: 100, cy: 128, rx: 80, ry: 56, fill: 'none', stroke: '#f7dbe6', 'stroke-width': 1.5, 'stroke-dasharray': '3 4' }, g);
+  if (!c.shape) { if (opts.hint) { const tx = el('text', { x: 100, y: 133, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 800, fill: '#c99aae', 'font-family': 'Nunito,sans-serif' }, g); tx.textContent = opts.hint; } return; }
+  const col = CREAMS[c.cream] || '#fff4e6';
+  const layers = c.tiers === 2 ? [[122, 74], [96, 46]] : [[112, 72]];
+  layers.forEach(([cy, s], li) => {
+    const side = 18;
+    el('path', { d: shapePath(c.shape, 100, cy + side, s), fill: shade(col, .72) }, g);
+    for (let k = side; k > 0; k -= 3) el('path', { d: shapePath(c.shape, 100, cy + k, s), fill: shade(col, .8 + (side - k) / side * .12) }, g);
+    el('path', { d: shapePath(c.shape, 100, cy, s), fill: col, stroke: shade(col, .88), 'stroke-width': 1.5 }, g);
+    // cream drops on edge
+    ringPts(c.shape, 100, cy, s * 1.38, 14).forEach(([x, y]) => { if (y > cy) el('ellipse', { cx: x, cy: y + 3, rx: 4, ry: 6, fill: col, opacity: .95 }, g); });
+    el('path', { d: shapePath(c.shape, 100, cy - 2, s * .9), fill: 'rgba(255,255,255,.22)' }, g);
+    if (li === layers.length - 1 && c.tops && c.tops.length) {
+      const n = c.tops.length === 1 ? 6 : 8, pts = ringPts(c.shape, 100, cy, s, n);
+      pts.sort((a, b) => a[1] - b[1]).forEach(([x, y], i) => drawTopping(g, c.tops[i % c.tops.length], x, y, s < 60 ? .9 : 1.1, i));
+      if (c.tops.length === 1 && c.tops[0] !== 'candle') drawTopping(g, c.tops[0], 100, cy, s < 60 ? .9 : 1.15, 9);
+    }
+  });
+}
+function icon(kind, val) {
+  const s = document.createElementNS(NS, 'svg'); s.setAttribute('viewBox', '0 0 40 40');
+  if (kind === 'shape') { el('path', { d: shapePath(val, 20, 21, 15), fill: '#ffc9dc', stroke: '#e86a96', 'stroke-width': 2 }, s); }
+  else if (kind === 'tiers') { if (val === 2) { el('rect', { x: 6, y: 22, width: 28, height: 12, rx: 3, fill: '#ffc9dc', stroke: '#e86a96', 'stroke-width': 2 }, s); el('rect', { x: 12, y: 10, width: 16, height: 12, rx: 3, fill: '#ffe0eb', stroke: '#e86a96', 'stroke-width': 2 }, s); } else el('rect', { x: 6, y: 18, width: 28, height: 14, rx: 3, fill: '#ffc9dc', stroke: '#e86a96', 'stroke-width': 2 }, s); }
+  else if (kind === 'cream') { el('circle', { cx: 20, cy: 20, r: 14, fill: CREAMS[val], stroke: shade(CREAMS[val], .75), 'stroke-width': 2 }, s); el('circle', { cx: 15, cy: 15, r: 4, fill: 'rgba(255,255,255,.45)' }, s); }
+  else drawTopping(s, val, 20, val === 'candle' ? 33 : 22, val === 'candle' ? 1.2 : 1.7, 1);
+  return s;
+}
+function drawFace(svg, who, mood) {
+  svg.innerHTML = '';
+  el('circle', { cx: 40, cy: 40, r: 38, fill: who.bg }, svg);
+  if (!who.boy) el('path', { d: 'M12,44 Q10,12 40,10 Q70,12 68,44 Q66,62 60,66 L20,66 Q14,62 12,44Z', fill: who.hair }, svg);
+  el('circle', { cx: 40, cy: 42, r: 21, fill: who.skin }, svg);
+  el('path', { d: who.boy ? 'M19,38 Q20,18 40,18 Q60,18 61,38 Q52,28 40,30 Q28,28 19,38Z' : 'M19,40 Q22,19 40,19 Q58,19 61,40 Q50,26 34,30 Q24,32 19,40Z', fill: who.hair }, svg);
+  if (who.bow) { el('path', { d: 'M52,20 l10,-6 l0,12z M52,20 l-8,-7 l-1,12z', fill: who.bow }, svg); el('circle', { cx: 52, cy: 20, r: 3, fill: who.bow }, svg); }
+  const ey = mood === 'sad' ? 44 : 42;
+  if (mood === 'happy') { el('path', { d: 'M30,42 q3,-4 6,0 M44,42 q3,-4 6,0', stroke: '#3b2530', 'stroke-width': 2.2, fill: 'none', 'stroke-linecap': 'round' }, svg); }
+  else { el('circle', { cx: 33, cy: ey, r: 2.6, fill: '#3b2530' }, svg); el('circle', { cx: 47, cy: ey, r: 2.6, fill: '#3b2530' }, svg); }
+  el('circle', { cx: 28, cy: 50, r: 3.5, fill: '#ff9db8', opacity: .55 }, svg); el('circle', { cx: 52, cy: 50, r: 3.5, fill: '#ff9db8', opacity: .55 }, svg);
+  const m = mood === 'happy' ? 'M33,52 Q40,60 47,52' : mood === 'sad' ? 'M34,57 Q40,51 46,57' : mood === 'wait' ? 'M35,54 L45,54' : 'M34,53 Q40,57 46,53';
+  el('path', { d: m, stroke: '#3b2530', 'stroke-width': 2.4, fill: mood === 'happy' ? '#fff' : 'none', 'stroke-linecap': 'round' }, svg);
+}
+
+// ---------- game state ----------
+const ROUND = 120;
+let state = 'menu', time = ROUND, coins = 0, hearts = 3, served = 0, perfect = 0, order = null, cur = { shape: null, cream: null, tiers: 1, tops: [] }, who = null, patience = 1, patienceMax = 25, busy = false;
+let best = 0; try { best = +localStorage.getItem('kp_tortik_best') || 0; } catch (e) {}
+const pick = a => a[Math.random() * a.length | 0];
+
+function newOrder() {
+  const lvl = served;
+  const o = { shape: pick(SHAPES), cream: pick(Object.keys(CREAMS).slice(0, lvl < 4 ? 4 : 5)), tiers: lvl >= 3 && Math.random() < .55 ? 2 : 1, tops: [pick(TOPS)] };
+  if (lvl >= 6 && Math.random() < .6) { let t2; do t2 = pick(TOPS); while (t2 === o.tops[0]); o.tops.push(t2); }
+  order = o;
+  const i = Math.random() * NAMES.length | 0;
+  const boy = i >= 10;
+  who = { i, boy, skin: pick(['#f6d2b8', '#eec19f', '#d9a37f', '#f9dcc6']), hair: pick(['#3a2418', '#5b3622', '#1f1a17', '#8a5a2b']), bg: pick(['#ffe3ee', '#e3f4ff', '#fff2cc', '#e6f7ec', '#efe6ff']), bow: !boy && Math.random() < .6 ? pick(['#ff6f9f', '#7cc7ff', '#ffb938']) : null };
+  patienceMax = Math.max(12, 26 - served * 1.2); patience = patienceMax;
+  cur = { shape: null, cream: null, tiers: 1, tops: [] };
+  $('face').classList.remove('pop'); void $('face').offsetWidth; $('face').classList.add('pop');
+  render();
+}
+function phrase(o) {
+  const w = W[lang];
+  const tops = o.tops.map(x => w.top[x]);
+  if (lang === 'ru') {
+    const shape = o.shape === 'heart' ? (o.tiers === 2 ? 'двухъярусный торт-сердечко' : 'торт-сердечко') : (o.tiers === 2 ? w.two : '') + w.shape[o.shape];
+    return `Хочу ${shape} с ${w.cream[o.cream]} кремом и ${tops.join(' и ')}!`;
+  }
+  return `Menga ${o.tiers === 2 ? w.two : ''}${w.shape[o.shape]}, ${w.cream[o.cream]} krem va ${tops.join(', ')} bilan, iltimos!`;
+}
+function render() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(e => e.textContent = t(e.dataset.t));
+  $('langBtn').textContent = lang === 'ru' ? 'UZ' : 'RU';
+  $('mTitle').innerHTML = t('title') + '<span>' + t('sub') + '</span>';
+  $('mText').textContent = t('intro');
+  $('mBest').textContent = best ? t('best') + best + ' 🪙' : '';
+  if (order) {
+    const nm = (lang === 'uz' ? NAMES_UZ : NAMES)[who.i];
+    $('say').innerHTML = '<small>' + nm + ' · ' + t('order') + ' №' + (served + 1) + '</small>' + phrase(order);
+    drawCake($('want'), order);
+  }
+  drawCake($('cake'), cur, { hint: lang === 'ru' ? 'Выберите форму ↓' : 'Shaklni tanlang ↓' });
+  buildOpts();
+  hud();
+}
+function buildOpts() {
+  const groups = { shape: SHAPES, tiers: [1, 2], cream: Object.keys(CREAMS), top: TOPS };
+  for (const g in groups) {
+    const box = $('o-' + g); box.innerHTML = '';
+    groups[g].forEach(v => {
+      const b = document.createElement('div'); b.className = 'opt'; b.appendChild(icon(g, v));
+      const on = g === 'top' ? cur.tops.includes(v) : cur[g] === v;
+      if (on) b.classList.add('on');
+      b.onclick = () => choose(g, v);
+      box.appendChild(b);
+    });
+  }
+}
+function choose(g, v) {
+  if (state !== 'play' || busy) return;
+  click(g === 'top' ? 660 : 520);
+  if (g === 'top') { const i = cur.tops.indexOf(v); if (i >= 0) cur.tops.splice(i, 1); else { cur.tops.push(v); if (cur.tops.length > 2) cur.tops.shift(); } }
+  else cur[g] = v;
+  if (!cur.shape && g !== 'shape') cur.shape = 'round';
+  drawCake($('cake'), cur); buildOpts();
+}
+function hud() {
+  const s = Math.max(0, Math.ceil(time));
+  $('timer').textContent = '⏱ ' + (s / 60 | 0) + ':' + String(s % 60).padStart(2, '0'); $('timer').classList.toggle('low', s <= 15);
+  $('coins').textContent = '🪙 ' + coins;
+  $('hearts').textContent = '♥'.repeat(hearts) + '♡'.repeat(3 - hearts);
+  const p = patience / patienceMax; const bar = $('patience').firstElementChild; bar.style.width = (p * 100) + '%'; bar.classList.toggle('low', p < .35);
+}
+function floatText(txt, color) { const f = $('float'); f.textContent = txt; f.style.color = color; f.classList.remove('show'); void f.offsetWidth; f.classList.add('show'); }
+function serve(timeout) {
+  if (state !== 'play' || busy) return;
+  busy = true;
+  let score = 0, total = 4;
+  if (!timeout) {
+    if (cur.shape === order.shape) score++;
+    if (cur.cream === order.cream) score++;
+    if ((cur.tiers || 1) === order.tiers) score++;
+    const want = [...order.tops].sort().join(), got = [...cur.tops].sort().join();
+    if (want === got) score++;
+  }
+  let mood, gain = 0;
+  if (timeout) { mood = 'sad'; hearts--; floatText(t('left'), '#e2365b'); tone([300, 220], .15); }
+  else if (score === total) { mood = 'happy'; gain = 30 + Math.round(patience / patienceMax * 30); perfect++; served++; floatText(t('perfect') + ' +' + gain, '#ff6f9f'); tone([660, 880, 1320], .09); }
+  else if (score >= 3) { mood = 'ok'; gain = 12; served++; floatText(t('good') + ' +' + gain, '#f39c12'); tone([520, 660], .1); }
+  else { mood = 'sad'; hearts--; floatText(t('bad'), '#e2365b'); tone([300, 220], .15); }
+  coins += gain;
+  drawFace($('face'), who, mood); hud();
+  setTimeout(() => { busy = false; if (hearts <= 0) end(false); else if (state === 'play') newOrder(), drawFace($('face'), who, 'wait'); }, 1100);
+}
+function start() {
+  audio();
+  state = 'play'; time = ROUND; coins = 0; hearts = 3; served = 0; perfect = 0; busy = false;
+  $('menu').classList.add('hidden'); $('over').classList.add('hidden');
+  newOrder(); drawFace($('face'), who, 'wait');
+}
+function end(timeUp) {
+  state = 'over';
+  $('oTitle').textContent = timeUp ? t('timeup') : t('over');
+  $('rC').textContent = coins; $('rS').textContent = served; $('rP').textContent = perfect;
+  if (coins > best) { best = coins; try { localStorage.setItem('kp_tortik_best', best); } catch (e) {} $('oBest').textContent = t('newBest'); }
+  else $('oBest').textContent = t('best') + best + ' 🪙';
+  $('over').classList.remove('hidden');
+}
+
+// ---------- sound ----------
+let AC = null;
+function audio() { try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) {} }
+function tone(freqs, step) { if (!AC) return; freqs.forEach((f, i) => { const o = AC.createOscillator(), g = AC.createGain(), t0 = AC.currentTime + i * step; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(.12, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + step * 1.8); o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + step * 2); }); }
+function click(f) { tone([f], .04); }
+
+// ---------- loop ----------
+let last = performance.now();
+function loop(now) {
+  const dt = Math.min(.1, (now - last) / 1000); last = now;
+  if (state === 'play') {
+    time -= dt;
+    if (!busy) { patience -= dt; if (patience <= 0) { patience = 0; serve(true); } }
+    if (time <= 0) { time = 0; hud(); end(true); }
+    else hud();
+  }
+  requestAnimationFrame(loop);
+}
+
+$('serve').onclick = () => serve(false);
+$('clear').onclick = () => { if (state !== 'play' || busy) return; cur = { shape: null, cream: null, tiers: 1, tops: [] }; render(); };
+$('play').onclick = start; $('again').onclick = start;
+$('langBtn').onclick = () => { lang = lang === 'ru' ? 'uz' : 'ru'; try { localStorage.setItem('ep_lang', lang); } catch (e) {} render(); };
+
+drawCake($('hero'), { shape: 'heart', tiers: 2, cream: 'pink', tops: ['straw', 'candle'] });
+render();
+requestAnimationFrame(loop);
+window.__tort = { get order() { return order; }, get cur() { return cur; }, start, serve, choose, get coins() { return coins; } };
+})();
+</script>
+</body>
+</html>
