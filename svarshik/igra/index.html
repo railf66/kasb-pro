@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Подбери режим — игра для сварщиков · Kasb Pro</title>
+<meta name="description" content="Бесплатная игра для сварщиков: подбери электрод, ток и приём под металл за 2 минуты — без прожогов и пор. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/svarshik/igra/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:title" content="Подбери режим — игра для сварщиков">
+<meta property="og:description" content="2 минуты, 3 жизни. Подбери электрод и ток правильно — и не прожги металл.">
+<meta property="og:url" content="https://kasbpro.uz/svarshik/igra/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#eef1f4; --surface:#fff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --ok:#1f8a4c; --bad:#c4392f;
+  --box:#c9d0d7; --plate:#e4e8ec; --rail:#9aa3ad; --paper:#fffdf6; --ink:#14202b;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --accent:#f08a24; --accent-ink:#2a1400; --navy:#1b1f45; --navy-fg:#f4f7fa;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --ok:#3dbb72; --bad:#ef6a5f; --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --paper:#f3efe2;
+  --accent:#ff9f43; --accent-ink:#2a1400; --navy:#0a1118; --navy-fg:#e7edf3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --ok:#3dbb72; --bad:#ef6a5f; --box:#2b3946; --plate:#1d2935; --rail:#5d6b78; --paper:#f3efe2;
+  --accent:#ff9f43; --accent-ink:#2a1400; --navy:#0a1118; --navy-fg:#e7edf3; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.bar{background:var(--navy);color:var(--navy-fg);padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:10px}
+.bar a{color:var(--navy-fg);opacity:.8;text-decoration:none;font-size:14px;white-space:nowrap}
+.bar .ttl{flex:1;font-family:var(--display);font-size:15px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:12px;font-weight:700;padding:5px 9px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.wrap{flex:1;padding:16px max(16px,env(safe-area-inset-right,0px)) 28px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+h1{font-family:var(--display);font-size:26px;line-height:1.15;margin:0;text-align:center;text-wrap:balance}
+.lead{margin:0;text-align:center;color:var(--muted);text-wrap:balance}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.rules li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.rules li span{flex:none;width:28px;height:28px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:16px}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:17px;padding:15px;width:100%;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.btn.tg{background:#229ed9;color:#fff}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.small{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.best{text-align:center;font-size:14px;color:var(--muted)}
+.best b{color:var(--fg);font-variant-numeric:tabular-nums}
+.hero{display:flex;justify-content:center}
+.hero svg{width:150px;height:auto}
+.hud{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+.hud .sc{font-family:var(--display);font-size:20px;min-width:70px}
+.hud .lv{display:flex;gap:2px;font-size:18px}
+.hud .lv i{font-style:normal;transition:opacity .3s,filter .3s}
+.hud .lv i.off{opacity:.25;filter:grayscale(1)}
+.hud .tm{margin-left:auto;font-weight:700;font-size:18px}
+.hud .tm.low{color:var(--bad)}
+.tbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:-6px}
+.tbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.tbar i.low{background:var(--bad)}
+.pname{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted);margin-bottom:-8px}
+.pname b{color:var(--fg);font-size:14px}
+.combo{color:var(--accent);font-weight:700}
+.panel svg{width:100%;height:auto;display:block}
+.newmod{animation:drop .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes drop{from{transform:translateY(-26px);opacity:0}to{transform:none;opacity:1}}
+.slot{animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+.flow{stroke-dasharray:10 8;animation:flow .6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-18}}
+.hot{animation:cool 1.6s ease-out forwards}
+@keyframes cool{from{stroke:#ffb347;filter:drop-shadow(0 0 4px #ff8a00)}}
+.q{font-size:17px;font-weight:600;margin:0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;display:flex;align-items:center;gap:10px;min-height:50px}
+.opt:active{transform:scale(.985)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface))}
+.float{position:fixed;left:50%;top:42%;transform:translate(-50%,0);font-family:var(--display);font-size:28px;color:var(--ok);pointer-events:none;animation:up .8s ease-out forwards;z-index:30;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+@keyframes up{to{transform:translate(-50%,-60px);opacity:0}}
+.toast{position:fixed;left:50%;top:30%;transform:translateX(-50%);background:var(--navy);color:var(--navy-fg);padding:14px 20px;border-radius:14px;font-family:var(--display);font-size:17px;z-index:30;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.3);animation:pop .3s ease-out;white-space:nowrap}
+@keyframes pop{from{transform:translateX(-50%) scale(.7);opacity:0}}
+.ov{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(8,14,20,.6)}
+.ov .sheet{width:100%;max-width:480px;background:var(--surface);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;animation:sheet .3s ease-out}
+@keyframes sheet{from{transform:translateY(60%)}}
+.ov .who{display:flex;align-items:center;gap:12px}
+.ov .who svg{width:96px;height:auto;flex:none}
+.ov h2{font-family:var(--display);font-size:20px;margin:0;color:var(--bad);line-height:1.2}
+.ov .ans{font-size:15px;margin:0}
+.ov .ans b{color:var(--ok)}
+.ov .why{font-size:14px;color:var(--muted);margin:0}
+.flash{position:fixed;inset:0;z-index:35;pointer-events:none;animation:flash .7s ease-out forwards}
+@keyframes flash{0%{background:var(--fc)}100%{background:transparent}}
+.flash.strobe{animation:strobe .5s steps(2) 2}
+@keyframes strobe{0%{background:var(--fc)}50%{background:rgba(10,10,10,.7)}}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translate(-6px,2px)}40%{transform:translate(6px,-2px)}60%{transform:translate(-4px,1px)}80%{transform:translate(4px,0)}}
+.zap .bolt{animation:zap .18s steps(2) infinite}
+@keyframes zap{50%{opacity:0}}
+.zap .body,.wob .body{animation:jit .12s infinite}
+@keyframes jit{50%{transform:translate(2px,-1px)}}
+.drip{animation:drip 1s ease-in infinite}
+@keyframes drip{from{transform:translateY(-6px);opacity:0}30%{opacity:1}to{transform:translateY(14px);opacity:0}}
+.big{font-family:var(--display);font-size:54px;text-align:center;line-height:1;font-variant-numeric:tabular-nums}
+.rank{display:inline-block;margin:0 auto;background:color-mix(in srgb,var(--accent) 25%,transparent);padding:6px 14px;border-radius:99px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.stats b{display:block;font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Kasb Pro mini-game engine (same rules as «Собери щиток»). Our own art and texts.
+const tg=window.Telegram&&window.Telegram.WebApp;
+if(tg){try{tg.ready();tg.expand();tg.disableVerticalSwipes&&tg.disableVerticalSwipes()}catch(e){}}
+const BOT='kasbpro_uz_bot';
+const GAME_TIME=120;
+let lang='ru';
+try{const v=JSON.parse(localStorage.getItem('ep_lang')||'null');lang=(v==='uz'||v==='ru')?v:((tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code==='uz')?'uz':'ru')}catch(e){}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const tr=o=>typeof o==='string'?o:(o[lang]||o.ru);
+
+/* ---------- shared mascot: a master with a per-profession hat ---------- */
+function person(mood,o){
+  const ink='#2a1c00';
+  const skin=mood==='soot'?'#6b5a4e':mood==='sick'?'#b8d49a':mood==='stink'?'#d8d6a0':'#f2c79b';
+  let eyes,mouth,extra='',cls='',brow='';
+  const dot=`<circle cx="57" cy="67" r="4.5" fill="${ink}"/><circle cx="83" cy="67" r="4.5" fill="${ink}"/><circle cx="58.5" cy="65.5" r="1.4" fill="#fff"/><circle cx="84.5" cy="65.5" r="1.4" fill="#fff"/>`;
+  const wide=`<circle cx="57" cy="67" r="7" fill="#fff" stroke="${ink}" stroke-width="2"/><circle cx="83" cy="67" r="7" fill="#fff" stroke="${ink}" stroke-width="2"/><circle cx="57" cy="68" r="2.8" fill="${ink}"/><circle cx="83" cy="68" r="2.8" fill="${ink}"/>`;
+  switch(mood){
+   case 'zap':eyes=`<path d="M52 62l10 10M62 62l-10 10M78 62l10 10M88 62l-10 10" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>`;
+    mouth=`<path d="M56 96l6-6 6 6 6-6 6 6 6-6" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linejoin="round"/>`;cls='zap';
+    extra=`<g class="bolt" fill="#fff3a0" stroke="#ff9f1a" stroke-width="2" stroke-linejoin="round"><path d="M14 70l6 6 8-2-4 8 6 6-9-1-3 8-2-9-9-2 8-4z"/><path d="M118 62l5 5 7-2-3 7 5 5-8-1-2 7-2-8-8-2 7-3z"/><path d="M24 118l4 4 5-1-2 5 4 4-6-1-2 5-1-6-6-1 5-3z"/></g>`;break;
+   case 'soot':eyes=`<circle cx="57" cy="67" r="6" fill="#fff"/><circle cx="83" cy="67" r="6" fill="#fff"/><circle cx="57" cy="68" r="2.5" fill="${ink}"/><circle cx="83" cy="68" r="2.5" fill="${ink}"/>`;
+    mouth=`<ellipse cx="70" cy="95" rx="7" ry="5" fill="${ink}"/>`;
+    extra=`<g fill="#9aa3ad" opacity=".85"><circle cx="34" cy="20" r="9"/><circle cx="46" cy="10" r="7"/><circle cx="100" cy="16" r="8"/><circle cx="110" cy="6" r="6"/></g><g fill="#ff8a1a"><path d="M18 128q-6-14 4-22 0 8 6 10 2-8 8-12-2 14 2 24z"/><path d="M114 132q-4-12 4-18 0 6 4 8 2-6 6-8-2 10 2 18z"/></g>`;break;
+   case 'wet':eyes=wide;mouth=`<ellipse cx="70" cy="95" rx="6" ry="7" fill="${ink}"/>`;
+    extra=`<g fill="#3a9be8"><path class="drip" d="M30 40q-5 8 0 11 5-3 0-11z"/><path class="drip" style="animation-delay:.3s" d="M112 34q-5 8 0 11 5-3 0-11z"/><path class="drip" style="animation-delay:.6s" d="M120 92q-5 8 0 11 5-3 0-11z"/><path class="drip" style="animation-delay:.15s" d="M18 96q-5 8 0 11 5-3 0-11z"/></g><path d="M8 4q30 30 62 10 32 20 62-10" fill="none" stroke="#3a9be8" stroke-width="5" stroke-linecap="round" opacity=".7"/>`;cls='wob';break;
+   case 'stink':eyes=`<path d="M51 68q6-6 12 0M77 68q6-6 12 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+    mouth=`<path d="M58 96q4-4 8 0t8 0 8 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+    extra=`<g fill="none" stroke="#6aa84f" stroke-width="4" stroke-linecap="round" opacity=".9"><path d="M16 120q-6-8 0-16t0-16"/><path d="M124 120q6-8 0-16t0-16"/><path d="M110 40q6-8 0-14"/></g>`;break;
+   case 'sick':eyes=`<path d="M57 67m-6 0a6 6 0 1 1 6 6a3 3 0 1 1-3-3M83 67m-6 0a6 6 0 1 1 6 6a3 3 0 1 1-3-3" fill="none" stroke="${ink}" stroke-width="2.5"/>`;
+    mouth=`<path d="M56 98q7-8 14 0t14 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+    extra=`<g fill="#7cb342" opacity=".9"><circle cx="22" cy="40" r="5"/><circle cx="116" cy="34" r="4"/><circle cx="122" cy="110" r="5"/></g>`;cls='wob';break;
+   case 'sweat':eyes=dot;brow=`<path d="M48 56l14 4M92 56l-14 4" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>`;
+    mouth=`<path d="M58 96q6-5 12 0t12 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`;
+    extra=`<path d="M112 52q-7 11 0 15 7-4 0-15z" fill="#7cc3f0" stroke="#3a9be8" stroke-width="1.5"/>`;break;
+   default:eyes=dot;mouth=`<path d="M56 90q14 12 28 0" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>`}
+  const hy=mood==='zap'?-12:0;
+  return `<svg viewBox="0 0 140 150" role="img" aria-label="usta" class="${cls}">${extra}<g class="body">
+  ${o.body}<ellipse cx="70" cy="76" rx="40" ry="38" fill="${skin}"/>
+  <ellipse cx="30" cy="78" rx="6" ry="9" fill="${skin}"/><ellipse cx="110" cy="78" rx="6" ry="9" fill="${skin}"/>
+  ${eyes}${brow}<path d="M50 84q10-6 20 0 10-6 20 0q-10 6-20 1-10 5-20-1z" fill="${mood==='soot'?'#2a2a2a':'#4a2e1a'}"/>${mouth}
+  <g transform="translate(0 ${hy})">${o.hat}</g></g></svg>`}
+
+/* ---------- game content (per profession) ---------- */
+/* «Подбери режим» — Сварщик Pro. Facts follow the app lessons and calculator:
+   ≤2 мм → Ø2 40–70 А; ≤3 → Ø2,5 60–90; ≤5 → Ø3 80–120; ≤10 → Ø4 120–170; >10 → Ø5 160–220; вертикаль −13 %, потолок −18 %;
+   прокалка: рутиловые ~100–150 °C, УОНИ ~250–350 °C 1 час (смотрите пачку); держак чаще в плюс (по пачке);
+   труба неповоротная — от «6» к «12» с каждой стороны; MIG на ветру — экран или порошковая; алюминий TIG — переменный ток. */
+const CFG={
+slug:'svarshik',icon:'🔥',life:'🛡️',start:'igra_svarshik',bestKey:'kp_igra_svarshik_best',
+UI:{
+ru:{back:'‹ Сварщик Pro',title:'Подбери режим',h1:'Подбери режим',lead:'Игра для сварщиков: подбери электрод, ток и приём под металл — без прожогов, пор и трещин.',
+ r:[['⏱','2 минуты смены. Отвечайте быстрее — больше очков.'],['🛡️','3 жизни. Ошибка — прожог, поры или «зайчик» в глаза.'],['🔥','Каждый верный ответ кладёт кусок шва. Проварили всё — бонус +300.']],
+ play:'Играть',best:'Ваш рекорд',safe:'Это игра. На работе всегда маска, краги и брезентовая одежда, рядом — огнетушитель.',
+ panel:(n,name)=>`Шов ${n}: <b>${name}</b>`,combo:n=>`серия ×${n}`,
+ right:'Правильно:',next:'Понятно, дальше',built:'Шов готов! +300',
+ over:'Смена окончена',overLives:'Жизни закончились',score:'очков',panels:'швов',acc:'верно',rec:'Новый рекорд!',
+ ranks:['Ученик','Сварщик','Мастер шва','Профи-сварщик'],
+ share:'Поделиться с друзьями',again:'Ещё раз',learn:'Учиться: 13 уроков Сварщик Pro',
+ shareText:(s,p)=>`🔥 Я набрал ${s} очков и проварил ${p} ${p===1?'шов':p>1&&p<5?'шва':'швов'} в игре «Подбери режим»! Сможешь лучше? Играть бесплатно в Telegram 👇`},
+uz:{back:'‹ Payvandchi Pro',title:'Rejimni tanla',h1:'Rejimni tanla',lead:"Payvandchilar uchun o'yin: metallga elektrod, tok va usulni to'g'ri tanlang — kuyish, g'ovak va yoriqsiz.",
+ r:[['⏱',"2 daqiqalik smena. Tezroq javob bering — ko'proq ball."],['🛡️',"3 ta jon. Xato — kuyib teshilish, g'ovak yoki ko'zga «quyoncha»."],['🔥',"Har bir to'g'ri javob chokning bir qismini qo'yadi. Hammasi payvandlandi — +300 bonus."]],
+ play:"O'ynash",best:'Rekordingiz',safe:"Bu o'yin. Ishda doim niqob, qo'lqop va brezent kiyim, yonida — o't o'chirgich.",
+ panel:(n,name)=>`${n}-chok: <b>${name}</b>`,combo:n=>`seriya ×${n}`,
+ right:"To'g'ri javob:",next:'Tushunarli, davom',built:'Chok tayyor! +300',
+ over:'Smena tugadi',overLives:'Jonlar tugadi',score:'ball',panels:'chok',acc:"to'g'ri",rec:'Yangi rekord!',
+ ranks:['Shogird','Payvandchi','Chok ustasi','Professional payvandchi'],
+ share:"Do'stlarga ulashish",again:'Yana bir bor',learn:"O'rganish: Payvandchi Pro'da 13 dars",
+ shareText:(s,p)=>`🔥 «Rejimni tanla» o'yinida ${s} ball to'pladim va ${p} ta chok payvandladim! Sen ko'proq qila olasanmi? Telegramda bepul o'yna 👇`}
+},
+FX:{
+ spark:{mood:'zap',strobe:true,color:'rgba(255,240,170,.9)',ru:['Ай! Поймал «зайчика»!','Искры в глаза!','Глаза жжёт!'],uz:["Voy! «Quyoncha» tutdim!",'Ko\'zga uchqun!','Ko\'z achishyapti!']},
+ burn:{mood:'soot',color:'rgba(255,120,30,.7)',ru:['Прожёг насквозь!','Дыра в металле!','Пахнет горелым!'],uz:['Teshib yubordim!','Metallda teshik!','Kuygan hid!']},
+ defect:{mood:'sweat',color:'rgba(120,130,140,.6)',ru:['Шов треснул!','Поры в шве!','Непровар! Переделывать!'],uz:['Chok yorildi!',"Chokda g'ovak!",'Erimay qoldi! Qayta qilish kerak!']}
+},
+PANELS:[
+{name:{ru:'Ворота из профиля 2 мм',uz:'2 mm profildan darvoza'},kind:'plate',thin:true,tasks:[
+ {q:{ru:'Перед сваркой что надеваем?',uz:'Payvanddan oldin nima kiyamiz?'},
+  o:[{ru:'Маску, краги и брезентовую куртку',uz:"Niqob, qo'lqop va brezent kurtka"},{ru:'Солнечные очки',uz:"Quyosh ko'zoynagi"},{ru:'Синтетическую куртку',uz:'Sintetik kurtka'},{ru:'Ничего, дуга короткая',uz:"Hech narsa, yoy qisqa"}],fx:'spark',
+  e:{ru:'Ультрафиолет обжигает глаза за секунды, солнечные очки не защищают. Синтетика плавится и прилипает к коже.',uz:"Ultrabinafsha ko'zni soniyalarda kuydiradi, quyosh ko'zoynagi himoya qilmaydi. Sintetika eriydi va teriga yopishadi."},m:1},
+ {q:{ru:'Профиль 2 мм. Какой электрод и ток?',uz:'Profil 2 mm. Qaysi elektrod va tok?'},
+  o:[{ru:'Ø 2 мм, 40–70 А',uz:'Ø 2 mm, 40–70 A'},{ru:'Ø 4 мм, 150 А',uz:'Ø 4 mm, 150 A'},{ru:'Ø 5 мм, 200 А',uz:'Ø 5 mm, 200 A'},{ru:'Ø 3 мм, 140 А',uz:'Ø 3 mm, 140 A'}],fx:'burn',
+  e:{ru:'До 2 мм — электрод 2 мм и 40–70 А. Толстый электрод и большой ток прожгут профиль. Это считает калькулятор в приложении.',uz:"2 mm gacha — 2 mm elektrod va 40–70 A. Yo'g'on elektrod va katta tok profilni teshib yuboradi. Buni ilovadagi kalkulyator hisoblaydi."},m:1},
+ {q:{ru:'Тонкий металл прожигается. Что делаем?',uz:'Yupqa metall teshilib ketyapti. Nima qilamiz?'},
+  o:[{ru:'Уменьшаем ток и варим короткими швами',uz:'Tokni kamaytiramiz va qisqa choklar bilan payvandlaymiz'},{ru:'Увеличиваем ток',uz:'Tokni oshiramiz'},{ru:'Держим длинную дугу',uz:'Uzun yoy ushlaymiz'},{ru:'Варим медленно одним длинным швом',uz:"Bitta uzun chok bilan sekin payvandlaymiz"}],fx:'burn',
+  e:{ru:'Тонкий электрод, малый ток и короткие швы меньше греют металл. Длинный шов перегреет и прожжёт.',uz:"Ingichka elektrod, kichik tok va qisqa choklar metallni kamroq qizdiradi. Uzun chok qizdirib, teshib yuboradi."},m:1},
+ {q:{ru:'Куда обычно подключают держак для МР-3, УОНИ?',uz:'MR-3, UONI uchun derjak odatda qayerga ulanadi?'},
+  o:[{ru:'В плюс, но сверяемся с пачкой',uz:'Plyusga, lekin qutiga qarab tekshiramiz'},{ru:'Всегда в минус',uz:'Doim minusga'},{ru:'На массу',uz:'Massaga'},{ru:'Неважно',uz:'Farqi yo\'q'}],fx:'defect',
+  e:{ru:'Полярность указана на пачке. Чаще всего держак в плюс. Неправильная — дуга рвётся и брызжет.',uz:"Qutblilik qutida yozilgan. Ko'pincha derjak plyusga. Noto'g'ri bo'lsa — yoy uziladi va sachraydi."},m:1},
+ {q:{ru:'Зачем ставят прихватки перед сваркой?',uz:"Payvanddan oldin prixvatka nima uchun qo'yiladi?"},
+  o:[{ru:'Держат размер, детали не «уходят»',uz:"O'lchamni ushlaydi, detallar «siljimaydi»"},{ru:'Для красоты',uz:"Chiroy uchun"},{ru:'Чтобы сэкономить электроды',uz:'Elektrod tejash uchun'},{ru:'Они не нужны',uz:'Ular kerak emas'}],fx:'defect',
+  e:{ru:'Шов при остывании стягивает металл. Прихватки держат размер, и ворота не поведёт.',uz:"Chok sovib, metallni tortadi. Prixvatkalar o'lchamni ushlaydi va darvoza qiyshaymaydi."},m:1},
+ {q:{ru:'Какая дуга правильная?',uz:"Qaysi yoy to'g'ri?"},
+  o:[{ru:'Короткая, примерно с диаметр электрода',uz:'Qisqa, taxminan elektrod diametricha'},{ru:'Длинная, 2–3 см',uz:'Uzun, 2–3 sm'},{ru:'Чем длиннее, тем лучше',uz:'Qancha uzun bo\'lsa, shuncha yaxshi'},{ru:'Электрод прижат к металлу',uz:'Elektrod metallga bosilgan'}],fx:'defect',
+  e:{ru:'Короткая дуга ровная и без брызг. Длинная даёт брызги, подрез и поры.',uz:"Qisqa yoy tekis va sachramasiz. Uzun yoy sachratadi, kesik va g'ovak beradi."},m:1},
+ {q:{ru:'Электрод прилип к металлу. Что делаем?',uz:'Elektrod metallga yopishib qoldi. Nima qilamiz?'},
+  o:[{ru:'Резко качаем в сторону и отрываем',uz:'Keskin yon tomonga qimirlatib, uzib olamiz'},{ru:'Держим, пока сам не отлипнет',uz:"O'zi ajralguncha ushlab turamiz"},{ru:'Бьём молотком по детали',uz:"Detalga bolg'a bilan uramiz"},{ru:'Берём электрод голой рукой',uz:"Elektrodni yalang qo'l bilan olamiz"}],fx:'burn',
+  e:{ru:'Долго прилипший электрод раскаляется и портится. Отрывайте сразу резким движением.',uz:"Uzoq yopishgan elektrod qizib, buziladi. Darhol keskin harakat bilan uzing."},m:1}
+]},
+{name:{ru:'Балка навеса, металл 8 мм',uz:'Ayvon balkasi, metall 8 mm'},kind:'plate',tasks:[
+ {q:{ru:'Металл 8 мм, нижнее положение. Электрод и ток?',uz:'Metall 8 mm, pastki holat. Elektrod va tok?'},
+  o:[{ru:'Ø 4 мм, 120–170 А',uz:'Ø 4 mm, 120–170 A'},{ru:'Ø 2 мм, 40–70 А',uz:'Ø 2 mm, 40–70 A'},{ru:'Ø 2,5 мм, 60–90 А',uz:'Ø 2,5 mm, 60–90 A'},{ru:'Ø 5 мм, 300 А',uz:'Ø 5 mm, 300 A'}],fx:'defect',
+  e:{ru:'5–10 мм — электрод 4 мм и 120–170 А. Тонкий электрод на толстом металле даст непровар.',uz:"5–10 mm — 4 mm elektrod va 120–170 A. Qalin metallda ingichka elektrod erimay qolishga olib keladi."},m:1},
+ {q:{ru:'Металл 8 мм встык. Что с кромками?',uz:'8 mm metall uchma-uch. Qirralar bilan nima qilamiz?'},
+  o:[{ru:'Снимаем фаску и оставляем зазор',uz:'Faska olamiz va tirqish qoldiramiz'},{ru:'Ничего, сварим сверху',uz:"Hech narsa, ustidan payvandlaymiz"},{ru:'Красим кромки',uz:"Qirralarni bo'yaymiz"},{ru:'Ставим ток 300 А',uz:"300 A tok qo'yamiz"}],fx:'defect',
+  e:{ru:'Толстый металл без разделки не проварится насквозь. Зазор помогает проварить корень.',uz:"Qalin metall ochilmasa, oxirigacha erimaydi. Tirqish ildizni eritishga yordam beradi."},m:1},
+ {q:{ru:'Несущая балка. Какие электроды берём?',uz:"Yuk ko'taruvchi balka. Qaysi elektrodlarni olamiz?"},
+  o:[{ru:'Основные УОНИ-13/55',uz:'Asosiy UONI-13/55'},{ru:'Любые, что остались',uz:'Qolgan har qanday'},{ru:'Сырые со склада',uz:'Ombordan nam elektrodlar'},{ru:'Медную проволоку',uz:'Mis sim'}],fx:'defect',
+  e:{ru:'Для ответственных конструкций — основные УОНИ-13/55: шов прочнее, хотя зажигать труднее.',uz:"Mas'uliyatli konstruksiyalar uchun — asosiy UONI-13/55: chok mustahkamroq, garchi yoqish qiyinroq bo'lsa ham."},m:1},
+ {q:{ru:'УОНИ лежали в сыром гараже. Что делаем?',uz:'UONI nam garajda yotgan. Nima qilamiz?'},
+  o:[{ru:'Прокаливаем ~250–350 °C, 1 час (смотрим пачку)',uz:'~250–350 °C da 1 soat qizdiramiz (qutiga qaraymiz)'},{ru:'Сушим на солнце 5 минут',uz:'Quyoshda 5 daqiqa quritamiz'},{ru:'Варим как есть',uz:'Shundayicha payvandlaymiz'},{ru:'Протираем тряпкой',uz:'Latta bilan artamiz'}],fx:'defect',
+  e:{ru:'Влага даёт газ в шве — поры. Сырые электроды прокаливают по пачке.',uz:"Namlik chokda gaz beradi — g'ovak. Nam elektrodlar qutidagi ko'rsatma bo'yicha qizdiriladi."},m:1},
+ {q:{ru:'Шов на вертикали. Что с током и направлением?',uz:'Vertikal chok. Tok va yo\'nalish qanday?'},
+  o:[{ru:'Ток на 10–15 % меньше, варим снизу вверх',uz:'Tok 10–15 % kam, pastdan tepaga'},{ru:'Ток больше, сверху вниз быстро',uz:'Tok ko\'proq, tepadan pastga tez'},{ru:'Как в нижнем, разницы нет',uz:"Pastki holatdagidek, farqi yo'q"},{ru:'Максимальный ток',uz:'Maksimal tok'}],fx:'burn',
+  e:{ru:'На вертикали металл стекает — ток уменьшают (в калькуляторе −13 %). Снизу вверх ванна опирается на застывший металл.',uz:"Vertikalda metall oqib tushadi — tok kamaytiriladi (kalkulyatorda −13 %). Pastdan tepaga vanna qotgan metallga tayanadi."},m:1},
+ {q:{ru:'Между проходами на шве шлак. Что делаем?',uz:"O'tishlar orasida chokda shlak bor. Nima qilamiz?"},
+  o:[{ru:'Отбиваем и зачищаем щёткой',uz:'Urib tushiramiz va cho\'tka bilan tozalaymiz'},{ru:'Варим прямо поверх',uz:"To'g'ridan-to'g'ri ustidan payvandlaymiz"},{ru:'Поливаем водой',uz:'Suv sepamiz'},{ru:'Закрашиваем',uz:"Bo'yab qo'yamiz"}],fx:'defect',
+  e:{ru:'Шлак внутри ослабляет шов. Каждый проход зачищают.',uz:"Ichkaridagi shlak chokni kuchsizlantiradi. Har bir o'tish tozalanadi."},m:1},
+ {q:{ru:'Горячий шов хочется быстро остудить водой. Можно?',uz:'Issiq chokni suv bilan tez sovutgimiz keladi. Mumkinmi?'},
+  o:[{ru:'Нет, металл станет хрупким',uz:"Yo'q, metall mo'rt bo'lib qoladi"},{ru:'Да, так крепче',uz:'Ha, shunday mustahkamroq'},{ru:'Да, если холодной',uz:'Ha, agar sovuq suv bo\'lsa'},{ru:'Да, снегом',uz:'Ha, qor bilan'}],fx:'defect',
+  e:{ru:'Резкое остывание делает металл хрупким — шов может треснуть.',uz:"Keskin sovish metallni mo'rt qiladi — chok yorilishi mumkin."},m:1}
+]},
+{name:{ru:'Труба, полуавтомат и аргон',uz:'Quvur, yarimavtomat va argon'},kind:'pipe',tasks:[
+ {q:{ru:'Трубу нельзя повернуть. Как ведём шов?',uz:'Quvurni burib bo\'lmaydi. Chokni qanday olib boramiz?'},
+  o:[{ru:'От «6 часов» к «12» с каждой стороны',uz:"«Soat 6» dan «12» ga har ikki tomondan"},{ru:'Сверху вниз одним проходом',uz:"Tepadan pastga bir o'tishda"},{ru:'Только сверху',uz:'Faqat tepadan'},{ru:'Как получится',uz:"Qanday chiqsa"}],fx:'defect',
+  e:{ru:'Неповоротный стык ведут снизу вверх: от «6 часов» к «12 часам» с каждой стороны.',uz:"Burilmaydigan birikma pastdan tepaga olib boriladi: har ikki tomondan «soat 6» dan «soat 12» ga."},m:1},
+ {q:{ru:'Зачем зазор при сварке корня трубы?',uz:'Quvur ildizini payvandlashda tirqish nima uchun?'},
+  o:[{ru:'Чтобы проварить корень насквозь',uz:'Ildizni oxirigacha eritish uchun'},{ru:'Для экономии металла',uz:'Metall tejash uchun'},{ru:'Чтобы стекал металл',uz:'Metall oqib tushishi uchun'},{ru:'Он не нужен',uz:'U kerak emas'}],fx:'defect',
+  e:{ru:'Корень — основа прочности стыка. Без зазора он не проварится.',uz:"Ildiz — birikma mustahkamligining asosi. Tirqishsiz u erimaydi."},m:1},
+ {q:{ru:'Полуавтомат с газом на улице, дует ветер. Что делаем?',uz:'Gazli yarimavtomat ko\'chada, shamol esyapti. Nima qilamiz?'},
+  o:[{ru:'Ставим экран или берём порошковую проволоку',uz:'Ekran qo\'yamiz yoki kukunli sim olamiz'},{ru:'Прибавляем ток',uz:'Tokni oshiramiz'},{ru:'Ничего, газ не сдует',uz:"Hech narsa, gazni uchirmaydi"},{ru:'Варим без газа сплошной проволокой',uz:'Yaxlit sim bilan gazsiz payvandlaymiz'}],fx:'defect',
+  e:{ru:'Ветер сдувает защитный газ — будут поры. Нужен экран или порошковая проволока.',uz:"Shamol himoya gazini uchirib ketadi — g'ovak bo'ladi. Ekran yoki kukunli sim kerak."},m:1},
+ {q:{ru:'Полуавтомат: прибавили скорость подачи проволоки. Что с током?',uz:'Yarimavtomat: sim uzatish tezligini oshirdik. Tok nima bo\'ladi?'},
+  o:[{ru:'Ток растёт',uz:'Tok oshadi'},{ru:'Ток падает',uz:'Tok kamayadi'},{ru:'Ничего не меняется',uz:"Hech narsa o'zgarmaydi"},{ru:'Газ кончается',uz:'Gaz tugaydi'}],fx:'burn',
+  e:{ru:'Чем быстрее подача, тем больше ток. Подачу и напряжение подбирают вместе.',uz:"Uzatish qancha tez bo'lsa, tok shuncha katta. Uzatish va kuchlanish birga tanlanadi."},m:1},
+ {q:{ru:'Что такое TIG?',uz:'TIG nima?'},
+  o:[{ru:'Дуга от вольфрамового электрода в аргоне',uz:'Argonda volfram elektroddan yoy'},{ru:'Сварка электродом МР-3',uz:'MR-3 elektrod bilan payvand'},{ru:'Газовая горелка',uz:'Gaz gorelkasi'},{ru:'Пайка оловом',uz:'Qalay bilan kavsharlash'}],fx:'defect',
+  e:{ru:'TIG — неплавящийся вольфрамовый электрод в аргоне, присадку подают второй рукой.',uz:"TIG — argonda erimaydigan volfram elektrod, prisadka ikkinchi qo'l bilan uzatiladi."},m:1},
+ {q:{ru:'Каким током варят алюминий аргоном?',uz:'Alyuminiy argonda qaysi tok bilan payvandlanadi?'},
+  o:[{ru:'Переменным',uz:"O'zgaruvchan"},{ru:'Постоянным',uz:'Doimiy'},{ru:'Любым',uz:'Istalgan'},{ru:'Без тока',uz:'Toksiz'}],fx:'defect',
+  e:{ru:'Переменный ток разрушает оксидную плёнку алюминия, иначе шов не ляжет.',uz:"O'zgaruvchan tok alyuminiyning oksid plyonkasini buzadi, aks holda chok tushmaydi."},m:1},
+ {q:{ru:'Сварка аргоном почти без дыма. Маска нужна?',uz:'Argon payvandi deyarli tutunsiz. Niqob kerakmi?'},
+  o:[{ru:'Да, ультрафиолета даже больше',uz:"Ha, ultrabinafsha hatto ko'proq"},{ru:'Нет, дыма же нет',uz:"Yo'q, tutun yo'q-ku"},{ru:'Хватит очков',uz:"Ko'zoynak yetadi"},{ru:'Только в цеху',uz:'Faqat sexda'}],fx:'spark',
+  e:{ru:'У аргона дуга почти без дыма, но ультрафиолета больше, чем у электрода.',uz:"Argonda yoy deyarli tutunsiz, lekin ultrabinafsha elektroddagidan ko'proq."},m:1}
+]}
+],
+mascot(mood){return person(mood,{
+  body:`<path d="M30 150q0-26 40-26t40 26z" fill="#8a5a2b"/><path d="M60 124l10 12 10-12" fill="none" stroke="#5e3b18" stroke-width="3"/><circle cx="70" cy="142" r="2.5" fill="#5e3b18"/>`,
+  hat:`<path d="M26 54q0-38 44-38t44 38z" fill="#3b4652"/><rect x="40" y="2" width="60" height="30" rx="10" fill="#2b333c"/><rect x="50" y="9" width="40" height="14" rx="3" fill="#1d6b4f"/><rect x="52" y="11" width="18" height="4" rx="2" fill="#7fe0b0" opacity=".6"/><rect x="22" y="50" width="96" height="8" rx="4" fill="#2b333c"/>`})},
+scene(G){
+  const P=G.panel,mods=P.src.filter(t=>t.m),n=mods.length;let s='';
+  const frame=`<rect x="2" y="2" width="336" height="176" rx="12" fill="var(--box)"/><rect x="10" y="10" width="320" height="160" rx="8" fill="var(--plate)"/>`;
+  const amps=P.kind==='pipe'?'TIG':P.thin?'60A':'150A';
+  const inv=`<rect x="250" y="18" width="70" height="40" rx="6" fill="#2b333c"/><rect x="258" y="25" width="38" height="18" rx="2" fill="#0d1a10"/><text x="277" y="38.5" font-size="11" font-family="monospace" fill="#ffb347" text-anchor="middle">${amps}</text><circle cx="307" cy="34" r="7" fill="var(--accent)"/><path d="M307 34l3-4" stroke="#2b333c" stroke-width="2"/><rect x="258" y="47" width="54" height="5" rx="2" fill="#444f5a"/>`;
+  const bead=(d,placed,cur,hot,i)=>placed?`<path${hot?' class="hot"':''} d="${d}" fill="none" stroke="#5f6a74" stroke-width="9" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#d7dce1" stroke-width="2.5" stroke-dasharray="2 4"/>`
+    :`<path${cur?' class="slot"':''} d="${d}" fill="none" stroke="${cur?'var(--accent)':'var(--rail)'}" stroke-width="${cur?3:1.5}" stroke-dasharray="4 4"/>`;
+  if(P.kind==='pipe'){const cx=150,cy=96,r=58;
+    s+=`<circle cx="${cx}" cy="${cy}" r="${r+12}" fill="#a7b0b9"/><circle cx="${cx}" cy="${cy}" r="${r-12}" fill="var(--plate)"/><circle cx="${cx}" cy="${cy}" r="${r-12}" fill="none" stroke="#7d8790" stroke-width="2"/>`;
+    mods.forEach((t,i)=>{const a0=Math.PI/2+i*2*Math.PI/n+0.06,a1=Math.PI/2+(i+1)*2*Math.PI/n-0.06;
+      const p=a=>`${(cx+r*Math.cos(a)).toFixed(1)} ${(cy+r*Math.sin(a)).toFixed(1)}`;
+      s+=bead(`M${p(a0)}A${r} ${r} 0 0 1 ${p(a1)}`,G.placed.includes(t),t===G.task&&!G.complete,t===G.justPlaced,i)});
+    s+=`<text x="${cx}" y="${cy+4}" font-size="11" text-anchor="middle" fill="var(--muted)">${G.placed.length}/${n}</text>`}
+  else{const y=106,x0=24,x1=316,w=(x1-x0)/n,th=P.thin?10:22;
+    s+=`<rect x="${x0-6}" y="${y-th-26}" width="${x1-x0+12}" height="26" fill="#a7b0b9" stroke="#7d8790"/><rect x="${x0-6}" y="${y+4}" width="${x1-x0+12}" height="${th+16}" fill="#9aa3ad" stroke="#7d8790"/>`;
+    mods.forEach((t,i)=>s+=bead(`M${(x0+i*w+4).toFixed(1)} ${y}H${(x0+(i+1)*w-4).toFixed(1)}`,G.placed.includes(t),t===G.task&&!G.complete,t===G.justPlaced,i));
+    s+=`<text x="${x0}" y="${y+th+40}" font-size="10" fill="var(--muted)">${P.thin?(lang==='uz'?'profil 2 mm':'профиль 2 мм'):(lang==='uz'?'metall 8 mm':'металл 8 мм')}</text>`}
+  const spark=G.complete?'':`<g fill="#ffd75e">${[0,1,2,3,4].map(k=>`<circle cx="${236+k*6}" cy="${150-k*5}" r="1.6"/>`).join('')}</g>`;
+  return `<svg viewBox="0 0 340 180" role="img" aria-label="${tr(P.name)}">${frame}${s}${inv}${spark}</svg>`}
+};
+
+
+const U=()=>CFG.UI[lang];
+const PANELS=CFG.PANELS;
+
+/* ---------- game state ---------- */
+let G=null,timer=null;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const NP=PANELS.length,ORDER=[...Array(NP).keys()];
+function newGame(){
+  G={score:0,lives:3,combo:0,t:GAME_TIME,right:0,total:0,panels:0,pn:0,order:shuffle(ORDER),busy:false};
+  loadPanel();render();
+  clearInterval(timer);let last=Date.now();
+  timer=setInterval(()=>{const now=Date.now(),dt=(now-last)/1000;last=now;if(G.busy||document.hidden)return;
+    G.t-=dt;if(G.t<=0){G.t=0;end('time')}else paintTime()},200)}
+function loadPanel(){
+  if(G.pn>0&&G.pn%NP===0)G.order=shuffle(ORDER);
+  const P=PANELS[G.order[G.pn%NP]];
+  G.panel={name:P.name,kind:P.kind,src:P.tasks,tasks:shuffle(P.tasks)};G.ti=0;G.complete=false;G.placed=[];G.justPlaced=null;nextTask(true)}
+function nextTask(first){
+  if(!first)G.ti++;
+  if(G.ti>=G.panel.tasks.length){G.complete=true;G.panels++;G.score+=300;toast(U().built);haptic('success');G.pn++;G.busy=true;
+    render();setTimeout(()=>{if(!G||G.over)return;G.busy=false;loadPanel();render()},1300);return}
+  G.task=G.panel.tasks[G.ti];
+  G.opts=shuffle(G.task.o.map((o,i)=>({o,ok:i===0})));G.shown=Date.now()}
+
+/* ---------- screens ---------- */
+const app=document.getElementById('app');
+const $=s=>document.querySelector(s);
+function bar(){const L=U();return `<header class="bar"><a href="../">${L.back}</a><div class="ttl">${CFG.icon} ${L.title}</div><div class="lang" role="group" aria-label="Til"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div></header>`}
+function bindBar(){document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('ep_lang',JSON.stringify(lang));document.documentElement.lang=lang;render()})}
+let screen='start',result=null;
+function render(){document.documentElement.lang=lang;
+  if(screen==='start')startScr();else if(screen==='game')gameScr();else endScr();bindBar()}
+function startScr(){const L=U();const best=+store.get(CFG.bestKey)||0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${CFG.mascot('ok')}</div><h1>${L.h1}</h1><p class="lead">${L.lead}</p>
+  <div class="card"><ul class="rules">${L.r.map(r=>`<li><span>${r[0]}</span><div>${r[1]}</div></li>`).join('')}</ul></div>
+  ${best?`<div class="best">${L.best}: <b>${best}</b></div>`:''}
+  <button class="btn" id="play" type="button">${L.play}</button><p class="small">${L.safe}</p></main>`;
+  $('#play').onclick=()=>{screen='game';newGame()}}
+function gameScr(){const L=U();const t=G.task;
+  const opts=G.opts.map((x,i)=>`<button class="opt" type="button" data-i="${i}"><span>${tr(x.o)}</span></button>`).join('');
+  app.innerHTML=bar()+`<main class="wrap" id="gw">
+  <div class="hud"><span class="sc" id="sc">${G.score}</span><span class="lv" aria-label="lives">${[0,1,2].map(i=>`<i class="${i<G.lives?'':'off'}">${CFG.life}</i>`).join('')}</span><span class="tm" id="tm"></span></div>
+  <div class="tbar"><i id="tb"></i></div>
+  <div class="pname"><span>${L.panel(G.complete?G.panels:G.panels+1,tr(G.panel.name))}</span>${G.combo>1?`<span class="combo">${L.combo(Math.min(G.combo,5))}</span>`:''}</div>
+  <div class="panel">${CFG.scene(G)}</div>
+  ${G.complete?'':`<p class="q">${tr(t.q)}</p><div class="opts">${opts}</div>`}</main>`;
+  G.justPlaced=null;paintTime();
+  document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>answer(+b.dataset.i,b))}
+function paintTime(){const tm=$('#tm'),tb=$('#tb');if(!tm)return;const s=Math.ceil(G.t);
+  tm.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;tm.classList.toggle('low',s<=15);
+  tb.style.width=(G.t/GAME_TIME*100)+'%';tb.classList.toggle('low',s<=15)}
+function answer(i,btn){if(G.busy)return;const x=G.opts[i],t=G.task;G.total++;
+  if(x.ok){G.right++;G.combo++;const fast=(Date.now()-G.shown)<5000;
+    const pts=100+25*Math.min(G.combo-1,4)+(fast?50:0);G.score+=pts;
+    if(t.m){G.placed.push(t);G.justPlaced=t}
+    btn.classList.add('right');floatTxt('+'+pts);haptic('light');G.busy=true;
+    setTimeout(()=>{if(G.over)return;G.busy=false;nextTask();if(!G.complete)render()},380)}
+  else{G.combo=0;G.lives--;G.busy=true;G.panel.tasks.push(t); // wrong task comes back later in this panel
+    haptic('error');failFx(t)}}
+function failFx(t){const L=U();const F=CFG.FX[t.fx]||CFG.FX[Object.keys(CFG.FX)[0]];
+  const f=document.createElement('div');f.className='flash'+(F.strobe?' strobe':'');f.style.setProperty('--fc',F.color);document.body.appendChild(f);setTimeout(()=>f.remove(),1000);
+  const gw=$('#gw');if(gw){gw.classList.add('shake')}
+  const titles=F[lang]||F.ru;const title=titles[Math.random()*titles.length|0];
+  const ov=document.createElement('div');ov.className='ov';
+  ov.innerHTML=`<div class="sheet" role="alertdialog" aria-live="assertive"><div class="who">${CFG.mascot(F.mood)}<h2>${title}</h2></div>
+  <p class="ans">${L.right} <b>${tr(t.o[0])}</b></p><p class="why">${tr(t.e)}</p><button class="btn" type="button" id="ovn">${L.next}</button></div>`;
+  setTimeout(()=>{document.body.appendChild(ov);$('#ovn').focus()},350);
+  ov.querySelector('#ovn').onclick=()=>{ov.remove();G.busy=false;if(G.lives<=0){end('lives');return}nextTask();if(!G.complete)render()}}
+function floatTxt(s){const d=document.createElement('div');d.className='float';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),800)}
+function toast(s){const d=document.createElement('div');d.className='toast';d.textContent=s;document.body.appendChild(d);setTimeout(()=>d.remove(),1200)}
+function haptic(k){try{const h=tg&&tg.HapticFeedback;if(!h)return;if(k==='light')h.impactOccurred('light');else h.notificationOccurred(k)}catch(e){}}
+function end(why){if(!G||G.over)return;G.over=true;clearInterval(timer);
+  document.querySelectorAll('.ov').forEach(o=>o.remove());
+  const prev=+store.get(CFG.bestKey)||0;const rec=G.score>prev;if(rec)store.set(CFG.bestKey,G.score);
+  result={score:G.score,panels:G.panels,right:G.right,total:G.total,why,rec,best:Math.max(prev,G.score)};
+  screen='end';render()}
+function rankOf(s){return s<1200?0:s<2400?1:s<3600?2:3}
+function endScr(){const L=U(),r=result;const acc=r.total?Math.round(r.right/r.total*100):0;
+  app.innerHTML=bar()+`<main class="wrap"><div class="hero">${CFG.mascot(r.why==='lives'?CFG.FX[Object.keys(CFG.FX)[0]].mood:'ok')}</div>
+  <h1>${r.why==='lives'?L.overLives:L.over}</h1>
+  <div class="big">${r.score}</div><div class="center"><span class="rank">${L.ranks[rankOf(r.score)]}</span></div>
+  ${r.rec&&r.score>0?`<p class="lead"><b>🏆 ${L.rec}</b></p>`:`<div class="best">${L.best}: <b>${r.best}</b></div>`}
+  <div class="stats"><div><b>${r.score}</b><span>${L.score}</span></div><div><b>${r.panels}</b><span>${L.panels}</span></div><div><b>${acc}%</b><span>${L.acc}</span></div></div>
+  <button class="btn tg" id="share" type="button">📤 ${L.share}</button>
+  <button class="btn" id="again" type="button">${L.again}</button>
+  <a class="btn ghost" href="../">📘 ${L.learn}</a></main>`;
+  $('#again').onclick=()=>{screen='game';newGame()};
+  $('#share').onclick=share}
+function share(){const r=result;const url=`https://t.me/${BOT}?start=${CFG.start}`;
+  const link=`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(U().shareText(r.score,r.panels))}`;
+  try{if(tg&&tg.initData&&tg.openTelegramLink){tg.openTelegramLink(link);return}}catch(e){}
+  window.open(link,'_blank','noopener')}
+render();
+</script>
+</body>
+</html>
