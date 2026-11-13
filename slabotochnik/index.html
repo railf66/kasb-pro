@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<script src="../tg.js" defer></script>
+<title>Уроки для слаботочника: СКС, домофон, сигнализация, СКУД — Слаботочник Pro</title>
+<meta name="description" content="Бесплатный курс для монтажника слаботочных систем: кабели и прокладка, розетка RJ45 и патч-панель, видеодомофон, охранная и пожарная сигнализация, СКУД, питание и АКБ. Калькуляторы кабеля, аккумулятора и падения напряжения. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/slabotochnik/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Уроки для слаботочника: СКС, домофон, сигнализация, СКУД — Слаботочник Pro">
+<meta property="og:description" content="Бесплатный курс для монтажника слаботочных систем: кабели и прокладка, розетка RJ45 и патч-панель, видеодомофон, охранная и пожарная сигнализация, СКУД, питание и АКБ. Калькуляторы кабеля, аккумулятора и падения напряжения. На русском и узбекском.">
+<meta property="og:url" content="https://kasbpro.uz/slabotochnik/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Course", "name": "Слаботочник Pro", "description": "Бесплатный курс для монтажника слаботочных систем: кабели и прокладка, розетка RJ45 и патч-панель, видеодомофон, охранная и пожарная сигнализация, СКУД, питание и АКБ. Калькуляторы кабеля, аккумулятора и падения напряжения. На русском и узбекском.", "url": "https://kasbpro.uz/slabotochnik/", "inLanguage": ["ru", "uz"], "isAccessibleForFree": true, "provider": {"@type": "EducationalOrganization", "name": "Kasb Pro", "url": "https://kasbpro.uz/"}, "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT3H"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "UZS", "category": "Free"}}</script>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a magenta "signal" accent */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#e8649f; --accent-ink:#3a0820; --navy:#13222e; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f07db0; --accent-ink:#3a0820; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f07db0; --accent-ink:#3a0820; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select:focus,.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+td:first-child{white-space:normal;min-width:76px}
+th,td{padding:10px 9px;overflow-wrap:break-word;hyphens:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Слаботочник Pro (low-voltage installer: SKS, intercom, alarm, access control). Each text is {ru, uz}. Quiz: a = index of the right option.
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}"${o.r?` transform="rotate(${o.r} ${x} ${y})"`:''}>${s}</text>`;
+const line=(d,c,w=3,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const circ=(x,y,r,f,st='var(--fg)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st}" stroke-width="1.5"/>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="11" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2)=>`${box(x,y,w,h)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+const PW='var(--wH)',DT='var(--wC)',SG='var(--wF)',HV='var(--wS)';
+
+// T568B pin colours: [base colour, striped with white?]
+const PAIRC={o:'#e8812a',g:'#2fa24a',b:'#2f6fd6',r:'#8a5a2b'};
+const T568B=[['o',1],['o',0],['g',1],['b',0],['b',1],['g',0],['r',1],['r',0]];
+const pin=(x,y,c,st,w=18,h=34)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${st?'#ffffff':PAIRC[c]}" stroke="var(--fg)" stroke-width="1.2"/>${st?`<rect x="${x+w/2-3}" y="${y+1}" width="6" height="${h-2}" fill="${PAIRC[c]}"/>`:''}`;
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:6,
+ t:{ru:"Техника безопасности",uz:"Xavfsizlik texnikasi"},s:{ru:"Высота, 220 В рядом, щиты, аккумуляторы",uz:"Balandlik, yonidagi 220 V, shitlar, akkumulyatorlar"},
+ table:{head:{ru:["Опасность","Как защититься"],uz:["Xavf","Qanday himoyalanish"]},rows:{
+  ru:[["Падение со стремянки","Ровная устойчивая стремянка, напарник держит. Над лестничными пролётами и на крыше — страховка"],["220 В в том же щите или канале","Блоки питания, домофоны и замки подключать при выключенном автомате. Проверить индикатором"],["Скрытая проводка в стене","Перед сверлением — детектор проводки. Не сверлить вертикально над розеткой и выключателем"],["Короткое замыкание аккумулятора","АКБ 12 В даёт сотни ампер: провод раскаляется. Клемму к АКБ подключать последней"],["Пыль, осколки, потолок","Очки при сверлении над головой. В подвесном потолке — перчатки (минвата, острые края)"],["Чужой шкаф и оборудование","Не трогать чужие линии и провайдерское оборудование без разрешения хозяина"]],
+  uz:[["Narvondan yiqilish","Tekis mustahkam narvon, sherigingiz ushlab tursin. Zinapoya oralig'i ustida va tomda — himoya kamari"],["Shu shit yoki kanaldagi 220 V","Quvvat bloklari, domofon va qulflarni avtomat o'chirilganda ulang. Indikator bilan tekshiring"],["Devordagi yashirin sim","Burg'ulashdan oldin — sim detektori. Rozetka va o'chirgich ustidan tik burg'ulamang"],["Akkumulyatorda qisqa tutashuv","12 V AKB yuzlab amper beradi: sim qizib ketadi. AKB klemmasini eng oxirida ulang"],["Chang, siniqlar, shift","Bosh ustida burg'ulashda ko'zoynak. Osma shiftda qo'lqop (mineral paxta, o'tkir chetlar)"],["Begona shkaf va uskunalar","Egasining ruxsatisiz begona liniyalar va provayder uskunalariga tegmang"]]}},
+ steps:{ru:["Узнайте у хозяина, где проходит силовая проводка, где щит и какой автомат отключает нужную линию.","Перед сверлением проверьте стену <b>детектором проводки</b>. Над розеткой и выключателем вертикально не сверлите.","Блоки питания 220 → 12 В подключайте только при <b>выключенном</b> автомате. Сначала все провода, потом включение.","Аккумулятор подключайте <b>последним</b>, сначала проверив полярность: красный «+», чёрный «−». Ключом не касайтесь двух клемм сразу.","На высоте работайте с напарником. После работы уберите обрезки кабеля, стяжки и пыль."],
+       uz:["Egasidan kuch simlari qayerdan o'tishini, shit qayerdaligini va kerakli liniyani qaysi avtomat o'chirishini so'rang.","Burg'ulashdan oldin devorni <b>sim detektori</b> bilan tekshiring. Rozetka va o'chirgich ustidan tik burg'ulamang.","220 → 12 V quvvat bloklarini faqat avtomat <b>o'chirilganda</b> ulang. Avval barcha simlar, keyin yoqish.","Akkumulyatorni qutblarni tekshirib, <b>eng oxirida</b> ulang: qizil «+», qora «−». Kalit bilan ikki klemmaga birdan tegmang.","Balandlikda sherik bilan ishlang. Ishdan keyin kabel qoldiqlari, styajkalar va changni yig'ishtiring."]},
+ tip:{ru:"Слаботочные 12 В не опасны для тела, но рядом почти всегда есть 220 В: в щите, в коробке домофона, в блоке питания. Относитесь к каждому ящику так, будто в нём 220 В, пока не проверили.",uz:"12 V past kuchlanish tanaga xavfli emas, lekin yonida deyarli doim 220 V bor: shitda, domofon qutisida, quvvat blokida. Tekshirmaguningizcha har bir qutiga ichida 220 V bordek qarang."},
+ quiz:[
+  {a:1,ru:{q:"Когда подключать блок питания 220 → 12 В?",o:["Под напряжением, так быстрее","При выключенном автомате","Неважно, там же 12 В"],e:"Вход блока питания — это 220 В."},uz:{q:"220 → 12 V quvvat blokini qachon ulash kerak?",o:["Kuchlanish ostida, tezroq","Avtomat o'chirilganda","Farqi yo'q, u yerda 12 V"],e:"Quvvat blokining kirishi — 220 V."}},
+  {a:2,ru:{q:"Какой провод подключать к аккумулятору последним?",o:["Сигнальный","Любой","Клемму к самому аккумулятору"],e:"Так меньше риск короткого замыкания при монтаже."},uz:{q:"Akkumulyatorga qaysi simni oxirida ulash kerak?",o:["Signal simini","Istalganini","Akkumulyatorning o'z klemmasini"],e:"Shunda montajda qisqa tutashuv xavfi kamroq."}},
+  {a:0,ru:{q:"Чем опасно короткое замыкание АКБ 12 В?",o:["Огромный ток, провод раскаляется","Сильный удар током","Ничем"],e:"Ток КЗ аккумулятора — сотни ампер."},uz:{q:"12 V AKB qisqa tutashuvi nimasi bilan xavfli?",o:["Juda katta tok, sim qizib ketadi","Kuchli tok urishi","Hech narsasi"],e:"Akkumulyator qisqa tutashuv toki — yuzlab amper."}},
+  {a:1,ru:{q:"Что сделать перед сверлением стены?",o:["Намочить стену","Проверить стену детектором проводки","Ничего"],e:"В стене может быть скрытая проводка 220 В."},uz:{q:"Devorni burg'ulashdan oldin nima qilish kerak?",o:["Devorni namlash","Devorni sim detektori bilan tekshirish","Hech narsa"],e:"Devorda yashirin 220 V sim bo'lishi mumkin."}}]},
+
+{id:'b2',lv:0,min:6,nowarn:true,legend:['D','P','V'],
+ t:{ru:"Что такое слаботочные системы",uz:"Past kuchlanishli tizimlar nima"},s:{ru:"Сеть, домофон, охрана, пожарка, СКУД, ТВ",uz:"Tarmoq, domofon, qo'riqlash, yong'in, SKUD, TV"},
+ svg:l=>svg(
+  `<path d="M20 70 180 20 340 70" fill="none" stroke="var(--fg)" stroke-width="2"/>`+box(30,70,300,165)+
+  `<line x1="30" y1="150" x2="330" y2="150" stroke="var(--line)" stroke-width="1.5"/>`+
+  flow(44,84,78,40,R(l,"Шкаф СКС","SKS shkafi"),R(l,"роутер, свитч","router, svitch"))+
+  flow(140,84,78,40,R(l,"ППК","PPK"),R(l,"охрана","qo'riqlash"))+
+  flow(236,84,80,40,R(l,"Домофон","Domofon"),R(l,"монитор","monitor"))+
+  line('M83 124V182',DT,3)+line('M179 124V140H260V182',SG,3)+line('M276 124V136',PW,3)+
+  flow(44,182,78,38,R(l,"Розетка","Rozetka"),"RJ45")+flow(140,182,72,38,R(l,"Датчик","Datchik"),R(l,"ИК, дым","IQ, tutun"))+
+  flow(222,182,94,38,R(l,"Считыватель","O'quvchi"),R(l,"СКУД, замок","SKUD, qulf"))+
+  tx(180,246,R(l,"всё работает от 12–24 В или по витой паре","hammasi 12–24 V yoki o'ralgan juftlik orqali ishlaydi"),{s:10,c:'var(--muted)'}),
+  R(l,"Слаботочные системы в доме","Uydagi past kuchlanishli tizimlar"),252),
+ table:{head:{ru:["Система","Что делает","Питание"],uz:["Tizim","Nima qiladi","Quvvat"]},rows:{
+  ru:[["СКС","Сеть: интернет, телефоны, IP-камеры по витой паре","PoE / 220 В в шкафу"],["Домофон","Связь с дверью, открывание замка","12–24 В"],["Охранная (ОС)","Датчики двери и движения, сирена, звонок хозяину","12 В + АКБ"],["Пожарная (ПС)","Дымовые датчики, оповещение «Пожар, выход»","12–24 В + АКБ"],["СКУД","Доступ по карте, брелоку, коду","12 В + АКБ"],["ТВ и антенны","Телевидение по коаксиалу","от приставки"]],
+  uz:[["SKS","Tarmoq: internet, telefonlar, o'ralgan juftlik orqali IP-kameralar","PoE / shkafda 220 V"],["Domofon","Eshik bilan aloqa, qulfni ochish","12–24 V"],["Qo'riqlash (OS)","Eshik va harakat datchiklari, sirena, egasiga qo'ng'iroq","12 V + AKB"],["Yong'in (PS)","Tutun datchiklari, «Yong'in, chiqish» ogohlantirishi","12–24 V + AKB"],["SKUD","Karta, brelok, kod bilan kirish","12 V + AKB"],["TV va antennalar","Koaksial orqali televidenie","pristavkadan"]]}},
+ steps:{ru:["«Слаботочка» — всё, что работает от низкого напряжения (обычно 12–24 В) или передаёт сигнал: сеть, связь, охрана.","Почти в каждой системе есть <b>центр</b> (шкаф, прибор, монитор, контроллер) и <b>оконечные устройства</b> (розетки, датчики, панели).","Центр питается от 220 В через блок питания, а у охраны, пожарки и СКУД есть ещё <b>аккумулятор</b> на время без света.","Видеонаблюдение тоже слаботочка, но для него в Kasb Pro есть отдельный курс.","Слаботочник обычно делает всё сразу: при ремонте квартиры или офиса кабели всех систем тянут вместе, до отделки."],
+       uz:["«Slabotochka» — past kuchlanishda (odatda 12–24 V) ishlaydigan yoki signal uzatadigan hamma narsa: tarmoq, aloqa, qo'riqlash.","Deyarli har bir tizimda <b>markaz</b> (shkaf, pribor, monitor, kontroller) va <b>chekka qurilmalar</b> (rozetkalar, datchiklar, panellar) bor.","Markaz 220 V dan quvvat bloki orqali ishlaydi, qo'riqlash, yong'in va SKUD da esa toksiz vaqt uchun <b>akkumulyator</b> ham bor.","Videokuzatuv ham past kuchlanish, lekin Kasb Pro da u uchun alohida kurs bor.","Slabotochnik odatda hammasini birga qiladi: kvartira yoki ofis ta'mirida barcha tizimlar kabeli pardozdan oldin birga tortiladi."]},
+ tip:{ru:"Кабели прокладывают до штукатурки и плитки. Потом добавить линию в 5 раз дороже, поэтому кладите запасные: лишняя витая пара стоит копейки.",uz:"Kabellar suvoq va plitkadan oldin yotqiziladi. Keyin liniya qo'shish 5 baravar qimmat, shuning uchun zaxira yotqizing: ortiqcha o'ralgan juftlik arzon."},
+ quiz:[
+  {a:2,ru:{q:"Какое напряжение обычно у слаботочных систем?",o:["380 В","220 В","12–24 В"],e:"Блок питания понижает 220 В до 12–24 В."},uz:{q:"Past kuchlanishli tizimlarda odatda qanday kuchlanish?",o:["380 V","220 V","12–24 V"],e:"Quvvat bloki 220 V ni 12–24 V gacha pasaytiradi."}},
+  {a:0,ru:{q:"Зачем у охраны и пожарки аккумулятор?",o:["Чтобы работали без света","Для красоты","Чтобы сирена громче"],e:"Злоумышленник может сначала отключить свет."},uz:{q:"Qo'riqlash va yong'in tizimida akkumulyator nima uchun?",o:["Toksiz ishlashi uchun","Chiroyi uchun","Sirena balandroq bo'lishi uchun"],e:"Buzg'unchi avval tokni o'chirishi mumkin."}},
+  {a:1,ru:{q:"Что такое СКУД?",o:["Телевидение","Контроль доступа: карта, брелок, код","Пожарная сигнализация"],e:"Система контроля и управления доступом."},uz:{q:"SKUD nima?",o:["Televidenie","Kirishni nazorat qilish: karta, brelok, kod","Yong'in signalizatsiyasi"],e:"Kirishni nazorat qilish va boshqarish tizimi."}},
+  {a:1,ru:{q:"Когда лучше прокладывать кабели?",o:["После поклейки обоев","До штукатурки и плитки","Когда въехали жильцы"],e:"Потом штробить готовый ремонт дорого."},uz:{q:"Kabellarni qachon yotqizgan yaxshi?",o:["Gulqog'ozdan keyin","Suvoq va plitkadan oldin","Odamlar ko'chib kelganda"],e:"Keyin tayyor ta'mirni o'yish qimmat."}}]},
+
+{id:'b3',lv:0,min:7,nowarn:true,
+ t:{ru:"Кабели слаботочника",uz:"Slabotochnik kabellari"},s:{ru:"Витая пара, КСПВ, огнестойкий, коаксиал",uz:"O'ralgan juftlik, KSPV, olovbardosh, koaksial"},
+ table:{head:{ru:["Кабель","Где нужен","Запомнить"],uz:["Kabel","Qayerda kerak","Eslab qoling"]},rows:{
+  ru:[["Витая пара UTP кат. 5e","Интернет, IP-домофон, IP-камеры","Медь, 4 пары, до 100 м. Не путать с CCA (омеднённый алюминий)"],["Витая пара FTP","Рядом с помехами, на улице","С экраном. На улице — чёрная оболочка из полиэтилена"],["Витая пара кат. 6","Офисы, гигабит и выше","Толще, жёстче, нужны розетки кат. 6"],["КСПВ 4×0,5 / 8×0,5","Охранные датчики, домофон","Одиночные жилы, дёшево, для шлейфов"],["Огнестойкий, нг(А)-FRLS","Пожарная сигнализация, оповещение","Не горит и не дымит. Для пожарки обязателен"],["ШВВП 2×0,75","Питание замков и блоков 12 В","Мягкий, гибкий, на большой ток"],["Коаксиал RG-6","ТВ, спутник, антенны","75 Ом, F-разъём"]],
+  uz:[["UTP o'ralgan juftlik 5e kat.","Internet, IP-domofon, IP-kameralar","Mis, 4 juft, 100 m gacha. CCA (misqoplangan alyuminiy) bilan adashtirmang"],["FTP o'ralgan juftlik","Xalaqit yonida, ko'chada","Ekranli. Ko'chada — polietilendan qora qobiq"],["6 kat. o'ralgan juftlik","Ofislar, gigabit va undan yuqori","Yo'g'onroq, qattiqroq, 6 kat. rozetkalar kerak"],["KSPV 4×0,5 / 8×0,5","Qo'riqlash datchiklari, domofon","Yakka tomirlar, arzon, shleyflar uchun"],["Olovbardosh, ng(A)-FRLS","Yong'in signalizatsiyasi, ogohlantirish","Yonmaydi va tutamaydi. Yong'in tizimi uchun majburiy"],["ShVVP 2×0,75","Qulflar va 12 V bloklar quvvati","Yumshoq, egiluvchan, katta tok uchun"],["Koaksial RG-6","TV, sun'iy yo'ldosh, antennalar","75 Om, F-ulagich"]]}},
+ steps:{ru:["Для сети берите <b>медную</b> витую пару. Проверка: поскоблите жилу ножом — у CCA под медью виден серый алюминий.","На улице — только кабель для улицы (UV-стойкий, чёрный) или в гофре. Обычный серый на солнце трескается за 1–2 года.","Для охраны хватает КСПВ: у датчика 4 провода (питание и контакт тревоги), запасные жилы пригодятся.","Для пожарной сигнализации используйте только огнестойкий кабель с маркировкой <b>нг(А)-FRLS</b> или FRHF.","Покупайте с запасом 10–15%: обходы, подъёмы к потолку и разделка съедают больше, чем кажется по плану."],
+       uz:["Tarmoq uchun <b>mis</b> o'ralgan juftlik oling. Tekshirish: tomirni pichoq bilan qiring — CCA da mis ostida kulrang alyuminiy ko'rinadi.","Ko'chada — faqat ko'cha kabeli (UV ga chidamli, qora) yoki gofra ichida. Oddiy kulrang kabel quyoshda 1–2 yilda yorilib ketadi.","Qo'riqlash uchun KSPV yetadi: datchikda 4 ta sim (quvvat va trevoga kontakti), zaxira tomirlar asqotadi.","Yong'in signalizatsiyasi uchun faqat <b>ng(A)-FRLS</b> yoki FRHF belgili olovbardosh kabel ishlating.","10–15% zaxira bilan oling: aylanib o'tishlar, shiftga ko'tarilish va uchlarini ochish rejadagidan ko'proq ketadi."]},
+ tip:{ru:"Дешёвая витая пара CCA работает на коротких линиях, но с PoE греется, а на 50+ метрах теряет скорость. Экономия 20% на кабеле потом превращается в повторный выезд.",uz:"Arzon CCA o'ralgan juftlik qisqa liniyada ishlaydi, lekin PoE bilan qiziydi, 50+ metrda esa tezlikni yo'qotadi. Kabeldagi 20% tejash keyin qayta chiqishga aylanadi."},
+ quiz:[
+  {a:1,ru:{q:"Какой кабель нужен для пожарной сигнализации?",o:["Любая витая пара","Огнестойкий нг(А)-FRLS","Коаксиал"],e:"При пожаре линия должна работать как можно дольше."},uz:{q:"Yong'in signalizatsiyasi uchun qanday kabel kerak?",o:["Istalgan o'ralgan juftlik","Olovbardosh ng(A)-FRLS","Koaksial"],e:"Yong'inda liniya iloji boricha uzoq ishlashi kerak."}},
+  {a:0,ru:{q:"Как отличить CCA от меди?",o:["Поскоблить жилу: под медью серый алюминий","По цвету оболочки","По цене на коробке"],e:"У CCA алюминий только покрыт медью."},uz:{q:"CCA ni misdan qanday farqlash mumkin?",o:["Tomirni qirish: mis ostida kulrang alyuminiy","Qobiq rangi bo'yicha","Qutidagi narx bo'yicha"],e:"CCA da alyuminiy faqat mis bilan qoplangan."}},
+  {a:2,ru:{q:"Какой кабель для антенны и ТВ?",o:["КСПВ","ШВВП","Коаксиал RG-6"],e:"ТВ-сигнал идёт по коаксиалу 75 Ом."},uz:{q:"Antenna va TV uchun qanday kabel?",o:["KSPV","ShVVP","Koaksial RG-6"],e:"TV signal 75 Om koaksial orqali boradi."}},
+  {a:1,ru:{q:"Обычная серая витая пара на улице на солнце...",o:["Служит вечно","Трескается за 1–2 года","Работает быстрее"],e:"Нужен уличный кабель или гофра."},uz:{q:"Oddiy kulrang o'ralgan juftlik ko'chada quyoshda...",o:["Abadiy xizmat qiladi","1–2 yilda yoriladi","Tezroq ishlaydi"],e:"Ko'cha kabeli yoki gofra kerak."}}]},
+
+{id:'b4',lv:0,min:7,legend:['D','H'],
+ t:{ru:"Прокладка кабеля",uz:"Kabel yotqizish"},s:{ru:"Отступ от 220 В, изгиб, запас, маркировка",uz:"220 V dan masofa, egilish, zaxira, belgilash"},
+ svg:l=>svg(
+  tx(16,22,R(l,"Отдельно от силовых","Kuch simlaridan alohida"),{a:'start',w:600,s:12})+
+  line('M20 50H340',HV,5)+tx(340,42,"220 V",{a:'end',s:10,w:700,c:'var(--muted)'})+
+  line('M20 84H340',DT,3)+tx(340,100,R(l,"витая пара","o'ralgan juftlik"),{a:'end',s:10,c:'var(--muted)'})+
+  line('M60 56V78',`var(--fg)`,1.2)+tx(66,72,R(l,"≥ 15 см","≥ 15 sm"),{a:'start',s:11,w:700})+
+  tx(16,134,R(l,"Пересекать под 90°","90° ostida kesib o'ting"),{a:'start',w:600,s:12})+
+  line('M30 170H160',HV,5)+line('M95 145V200',DT,3)+tx(104,196,"90°",{a:'start',s:11,w:700})+
+  tx(200,134,R(l,"Изгиб плавный","Egilish silliq"),{a:'start',w:600,s:12})+
+  line('M210 150V180Q210 205 235 205H330',DT,3)+tx(250,175,R(l,"радиус ≥ 4","radius ≥ 4"),{a:'start',s:11,w:700})+tx(250,190,R(l,"диаметров","diametr"),{a:'start',s:10,c:'var(--muted)'})+
+  tx(180,240,R(l,"не в одной гофре и коробке с 220 В","220 V bilan bitta gofra va qutida emas"),{s:10,c:'var(--muted)'}),
+  R(l,"Правила прокладки витой пары","O'ralgan juftlikni yotqizish qoidalari"),252),
+ steps:{ru:["Нарисуйте план: где шкаф, где каждая розетка и датчик. Все линии идут <b>звездой</b> от шкафа, каждая отдельным куском.","Слаботочку кладите в <b>отдельный</b> канал, гофру или лоток. Параллельно с силовыми проводами — не ближе 15 см, пересекать под прямым углом.","Не перегибайте кабель: радиус изгиба не меньше 4 его диаметров. Стяжки не затягивайте до вмятин, не наступайте на бухту.","Оставьте запас: 20–30 см в подрозетнике, 2–3 м в шкафу. Сращивать витую пару скруткой нельзя.","Подпишите <b>оба конца</b> каждой линии одинаково (например «К1-05»: кабинет 1, розетка 5) и занесите в план."],
+       uz:["Reja chizing: shkaf qayerda, har bir rozetka va datchik qayerda. Barcha liniyalar shkafdan <b>yulduz</b> shaklida, har biri alohida bo'lak bo'lib boradi.","Past kuchlanishni <b>alohida</b> kanal, gofra yoki lotokka yotqizing. Kuch simlari bilan parallel — 15 sm dan yaqin emas, to'g'ri burchak ostida kesib o'ting.","Kabelni bukmang: egilish radiusi uning 4 diametridan kam emas. Styajkalarni botiq qolguncha tortmang, g'altakni bosmang.","Zaxira qoldiring: rozetka qutisida 20–30 sm, shkafda 2–3 m. O'ralgan juftlikni burab ulash mumkin emas.","Har bir liniyaning <b>ikki uchini</b> bir xil belgilang (masalan «K1-05»: 1-xona, 5-rozetka) va rejaga yozing."]},
+ tip:{ru:"Через полгода никто не вспомнит, какой кабель куда идёт. Маркировка и план занимают 20 минут, а без них поиск линии — полдня работы.",uz:"Yarim yildan keyin hech kim qaysi kabel qayerga borishini eslamaydi. Belgilash va reja 20 daqiqa oladi, ularsiz liniyani qidirish — yarim kunlik ish."},
+ quiz:[
+  {a:0,ru:{q:"Как пересекать силовой кабель?",o:["Под прямым углом","Вдоль, в одной гофре","Под любым углом"],e:"Так помехи от 220 В минимальны."},uz:{q:"Kuch kabelini qanday kesib o'tish kerak?",o:["To'g'ri burchak ostida","Bo'ylab, bitta gofrada","Istalgan burchakda"],e:"Shunda 220 V xalaqiti eng kam."}},
+  {a:2,ru:{q:"Можно ли сращивать витую пару скруткой?",o:["Да, изолентой","Да, если коротко","Нет, линия — целым куском"],e:"Скрутка портит линию и скорость."},uz:{q:"O'ralgan juftlikni burab ulash mumkinmi?",o:["Ha, izolenta bilan","Ha, qisqa bo'lsa","Yo'q, liniya — butun bo'lak"],e:"Burab ulash liniya va tezlikni buzadi."}},
+  {a:1,ru:{q:"Сколько запаса кабеля оставить в шкафу?",o:["Ничего","2–3 метра","10 сантиметров"],e:"Запас нужен для разделки и перекоммутации."},uz:{q:"Shkafda qancha kabel zaxirasi qoldirish kerak?",o:["Hech qancha","2–3 metr","10 santimetr"],e:"Zaxira uchlarini ochish va qayta ulash uchun kerak."}},
+  {a:1,ru:{q:"Где подписывать линию?",o:["Только в шкафу","На обоих концах одинаково","Нигде"],e:"Иначе потом не найти, какая розетка где."},uz:{q:"Liniyani qayerda belgilash kerak?",o:["Faqat shkafda","Ikki uchida bir xil","Hech qayerda"],e:"Aks holda qaysi rozetka qayerdaligini topib bo'lmaydi."}}]},
+
+{id:'b5',lv:0,min:6,nowarn:true,
+ t:{ru:"Инструмент и замеры",uz:"Asboblar va o'lchovlar"},s:{ru:"Кроссировочный нож, LAN-тестер, мультиметр",uz:"Krossirovka pichog'i, LAN-tester, multimetr"},
+ table:{head:{ru:["Инструмент","Для чего"],uz:["Asbob","Nima uchun"]},rows:{
+  ru:[["Кроссировочный нож (Krone / 110)","Забивать жилы в розетку и патч-панель"],["Обжимник RJ45 и стриппер","Делать патч-корды, снимать оболочку не царапая жилы"],["LAN-тестер","Проверить, что все 8 жил дошли и не перепутаны"],["Тональный генератор и щуп","Найти нужный кабель в пучке без подписи"],["Мультиметр","Напряжение блока питания, сопротивление шлейфа, обрыв"],["Индикаторная отвёртка","Проверить, нет ли 220 В"],["Перфоратор, детектор проводки","Отверстия и штробы без риска попасть в провод"],["Протяжка (кабельная «рулетка»)","Протянуть кабель в гофре и трубе"]],
+  uz:[["Krossirovka pichog'i (Krone / 110)","Tomirlarni rozetka va patch-panelga urib kiritish"],["RJ45 siqqich va stripper","Patch-kord yasash, tomirlarni tirnamasdan qobiqni olish"],["LAN-tester","8 ta tomir yetib kelgani va adashmaganini tekshirish"],["Tonal generator va zond","Belgisiz to'pdan kerakli kabelni topish"],["Multimetr","Quvvat bloki kuchlanishi, shleyf qarshiligi, uzilish"],["Indikator otvyortka","220 V yo'qligini tekshirish"],["Perforator, sim detektori","Simga tegib ketmasdan teshik va o'yiq"],["Tortgich (kabel «ruletkasi»)","Kabelni gofra va quvur ichidan tortish"]]}},
+ steps:{ru:["<b>Напряжение блока питания:</b> мультиметр на «V⎓» (постоянное), щупы на «+» и «−». Норма для 12 В блока — 13,5–13,8 В без нагрузки.","<b>Под нагрузкой</b> измерьте ещё раз на дальнем устройстве. Меньше 11 В — линия слишком длинная или тонкая.","<b>Обрыв:</b> режим прозвонки (значок динамика). Скрутите две жилы на одном конце и прозвоните их на другом: пищит — жилы целые.","<b>Сопротивление шлейфа</b> сигнализации: режим «Ω», питание прибора выключено. Должно быть близко к номиналу оконечного резистора.","<b>Поиск кабеля:</b> генератор подключите к линии в комнате, а щупом ищите в шкафу — нужный кабель «гудит» громче всех."],
+       uz:["<b>Quvvat bloki kuchlanishi:</b> multimetrni «V⎓» (o'zgarmas) ga qo'ying, zondlarni «+» va «−» ga. 12 V blok uchun norma — yuksiz 13,5–13,8 V.","<b>Yuk ostida</b> uzoqdagi qurilmada yana o'lchang. 11 V dan kam — liniya juda uzun yoki ingichka.","<b>Uzilish:</b> jiringlatish rejimi (dinamik belgisi). Bir uchida ikki tomirni burang, ikkinchi uchida jiringlating: chiyillasa — tomirlar butun.","Signalizatsiya <b>shleyfi qarshiligi</b>: «Ω» rejimi, pribor quvvati o'chirilgan. Oxirgi rezistor nominaliga yaqin bo'lishi kerak.","<b>Kabelni qidirish:</b> generatorni xonadagi liniyaga ulang, shkafda zond bilan qidiring — kerakli kabel hammadan baland «g'o'ng'illaydi»."]},
+ tip:{ru:"Сопротивление измеряйте только на обесточенной линии. Под напряжением мультиметр в режиме «Ω» показывает ерунду и может сгореть.",uz:"Qarshilikni faqat tok o'chirilgan liniyada o'lchang. Kuchlanish ostida «Ω» rejimidagi multimetr noto'g'ri ko'rsatadi va kuyib qolishi mumkin."},
+ quiz:[
+  {a:1,ru:{q:"Сколько должен показывать блок питания 12 В без нагрузки?",o:["5 В","13,5–13,8 В","220 В"],e:"Блоки для охраны выдают чуть больше 12 В, чтобы заряжать АКБ."},uz:{q:"12 V quvvat bloki yuksiz qancha ko'rsatishi kerak?",o:["5 V","13,5–13,8 V","220 V"],e:"Qo'riqlash bloklari AKB ni zaryadlash uchun 12 V dan biroz ko'p beradi."}},
+  {a:2,ru:{q:"Чем найти нужный кабель в пучке без подписи?",o:["Перфоратором","Индикаторной отвёрткой","Тональным генератором и щупом"],e:"Щуп «слышит» сигнал генератора."},uz:{q:"Belgisiz to'pdan kerakli kabelni nima bilan topish mumkin?",o:["Perforator bilan","Indikator otvyortka bilan","Tonal generator va zond bilan"],e:"Zond generator signalini «eshitadi»."}},
+  {a:0,ru:{q:"Когда можно мерить сопротивление шлейфа?",o:["При выключенном питании прибора","Под напряжением","Во время тревоги"],e:"Под напряжением замер неверный и опасен для прибора."},uz:{q:"Shleyf qarshiligini qachon o'lchash mumkin?",o:["Pribor quvvati o'chirilganda","Kuchlanish ostida","Trevoga paytida"],e:"Kuchlanish ostida o'lchov noto'g'ri va pribor uchun xavfli."}},
+  {a:1,ru:{q:"Что проверяет LAN-тестер?",o:["Скорость интернета","Что все 8 жил дошли и в правильном порядке","Напряжение 220 В"],e:"Огоньки 1–8 должны загораться по порядку."},uz:{q:"LAN-tester nimani tekshiradi?",o:["Internet tezligini","8 ta tomir yetib kelgani va to'g'ri tartibda ekanini","220 V kuchlanishni"],e:"1–8 chiroqlar tartib bilan yonishi kerak."}}]},
+
+/* ---------- INTERMEDIATE ---------- */
+{id:'m1',lv:1,min:8,nowarn:true,
+ t:{ru:"Розетка RJ45 и патч-панель",uz:"RJ45 rozetka va patch-panel"},s:{ru:"Кроссировка по схеме T568B",uz:"T568B sxemasi bo'yicha krossirovka"},
+ svg:l=>svg(
+  tx(180,22,R(l,"Порядок жил T568B (контакты 1–8)","T568B tomirlar tartibi (1–8 kontaktlar)"),{w:600,s:12})+
+  box(40,36,280,92)+
+  T568B.map((p,i)=>pin(56+i*32,52,p[0],p[1])+tx(65+i*32,104,i+1,{w:700,s:12})).join('')+
+  tx(180,120,R(l,"смотрим на контакты, защёлка снизу","kontaktlarga qaraymiz, ilgak pastda"),{s:10,c:'var(--muted)'})+
+  [[R(l,"1-2 оранжевая","1-2 to'q sariq"),'o'],[R(l,"3-6 зелёная","3-6 yashil"),'g'],[R(l,"4-5 синяя","4-5 ko'k"),'b'],[R(l,"7-8 коричневая","7-8 jigarrang"),'r']].map((p,i)=>`<rect x="${22+(i%2)*170}" y="${150+Math.floor(i/2)*30}" width="22" height="10" rx="3" fill="${PAIRC[p[1]]}"/>`+tx(52+(i%2)*170,160+Math.floor(i/2)*30,p[0],{a:'start',s:11})).join('')+
+  line('M40 222H130',DT,3)+line('M130 222Q140 210 150 222T170 222T190 222',DT,3)+line('M190 222H320',DT,3)+
+  tx(160,244,R(l,"раскрутка пары ≤ 13 мм","juftlikni yechish ≤ 13 mm"),{s:11,w:700}),
+  R(l,"Схема T568B","T568B sxemasi"),252),
+ table:{head:{ru:["Контакт","Цвет жилы","Пара"],uz:["Kontakt","Tomir rangi","Juft"]},rows:{
+  ru:[["1","Бело-оранжевый","2"],["2","Оранжевый","2"],["3","Бело-зелёный","3"],["4","Синий","1"],["5","Бело-синий","1"],["6","Зелёный","3"],["7","Бело-коричневый","4"],["8","Коричневый","4"]],
+  uz:[["1","Oq-to'q sariq","2"],["2","To'q sariq","2"],["3","Oq-yashil","3"],["4","Ko'k","1"],["5","Oq-ko'k","1"],["6","Yashil","3"],["7","Oq-jigarrang","4"],["8","Jigarrang","4"]]}},
+ steps:{ru:["Снимите оболочку на 3–4 см стриппером, не надрезая жилы. Нить-разрыватель внутри помогает снять оболочку ровно.","Разведите пары по цветной наклейке на розетке. На ней две схемы: <b>A</b> и <b>B</b>. Берите <b>B</b> — как на всех патч-кордах.","Раскручивайте каждую пару как можно меньше, не больше <b>13 мм</b> до контакта. Сильно раскрученная пара теряет скорость.","Забейте жилы <b>кроссировочным ножом</b> лезвием наружу: он вдавит жилу в нож-контакт и сразу обрежет лишнее.","На патч-панели в шкафу — та же схема B и тот же номер, что на розетке. Закройте крышку и проверьте линию тестером."],
+       uz:["Stripper bilan qobiqni 3–4 sm ga oling, tomirlarni kesmang. Ichidagi uzuvchi ip qobiqni tekis olishga yordam beradi.","Juftlarni rozetkadagi rangli yorliq bo'yicha ajrating. Unda ikki sxema: <b>A</b> va <b>B</b>. <b>B</b> ni oling — barcha patch-kordlardagidek.","Har bir juftlikni iloji boricha kam, kontaktgacha <b>13 mm</b> dan ko'p yechmang. Ko'p yechilgan juftlik tezlikni yo'qotadi.","Tomirlarni <b>krossirovka pichog'i</b> bilan, tig'ini tashqariga qaratib urib kiriting: u tomirni kontaktga bosadi va ortiqchasini kesadi.","Shkafdagi patch-panelda — xuddi shu B sxema va rozetkadagi raqam. Qopqoqni yoping va liniyani tester bilan tekshiring."]},
+ tip:{ru:"Главное правило: на обоих концах одна и та же схема. Если на розетке B, а на панели A — компьютер не увидит сеть или будет работать на 100 Мбит/с.",uz:"Asosiy qoida: ikki uchida bir xil sxema. Rozetkada B, panelda A bo'lsa — kompyuter tarmoqni ko'rmaydi yoki 100 Mbit/s da ishlaydi."},
+ quiz:[
+  {a:0,ru:{q:"Какой цвет на 1-м контакте по T568B?",o:["Бело-оранжевый","Бело-зелёный","Синий"],e:"1 — бело-оранжевый, 2 — оранжевый."},uz:{q:"T568B bo'yicha 1-kontaktda qaysi rang?",o:["Oq-to'q sariq","Oq-yashil","Ko'k"],e:"1 — oq-to'q sariq, 2 — to'q sariq."}},
+  {a:2,ru:{q:"На сколько можно раскрутить пару?",o:["На 5 см","Полностью","Не больше 13 мм"],e:"Скрутка защищает пару от помех."},uz:{q:"Juftlikni qanchaga yechish mumkin?",o:["5 sm ga","To'liq","13 mm dan ko'p emas"],e:"O'ralish juftlikni xalaqitdan himoya qiladi."}},
+  {a:1,ru:{q:"Чем забивают жилы в розетку и патч-панель?",o:["Отвёрткой","Кроссировочным ножом","Обжимником RJ45"],e:"Нож вдавливает и обрезает жилу."},uz:{q:"Tomirlar rozetka va patch-panelga nima bilan urib kiritiladi?",o:["Otvyortka bilan","Krossirovka pichog'i bilan","RJ45 siqqich bilan"],e:"Pichoq tomirni bosadi va kesadi."}},
+  {a:1,ru:{q:"На розетке схема B. Какая схема на патч-панели?",o:["A","Тоже B","Любая"],e:"Схема на обоих концах одинаковая."},uz:{q:"Rozetkada B sxema. Patch-panelda qaysi sxema?",o:["A","Ham B","Istalgani"],e:"Ikki uchida sxema bir xil."}}]},
+
+{id:'m2',lv:1,min:8,nowarn:true,legend:['D'],calc:'cable',
+ t:{ru:"Шкаф и проверка линий",uz:"Shkaf va liniyalarni tekshirish"},s:{ru:"Патч-панель, свитч, правило 90 + 10 м",uz:"Patch-panel, svitch, 90 + 10 m qoidasi"},
+ svg:l=>svg(
+  flow(10,70,62,44,R(l,"ПК","Kompyuter"))+line('M72 92H96',DT,3)+flow(96,74,46,36,R(l,"Розетка","Rozetka"))+
+  line('M142 92H200',DT,4)+tx(171,84,R(l,"≤ 90 м","≤ 90 m"),{s:11,w:700})+
+  box(200,30,150,170,'var(--navy)')+tx(275,48,R(l,"Шкаф 19″","19″ shkaf"),{s:11,w:700,c:'var(--navy-fg)'})+
+  flow(212,60,126,30,R(l,"Патч-панель","Patch-panel"))+flow(212,110,126,30,R(l,"Коммутатор","Kommutator"))+flow(212,160,126,30,R(l,"Роутер","Router"))+
+  line('M226 90Q214 100 226 110',DT,2)+line('M326 140Q338 150 326 160',DT,2)+
+  tx(84,140,R(l,"патч-корды вместе ≤ 10 м","patch-kordlar birga ≤ 10 m"),{s:10,c:'var(--muted)'})+
+  tx(180,226,R(l,"вся линия от ПК до коммутатора — не больше 100 м","kompyuterdan kommutatorgacha butun liniya — 100 m dan ko'p emas"),{s:10,c:'var(--muted)'}),
+  R(l,"Линия СКС: розетка, кабель, шкаф","SKS liniyasi: rozetka, kabel, shkaf"),240),
+ table:{head:{ru:["Тестер показывает","Что значит","Что делать"],uz:["Tester ko'rsatadi","Bu nimani bildiradi","Nima qilish kerak"]},rows:{
+  ru:[["1-2-3-4-5-6-7-8 по порядку","Линия в норме","Подписать и сдать"],["Одна лампа не горит","Обрыв или плохо забита жила","Перезабить жилу на розетке и панели"],["Лампы не по порядку","Перепутаны жилы или разные схемы A/B","Проверить цвета на обоих концах"],["Горят две лампы сразу","Замыкание жил","Переразделать конец, искать повреждение"],["Нет ни одной","Не тот кабель или порт","Проверить подпись, найти кабель генератором"]],
+  uz:[["1-2-3-4-5-6-7-8 tartib bilan","Liniya normal","Belgilash va topshirish"],["Bitta chiroq yonmaydi","Uzilish yoki tomir yomon kiritilgan","Tomirni rozetka va panelda qayta kiritish"],["Chiroqlar tartibsiz","Tomirlar adashgan yoki A/B sxemalar har xil","Ikki uchidagi ranglarni tekshirish"],["Ikki chiroq birdan yonadi","Tomirlar tutashgan","Uchini qayta ochish, shikastni izlash"],["Birortasi yonmaydi","Boshqa kabel yoki port","Belgini tekshirish, kabelni generator bilan topish"]]}},
+ steps:{ru:["Кабели заводите в шкаф аккуратным жгутом, по бокам, через органайзеры. Запас 2–3 м сверните петлёй сзади.","Каждую линию заделайте в патч-панель под тем же номером, что и розетка. От панели к коммутатору — короткие патч-корды 0,5–1 м.","Правило длины: кабель от розетки до панели — до <b>90 м</b>, патч-корды с двух сторон вместе — до <b>10 м</b>. Всего не больше 100 м.","Проверьте <b>каждую</b> линию LAN-тестером: основной блок в панель, ответный — в розетку. Лампы должны идти 1–8 по порядку.","Составьте таблицу: номер порта — комната — розетка — результат теста. Отдайте её клиенту вместе с работой."],
+       uz:["Kabellarni shkafga yon tomondan, organayzerlar orqali tartibli to'p qilib kiriting. 2–3 m zaxirani orqada halqa qilib o'rang.","Har bir liniyani patch-panelga rozetkadagi raqam bilan ulang. Paneldan kommutatorga — 0,5–1 m li qisqa patch-kordlar.","Uzunlik qoidasi: rozetkadan panelgacha kabel — <b>90 m</b> gacha, ikki tomondagi patch-kordlar birga — <b>10 m</b> gacha. Jami 100 m dan oshmasin.","<b>Har bir</b> liniyani LAN-tester bilan tekshiring: asosiy blok panelga, javob bloki rozetkaga. Chiroqlar 1–8 tartib bilan yonishi kerak.","Jadval tuzing: port raqami — xona — rozetka — test natijasi. Uni ish bilan birga mijozga bering."]},
+ tip:{ru:"Сколько бухт кабеля купить, посчитайте в калькуляторе: из бухты 305 м выходит целое число линий, и обрезки на новую линию не годятся.",uz:"Qancha kabel g'altagi olishni kalkulyatorda hisoblang: 305 m g'altakdan butun son liniya chiqadi, qoldiqlar yangi liniyaga yaramaydi."},
+ quiz:[
+  {a:1,ru:{q:"Максимальная длина кабеля от розетки до патч-панели?",o:["150 м","90 м","30 м"],e:"Плюс до 10 м патч-кордов, всего 100 м."},uz:{q:"Rozetkadan patch-panelgacha kabelning eng ko'p uzunligi?",o:["150 m","90 m","30 m"],e:"Yana 10 m gacha patch-kordlar, jami 100 m."}},
+  {a:0,ru:{q:"На тестере не горит лампа 4. Что это?",o:["Обрыв или плохо забита жила 4","Всё нормально","Нет интернета у провайдера"],e:"Перезабейте синюю жилу на обоих концах."},uz:{q:"Testerda 4-chiroq yonmaydi. Bu nima?",o:["4-tomir uzilgan yoki yomon kiritilgan","Hammasi normal","Provayderda internet yo'q"],e:"Ko'k tomirni ikki uchida qayta kiriting."}},
+  {a:2,ru:{q:"Лампы горят не по порядку. Вероятная причина?",o:["Длинный кабель","Мало света","Перепутаны жилы или разные схемы A и B"],e:"Сверьте цвета на розетке и панели."},uz:{q:"Chiroqlar tartibsiz yonadi. Ehtimoliy sabab?",o:["Uzun kabel","Yorug'lik kam","Tomirlar adashgan yoki A va B sxemalar har xil"],e:"Rozetka va paneldagi ranglarni solishtiring."}},
+  {a:1,ru:{q:"Что отдать клиенту вместе с работой?",o:["Ничего","Таблицу: порт — комната — розетка — тест","Обрезки кабеля"],e:"Так любой мастер потом найдёт линию."},uz:{q:"Ish bilan birga mijozga nima berish kerak?",o:["Hech narsa","Jadval: port — xona — rozetka — test","Kabel qoldiqlari"],e:"Shunda keyin istalgan usta liniyani topadi."}}]},
+
+{id:'m3',lv:1,min:8,legend:['P','V','H'],
+ t:{ru:"Видеодомофон и замок",uz:"Videodomofon va qulf"},s:{ru:"Панель, монитор, 4 провода, электромагнитный замок",uz:"Panel, monitor, 4 sim, elektromagnit qulf"},
+ svg:l=>svg(
+  flow(10,40,84,62,R(l,"Вызывная","Chaqiruv"),R(l,"панель","paneli"))+tx(52,30,R(l,"улица","ko'cha"),{s:10,c:'var(--muted)'})+
+  [["+12 V",PW],["GND",'var(--fg)'],[R(l,"аудио","audio"),SG],[R(l,"видео","video"),SG]].map((w,i)=>line(`M94 ${52+i*12}H226`,w[1],2.5,i==3?'6 4':null)+tx(160,49+i*12,w[0],{s:9,c:'var(--muted)'})).join('')+
+  flow(226,36,124,70,R(l,"Монитор","Monitor"),R(l,"в квартире","kvartirada"))+line('M288 36V20',HV,4)+tx(298,22,"220 V",{a:'start',s:10,w:700,c:'var(--muted)'})+
+  flow(10,150,84,44,R(l,"Замок","Qulf"),R(l,"магнит 12 В","magnit 12 V"))+
+  flow(130,150,96,44,R(l,"БП 12 В","QB 12 V"),R(l,"+ реле","+ rele"))+line('M178 150V128',HV,4)+tx(186,134,"220 V",{a:'start',s:10,w:700,c:'var(--muted)'})+
+  line('M130 172H94',PW,3)+line('M288 106V172H226',SG,2.5,'2 4')+tx(258,190,R(l,"кнопка «открыть»","«ochish» tugmasi"),{s:9,c:'var(--muted)'})+
+  flow(250,206,100,34,R(l,"Кнопка выхода","Chiqish tugmasi"))+line('M250 222H178V194',SG,2.5),
+  R(l,"Схема видеодомофона","Videodomofon sxemasi"),250),
+ steps:{ru:["Вызывную панель ставьте на высоте 1,5–1,6 м, под козырьком, камерой на лицо гостя, а не на солнце.","Соедините панель и монитор <b>4 проводами</b>: +12 В, общий (GND), аудио, видео. Порядок и цвета у брендов разные — смотрите паспорт.","На длину больше 25–30 м видео тяните отдельной парой витой пары или коаксиалом, иначе картинка будет с помехами.","<b>Электромагнитный замок</b> питайте от отдельного блока 12 В. Монитор и кнопка выхода только размыкают его цепь через реле.","Проверьте: вызов, звук в обе стороны, картинку ночью с подсветкой, открывание с монитора и кнопкой выхода."],
+       uz:["Chaqiruv panelini 1,5–1,6 m balandlikda, soyabon ostida, kamerasini quyoshga emas, mehmonning yuziga qaratib o'rnating.","Panel va monitorni <b>4 ta sim</b> bilan ulang: +12 V, umumiy (GND), audio, video. Brendlarda tartib va ranglar har xil — pasportga qarang.","25–30 m dan uzunda videoni o'ralgan juftlikning alohida jufti yoki koaksial bilan torting, aks holda tasvir xalaqit bilan bo'ladi.","<b>Elektromagnit qulfni</b> alohida 12 V blokdan quvvatlang. Monitor va chiqish tugmasi uning zanjirini faqat rele orqali uzadi.","Tekshiring: chaqiruv, ikki tomonlama ovoz, tunda yoritgich bilan tasvir, monitordan va chiqish tugmasi bilan ochish."]},
+ tip:{ru:"Электромагнитный замок держит дверь, пока на нём есть питание. Пропал ток — дверь открыта. Поэтому блок питания замка ставят с аккумулятором.",uz:"Elektromagnit qulf quvvat bor ekan eshikni ushlab turadi. Tok yo'qolsa — eshik ochiq. Shuning uchun qulf quvvat bloki akkumulyator bilan qo'yiladi."},
+ quiz:[
+  {a:1,ru:{q:"Сколько проводов обычно между панелью и монитором?",o:["2","4","8"],e:"+12 В, общий, аудио, видео."},uz:{q:"Panel va monitor orasida odatda nechta sim?",o:["2","4","8"],e:"+12 V, umumiy, audio, video."}},
+  {a:0,ru:{q:"Пропало питание у электромагнитного замка. Дверь...",o:["Открыта","Закрыта навсегда","Пищит"],e:"Магнит держит только под током."},uz:{q:"Elektromagnit qulfning quvvati yo'qoldi. Eshik...",o:["Ochiq","Butunlay yopiq","Chiyillaydi"],e:"Magnit faqat tok ostida ushlab turadi."}},
+  {a:2,ru:{q:"На какой высоте ставят вызывную панель?",o:["0,8 м","2,5 м","1,5–1,6 м"],e:"Камера должна видеть лицо гостя."},uz:{q:"Chaqiruv paneli qanday balandlikda qo'yiladi?",o:["0,8 m","2,5 m","1,5–1,6 m"],e:"Kamera mehmonning yuzini ko'rishi kerak."}},
+  {a:1,ru:{q:"Линия 40 м, картинка с помехами. Что сделать?",o:["Поменять монитор","Видео тянуть отдельной парой или коаксиалом","Добавить изоленты"],e:"На длинной линии видео нужно отдельно."},uz:{q:"Liniya 40 m, tasvirda xalaqit. Nima qilish kerak?",o:["Monitorni almashtirish","Videoni alohida juft yoki koaksial bilan tortish","Izolenta qo'shish"],e:"Uzun liniyada video alohida bo'lishi kerak."}}]},
+
+{id:'m4',lv:1,min:9,legend:['V','P'],calc:'batt',
+ t:{ru:"Охранная сигнализация",uz:"Qo'riqlash signalizatsiyasi"},s:{ru:"Прибор, датчики, шлейф, оконечный резистор",uz:"Pribor, datchiklar, shleyf, oxirgi rezistor"},
+ svg:l=>svg(
+  box(10,30,96,120,'var(--navy)')+tx(58,52,R(l,"ППК","PPK"),{w:700,s:13,c:'var(--navy-fg)'})+tx(58,68,R(l,"прибор","pribor"),{s:10,c:'var(--navy-fg)'})+
+  tx(58,96,R(l,"ЗОНА 1","ZONA 1"),{s:10,w:700,c:'var(--accent)'})+tx(58,128,"+12 V  GND",{s:9,c:'var(--navy-fg)'})+
+  line('M106 92H150',SG,2.5)+flow(150,74,70,36,R(l,"Геркон","Gerkon"),R(l,"дверь, NC","eshik, NC"))+
+  line('M220 92H254',SG,2.5)+flow(254,74,70,36,R(l,"ИК-датчик","IQ-datchik"),R(l,"движение","harakat"))+
+  `<rect x="276" y="122" width="26" height="12" rx="2" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(289,150,R(l,"резистор","rezistor"),{s:9,c:'var(--muted)'})+
+  line('M289 110V122',SG,2.5)+line('M289 134V142H106',SG,2.5)+line('M106 120H130V200H289V110',PW,2,'5 4')+tx(198,214,R(l,"питание датчика +12 В","datchik quvvati +12 V"),{s:9,c:'var(--muted)'})+
+  flow(10,170,60,32,R(l,"Сирена","Sirena"))+flow(10,214,60,30,"АКБ")+flow(80,214,70,30,"GSM")+
+  tx(256,238,R(l,"контакты — последовательно","kontaktlar — ketma-ket"),{s:10,c:'var(--muted)'}),
+  R(l,"Шлейф охранной сигнализации","Qo'riqlash signalizatsiyasi shleyfi"),252),
+ table:{head:{ru:["Состояние шлейфа","Сопротивление","Прибор видит"],uz:["Shleyf holati","Qarshilik","Pribor ko'radi"]},rows:{
+  ru:[["Норма","≈ номинал резистора (по паспорту, напр. 4,7 кОм)","Всё закрыто"],["Обрыв: дверь открыта, датчик сработал, кабель перерезан","Бесконечность","Тревога"],["Короткое замыкание","≈ 0 Ом","Тревога или неисправность"],["Плохой контакт, окисление","Скачет","Ложные тревоги"]],
+  uz:[["Normal","≈ rezistor nominali (pasport bo'yicha, masalan 4,7 kOm)","Hammasi yopiq"],["Uzilish: eshik ochildi, datchik ishladi, kabel kesildi","Cheksiz","Trevoga"],["Qisqa tutashuv","≈ 0 Om","Trevoga yoki nosozlik"],["Yomon kontakt, oksidlanish","Sakraydi","Soxta trevogalar"]]}},
+ steps:{ru:["Центр системы — <b>ППК</b> (прибор приёмно-контрольный): к нему идут шлейфы-зоны, сирена, клавиатура, GSM-модуль и аккумулятор.","Датчики с контактом <b>NC</b> (нормально замкнут) включайте в шлейф <b>последовательно</b>. На последнем датчике ставьте <b>оконечный резистор</b> из комплекта прибора.","<b>Геркон</b>: корпус на раму, магнит на створку, зазор по паспорту (обычно до 1–2 см). <b>ИК-датчик</b> — в угол на 2–2,5 м, не на окно и не на батарею.","Тампер (кнопка вскрытия корпуса) подключите в круглосуточную зону: тревога, даже если систему сняли с охраны.","Проверьте каждую зону: откройте дверь, пройдите перед датчиком, снимите крышку. Аккумулятор подберите в калькуляторе."],
+       uz:["Tizim markazi — <b>PPK</b> (qabul-nazorat pribori): unga shleyf-zonalar, sirena, klaviatura, GSM-modul va akkumulyator boradi.","<b>NC</b> (normal yopiq) kontaktli datchiklarni shleyfga <b>ketma-ket</b> ulang. Oxirgi datchikka pribor to'plamidagi <b>oxirgi rezistorni</b> qo'ying.","<b>Gerkon</b>: korpusi romga, magniti tabaqaga, oraliq pasport bo'yicha (odatda 1–2 sm gacha). <b>IQ-datchik</b> — burchakka 2–2,5 m ga, oyna va batareyaga qaratmasdan.","Tamperni (korpusni ochish tugmasi) sutkalik zonaga ulang: tizim qo'riqlovdan olingan bo'lsa ham trevoga.","Har bir zonani tekshiring: eshikni oching, datchik oldidan o'ting, qopqoqni oling. Akkumulyatorni kalkulyatorda tanlang."]},
+ tip:{ru:"Резистор ставят в конце шлейфа, у последнего датчика, а не у прибора. Иначе вор может замкнуть провода у датчика, и прибор ничего не заметит.",uz:"Rezistor shleyf oxiriga, oxirgi datchik yoniga qo'yiladi, pribor yoniga emas. Aks holda o'g'ri datchik yonida simlarni tutashtirsa, pribor hech narsani sezmaydi."},
+ quiz:[
+  {a:2,ru:{q:"Где ставить оконечный резистор?",o:["У прибора","Где удобно","У последнего датчика в шлейфе"],e:"Так прибор контролирует весь кабель."},uz:{q:"Oxirgi rezistor qayerga qo'yiladi?",o:["Pribor yoniga","Qulay joyga","Shleyfdagi oxirgi datchik yoniga"],e:"Shunda pribor butun kabelni nazorat qiladi."}},
+  {a:0,ru:{q:"Как соединяют контакты NC в шлейфе?",o:["Последовательно","Параллельно","Не соединяют"],e:"Любой разомкнутый датчик рвёт цепь — тревога."},uz:{q:"Shleyfda NC kontaktlar qanday ulanadi?",o:["Ketma-ket","Parallel","Ulanmaydi"],e:"Har qanday ochilgan datchik zanjirni uzadi — trevoga."}},
+  {a:1,ru:{q:"Куда нельзя направлять ИК-датчик?",o:["На вход","На окно и батарею","В угол комнаты"],e:"Солнце и тёплый воздух дают ложные тревоги."},uz:{q:"IQ-datchikni qayerga qaratib bo'lmaydi?",o:["Kirishga","Oyna va batareyaga","Xona burchagiga"],e:"Quyosh va issiq havo soxta trevoga beradi."}},
+  {a:1,ru:{q:"Шлейф показывает бесконечное сопротивление. Это...",o:["Норма","Обрыв: тревога","Короткое замыкание"],e:"Открыта дверь, сработал датчик или перерезан кабель."},uz:{q:"Shleyf cheksiz qarshilik ko'rsatadi. Bu...",o:["Normal","Uzilish: trevoga","Qisqa tutashuv"],e:"Eshik ochilgan, datchik ishlagan yoki kabel kesilgan."}}]},
+
+/* ---------- ADVANCED ---------- */
+{id:'a1',lv:2,min:9,
+ warnB:{ru:"Пожарная сигнализация — это жизни людей.",uz:"Yong'in signalizatsiyasi — bu odamlar hayoti."},
+ warn:{ru:"Её делают по проекту и местным нормам, а монтаж и сдачу выполняет организация с лицензией. Урок даёт основы, чтобы понимать проект и не ошибаться.",uz:"U loyiha va mahalliy me'yorlar bo'yicha qilinadi, montaj va topshirishni litsenziyali tashkilot bajaradi. Dars loyihani tushunish va xato qilmaslik uchun asoslarni beradi."},
+ t:{ru:"Пожарная сигнализация",uz:"Yong'in signalizatsiyasi"},s:{ru:"Дымовые и ручные извещатели, оповещение, кабель",uz:"Tutun va qo'l datchiklari, ogohlantirish, kabel"},
+ svg:l=>svg(
+  tx(16,22,R(l,"Потолок комнаты, вид сверху","Xona shifti, yuqoridan ko'rinish"),{a:'start',w:600,s:12})+box(20,34,320,160)+
+  circ(110,114,13,'var(--surface)')+circ(110,114,4,'var(--wH)','var(--wH)')+circ(250,114,13,'var(--surface)')+circ(250,114,4,'var(--wH)','var(--wH)')+
+  line('M20 66H110V101',`var(--fg)`,1,'3 3')+tx(60,60,R(l,"≥ 0,5 м от стены","devordan ≥ 0,5 m"),{s:10,w:700})+
+  `<rect x="296" y="48" width="30" height="16" fill="var(--bg)" stroke="var(--fg)" stroke-width="1.2"/>`+tx(311,80,R(l,"вент.","vent."),{s:9,c:'var(--muted)'})+
+  line('M296 70L262 104',`var(--fg)`,1,'3 3')+tx(250,150,R(l,"≥ 1 м от вентиляции","ventilyatsiyadan ≥ 1 m"),{s:10,w:700})+
+  line('M123 114H237',SG,2.5)+tx(180,108,R(l,"шлейф","shleyf"),{s:9,c:'var(--muted)'})+
+  `<rect x="20" y="152" width="8" height="30" fill="var(--wH)"/>`+tx(36,172,R(l,"ИПР у выхода, 1,5 м","chiqish yonida QD, 1,5 m"),{a:'start',s:10})+
+  tx(180,214,R(l,"в комнате — не меньше двух датчиков или по проекту","xonada — kamida ikki datchik yoki loyiha bo'yicha"),{s:10,c:'var(--muted)'})+
+  tx(180,232,R(l,"кабель — только огнестойкий нг(А)-FRLS","kabel — faqat olovbardosh ng(A)-FRLS"),{s:10,c:'var(--muted)'}),
+  R(l,"Размещение пожарных извещателей","Yong'in datchiklarini joylashtirish"),245),
+ table:{head:{ru:["Устройство","Где ставят"],uz:["Qurilma","Qayerga qo'yiladi"]},rows:{
+  ru:[["Дымовой извещатель","Комнаты, офисы, коридоры — на потолок"],["Тепловой извещатель","Где бывает дым и пар: кухня, котельная, баня"],["Ручной извещатель (ИПР)","У выходов и на лестницах, на высоте 1,5 м"],["Оповещатель (сирена, табло «Выход»)","Чтобы слышали и видели во всех помещениях"],["Прибор пожарный (ППКП)","В помещении с охраной или дежурным, с АКБ"]],
+  uz:[["Tutun datchigi","Xonalar, ofislar, yo'laklar — shiftga"],["Issiqlik datchigi","Tutun va bug' bo'ladigan joy: oshxona, qozonxona, hammom"],["Qo'l datchigi (QD)","Chiqishlar va zinalarda, 1,5 m balandlikda"],["Ogohlantirgich (sirena, «Chiqish» tablosi)","Barcha xonalarda eshitilishi va ko'rinishi uchun"],["Yong'in pribori (PPKP)","Qo'riqchi yoki navbatchi bor xonada, AKB bilan"]]}},
+ steps:{ru:["Работайте только по <b>проекту</b>: в нём указано, сколько датчиков, где они и какой кабель. Сам «на глаз» пожарку не проектируют.","Дымовой датчик ставьте на потолок, не ближе <b>0,5 м</b> от стены и не ближе <b>1 м</b> от вентиляции и кондиционера: поток воздуха сдувает дым.","На кухне и в котельной вместо дымового — <b>тепловой</b>, иначе каждый ужин будет ложная тревога.","Кабель — только огнестойкий <b>нг(А)-FRLS</b>, крепление металлическими скобами: пластиковые стяжки в огне плавятся, и кабель падает.","После монтажа проверьте каждый датчик тестовым аэрозолем или кнопкой, ИПР — ключом. Запишите результат в акт."],
+       uz:["Faqat <b>loyiha</b> bo'yicha ishlang: unda nechta datchik, qayerda va qanday kabel ko'rsatilgan. Yong'in tizimini «ko'z bilan» loyihalashmaydi.","Tutun datchigini shiftga, devordan <b>0,5 m</b> dan va ventilyatsiya hamda konditsionerdan <b>1 m</b> dan yaqin bo'lmagan joyga qo'ying: havo oqimi tutunni uchirib ketadi.","Oshxona va qozonxonada tutun datchigi o'rniga — <b>issiqlik</b> datchigi, aks holda har kechki ovqatda soxta trevoga bo'ladi.","Kabel — faqat olovbardosh <b>ng(A)-FRLS</b>, metall skobalar bilan mahkamlang: plastik styajkalar olovda eriydi va kabel tushib ketadi.","Montajdan keyin har bir datchikni test aerozoli yoki tugma bilan, QD ni kalit bilan tekshiring. Natijani dalolatnomaga yozing."]},
+ tip:{ru:"Ложные тревоги опаснее, чем кажется: после трёх ложных люди перестают выходить по сигналу. Правильное место датчика важнее, чем его цена.",uz:"Soxta trevogalar ko'ringanidan xavfliroq: uchta soxta trevogadan keyin odamlar signal bo'yicha chiqmay qo'yadi. Datchikning to'g'ri joyi narxidan muhimroq."},
+ quiz:[
+  {a:1,ru:{q:"Какой датчик ставить на кухне?",o:["Дымовой","Тепловой","Никакой"],e:"Дымовой от готовки даст ложную тревогу."},uz:{q:"Oshxonaga qaysi datchik qo'yiladi?",o:["Tutun","Issiqlik","Hech qaysi"],e:"Tutun datchigi ovqat pishirishdan soxta trevoga beradi."}},
+  {a:0,ru:{q:"На какой высоте ставят ручной извещатель?",o:["1,5 м","0,5 м","Под потолком"],e:"Чтобы любой человек легко дотянулся."},uz:{q:"Qo'l datchigi qanday balandlikka qo'yiladi?",o:["1,5 m","0,5 m","Shift ostiga"],e:"Har qanday odam oson yetishi uchun."}},
+  {a:2,ru:{q:"Чем крепить кабель пожарной сигнализации?",o:["Пластиковыми стяжками","Скотчем","Металлическими скобами"],e:"Пластик в огне плавится, кабель падает."},uz:{q:"Yong'in signalizatsiyasi kabelini nima bilan mahkamlash kerak?",o:["Plastik styajkalar","Skotch","Metall skobalar"],e:"Plastik olovda eriydi, kabel tushadi."}},
+  {a:1,ru:{q:"Как близко к вентиляции можно ставить дымовой датчик?",o:["Вплотную","Не ближе 1 м","Не ближе 5 см"],e:"Поток воздуха сдувает дым от датчика."},uz:{q:"Tutun datchigini ventilyatsiyaga qanchalik yaqin qo'yish mumkin?",o:["Yopishtirib","1 m dan yaqin emas","5 sm dan yaqin emas"],e:"Havo oqimi tutunni datchikdan uchirib ketadi."}}]},
+
+{id:'a2',lv:2,min:9,legend:['V','P'],
+ t:{ru:"СКУД: доступ по карте",uz:"SKUD: karta bilan kirish"},s:{ru:"Контроллер, считыватель, замки, кнопка выхода",uz:"Kontroller, o'quvchi, qulflar, chiqish tugmasi"},
+ svg:l=>svg(
+  `<line x1="130" y1="20" x2="130" y2="288" stroke="var(--fg)" stroke-width="5"/>`+tx(64,30,R(l,"снаружи","tashqarida"),{s:10,c:'var(--muted)'})+tx(250,30,R(l,"внутри","ichkarida"),{s:10,c:'var(--muted)'})+
+  flow(30,50,80,44,R(l,"Считыватель","O'quvchi"),R(l,"карта","karta"))+line('M110 72H180',SG,2.5)+tx(146,66,"D0 D1",{s:9,c:'var(--muted)'})+
+  box(180,44,160,80,'var(--navy)')+tx(260,72,R(l,"Контроллер","Kontroller"),{w:700,s:12,c:'var(--navy-fg)'})+tx(260,90,R(l,"реле замка","qulf relesi"),{s:10,c:'var(--navy-fg)'})+tx(260,106,"Wiegand 26",{s:9,c:'var(--navy-fg)'})+
+  flow(140,168,64,40,R(l,"Замок","Qulf"))+line('M220 124V188H204',PW,3)+
+  flow(230,168,110,40,R(l,"Кнопка выхода","Chiqish tugmasi"))+line('M300 124V168',SG,2.5)+
+  flow(140,220,90,26,R(l,"Геркон двери","Eshik gerkoni"))+line('M140 233H136V104H180',SG,2,'4 4')+
+  flow(230,252,110,32,R(l,"БП + АКБ","QB + AKB"))+line('M340 268H352V84H340',PW,3)+
+  tx(64,140,R(l,"снаружи только","tashqarida faqat"),{s:10,c:'var(--muted)'})+tx(64,154,R(l,"считыватель","o'quvchi"),{s:10,c:'var(--muted)'}),
+  R(l,"Схема точки доступа СКУД","SKUD kirish nuqtasi sxemasi"),292),
+ table:{head:{ru:["Замок","Без питания","Где ставить"],uz:["Qulf","Quvvatsiz","Qayerga qo'yish"]},rows:{
+  ru:[["Электромагнитный","Открыт","Пути эвакуации, офисы, подъезды"],["Электромеханический","Закрыт, открыть ключом","Склады, кассы, серверные"],["Электрозащёлка","Бывают оба вида — смотрите маркировку","Межкомнатные и офисные двери"]],
+  uz:[["Elektromagnit","Ochiq","Evakuatsiya yo'llari, ofislar, kirish joylari"],["Elektromexanik","Yopiq, kalit bilan ochiladi","Omborlar, kassalar, server xonalari"],["Elektr ilgak","Ikkala turi ham bor — belgiga qarang","Xonalararo va ofis eshiklari"]]}},
+ steps:{ru:["Точка доступа: <b>считыватель</b> снаружи, <b>кнопка выхода</b> внутри, <b>контроллер</b> и <b>блок питания с АКБ</b> — на защищённой стороне двери.","Считыватель к контроллеру подключают по <b>Wiegand</b> (D0, D1, +12, GND) — экранированным кабелем, длина по паспорту, обычно до 50–100 м.","Замок питайте через реле контроллера. Параллельно катушке ставят <b>диод</b> (если его нет в замке): он гасит скачок напряжения и бережёт реле.","На путях эвакуации — только замок, который <b>открывается без питания</b>. Пожарная сигнализация по сигналу «Пожар» снимает питание с замков.","Добавьте карты в контроллер, проверьте открывание картой, кнопкой и при отключении 220 В. Подпишите карты по владельцам."],
+       uz:["Kirish nuqtasi: tashqarida <b>o'quvchi</b>, ichkarida <b>chiqish tugmasi</b>, eshikning himoyalangan tomonida <b>kontroller</b> va <b>AKB li quvvat bloki</b>.","O'quvchi kontrollerga <b>Wiegand</b> (D0, D1, +12, GND) orqali — ekranli kabel bilan ulanadi, uzunligi pasport bo'yicha, odatda 50–100 m gacha.","Qulfni kontroller relesi orqali quvvatlang. G'altakka parallel <b>diod</b> qo'yiladi (qulfda bo'lmasa): u kuchlanish sakrashini so'ndiradi va releni asraydi.","Evakuatsiya yo'llarida — faqat <b>quvvatsiz ochiladigan</b> qulf. Yong'in signalizatsiyasi «Yong'in» signali bilan qulflardan quvvatni oladi.","Kartalarni kontrollerga qo'shing, karta, tugma bilan va 220 V o'chirilganda ochilishini tekshiring. Kartalarni egalari bo'yicha belgilang."]},
+ tip:{ru:"Блок питания и контроллер никогда не ставят снаружи двери: сорвал считыватель, замкнул два провода — и дверь открыта. Снаружи только считыватель.",uz:"Quvvat bloki va kontroller hech qachon eshik tashqarisiga qo'yilmaydi: o'quvchini yulib, ikki simni tutashtirsa — eshik ochiq. Tashqarida faqat o'quvchi."},
+ quiz:[
+  {a:0,ru:{q:"Какой замок ставят на путях эвакуации?",o:["Открывающийся без питания (электромагнитный)","Электромеханический, закрытый без питания","Навесной"],e:"При пожаре и без света люди должны выйти."},uz:{q:"Evakuatsiya yo'llariga qaysi qulf qo'yiladi?",o:["Quvvatsiz ochiladigan (elektromagnit)","Quvvatsiz yopiq elektromexanik","Osma qulf"],e:"Yong'inda va toksiz odamlar chiqa olishi kerak."}},
+  {a:2,ru:{q:"Где ставить контроллер СКУД?",o:["Снаружи, рядом со считывателем","На улице","На защищённой стороне двери"],e:"Иначе дверь можно открыть, замкнув провода."},uz:{q:"SKUD kontrolleri qayerga qo'yiladi?",o:["Tashqarida, o'quvchi yonida","Ko'chada","Eshikning himoyalangan tomonida"],e:"Aks holda simlarni tutashtirib eshikni ochish mumkin."}},
+  {a:1,ru:{q:"Зачем диод параллельно катушке замка?",o:["Для подсветки","Гасит скачок напряжения, бережёт реле","Чтобы замок был сильнее"],e:"При отключении катушка даёт скачок напряжения."},uz:{q:"Qulf g'altagiga parallel diod nima uchun?",o:["Yoritish uchun","Kuchlanish sakrashini so'ndiradi, releni asraydi","Qulf kuchliroq bo'lishi uchun"],e:"O'chirilganda g'altak kuchlanish sakrashini beradi."}},
+  {a:1,ru:{q:"По какому протоколу считыватель часто подключают к контроллеру?",o:["HDMI","Wiegand (D0, D1)","Wi-Fi"],e:"Wiegand — самый распространённый."},uz:{q:"O'quvchi kontrollerga ko'pincha qaysi protokol bilan ulanadi?",o:["HDMI","Wiegand (D0, D1)","Wi-Fi"],e:"Wiegand — eng ko'p tarqalgani."}}]},
+
+{id:'a3',lv:2,min:9,calc:'batt',
+ warnB:{ru:"Аккумулятор не бьёт током, но жжёт.",uz:"Akkumulyator tok urmaydi, lekin kuydiradi."},
+ warn:{ru:"При коротком замыкании АКБ 12 В даёт сотни ампер. Ставьте предохранитель на «+», клемму к АКБ подключайте последней.",uz:"Qisqa tutashuvda 12 V AKB yuzlab amper beradi. «+» ga saqlagich qo'ying, AKB klemmasini eng oxirida ulang."},
+ t:{ru:"Питание и резерв",uz:"Quvvat va zaxira"},s:{ru:"Ток устройств, блок питания, ёмкость АКБ",uz:"Qurilmalar toki, quvvat bloki, AKB sig'imi"},
+ table:{head:{ru:["Устройство","Ток, мА (примерно)"],uz:["Qurilma","Tok, mA (taxminan)"]},rows:{
+  ru:[["Охранный прибор (ППК)","50–150"],["ИК-датчик, геркон","10–20 / 0"],["Клавиатура","30–80"],["GSM-модуль (в покое / при звонке)","30 / 300"],["Сирена","300–1000"],["Электромагнитный замок","300–500"],["Монитор домофона","300–500"]],
+  uz:[["Qo'riqlash pribori (PPK)","50–150"],["IQ-datchik, gerkon","10–20 / 0"],["Klaviatura","30–80"],["GSM-modul (tinch / qo'ng'iroqda)","30 / 300"],["Sirena","300–1000"],["Elektromagnit qulf","300–500"],["Domofon monitori","300–500"]]}},
+ steps:{ru:["Выпишите <b>все</b> устройства и их ток из паспортов. Сложите ток <b>в дежурном режиме</b> (всё работает, тревоги нет) и <b>в тревоге</b> (плюс сирена, звонок GSM).","Блок питания берите с запасом 30% по току тревоги. Пример: в тревоге 1,2 А — блок не меньше 1,5–2 А.","Ёмкость АКБ = (дежурный ток × часы без света + ток тревоги × время тревоги) × 1,25 запаса. Пример: 0,15 А × 24 ч + 0,6 А × 10 мин ≈ 3,7 А·ч × 1,25 ≈ 4,6 → ставим <b>7 А·ч</b>.","Проверьте падение напряжения до дальних устройств (калькулятор): у замка и сирены должно быть не меньше 11 В.","Подпишите на АКБ дату установки. Аккумуляторы охраны меняют раз в 3–5 лет, даже если «вроде работают»."],
+       uz:["Pasportlardan <b>barcha</b> qurilmalar va ularning tokini yozib chiqing. <b>Navbatchi rejimdagi</b> (hammasi ishlaydi, trevoga yo'q) va <b>trevogadagi</b> (qo'shimcha sirena, GSM qo'ng'iroq) tokni qo'shing.","Quvvat blokini trevoga toki bo'yicha 30% zaxira bilan oling. Misol: trevogada 1,2 A — blok kamida 1,5–2 A.","AKB sig'imi = (navbatchi tok × toksiz soatlar + trevoga toki × trevoga vaqti) × 1,25 zaxira. Misol: 0,15 A × 24 s + 0,6 A × 10 daq ≈ 3,7 A·s × 1,25 ≈ 4,6 → <b>7 A·s</b> qo'yamiz.","Uzoqdagi qurilmalargacha kuchlanish yo'qotilishini tekshiring (kalkulyator): qulf va sirenada kamida 11 V bo'lishi kerak.","AKB ga o'rnatilgan sanani yozing. Qo'riqlash akkumulyatorlari «ishlayotgandek» bo'lsa ham 3–5 yilda bir almashtiriladi."]},
+ tip:{ru:"Самая частая причина «сигнализация молчала, когда отключили свет» — старый вздутый аккумулятор. При каждом обслуживании отключите 220 В и посмотрите, сколько система держится.",uz:"«Tok o'chganda signalizatsiya jim qoldi» ning eng ko'p sababi — eski shishgan akkumulyator. Har xizmatda 220 V ni o'chiring va tizim qancha ushlab turishini ko'ring."},
+ quiz:[
+  {a:1,ru:{q:"Дежурный ток 0,15 А, нужно 24 ч без света. Сколько А·ч без запаса?",o:["0,6","3,6","24"],e:"0,15 × 24 = 3,6 А·ч, плюс тревога и запас 25%."},uz:{q:"Navbatchi tok 0,15 A, 24 soat toksiz kerak. Zaxirasiz necha A·s?",o:["0,6","3,6","24"],e:"0,15 × 24 = 3,6 A·s, yana trevoga va 25% zaxira."}},
+  {a:2,ru:{q:"Как часто менять АКБ охранной системы?",o:["Никогда","Каждый месяц","Раз в 3–5 лет"],e:"Со временем ёмкость падает, даже если АКБ «живой»."},uz:{q:"Qo'riqlash tizimi AKB sini qanchada almashtirish kerak?",o:["Hech qachon","Har oy","3–5 yilda bir"],e:"Vaqt o'tishi bilan sig'im kamayadi, AKB «tirik» bo'lsa ham."}},
+  {a:0,ru:{q:"По какому току выбирают блок питания?",o:["По току в тревоге + 30% запаса","По току в покое","По размеру корпуса"],e:"В тревоге включается сирена и GSM."},uz:{q:"Quvvat bloki qaysi tok bo'yicha tanlanadi?",o:["Trevogadagi tok + 30% zaxira","Tinch holatdagi tok","Korpus o'lchami"],e:"Trevogada sirena va GSM yoqiladi."}},
+  {a:1,ru:{q:"Что поставить на «+» провод от АКБ?",o:["Ничего","Предохранитель","Резистор 4,7 кОм"],e:"Предохранитель защитит провод при замыкании."},uz:{q:"AKB dan «+» simga nima qo'yish kerak?",o:["Hech narsa","Saqlagich","4,7 kOm rezistor"],e:"Saqlagich tutashuvda simni himoya qiladi."}}]},
+
+{id:'a4',lv:2,min:10,nowarn:true,
+ t:{ru:"Поиск неисправностей",uz:"Nosozliklarni topish"},s:{ru:"Сеть, домофон, сигнализация, замки",uz:"Tarmoq, domofon, signalizatsiya, qulflar"},
+ table:{head:{ru:["Признак","Частая причина","Что проверить"],uz:["Belgi","Ko'p uchraydigan sabab","Nimani tekshirish"]},rows:{
+  ru:[["Сеть 100 Мбит/с вместо 1000","Обрыв в паре 4-5 или 7-8","Тестер: для гигабита нужны все 8 жил"],["Нет сети совсем","Обрыв, не та схема, мёртвый порт","Тестер, другой порт коммутатора"],["Домофон: есть звук, нет картинки","Обрыв или помеха на видео","Жила видео, длина линии"],["Домофон гудит","Кабель рядом с 220 В, плохой GND","Трассу кабеля, контакт общего провода"],["Ложные тревоги ночью","ИК на батарею, окно, животные","Место и чувствительность датчика"],["«Неисправность» зоны","Окисление, не тот резистор","Сопротивление шлейфа мультиметром"],["Замок не держит дверь","Мало напряжения, перекос, грязь на пластине","Напряжение на замке под нагрузкой"]],
+  uz:[["Tarmoq 1000 o'rniga 100 Mbit/s","4-5 yoki 7-8 juftda uzilish","Tester: gigabit uchun 8 ta tomir hammasi kerak"],["Tarmoq umuman yo'q","Uzilish, boshqa sxema, o'lik port","Tester, kommutatorning boshqa porti"],["Domofon: ovoz bor, tasvir yo'q","Videoda uzilish yoki xalaqit","Video tomiri, liniya uzunligi"],["Domofon g'o'ng'illaydi","Kabel 220 V yonida, GND yomon","Kabel yo'li, umumiy sim kontakti"],["Tunda soxta trevogalar","IQ batareya, oynaga qaragan, hayvonlar","Datchik joyi va sezgirligi"],["Zona «nosozligi»","Oksidlanish, boshqa rezistor","Shleyf qarshiligini multimetr bilan"],["Qulf eshikni ushlamaydi","Kuchlanish kam, qiyshayish, plastinada kir","Yuk ostida qulfdagi kuchlanish"]]}},
+ steps:{ru:["Сначала <b>расспросите</b>: когда началось, всегда или иногда, что меняли, был ли ремонт, дождь, отключение света.","Осмотрите: индикаторы на приборе и коммутаторе, вздутый аккумулятор, следы воды, перебитый кабель после ремонта.","Измерьте <b>напряжение</b> на блоке питания и на дальнем устройстве под нагрузкой. Половина поломок слаботочки — питание.","<b>Делите пополам:</b> отключите половину шлейфа или линии. Неисправность ушла — ищите в отключённой половине.","После ремонта проверьте всю систему целиком и объясните клиенту, что было. Запишите в журнал обслуживания."],
+       uz:["Avval <b>so'rang</b>: qachon boshlandi, doimmi yoki ba'zan, nima o'zgartirildi, ta'mir, yomg'ir, tok o'chishi bo'lganmi.","Ko'zdan kechiring: pribor va kommutatordagi indikatorlar, shishgan akkumulyator, suv izlari, ta'mirdan keyin uzilgan kabel.","Quvvat blokida va uzoqdagi qurilmada yuk ostida <b>kuchlanishni</b> o'lchang. Past kuchlanish nosozliklarining yarmi — quvvat.","<b>Teng ikkiga bo'ling:</b> shleyf yoki liniyaning yarmini uzing. Nosozlik ketdi — uzilgan yarmidan qidiring.","Ta'mirdan keyin butun tizimni tekshiring va mijozga nima bo'lganini tushuntiring. Xizmat jurnaliga yozing."]},
+ tip:{ru:"Для 100 Мбит/с хватает пар 1-2 и 3-6, поэтому обрыв синей или коричневой пары «маскируется»: сеть есть, но медленная. Тестер покажет это за минуту.",uz:"100 Mbit/s uchun 1-2 va 3-6 juftlar yetadi, shuning uchun ko'k yoki jigarrang juftdagi uzilish «yashirinadi»: tarmoq bor, lekin sekin. Tester buni bir daqiqada ko'rsatadi."},
+ quiz:[
+  {a:1,ru:{q:"Сеть работает только на 100 Мбит/с. Вероятная причина?",o:["Слабый Wi-Fi","Обрыв в паре 4-5 или 7-8","Мало памяти"],e:"Гигабиту нужны все 4 пары."},uz:{q:"Tarmoq faqat 100 Mbit/s da ishlaydi. Ehtimoliy sabab?",o:["Wi-Fi kuchsiz","4-5 yoki 7-8 juftda uzilish","Xotira kam"],e:"Gigabitga 4 ta juft hammasi kerak."}},
+  {a:0,ru:{q:"С чего начинать поиск неисправности?",o:["Расспросить клиента и осмотреть","Сразу менять прибор","Перетянуть все кабели"],e:"Часто причина видна сразу: вода, ремонт, АКБ."},uz:{q:"Nosozlikni qidirishni nimadan boshlash kerak?",o:["Mijozdan so'rash va ko'zdan kechirish","Darhol priborni almashtirish","Barcha kabellarni qayta tortish"],e:"Ko'pincha sabab darhol ko'rinadi: suv, ta'mir, AKB."}},
+  {a:2,ru:{q:"Домофон гудит. Что проверить первым?",o:["Яркость монитора","Пароль","Не идёт ли кабель рядом с 220 В, контакт GND"],e:"Силовые провода наводят фон."},uz:{q:"Domofon g'o'ng'illaydi. Birinchi nimani tekshirish kerak?",o:["Monitor yorqinligini","Parolni","Kabel 220 V yonidan o'tmayaptimi, GND kontakti"],e:"Kuch simlari fon beradi."}},
+  {a:1,ru:{q:"Что значит «делить пополам»?",o:["Резать кабель","Отключить половину линии и смотреть, ушла ли поломка","Делить оплату"],e:"Так быстро сужают место поиска."},uz:{q:"«Teng ikkiga bo'lish» nima degani?",o:["Kabelni kesish","Liniyaning yarmini uzib, nosozlik ketdimi ko'rish","To'lovni bo'lish"],e:"Shunday qilib qidiruv joyi tez toraytiriladi."}}]}
+];
+
+// UI for Слаботочник Pro (Slabotochnik Pro). Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Слаботочник Pro',tag:'СКС, домофоны, сигнализация, СКУД · 13 уроков',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Начальный','Средний','Продвинутый'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} уровень · урок ${n} · ~${m} мин`,
+ leg:{D:'Витая пара (данные)',P:'Питание 12 В',V:'Сигнал / шлейф',H:'Сеть 220 В'},
+ warnB:'Сначала отключите питание.',warn:'Отключите блок питания и аккумулятор, а рядом с 220 В — автомат, и проверьте, что напряжения нет.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ cT:'Кабель для СКС',cSub:'Сколько бухт витой пары по 305 м купить',pts:'Розеток (линий)',mn:'Ближняя, м',mx:'Дальняя, м',
+ avg:'Средняя, м',runs:'Линий из бухты',box:'Бухт',
+ cOk:(b,m)=>`Купите ${b} бух. по 305 м (всего ${m} м). Линии не сращивают: каждая — целым куском.`,cLong:'Дальняя линия длиннее 90 м: по правилам СКС нужен второй шкаф ближе к розеткам.',
+ cNote:'Расчёт: средняя линия = (ближняя + дальняя) / 2 × 1,1 + 2,5 м запаса на разделку. Из бухты 305 м выходит целое число линий, остаток идёт на патч-корды.',
+ bT:'Аккумулятор для сигнализации',bSub:'Какая ёмкость АКБ нужна на время без света',iS:'Ток в дежурном режиме, мА',tS:'Часов без света',iA:'Ток в тревоге, мА',tA:'Минут тревоги',
+ ah:'Нужно, А·ч',akb:'Ставить АКБ',
+ bOk:a=>`Ставьте аккумулятор 12 В ${a} А·ч.`,bMany:n=>`Больше 40 А·ч: поставьте несколько АКБ или отдельный резервный блок (например ${n} × 40 А·ч) и проверьте, какой заряд держит блок питания.`,
+ bNote:'Расчёт: (дежурный ток × часы + ток тревоги × минуты / 60) × 1,25 запаса на старение и холод. Токи берите из паспортов: прибор, датчики, клавиатура, сирена.',
+ dT:'Падение напряжения 12 В',dSub:'Дойдёт ли питание до дальнего устройства',cur:'Ток устройства, А',len:'Длина кабеля, м',sec:'Сечение жилы, мм²',
+ dV:'Падение, В',uEnd:'В конце, В',minS:'Нужно, мм²',
+ dOk:'Напряжения хватает: потери не больше 10%.',dBad:'Потери больше 10%: возьмите жилу толще, сложите жилы параллельно или поставьте блок питания ближе к устройству.',
+ dNote:'Расчёт по меди: ΔU = 2 × длина × ток × 0,0175 / сечение (ток идёт туда и обратно). Блок питания выдаёт 13,8 В. Одна жила витой пары ≈ 0,2 мм².',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Slabotochnik Pro',tag:'SKS, domofon, signalizatsiya, SKUD · 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Boshlang\'ich','O\'rta','Yuqori'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} daraja · ${n}-dars · ~${m} daq`,
+ leg:{D:'O\'ralgan juftlik (ma\'lumot)',P:'12 V quvvat',V:'Signal / shleyf',H:'220 V tarmoq'},
+ warnB:'Avval tokni o\'chiring.',warn:'Quvvat bloki va akkumulyatorni uzing, 220 V yonida esa avtomatni o\'chiring va kuchlanish yo\'qligini tekshiring.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ cT:'SKS uchun kabel',cSub:'305 m li o\'ralgan juftlik g\'altagidan nechta olish kerak',pts:'Rozetkalar (liniyalar)',mn:'Eng yaqin, m',mx:'Eng uzoq, m',
+ avg:'O\'rtacha, m',runs:'G\'altakdan liniya',box:'G\'altak',
+ cOk:(b,m)=>`305 m li ${b} ta g\'altak oling (jami ${m} m). Liniyalar ulanmaydi: har biri butun bo\'lak.`,cLong:'Eng uzoq liniya 90 m dan uzun: SKS qoidasiga ko\'ra rozetkalarga yaqinroq ikkinchi shkaf kerak.',
+ cNote:'Hisob: o\'rtacha liniya = (yaqin + uzoq) / 2 × 1,1 + uchlarini ochish uchun 2,5 m zaxira. 305 m g\'altakdan butun son liniya chiqadi, qoldig\'i patch-kordlarga ketadi.',
+ bT:'Signalizatsiya uchun akkumulyator',bSub:'Tok yo\'q vaqtga qancha sig\'imli AKB kerak',iS:'Navbatchi rejim toki, mA',tS:'Toksiz soatlar',iA:'Trevoga toki, mA',tA:'Trevoga daqiqalari',
+ ah:'Kerak, A·s',akb:'AKB qo\'yish',
+ bOk:a=>`12 V ${a} A·s akkumulyator qo\'ying.`,bMany:n=>`40 A·s dan ko\'p: bir nechta AKB yoki alohida zaxira blok qo\'ying (masalan ${n} × 40 A·s) va quvvat bloki qancha zaryad bera olishini tekshiring.`,
+ bNote:'Hisob: (navbatchi tok × soat + trevoga toki × daqiqa / 60) × 1,25 eskirish va sovuq uchun zaxira. Toklarni pasportdan oling: pribor, datchiklar, klaviatura, sirena.',
+ dT:'12 V kuchlanish yo\'qotilishi',dSub:'Quvvat uzoqdagi qurilmaga yetadimi',cur:'Qurilma toki, A',len:'Kabel uzunligi, m',sec:'Tomir kesimi, mm²',
+ dV:'Yo\'qotish, V',uEnd:'Oxirida, V',minS:'Kerak, mm²',
+ dOk:'Kuchlanish yetadi: yo\'qotish 10% dan oshmaydi.',dBad:'Yo\'qotish 10% dan ko\'p: yo\'g\'onroq tomir oling, tomirlarni parallel ulang yoki quvvat blokini qurilmaga yaqinroq qo\'ying.',
+ dNote:'Mis uchun hisob: ΔU = 2 × uzunlik × tok × 0,0175 / kesim (tok borib-qaytadi). Quvvat bloki 13,8 V beradi. O\'ralgan juftlikning bitta tomiri ≈ 0,2 mm².',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (sl_)
+const pk=k=>(k==='lang'?'ep_':'sl_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{p:24,mn:15,mx:60,is:150,ts:24,ia:600,ta:10,di:1,dl:50,ds:2}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="var(--accent-ink)" stroke-width="2"/><path d="M7 9h10v6h-2.5v2h-5v-2H7z" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linejoin="round"/><path d="M9.5 9v2.5M12 9v2.5M14.5 9v2.5" stroke="var(--accent-ink)" stroke-width="1.6"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+const swatch={D:'var(--wC)',P:'var(--wH)',V:'var(--wF)',H:'var(--wS)'};
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    if(x.legend)h+=`<div class="legend">${x.legend.map(k=>`<span><i class="sw" style="background:${swatch[k]}"></i>${L.leg[k]}</span>`).join('')}</div>`;h+='</div>'}
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warnB?tr(x.warnB):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* calculators: SKS cable boxes, alarm battery, 12 V voltage drop */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',').replace('-','−');
+const numv=v=>+String(v).replace(',','.')||0;
+const AKB=[1.2,2.2,4.5,7,9,12,17,18,26,40];
+const SEC=[0.2,0.5,0.75,1,1.5,2.5];
+const dc=x=>String(x).replace('.',',');
+const SECS=[0.2,0.22,0.35,0.5,0.75,1,1.5,2.5,4];
+const seg=(k,opts)=>`<div class="seg" role="group">${opts.map((o,i)=>`<button type="button" data-seg="${k}" data-v="${i}" aria-pressed="${S.calc[k]===i}">${o}</button>`).join('')}</div>`;
+const inp=(id,lab,v,dec)=>`<label class="fld" for="${id}">${lab}<input id="${id}" type="number" inputmode="${dec?'decimal':'numeric'}" min="0" step="${dec?'0.1':'1'}" value="${v}"></label>`;
+function calcBlock(){const L=U();const c=S.calc;
+  return `<div class="card stack"><div><h3>${L.cT}</h3><p class="expl">${L.cSub}</p></div>
+  ${inp('cp',L.pts,c.p)}
+  <div class="pair">${inp('cmn',L.mn,c.mn)}${inp('cmx',L.mx,c.mx)}</div>
+  <div class="out" id="out1"></div><p class="expl" id="verd1"></p><p class="expl">${L.cNote}</p></div>
+  <div class="card stack"><div><h3>${L.bT}</h3><p class="expl">${L.bSub}</p></div>
+  <div class="pair">${inp('bis',L.iS,c.is)}${inp('bts',L.tS,c.ts)}</div>
+  <div class="pair">${inp('bia',L.iA,c.ia)}${inp('bta',L.tA,c.ta)}</div>
+  <div class="out two" id="out2"></div><p class="expl" id="verd2"></p><p class="expl">${L.bNote}</p></div>
+  <div class="card stack"><div><h3>${L.dT}</h3><p class="expl">${L.dSub}</p></div>
+  <div class="pair">${inp('di',L.cur,c.di,1)}${inp('dl',L.len,c.dl)}</div>
+  <div class="fld">${L.sec}${seg('ds',SEC.map(dc))}</div>
+  <div class="out" id="out3"></div><p class="expl" id="verd3"></p><p class="expl">${L.dNote}</p></div>`}
+function paintCalc(){const L=U();const c=S.calc;const M=lang==='ru'?' м':' m';
+  const p=Math.max(0,Math.round(numv(c.p))),mn=Math.max(0,numv(c.mn)),mx=Math.max(mn,numv(c.mx));
+  const avg=(mn+mx)/2*1.1+2.5;const runs=Math.floor(305/avg);const boxes=runs>0?Math.ceil(p/runs):0;
+  $('#out1').innerHTML=`<div><span>${L.avg}</span><b>${fmt(avg,avg<10?1:0)}</b></div><div><span>${L.runs}</span><b>${runs}</b></div><div><span>${L.box}</span><b>${p?boxes:'—'}</b></div>`;
+  const v1=$('#verd1');const m1=[];if(p&&runs>0)m1.push(L.cOk(boxes,boxes*305));if(mx>90)m1.push(L.cLong);
+  v1.textContent=m1.join(' ');v1.className='expl '+(mx>90?'badc':'okc');
+  const is=Math.max(0,numv(c.is)),ts=Math.max(0,numv(c.ts)),ia=Math.max(0,numv(c.ia)),ta=Math.max(0,numv(c.ta));
+  const ah=(is*ts+ia*ta/60)/1000*1.25;const a=AKB.find(x=>x>=ah);
+  $('#out2').innerHTML=`<div><span>${L.ah}</span><b>${fmt(ah,ah<10?1:0)}</b></div><div><span>${L.akb}</span><b>${ah?(a?fmt(a,a%1?1:0)+(lang==='ru'?' А·ч':' A·s'):'—'):'—'}</b></div>`;
+  const v2=$('#verd2');if(!ah){v2.textContent=''}else if(a){v2.textContent=L.bOk(fmt(a,a%1?1:0));v2.className='expl okc'}else{v2.textContent=L.bMany(Math.ceil(ah/40));v2.className='expl badc'}
+  const I=Math.max(0,numv(c.di)),len=Math.max(0,numv(c.dl)),S2=SEC[c.ds];
+  const du=2*len*I*0.0175/S2;const ue=13.8-du;const need=2*len*I*0.0175/1.38;const ms=SECS.find(x=>x>=need);
+  $('#out3').innerHTML=`<div><span>${L.dV}</span><b>${fmt(du,1)}</b></div><div><span>${L.uEnd}</span><b>${fmt(Math.max(0,ue),1)}</b></div><div><span>${L.minS}</span><b>${I&&len?(ms?dc(ms):'>4'):'—'}</b></div>`;
+  const v3=$('#verd3');const ok=du<=1.38;v3.textContent=I&&len?(ok?L.dOk:L.dBad):'';v3.className='expl '+(ok?'okc':'badc')}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  on('#cp','p');on('#cmn','mn');on('#cmx','mx');on('#bis','is');on('#bts','ts');on('#bia','ia');on('#bta','ta');on('#di','di');on('#dl','dl');
+  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const k=b.dataset.seg;S.calc[k]=+b.dataset.v;document.querySelectorAll(`[data-seg="${k}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>

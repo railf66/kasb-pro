@@ -16,6 +16,7 @@
 - `avtoelektrik/` — приложение для автоэлектриков и диагностов «Автоэлектрик Pro» (исходники: папка проекта avtoelektrik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
 - `videonablyudenie/` — приложение для установщиков видеонаблюдения (исходники: папка проекта videonablyudenie-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`).
 - `povar/` — приложение для поваров (исходники: папка проекта povar-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"` и SEO-тегами).
+- `slabotochnik/` — приложение для слаботочников «Слаботочник Pro»: СКС, домофоны, охранная и пожарная сигнализация, СКУД (исходники: папка проекта slabotochnik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`, `tg.js` и SEO-тегами).
 
 ## Telegram
 
