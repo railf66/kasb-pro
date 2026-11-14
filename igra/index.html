@@ -77,6 +77,17 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 #vig{inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.45) 100%)}
 #dirInd{left:50%;top:50%;width:220px;height:220px;margin:-110px 0 0 -110px;opacity:0;transition:opacity .6s}
 #dirInd i{position:absolute;left:50%;top:0;width:0;height:0;margin-left:-16px;border-left:16px solid transparent;border-right:16px solid transparent;border-bottom:26px solid rgba(255,50,40,.85);filter:drop-shadow(0 0 6px rgba(255,0,0,.7))}
+#bPause{width:40px;height:40px;left:calc(62px + env(safe-area-inset-left));top:calc(136px + env(safe-area-inset-top));font-size:14px}
+#fps{left:max(8px,env(safe-area-inset-left));bottom:max(6px,env(safe-area-inset-bottom));font:600 11px ui-monospace,monospace;opacity:.7}
+.set{text-align:left;margin-top:10px;display:flex;flex-direction:column;gap:4px}
+.set label{font-size:13px;opacity:.8;margin-top:8px}
+.set input[type=range]{width:100%;accent-color:#ff8a3d}
+.set .diff{justify-content:flex-start;margin:0}
+#touch.big #bFire{width:112px;height:112px}
+#touch.big #bReload,#touch.big #bSwap,#touch.big #bZoom{width:70px;height:70px}
+#touch.big #bReload{right:calc(150px + env(safe-area-inset-right))}
+#touch.big #bSwap{bottom:calc(164px + env(safe-area-inset-bottom))}
+#touch.big #bZoom{right:calc(150px + env(safe-area-inset-right));bottom:calc(120px + env(safe-area-inset-bottom))}
 #bSnd{width:40px;height:40px;left:calc(14px + env(safe-area-inset-left));top:calc(136px + env(safe-area-inset-top));font-size:16px}
 .hidden{display:none!important}
 .screen{overflow-y:auto;align-items:flex-start}.screen .card{margin:auto}
@@ -115,6 +126,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="scope" class="hud hidden"></div>
 <div id="feed" class="hud"></div>
 <div id="center" class="hud"></div>
+<div id="fps" class="hud hidden"></div>
 <div id="reloadMsg" class="hud">Перезарядка…</div>
 
 <div id="touch" class="hidden">
@@ -122,6 +134,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
   <div id="joyHint">← двигаться</div>
   <div id="bSwap" class="tbtn">⇄</div>
   <div id="bSnd" class="tbtn">🔊</div>
+  <div id="bPause" class="tbtn">II</div>
   <div id="bZoom" class="tbtn hidden">ПРИЦЕЛ</div>
   <div id="bReload" class="tbtn">R</div>
   <div id="bFire" class="tbtn">ОГОНЬ</div>
@@ -136,7 +149,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
     <div class="diff" id="diff"><button data-d="easy">Лёгкий</button><button data-d="normal">Средний</button><button data-d="hard">Сложный</button></div>
     <p class="dnote" id="dnote"></p>
     <button class="btn" id="play">ИГРАТЬ</button>
-    <div style="margin-top:12px"><button class="btn2" id="shopBtn">🛒 МАГАЗИН ОРУЖИЯ</button></div>
+    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn2" id="shopBtn">🛒 МАГАЗИН ОРУЖИЯ</button><button class="btn2" id="setBtn">⚙️ НАСТРОЙКИ</button></div>
     <p class="help" id="bank"></p>
     <button class="btn2 snd" style="margin-top:8px">🔊 Звук вкл</button>
     <p class="help" id="helpText"></p>
@@ -157,6 +170,34 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
     <p class="sub" id="rBest"></p>
     <button class="btn" id="again">ЕЩЁ РАУНД</button>
     <div style="margin-top:12px"><button class="btn2" id="toMenu">🛒 МЕНЮ И МАГАЗИН</button></div>
+  </div>
+</div>
+
+<div id="settings" class="screen hidden">
+  <div class="card">
+    <div class="logo" style="font-size:28px">НАСТРОЙКИ</div>
+    <div class="set">
+      <label>Чувствительность обзора <b id="sensV"></b></label>
+      <input type="range" id="sens" min="0.4" max="2.2" step="0.1">
+      <label>Графика</label>
+      <div class="diff" id="qSel"><button data-q="auto">Авто</button><button data-q="low">Низкая</button><button data-q="mid">Средняя</button><button data-q="high">Высокая</button></div>
+      <label>Кнопки на экране</label>
+      <div class="diff" id="bSel"><button data-b="0">Обычные</button><button data-b="1">Крупные</button></div>
+      <label>Помощь в прицеливании</label>
+      <div class="diff" id="aSel"><button data-a="1">Вкл</button><button data-a="0">Выкл</button></div>
+      <label>Показывать скорость (FPS)</label>
+      <div class="diff" id="fSel"><button data-f="1">Да</button><button data-f="0">Нет</button></div>
+      <button class="btn2 snd" style="margin-top:10px">🔊 Звук вкл</button>
+    </div>
+    <button class="btn" id="setBack" style="margin-top:14px">НАЗАД</button>
+  </div>
+</div>
+
+<div id="rotate" class="screen hidden">
+  <div class="card">
+    <div style="font-size:54px">📱↻</div>
+    <p class="sub">Поверните телефон горизонтально, так удобнее играть.</p>
+    <button class="btn2" id="rotOk">ИГРАТЬ ТАК</button>
   </div>
 </div>
 
@@ -184,6 +225,11 @@ import * as THREE from './three.module.min.js';
 const $ = id => document.getElementById(id);
 const isTouch = ('ontouchstart' in window) || matchMedia('(pointer: coarse)').matches;
 const ROUND = 180, H = 36, BOTS = 9;
+const SET = { sens: 1, q: 'auto', big: 0, assist: isTouch ? 1 : 0, fps: 0 };
+try { Object.assign(SET, JSON.parse(localStorage.getItem('sd_set') || '{}')); } catch (e) {}
+function saveSet() { try { localStorage.setItem('sd_set', JSON.stringify(SET)); } catch (e) {} }
+const QPR = { low: .6, mid: .85, high: Math.min(devicePixelRatio, 1.6) };
+let autoPR = Math.min(devicePixelRatio, isTouch ? 1.1 : 1.5);
 const DIFF = {
   easy:   { name: 'Лёгкий',  note: '4 дрона, медленные и мажут. У вас 150 здоровья.', bots: 4, speed: .75, fire: [1.1, 1.9], react: 1.2, dmg: [4, 7],  acc: .7,  hp: 150 },
   normal: { name: 'Средний', note: '6 дронов. Обычная перестрелка.',                    bots: 6, speed: 1,   fire: [.55, 1.1], react: .7, dmg: [7, 11], acc: 1,   hp: 100 },
@@ -214,7 +260,7 @@ setDiff(diff);
 
 // ---------- renderer ----------
 const renderer = new THREE.WebGLRenderer({ canvas: $('gl'), antialias: !isTouch, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(devicePixelRatio, isTouch ? 1.25 : 2));
+renderer.setPixelRatio(SET.q === 'auto' ? autoPR : QPR[SET.q]);
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -748,7 +794,7 @@ class Bot {
     this.target = null; this.seeT = 0; this.alertT = 0; this.fireCD = rand(.5, 1.2); this.strafe = 1; this.strafeT = 0;
     this.stuckT = 0; this.last = this.p.clone(); this.walk = 0; this.lastSeen = null;
     this.speed = (this.type === 'boss' ? 1.7 : this.type === 'soldier' ? rand(2.8, 3.4) : rand(2.6, 3.4)) * D.speed;
-    this.mode = 'fight'; this.bursts = 0; this.burstN = 0; this.hurtT = 0; this.lostT = 0; this.shotsLeft = 8; this.rocketsLeft = 0;
+    this.losT = 0; this.seesC = false; this.mode = 'fight'; this.bursts = 0; this.burstN = 0; this.hurtT = 0; this.lostT = 0; this.shotsLeft = 8; this.rocketsLeft = 0;
   }
   eye(out) { return out.set(this.p.x, 1.75 * this.scale, this.p.z); }
   damage(d, head) {
@@ -865,7 +911,9 @@ class Bot {
     }
     const eye = this.eye(_v2.clone()), pe = new THREE.Vector3(P.pos.x, 1.6, P.pos.z);
     const dist = Math.hypot(P.pos.x - this.p.x, P.pos.z - this.p.z);
-    const sees = P.alive && dist < (this.type === 'boss' ? 60 : 38) && los(eye, pe);
+    this.losT -= dt;
+    if (this.losT <= 0) { this.seesC = P.alive && dist < (this.type === 'boss' ? 60 : 38) && los(eye, pe); this.losT = .1 + Math.random() * .05; }
+    const sees = P.alive && this.seesC;
     const { face, moving } = this.type === 'soldier' ? this.updSoldier(dt, sees, dist) : this.type === 'boss' ? this.updBoss(dt, sees, dist) : this.updDrone(dt, sees, dist);
     for (const o of bots) if (o !== this && o.active && o.alive) { const dx = this.p.x - o.p.x, dz = this.p.z - o.p.z, d = Math.hypot(dx, dz), m = this.rad + o.rad; if (d < m && d > 0) { this.p.x += dx / d * (m - d) * .5; this.p.z += dz / d * (m - d) * .5; } }
     collide(this.p, this.rad);
@@ -907,7 +955,7 @@ let centerT = 0;
 function center(t, dur = 1.5) { $('center').textContent = t; centerT = dur; }
 function hurt(d, bot) {
   if (!P.alive || state !== 'play') return;
-  P.hp -= d; sfx('hurt', .5); shake(.12); if (bot && bot.p) showDir(bot.p);
+  P.hp -= d; sfx('hurt', .5); vibrate(35); shake(.12); if (bot && bot.p) showDir(bot.p);
   $('dmg').style.transition = 'none'; $('dmg').style.opacity = .85; requestAnimationFrame(() => { $('dmg').style.transition = 'opacity .5s'; $('dmg').style.opacity = 0; });
   if (P.hp <= 0) { P.hp = 0; P.alive = false; P.deaths++; P.respT = 2.5; center('Вас подбили!', 2.5); feed(bot === 'self' ? 'Вы попали под свой взрыв' : bot && bot.type === 'boss' ? '<span class="rust">Босс</span> подбил вас' : bot && bot.type === 'soldier' ? '<span class="rust">Штурмовик</span> подбил вас' : '<span class="rust">Ржавый</span> подбил вас'); }
   hud();
@@ -996,6 +1044,7 @@ function swap(to) {
 }
 function setZoom(z) { zoom = !!z && !!W[wi].zoom && P.alive; $('scope').classList.toggle('hidden', !zoom); $('bZoom').classList.toggle('on', zoom); }
 function onKill(head, how) {
+  vibrate([15, 30, 15]);
   P.kills++; const c = COIN[diff] + (head ? 5 : 0) + (lastKill && lastKill.type === 'soldier' ? 5 : 0); roundCoins += c; bank += c; saveWallet(); sfx('kill', 1);
   feed('Вы уничтожили <span class="rust">' + ENEMY_NAME[lastKill ? lastKill.type : 'drone'] + '</span>' + (head ? ' 🎯' : '') + (how || '') + ' <span class="gold">+' + c + ' 🪙</span>');
   if (mode === 'campaign' && !bossPhase && lastKill && lastKill.type !== 'boss') { stageKills++; if (stageKills >= STAGES[stage].goal) startBoss(); }
@@ -1068,6 +1117,19 @@ function explode(p, w, enemy) {
   if (dp < r && P.alive) hurt(w.proj.dmg * .35 * (1 - dp / r), 'self');
 }
 
+// gentle aim help: if an enemy is very close to the crosshair, the bullet goes to it
+function assistDir() {
+  const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd);
+  let best = null, bestA = 1;
+  for (const b of bots) {
+    if (!b.active || !b.alive) continue;
+    const c = new THREE.Vector3(b.p.x, 1.2 * b.scale, b.p.z), d = c.clone().sub(camera.position), dist = d.length(); d.normalize();
+    const a = Math.acos(clamp(fwd.dot(d), -1, 1)), lim = clamp(1.1 / dist, .03, .09) * (zoom ? .4 : 1);
+    if (a < lim && a < bestA && los(camera.position.clone(), c)) { bestA = a; best = d; }
+  }
+  return best;
+}
+function vibrate(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
 function shoot() {
   const w = W[wi];
   if (ammo[wi] <= 0) { reload(); return; }
@@ -1076,8 +1138,11 @@ function shoot() {
   sfx(w.snd, .8);
   if (w.proj) { launch(w); if (ammo[wi] === 0) setTimeout(reload, 150); hud(); return; }
   const sp = (w.hip && !zoom ? w.hip : w.spread) * (P.moving ? 1.8 : 1);
-  ray.setFromCamera(new THREE.Vector2(rand(-sp, sp), rand(-sp, sp)), camera); ray.far = 120;
-  const hits = ray.intersectObjects([...solids, ...botMeshes, ground], false);
+  const aim = SET.assist ? assistDir() : null;
+  if (aim) { aim.x += rand(-sp, sp) * .5; aim.y += rand(-sp, sp) * .5; aim.z += rand(-sp, sp) * .5; ray.set(camera.position, aim.normalize()); }
+  else ray.setFromCamera(new THREE.Vector2(rand(-sp, sp), rand(-sp, sp)), camera);
+  ray.far = 120;
+  const hits = ray.intersectObjects([...solids, ...botMeshes.filter(m => m.userData.bot.alive), ground], false);
   let h = null; for (const x of hits) { if (x.object.userData.bot && !x.object.userData.bot.alive) continue; h = x; break; }
   const from = guns[wi].userData.muzzle.getWorldPosition(new THREE.Vector3());
   const end = h ? h.point : ray.ray.at(80, new THREE.Vector3());
@@ -1110,11 +1175,29 @@ addEventListener('keyup', e => keys[e.code] = false);
 addEventListener('wheel', e => { if (state === 'play') swap(); }, { passive: true });
 renderer.domElement.addEventListener('mousedown', e => { if (state !== 'play' || isTouch) return; if (!document.pointerLockElement) { lockPointer(); return; } if (e.button === 0) mouseDown = true; if (e.button === 2) setZoom(true); });
 addEventListener('mouseup', e => { if (e.button === 2) setZoom(false); else mouseDown = false; });
-addEventListener('mousemove', e => { if (document.pointerLockElement && state === 'play' && !paused) { const ks = zoom ? .35 : 1; P.yaw -= e.movementX * .0022 * ks; P.pitch = clamp(P.pitch - e.movementY * .0022 * ks, -1.4, 1.4); } });
+addEventListener('mousemove', e => { if (document.pointerLockElement && state === 'play' && !paused) { const ks = (zoom ? .35 : 1) * SET.sens; P.yaw -= e.movementX * .0022 * ks; P.pitch = clamp(P.pitch - e.movementY * .0022 * ks, -1.4, 1.4); } });
 document.addEventListener('pointerlockchange', () => { if (!document.pointerLockElement && state === 'play' && !isTouch) { paused = true; mouseDown = false; $('pause').classList.remove('hidden'); } });
 document.querySelectorAll('.snd').forEach(b => b.onclick = () => { audioInit(); setMute(!muted); });
 setMute(muted);
-$('resume').onclick = () => { paused = false; $('pause').classList.add('hidden'); lockPointer(); };
+$('resume').onclick = () => { paused = false; $('pause').classList.add('hidden'); if (!isTouch) lockPointer(); clock.getDelta(); };
+function pauseGame() { if (state !== 'play' || paused) return; paused = true; mouseDown = false; firing = false; $('pause').classList.remove('hidden'); }
+document.addEventListener('visibilitychange', () => { if (document.hidden) { pauseGame(); if (AC && AC.state === 'running') AC.suspend(); } else if (AC) AC.resume(); });
+function applySettings() {
+  renderer.setPixelRatio(SET.q === 'auto' ? autoPR : QPR[SET.q]); renderer.setSize(innerWidth, innerHeight);
+  wGeo.setDrawRange(0, SET.q === 'low' ? 300 : SET.q === 'mid' ? 600 : WN);
+  $('touch').classList.toggle('big', !!SET.big); $('fps').classList.toggle('hidden', !SET.fps);
+  $('sens').value = SET.sens; $('sensV').textContent = (+SET.sens).toFixed(1);
+  const mark = (id, attr, v) => document.querySelectorAll('#' + id + ' button').forEach(b => b.classList.toggle('on', b.dataset[attr] === String(v)));
+  mark('qSel', 'q', SET.q); mark('bSel', 'b', SET.big); mark('aSel', 'a', SET.assist); mark('fSel', 'f', SET.fps);
+}
+$('sens').oninput = e => { SET.sens = +e.target.value; saveSet(); applySettings(); };
+[['qSel', 'q', 'q', String], ['bSel', 'b', 'big', Number], ['aSel', 'a', 'assist', Number], ['fSel', 'f', 'fps', Number]].forEach(([id, attr, key, cast]) =>
+  document.querySelectorAll('#' + id + ' button').forEach(b => b.onclick = () => { SET[key] = cast(b.dataset[attr]); saveSet(); applySettings(); }));
+$('setBtn').onclick = () => { applySettings(); $('menu').classList.add('hidden'); $('settings').classList.remove('hidden'); };
+$('setBack').onclick = () => { $('settings').classList.add('hidden'); $('menu').classList.remove('hidden'); };
+let allowPortrait = false;
+$('rotOk').onclick = () => { allowPortrait = true; $('rotate').classList.add('hidden'); clock.getDelta(); };
+applySettings();
 function renderModes() {
   document.querySelectorAll('#modeSel button').forEach(b => b.classList.toggle('on', b.dataset.m === mode));
   $('stageSel').innerHTML = '';
@@ -1166,6 +1249,7 @@ function btn(id, down, up) {
 btn('bFire', e => { firing = true; audioInit(); const t = e.changedTouches[0]; if (look.id === null) { look.id = t.identifier; look.x = t.clientX; look.y = t.clientY; } }, () => firing = false);
 btn('bReload', () => reload());
 btn('bSwap', () => swap());
+btn('bPause', () => pauseGame());
 btn('bSnd', () => { setMute(!muted); $('bSnd').textContent = muted ? '🔇' : '🔊'; });
 $('bSnd').textContent = muted ? '🔇' : '🔊';
 btn('bZoom', () => setZoom(!zoom));
@@ -1184,7 +1268,7 @@ addEventListener('touchmove', e => {
       if (d > m) { dx = dx / d * m; dy = dy / d * m; }
       joy.x = dx / m; joy.y = dy / m; $('joyKnob').style.transform = `translate(${dx}px,${dy}px)`;
     } else if (t.identifier === look.id) {
-      const ks = zoom ? .35 : 1; P.yaw -= (t.clientX - look.x) * .0055 * ks; P.pitch = clamp(P.pitch - (t.clientY - look.y) * .0055 * ks, -1.4, 1.4);
+      const ks = (zoom ? .35 : 1) * SET.sens; P.yaw -= (t.clientX - look.x) * .0055 * ks; P.pitch = clamp(P.pitch - (t.clientY - look.y) * .0055 * ks, -1.4, 1.4);
       look.x = t.clientX; look.y = t.clientY;
     }
   }
@@ -1216,17 +1300,26 @@ function drawMap() {
 // ---------- loop ----------
 const clock = new THREE.Clock(); let mmT = 0, hudT = 0;
 let heartT = 0;
+let fpsN = 0, fpsT = 0, fpsLast = 0;
 function frame() {
   requestAnimationFrame(frame);
   const dt = Math.min(clock.getDelta(), .05);
-  if (state === 'play' && !paused) {
+  fpsN++; fpsT += clock.elapsedTime - fpsLast; fpsLast = clock.elapsedTime;
+  if (fpsT >= 2) {
+    const fps = fpsN / fpsT; fpsN = 0; fpsT = 0;
+    if (SET.fps) $('fps').textContent = Math.round(fps) + ' FPS · ' + renderer.getPixelRatio().toFixed(2);
+    if (SET.q === 'auto' && state === 'play' && !paused && fps < 40 && autoPR > .6) { autoPR = Math.max(.6, autoPR - .2); renderer.setPixelRatio(autoPR); renderer.setSize(innerWidth, innerHeight); if (autoPR < .9) wGeo.setDrawRange(0, 400); }
+  }
+  const portrait = isTouch && state === 'play' && !allowPortrait && innerHeight > innerWidth * 1.1;
+  $('rotate').classList.toggle('hidden', !portrait);
+  if (state === 'play' && !paused && !portrait) {
     if (mode === 'skirmish') { timeLeft -= dt; if (timeLeft <= 0) { timeLeft = 0; hud(); endRound(); } } else stageT += dt;
     if (P.alive) {
       let mx = 0, mz = 0;
       if (keys.KeyW || keys.ArrowUp) mz -= 1; if (keys.KeyS || keys.ArrowDown) mz += 1; if (keys.KeyA || keys.ArrowLeft) mx -= 1; if (keys.KeyD || keys.ArrowRight) mx += 1;
       mx += joy.x; mz += joy.y;
       const ml = Math.hypot(mx, mz); if (ml > 1) { mx /= ml; mz /= ml; }
-      const sp = (keys.ShiftLeft || keys.ShiftRight) ? 8 : 5.5;
+      const sp = (keys.ShiftLeft || keys.ShiftRight || Math.hypot(joy.x, joy.y) > .95) ? 7.5 : 5.5;
       const s = Math.sin(P.yaw), c = Math.cos(P.yaw);
       P.pos.x += (mx * c + mz * s) * sp * dt; P.pos.z += (-mx * s + mz * c) * sp * dt;
       collide(P.pos, .4);
@@ -1272,7 +1365,7 @@ function frame() {
   renderer.render(scene, camera);
 }
 hud(); frame();
-window.__game = { P, bots, get state() { return state; }, startRound }; window.__onKill = onKill;
+window.__game = { P, bots, get state() { return state; }, startRound }; window.__onKill = onKill; window.__assist = () => assistDir();
 </script>
 </body>
 </html>
