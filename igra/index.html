@@ -47,12 +47,18 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 .logo span{display:block;font-size:13px;letter-spacing:4px;color:#ff8a3d;-webkit-text-fill-color:#ff8a3d;margin-top:8px;font-weight:700}
 .sub{margin:16px 0 20px;font-size:15px;opacity:.85;line-height:1.45}
 .btn{pointer-events:auto;display:inline-block;background:linear-gradient(180deg,#ff9a4d,#e0621c);color:#1a0c03;border:0;font-weight:800;font-size:20px;padding:14px 44px;border-radius:12px;cursor:pointer;box-shadow:0 6px 20px rgba(224,98,28,.35)}
+.diff{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
+.diff button{pointer-events:auto;flex:1;max-width:120px;background:rgba(255,255,255,.08);color:#e8edf2;border:2px solid rgba(255,255,255,.18);border-radius:10px;padding:10px 6px;font-weight:800;font-size:15px;cursor:pointer}
+.diff button.on{border-color:#ff8a3d;background:rgba(255,138,61,.22);color:#fff}
+.dnote{font-size:13px;opacity:.75;min-height:18px;margin-bottom:14px}
 .help{margin-top:20px;font-size:13px;opacity:.65;line-height:1.6}
 .res{display:flex;justify-content:center;gap:12px;margin:18px 0}
 .res div{background:rgba(255,255,255,.06);border-radius:10px;padding:10px 14px;min-width:84px}
 .res b{display:block;font-size:26px}
 .res small{opacity:.7;font-size:12px}
 .hidden{display:none!important}
+.screen{overflow-y:auto}
+@media (max-height:520px){.logo{font-size:26px}.logo span{margin-top:4px;font-size:11px}#menu .sub{display:none}.card{padding-top:6px}.help{margin-top:10px;font-size:12px;line-height:1.4}.btn{padding:11px 40px;font-size:18px}.diff{margin-top:12px}.dnote{margin-bottom:10px}.res{margin:10px 0}}
 /* touch */
 #touch{position:fixed;inset:0;z-index:6}
 #joyBase{position:fixed;width:120px;height:120px;border-radius:50%;border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);pointer-events:none;display:none;transform:translate(-50%,-50%)}
@@ -97,6 +103,8 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
   <div class="card">
     <div class="logo">СТАЛЬНОЙ<br>ДВОР<span>РАУНД 3 МИНУТЫ</span></div>
     <p class="sub">Ночь. Заброшенный склад. Отряд ржавых дронов захватил двор.<br>Уничтожьте как можно больше, пока не кончилось время.</p>
+    <div class="diff" id="diff"><button data-d="easy">Лёгкий</button><button data-d="normal">Средний</button><button data-d="hard">Сложный</button></div>
+    <p class="dnote" id="dnote"></p>
     <button class="btn" id="play">ИГРАТЬ</button>
     <p class="help" id="helpText"></p>
     <p class="help" id="best"></p>
@@ -106,6 +114,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="over" class="screen hidden">
   <div class="card">
     <div class="logo" style="font-size:32px">РАУНД ОКОНЧЕН</div>
+    <p class="sub" id="rDiff" style="margin:8px 0 0"></p>
     <div class="res">
       <div><b id="rK">0</b><small>уничтожено</small></div>
       <div><b id="rD">0</b><small>гибелей</small></div>
@@ -129,7 +138,15 @@ import * as THREE from './three.module.min.js';
 
 const $ = id => document.getElementById(id);
 const isTouch = ('ontouchstart' in window) || matchMedia('(pointer: coarse)').matches;
-const ROUND = 180, H = 36, BOTS = 6;
+const ROUND = 180, H = 36, BOTS = 9;
+const DIFF = {
+  easy:   { name: 'Лёгкий',  note: '4 дрона, медленные и мажут. У вас 150 здоровья.', bots: 4, speed: .75, fire: [1.1, 1.9], react: 1.2, dmg: [4, 7],  acc: .7,  hp: 150 },
+  normal: { name: 'Средний', note: '6 дронов. Обычная перестрелка.',                    bots: 6, speed: 1,   fire: [.55, 1.1], react: .7, dmg: [7, 11], acc: 1,   hp: 100 },
+  hard:   { name: 'Сложный', note: '9 быстрых дронов, стреляют часто и метко.',          bots: 9, speed: 1.25, fire: [.4, .8],  react: .45, dmg: [9, 13], acc: 1.15, hp: 100 },
+};
+let diff = 'normal';
+try { const d = localStorage.getItem('sd_diff'); if (DIFF[d]) diff = d; } catch (e) {}
+let D = DIFF[diff];
 const rand = (a, b) => a + Math.random() * (b - a);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -138,8 +155,17 @@ $('helpText').innerHTML = isTouch
   : 'WASD — ходить, мышь — смотреть, ЛКМ — стрелять<br>R — перезарядка, 1/2 или колесо — оружие, Shift — бег, Esc — пауза';
 
 let best = 0;
-try { best = +localStorage.getItem('sd_best') || 0; } catch (e) {}
-if (best) $('best').textContent = 'Ваш рекорд: ' + best;
+function loadBest() {
+  best = 0; try { best = +localStorage.getItem('sd_best_' + diff) || (diff === 'normal' ? +localStorage.getItem('sd_best') || 0 : 0); } catch (e) {}
+  $('best').textContent = best ? 'Рекорд (' + D.name.toLowerCase() + '): ' + best : '';
+}
+function setDiff(d) {
+  diff = d; D = DIFF[d]; try { localStorage.setItem('sd_diff', d); } catch (e) {}
+  document.querySelectorAll('#diff button').forEach(b => b.classList.toggle('on', b.dataset.d === d));
+  $('dnote').textContent = D.note; loadBest();
+}
+document.querySelectorAll('#diff button').forEach(b => b.onclick = () => setDiff(b.dataset.d));
+setDiff(diff);
 
 // ---------- renderer ----------
 const renderer = new THREE.WebGLRenderer({ canvas: $('gl'), antialias: !isTouch, powerPreference: 'high-performance' });
@@ -393,7 +419,7 @@ class Bot {
     this.p = new THREE.Vector3(wp.x, 0, wp.y); this.hp = 100; this.alive = true; this.deadT = 0;
     this.g.rotation.set(0, rand(0, 6.28), 0); this.g.position.copy(this.p); this.g.visible = true;
     this.target = null; this.seeT = 0; this.alertT = 0; this.fireCD = rand(.5, 1.2); this.strafe = 1; this.strafeT = 0;
-    this.stuckT = 0; this.last = this.p.clone(); this.walk = 0; this.speed = rand(2.6, 3.4); this.lastSeen = null;
+    this.stuckT = 0; this.last = this.p.clone(); this.walk = 0; this.speed = rand(2.6, 3.4) * D.speed; this.lastSeen = null;
   }
   eye(out) { return out.set(this.p.x, 1.75, this.p.z); }
   damage(d, head) {
@@ -407,6 +433,7 @@ class Bot {
     const s = Math.min(d, speed * dt); this.p.x += dx / d * s; this.p.z += dz / d * s; return d;
   }
   update(dt) {
+    if (!this.active) return;
     if (!this.alive) {
       this.deadT += dt; this.g.rotation.x = -Math.min(this.deadT * 4, Math.PI / 2); this.g.position.y = -Math.min(this.deadT, .3);
       if (this.deadT > 3.5) this.spawn(); return;
@@ -424,7 +451,7 @@ class Bot {
       mx += -dz * this.strafe * .7; mz += dx * this.strafe * .7;
       const ml = Math.hypot(mx, mz) || 1; this.p.x += mx / ml * this.speed * .8 * dt; this.p.z += mz / ml * this.speed * .8 * dt; moving = true;
       this.fireCD -= dt;
-      if (this.fireCD <= 0 && this.seeT > .7) { this.fire(dist); this.fireCD = rand(.55, 1.1); }
+      if (this.fireCD <= 0 && this.seeT > D.react) { this.fire(dist); this.fireCD = rand(D.fire[0], D.fire[1]); }
     } else {
       this.seeT = Math.max(0, this.seeT - dt * 2);
       if (this.alertT > 0 && this.lastSeen) {
@@ -451,16 +478,18 @@ class Bot {
   }
   fire(dist) {
     const from = this.muzzle.getWorldPosition(new THREE.Vector3());
-    const chance = clamp(.72 - dist * .016 - (P.moving ? .2 : 0), .12, .75);
+    const chance = clamp((.72 - dist * .016 - (P.moving ? .2 : 0)) * D.acc, .08, .85);
     const hit = Math.random() < chance;
     const to = new THREE.Vector3(P.pos.x, 1.45, P.pos.z);
     if (!hit) to.add(new THREE.Vector3(rand(-1, 1), rand(-.5, .8), rand(-1, 1)));
     tracer(from, to, 0xff6a3d);
     sfx('enemy', clamp(1 - dist / 40, .1, .7));
-    if (hit) hurt(rand(7, 11), this);
+    if (hit) hurt(rand(D.dmg[0], D.dmg[1]), this);
   }
 }
 const bots = []; for (let i = 0; i < BOTS; i++) bots.push(new Bot(i));
+function activateBots() { bots.forEach((b, i) => { b.active = i < D.bots; if (b.active) b.spawn(); else { b.alive = false; b.g.visible = false; } }); }
+activateBots();
 
 // health packs
 const packs = [[0, -12], [-26, 12], [26, -12], [12, 26]].map(([x, z]) => {
@@ -487,12 +516,12 @@ function spawnPlayer() {
   let bestS = playerSpawns[0], bd = -1;
   for (const s of playerSpawns) { let md = 1e9; for (const b of bots) if (b.alive) md = Math.min(md, Math.hypot(b.p.x - s[0], b.p.z - s[1])); md += Math.random() * 6; if (md > bd) { bd = md; bestS = s; } }
   P.pos.set(bestS[0], 0, bestS[1]); P.yaw = Math.atan2(bestS[0], bestS[1]); P.pitch = 0;
-  P.hp = 100; P.alive = true; ammo[0] = W[0].mag; ammo[1] = W[1].mag; reloadT = 0;
+  P.hp = D.hp; P.alive = true; ammo[0] = W[0].mag; ammo[1] = W[1].mag; reloadT = 0;
 }
 function startRound() {
   audioInit();
   P.kills = P.deaths = P.shots = P.hits = 0; timeLeft = ROUND;
-  spawnPlayer(); bots.forEach(b => b.spawn());
+  spawnPlayer(); activateBots();
   packs.forEach(p => { p.t = 0; p.g.visible = true; });
   state = 'play'; paused = false;
   $('menu').classList.add('hidden'); $('over').classList.add('hidden'); $('pause').classList.add('hidden');
@@ -504,12 +533,13 @@ function endRound() {
   state = 'over'; $('touch').classList.add('hidden'); if (document.pointerLockElement) document.exitPointerLock();
   const acc = P.shots ? Math.round(P.hits / P.shots * 100) : 0;
   $('rK').textContent = P.kills; $('rD').textContent = P.deaths; $('rA').textContent = acc + '%';
-  if (P.kills > best) { best = P.kills; try { localStorage.setItem('sd_best', best); } catch (e) {} $('rBest').textContent = '🏆 Новый рекорд!'; }
+  if (P.kills > best) { best = P.kills; try { localStorage.setItem('sd_best_' + diff, best); } catch (e) {} $('rBest').textContent = '🏆 Новый рекорд!'; }
   else $('rBest').textContent = 'Рекорд: ' + best;
+  $('rDiff').textContent = 'Уровень: ' + D.name; loadBest();
   $('over').classList.remove('hidden');
 }
 function hud() {
-  $('hpnum').textContent = Math.ceil(P.hp); $('hpfill').style.width = P.hp + '%'; $('hpfill').classList.toggle('low', P.hp < 35);
+  $('hpnum').textContent = Math.ceil(P.hp); $('hpfill').style.width = (P.hp / D.hp * 100) + '%'; $('hpfill').classList.toggle('low', P.hp < D.hp * .35);
   $('ammo').innerHTML = ammo[wi] + '<small> / ∞</small>'; $('wname').textContent = W[wi].name;
   $('kills').textContent = P.kills; $('deaths').textContent = P.deaths;
   const s = Math.max(0, Math.ceil(timeLeft)); $('timer').textContent = (s / 60 | 0) + ':' + String(s % 60).padStart(2, '0'); $('timer').classList.toggle('low', s <= 20);
@@ -642,7 +672,7 @@ function frame() {
       for (const p of packs) {
         if (!p.g.visible) { p.t -= dt; if (p.t <= 0) p.g.visible = true; continue; }
         p.g.rotation.y += dt * 2; p.g.position.y = .7 + Math.sin(performance.now() / 300) * .08;
-        if (P.hp < 100 && Math.hypot(P.pos.x - p.x, P.pos.z - p.z) < 1.1) { P.hp = Math.min(100, P.hp + 40); p.g.visible = false; p.t = 20; sfx('hit', 1); feed('<span style="color:#3ddc84">+40 здоровья</span>'); hud(); }
+        if (P.hp < D.hp && Math.hypot(P.pos.x - p.x, P.pos.z - p.z) < 1.1) { P.hp = Math.min(D.hp, P.hp + 40); p.g.visible = false; p.t = 20; sfx('hit', 1); feed('<span style="color:#3ddc84">+40 здоровья</span>'); hud(); }
       }
     } else {
       P.respT -= dt; firing && (firing = firing);
