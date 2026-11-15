@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<script src="../tg.js" defer></script>
+<title>Уроки для кондитера: бисквит, кремы, декор, цена торта — Кондитер Pro</title>
+<meta name="description" content="Бесплатный курс для кондитера: гигиена и хранение кремов, инструменты, бисквит, песочное и заварное тесто, кремы, сборка и выравнивание торта, шоколад и ганаш, декор, пересчёт рецепта, себестоимость и заказы. Калькуляторы рецепта под форму, веса торта и цены. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/konditer/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Уроки для кондитера: бисквит, кремы, декор, цена торта — Кондитер Pro">
+<meta property="og:description" content="Бесплатный курс для кондитера: гигиена и хранение кремов, инструменты, бисквит, песочное и заварное тесто, кремы, сборка и выравнивание торта, шоколад и ганаш, декор, пересчёт рецепта, себестоимость и заказы. Калькуляторы рецепта под форму, веса торта и цены. На русском и узбекском.">
+<meta property="og:url" content="https://kasbpro.uz/konditer/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Course", "name": "Кондитер Pro", "description": "Бесплатный курс для кондитера: гигиена и хранение кремов, инструменты, бисквит, песочное и заварное тесто, кремы, сборка и выравнивание торта, шоколад и ганаш, декор, пересчёт рецепта, себестоимость и заказы. Калькуляторы рецепта под форму, веса торта и цены. На русском и узбекском.", "url": "https://kasbpro.uz/konditer/", "inLanguage": ["ru", "uz"], "isAccessibleForFree": true, "provider": {"@type": "EducationalOrganization", "name": "Kasb Pro", "url": "https://kasbpro.uz/"}, "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT3H"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "UZS", "category": "Free"}}</script>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a raspberry accent and chocolate header */
+:root{
+  --bg:#f7f1f2; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#e8618c; --accent-ink:#2a0a16; --navy:#3a2028; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f07aa0; --accent-ink:#2a0a16; --navy:#170b10; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543;
+  --accent:#f07aa0; --accent-ink:#2a0a16; --navy:#170b10; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;min-width:7.5em}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select:focus,.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+.game{display:flex;align-items:center;gap:12px;background:var(--navy);color:var(--navy-fg);border-radius:14px;padding:14px 16px;text-decoration:none}.game .gi{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;font-size:22px;flex:none}.game .tx{flex:1;min-width:0}.game b{display:block;font-size:15px}.game span.s{font-size:13px;opacity:.75}.game .go{color:var(--accent);font-weight:700;font-size:20px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Кондитер Pro (pastry chef). Each text is {ru, uz}. Quiz: a = index of the right option.
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}">${s}</text>`;
+const line=(d,c,w=3,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const circ=(x,y,r,f,st='var(--fg)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st}" stroke-width="1.5"/>`;
+const num=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="11" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/>${tx(x,y+4,n,{w:700,s:12,c:'var(--accent-ink)'})}`;
+const flow=(x,y,w,h,l1,l2)=>`${box(x,y,w,h)}${tx(x+w/2,y+(l2?h/2-2:h/2+4),l1,{w:600,s:11})}${l2?tx(x+w/2,y+h/2+11,l2,{s:10,c:'var(--muted)'}):''}`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+const RED='var(--wH)',BLUE='var(--wC)',GREY='var(--wS)',OR='var(--wF)',GR='var(--ok)';
+// colored cutting board with label
+const PINK='var(--accent)',CHOC='#7a4a32',CREAM='#f6e7c8',SPONGE='#e9c46a',BERRY='#c2185b';
+
+const LESSONS=[
+/* ---------- BEGINNER ---------- */
+{id:'b1',lv:0,min:6,nowarn:true,
+ t:{ru:"Гигиена и хранение в кондитерской",uz:"Qandolatchilikda gigiyena va saqlash"},s:{ru:"Яйца, кремы, холодильник, сроки",uz:"Tuxum, kremlar, muzlatgich, muddatlar"},
+ svg:l=>svg(
+  `<rect x="40" y="14" width="26" height="190" rx="13" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+circ(53,216,18,RED)+
+  `<rect x="44" y="20" width="18" height="50" fill="${OR}"/><rect x="44" y="70" width="18" height="96" fill="${RED}" opacity=".85"/><rect x="44" y="166" width="18" height="34" fill="${BLUE}"/>`+
+  line('M70 70H86',GREY,1.5)+tx(92,74,R(l,'+60 °C и выше — микробы гибнут','+60 °C va yuqori — mikroblar o\'ladi'),{a:'start',s:10,w:600})+
+  tx(92,108,R(l,'ОПАСНАЯ ЗОНА +6…+60 °C','XAVFLI ZONA +6…+60 °C'),{a:'start',s:12,w:700,c:RED})+
+  tx(92,124,R(l,'торт с кремом на столе —','kremli tort stolda —'),{a:'start',s:10})+tx(92,138,R(l,'не дольше 1–2 часов','1–2 soatdan ortiq emas'),{a:'start',s:10,w:600})+
+  line('M70 166H86',GREY,1.5)+tx(92,176,R(l,'+2…+6 °C — кремы, торты, сливки','+2…+6 °C — kremlar, tortlar, qaymoq'),{a:'start',s:10,w:600})+tx(92,190,R(l,'готовое — наверху, яйца — отдельно','tayyori — tepada, tuxum — alohida'),{a:'start',s:10})+
+  tx(180,256,R(l,'Крем с яйцами и сливками портится быстрее всего','Tuxum va qaymoqli krem eng tez buziladi'),{s:11,w:600}),
+  R(l,"Термометр: торты и кремы хранят при плюс 2–6 градусах, от 6 до 60 градусов опасная зона","Termometr: tort va kremlar plyus 2–6 darajada saqlanadi, 6 dan 60 gacha xavfli zona"),266),
+ table:{head:{ru:["Крем (без консервантов)","Срок, +2…+6 °C"],uz:["Krem (konservantsiz)","Muddat, +2…+6 °C"]},rows:{
+  ru:[["Заварной (эклеры, наполеон)","6 часов"],["Взбитые сливки","6 часов"],["Масляный","36 часов"],["Крем-чиз, творожный","до 36 часов"],["Белковый заварной","72 часа"],["Бисквит без крема, в плёнке","2–3 суток"]],
+  uz:[["Qaynatilgan (ekler, napoleon)","6 soat"],["Ko'pirtirilgan qaymoq","6 soat"],["Sariyog'li","36 soat"],["Krem-chiz, tvorogli","36 soatgacha"],["Oqsilli qaynatilgan","72 soat"],["Kremsiz biskvit, plyonkada","2–3 sutka"]]}},
+ steps:{ru:["Волосы под косынкой или шапочкой, руки чистые, ногти короткие, без колец и лака.","Яйца перед работой моют тёплой водой с содой в отдельной миске. Скорлупа — частый источник сальмонеллы.","Сырые яйца в крем без нагрева не кладут. Для кремов с белком белки заваривают горячим сиропом (итальянская меренга).","Заварной крем после варки сразу остужают: плёнку кладут «в контакт» и убирают в холодильник.","Торт с кремом не оставляют на столе дольше 1–2 часов. Летом — ещё меньше.","Готовый декор, ягоды и топперы трогают в перчатках или чистыми щипцами."],
+       uz:["Soch ro'mol yoki shapka ostida, qo'llar toza, tirnoqlar qisqa, uzuk va laksiz.","Tuxum ishdan oldin alohida idishda iliq suv va soda bilan yuviladi. Po'chog'i — salmonellaning tez-tez manbai.","Xom tuxum kremga qizdirilmasdan qo'shilmaydi. Oqsilli kremlar uchun oqsil issiq sirop bilan qaynatiladi (italyan merengi).","Qaynatilgan krem pishgandan keyin darrov sovitiladi: plyonka «kontaktda» yopiladi va muzlatgichga qo'yiladi.","Kremli tort stolda 1–2 soatdan ortiq qoldirilmaydi. Yozda — undan ham kam.","Tayyor bezak, rezavorlar va topperlar qo'lqopda yoki toza qisqich bilan ushlanadi."]},
+ tip:{ru:"Сроки в таблице — нормы для кондитерских без консервантов. Дома ориентируйтесь на них же: лучше испечь торт накануне, а собрать в день праздника.",uz:"Jadvaldagi muddatlar — konservantsiz qandolatxonalar uchun me'yorlar. Uyda ham shularga amal qiling: tortni bir kun oldin pishirib, bayram kuni yig'ish yaxshi."},
+ quiz:[
+  {a:1,ru:{q:"При какой температуре хранят торт с кремом?",o:["+10…+15 °C","+2…+6 °C","Комнатной"],e:"Кремы хранят при +2…+6 °C."},uz:{q:"Kremli tort qanday haroratda saqlanadi?",o:["+10…+15 °C","+2…+6 °C","Xona haroratida"],e:"Kremlar +2…+6 °C da saqlanadi."}},
+  {a:0,ru:{q:"Сколько хранятся эклеры с заварным кремом?",o:["6 часов","3 суток","Неделю"],e:"Заварной крем — один из самых скоропортящихся."},uz:{q:"Qaynatilgan kremli ekler qancha saqlanadi?",o:["6 soat","3 sutka","Bir hafta"],e:"Qaynatilgan krem — eng tez buziladiganlardan."}},
+  {a:2,ru:{q:"Зачем мыть яйца перед работой?",o:["Чтобы блестели","Так легче разбить","На скорлупе бывает сальмонелла"],e:"Мыть в отдельной миске, не над тестом."},uz:{q:"Nega tuxumni ishdan oldin yuvish kerak?",o:["Yaltirashi uchun","Sindirish oson","Po'chog'ida salmonella bo'ladi"],e:"Alohida idishda yuving, xamir ustida emas."}},
+  {a:1,ru:{q:"Как правильно остудить заварной крем?",o:["Оставить на плите до утра","Плёнку «в контакт» и в холодильник","Накрыть полотенцем"],e:"Быстро остудить — меньше микробов."},uz:{q:"Qaynatilgan kremni qanday to'g'ri sovitish kerak?",o:["Ertalabgacha plitada qoldirish","Plyonka «kontaktda» va muzlatgichga","Sochiq bilan yopish"],e:"Tez sovitish — mikrob kamroq."}}]},
+
+{id:'b2',lv:0,min:6,nowarn:true,
+ t:{ru:"Инструменты и мерки",uz:"Asboblar va o'lchovlar"},s:{ru:"Весы, насадки, формы, ложки и стаканы",uz:"Tarozi, nasadkalar, qoliplar, qoshiq va stakanlar"},
+ svg:l=>svg(
+  `<path d="M30 40h80l-32 110h-16z" fill="${CREAM}" stroke="var(--fg)" stroke-width="1.5" stroke-linejoin="round"/><path d="M62 150h16l-4 18h-8z" fill="${GREY}" stroke="var(--fg)" stroke-width="1.5"/>`+tx(70,190,R(l,'мешок на 2/3','qop 2/3 gacha'),{s:10,w:600})+
+  `<g transform="translate(160 40)">${[0,1,2,3,4,5,6,7].map(i=>{const a=i*Math.PI/4;return `<path d="M0 0L${(Math.cos(a)*16).toFixed(1)} ${(Math.sin(a)*16).toFixed(1)}" stroke="var(--fg)" stroke-width="2"/>`}).join('')}${circ(0,0,6,'var(--surface)')}</g>`+tx(160,74,'1M',{w:700})+tx(160,88,R(l,'открытая звезда','ochiq yulduz'),{s:9,c:'var(--muted)'})+
+  `<g transform="translate(240 40)">${[0,1,2,3,4,5,6,7].map(i=>{const a=i*Math.PI/4;return `<path d="M${(Math.cos(a)*5).toFixed(1)} ${(Math.sin(a)*5).toFixed(1)}L${(Math.cos(a)*16).toFixed(1)} ${(Math.sin(a)*16).toFixed(1)}" stroke="var(--fg)" stroke-width="4" stroke-linecap="round"/>`}).join('')}</g>`+tx(240,74,'2D',{w:700})+tx(240,88,R(l,'закрытая звезда','yopiq yulduz'),{s:9,c:'var(--muted)'})+
+  circ(320,40,10,'var(--surface)')+tx(320,74,R(l,'Круглая','Dumaloq'),{w:700})+tx(320,88,R(l,'надписи, точки','yozuv, nuqta'),{s:9,c:'var(--muted)'})+
+  `<rect x="150" y="130" width="190" height="56" rx="10" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/><rect x="170" y="116" width="150" height="14" rx="4" fill="${GREY}"/><rect x="200" y="142" width="90" height="30" rx="4" fill="var(--navy)"/>`+tx(245,163,'125 g',{s:15,w:700,c:'var(--navy-fg)'})+tx(245,206,R(l,'Весы с точностью 1 г','1 g aniqlikdagi tarozi'),{s:11,w:600}),
+  R(l,"Кондитерский мешок, насадки открытая и закрытая звезда, круглая, и кухонные весы","Qandolat qopi, ochiq va yopiq yulduz, dumaloq nasadkalar va oshxona tarozisi"),220),
+ table:{head:{ru:["Мерка","Примерно"],uz:["O'lchov","Taxminan"]},rows:{
+  ru:[["Стакан 250 мл муки","160 г"],["Стакан 250 мл сахара","200 г"],["Столовая ложка сахара / муки","20–25 г / 15–20 г"],["Чайная ложка разрыхлителя","4–5 г"],["1 яйцо без скорлупы (С1)","50–55 г: белок ~30, желток ~20"],["Пакетик ванильного сахара","8–10 г"]],
+  uz:[["250 ml stakan un","160 g"],["250 ml stakan shakar","200 g"],["Osh qoshiq shakar / un","20–25 g / 15–20 g"],["Choy qoshiq qabartirgich","4–5 g"],["1 ta tuxum po'choqsiz (C1)","50–55 g: oqsil ~30, sarig'i ~20"],["Paket vanilli shakar","8–10 g"]]}},
+ steps:{ru:["Главный инструмент кондитера — <b>весы</b>. Стакан муки весит по-разному, а в выпечке ошибка 20 г уже видна.","Миксер (лучше планетарный или ручной от 500 Вт), венчик и силиконовая лопатка для вмешивания.","Разъёмная форма или кольцо 16–24 см, пергамент или силиконовый коврик.","Кондитерский мешок и насадки: 1M (открытая звезда), 2D (закрытая звезда), круглые 8–12 мм.","Прямой и угловой шпатель, скребок и поворотный столик — для ровного торта.","Термометр для духовки: многие духовки врут на 10–30 °C."],
+       uz:["Qandolatchining asosiy asbobi — <b>tarozi</b>. Bir stakan un har xil og'irlikda bo'ladi, pishiriqda esa 20 g xato ham ko'rinadi.","Mikser (planetar yoki 500 Vt dan qo'l mikseri), ko'pirtirgich va aralashtirish uchun silikon kurakcha.","Ajraladigan qolip yoki 16–24 sm halqa, pergament yoki silikon gilamcha.","Qandolat qopi va nasadkalar: 1M (ochiq yulduz), 2D (yopiq yulduz), dumaloq 8–12 mm.","To'g'ri va burchakli shpatel, qirg'ich va aylanadigan stolcha — tekis tort uchun.","Duxovka termometri: ko'p duxovkalar 10–30 °C ga adashadi."]},
+ tip:{ru:"Купите простые электронные весы до 5 кг (от 60–100 тыс. сум). Это первая покупка, которая сразу улучшит выпечку.",uz:"5 kg gacha oddiy elektron tarozi oling (60–100 ming so'mdan). Bu pishiriqni darrov yaxshilaydigan birinchi xarid."},
+ quiz:[
+  {a:2,ru:{q:"Чем точнее всего отмерить муку?",o:["Стаканом","Ложкой","Весами"],e:"Стакан муки весит 130–170 г по-разному."},uz:{q:"Unni eng aniq nima bilan o'lchash mumkin?",o:["Stakan","Qoshiq","Tarozi"],e:"Bir stakan un har xil — 130–170 g."}},
+  {a:0,ru:{q:"Сколько весит одно яйцо С1 без скорлупы?",o:["50–55 г","20 г","100 г"],e:"Белок около 30 г, желток около 20 г."},uz:{q:"Bitta C1 tuxum po'choqsiz qancha keladi?",o:["50–55 g","20 g","100 g"],e:"Oqsil ~30 g, sarig'i ~20 g."}},
+  {a:1,ru:{q:"Какая насадка для надписей?",o:["Открытая звезда 1M","Круглая","Закрытая звезда 2D"],e:"Круглой насадкой пишут и ставят точки."},uz:{q:"Yozuv uchun qaysi nasadka?",o:["Ochiq yulduz 1M","Dumaloq","Yopiq yulduz 2D"],e:"Dumaloq nasadka bilan yoziladi va nuqta qo'yiladi."}},
+  {a:1,ru:{q:"На сколько наполняют кондитерский мешок?",o:["До краёв","На 2/3","На 1/10"],e:"Так крем не полезет сверху и мешок удобно держать."},uz:{q:"Qandolat qopi qanchaga to'ldiriladi?",o:["Liq to'la","2/3 gacha","1/10 gacha"],e:"Shunda krem tepadan chiqmaydi va qopni ushlash qulay."}}]},
+
+{id:'b3',lv:0,min:7,nowarn:true,
+ t:{ru:"Продукты и их роль",uz:"Mahsulotlar va ularning vazifasi"},s:{ru:"Мука, сахар, яйца, масло, разрыхлитель",uz:"Un, shakar, tuxum, sariyog', qabartirgich"},
+ table:{head:{ru:["Продукт","Что делает и как выбрать"],uz:["Mahsulot","Nima qiladi va qanday tanlash"]},rows:{
+  ru:[["Мука высшего сорта","Каркас изделия. Для нежного бисквита часть муки (до 20 %) заменяют крахмалом"],["Сахар / пудра","Сладость, объём, румяная корочка. Пудра — для кремов и песочного теста"],["Яйца","Связывают, дают объём. Для взбивания — комнатной температуры"],["Сливочное масло 82,5 %","Вкус и рассыпчатость. Спред и маргарин крем не держат"],["Сливки 33–35 %","Для взбивания и ганаша. Ниже 30 % не взбиваются"],["Разрыхлитель / сода","Пузырьки газа. Соде нужна кислота: кефир, сметана, какао, лимон"],["Желатин","Стабилизирует муссы и кремы. Замачивают 1 : 6 водой, не кипятят"]],
+  uz:[["Oliy navli un","Mahsulot karkasi. Nozik biskvit uchun unning bir qismi (20 % gacha) kraxmal bilan almashtiriladi"],["Shakar / upa","Shirinlik, hajm, qizarish. Upa — kremlar va qumoq xamir uchun"],["Tuxum","Bog'laydi, hajm beradi. Ko'pirtirish uchun — xona haroratida"],["Sariyog' 82,5 %","Ta'm va ushalovchanlik. Sprend va margarin kremni ushlamaydi"],["Qaymoq 33–35 %","Ko'pirtirish va ganash uchun. 30 % dan pasti ko'pirmaydi"],["Qabartirgich / soda","Gaz pufakchalari. Sodaga kislota kerak: kefir, smetana, kakao, limon"],["Jelatin","Mus va kremlarni barqaror qiladi. 1 : 6 suvda ivitiladi, qaynatilmaydi"]]}},
+ steps:{ru:["Яйца и масло достают из холодильника заранее, за 1–2 часа (кроме песочного теста — там масло холодное).","Муку <b>просеивают</b>: она насыщается воздухом, уходят комочки.","Соль нужна и в сладком: щепотка делает вкус ярче.","Сливки для взбивания, наоборот, должны быть холодными — и миска тоже.","Разрыхлитель смешивают с мукой, а не с яйцами, иначе реакция пройдёт раньше времени.","Какао-порошок — без сахара (алкализованный темнее). Какао-напиток с сахаром для выпечки не подходит."],
+       uz:["Tuxum va sariyog' muzlatgichdan oldindan, 1–2 soat oldin olinadi (qumoq xamirdan tashqari — unda sariyog' sovuq).","Un <b>elanadi</b>: havoga to'yinadi, kesakchalar yo'qoladi.","Shirinlikda ham tuz kerak: bir chimdim ta'mni yorqinroq qiladi.","Ko'pirtiriladigan qaymoq esa sovuq bo'lishi kerak — idish ham.","Qabartirgich tuxum bilan emas, un bilan aralashtiriladi, aks holda reaksiya erta o'tadi.","Kakao kukuni — shakarsiz (alkalizatsiyalangani to'qroq). Shakarli kakao-ichimlik pishiriqqa yaramaydi."]},
+ tip:{ru:"Если крем не взбивается — проверьте жирность сливок на упаковке. Нужно 33 % и больше, и всё должно быть холодным.",uz:"Krem ko'pirmasa — qadoqdagi qaymoq yog'liligini tekshiring. 33 % va undan yuqori kerak, hammasi sovuq bo'lishi lozim."},
+ quiz:[
+  {a:1,ru:{q:"Какие сливки взбиваются в крем?",o:["10 %","33–35 %","20 %"],e:"Ниже 30 % сливки не взбиваются."},uz:{q:"Qanday qaymoq kremga ko'piradi?",o:["10 %","33–35 %","20 %"],e:"30 % dan past qaymoq ko'pirmaydi."}},
+  {a:0,ru:{q:"Что нужно соде, чтобы она сработала?",o:["Кислота","Сахар","Мороз"],e:"Кефир, сметана, какао, лимонный сок."},uz:{q:"Soda ishlashi uchun nima kerak?",o:["Kislota","Shakar","Sovuq"],e:"Kefir, smetana, kakao, limon sharbati."}},
+  {a:2,ru:{q:"Зачем просеивать муку?",o:["Чтобы была тяжелее","Это не нужно","Воздух и нет комочков"],e:"Просеянная мука легче вмешивается."},uz:{q:"Nega unni elash kerak?",o:["Og'irroq bo'lishi uchun","Shart emas","Havo va kesakchasiz"],e:"Elangan un osonroq aralashadi."}},
+  {a:1,ru:{q:"Почему крем на спреде получается плохим?",o:["Спред слишком дорогой","Спред не держит форму крема","Спред слишком сладкий"],e:"Нужно настоящее масло 82,5 %."},uz:{q:"Nega sprendli krem yomon chiqadi?",o:["Sprend juda qimmat","Sprend krem shaklini ushlamaydi","Sprend juda shirin"],e:"Haqiqiy 82,5 % sariyog' kerak."}}]},
+
+{id:'b4',lv:0,min:8,calc:true,
+ warnB:{ru:"Горячая духовка и форма.",uz:"Issiq duxovka va qolip."},warn:{ru:"Доставайте форму только прихватками и ставьте на решётку, не на пластик.",uz:"Qolipni faqat ushlagich bilan oling va plastikka emas, panjaraga qo'ying."},
+ t:{ru:"Классический бисквит",uz:"Klassik biskvit"},s:{ru:"4 яйца, 120 г сахара, 120 г муки",uz:"4 tuxum, 120 g shakar, 120 g un"},
+ svg:l=>svg(
+  num(30,30,1)+tx(48,34,R(l,'Яйца + сахар 8–10 мин — объём ×3','Tuxum + shakar 8–10 daq — hajm ×3'),{a:'start',w:600})+
+  num(30,62,2)+tx(48,66,R(l,'Мука — лопаткой, снизу вверх','Un — kurakcha bilan, pastdan yuqoriga'),{a:'start',w:600})+
+  num(30,94,3)+tx(48,98,R(l,'180 °C, 30–35 мин, дверцу не открывать 20 мин','180 °C, 30–35 daq, 20 daq eshikni ochmang'),{a:'start',w:600})+
+  num(30,126,4)+tx(48,130,R(l,'Шпажка сухая — готов','Cho\'p quruq — tayyor'),{a:'start',w:600})+
+  `<rect x="70" y="160" width="220" height="58" rx="4" fill="${GREY}" opacity=".35" stroke="var(--fg)" stroke-width="1.5"/><path d="M74 214V176q106-14 212 0v38z" fill="${SPONGE}" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<path d="M74 176q106-14 212 0" fill="none" stroke="#b07a2a" stroke-width="4"/>`+line('M250 140L232 206','#c9a07a',3)+tx(180,240,R(l,'Ровный верх без горки — духовка не перегрета','Tepasi tekis, do\'ngsiz — duxovka qizib ketmagan'),{s:10,c:'var(--muted)'}),
+  R(l,"Четыре шага бисквита и разрез формы с готовым бисквитом и шпажкой","Biskvitning to'rt bosqichi va tayyor biskvit hamda cho'p bilan qolip kesimi"),250),
+ steps:{ru:["Духовку включают заранее на 180 °C. Дно формы 20–22 см застилают пергаментом, бортики <b>не смазывают</b> — тесто цепляется и поднимается.","Яйца с сахаром взбивают 8–10 минут до светлой пышной массы, которая увеличилась в 3 раза и стекает «лентой».","Муку (можно 100 г муки + 20 г крахмала) просеивают и вмешивают лопаткой в 2–3 приёма движениями снизу вверх.","Сразу в форму и в духовку: 30–35 минут. Первые 20 минут дверцу не открывают — бисквит опадёт.","Готовность — деревянной шпажкой: сухая, без липкого теста.","Остужают на решётке, вынимают из формы, заворачивают в плёнку на 6–8 часов. Отдохнувший бисквит меньше крошится."],
+       uz:["Duxovka oldindan 180 °C ga yoqiladi. 20–22 sm qolip tagiga pergament to'shaladi, chetlari <b>moylanmaydi</b> — xamir ilinib ko'tariladi.","Tuxum shakar bilan 8–10 daqiqa ko'pirtiriladi — 3 barobar oshgan, «lenta» bo'lib oqadigan och, ko'pchigan massa bo'lguncha.","Un (100 g un + 20 g kraxmal ham mumkin) elanadi va kurakcha bilan 2–3 bosqichda pastdan yuqoriga aralashtiriladi.","Darrov qolipga va duxovkaga: 30–35 daqiqa. Dastlabki 20 daqiqa eshik ochilmaydi — biskvit cho'kadi.","Tayyorligi — yog'och cho'p bilan: quruq, yopishqoq xamirsiz.","Panjarada sovitiladi, qolipdan olinadi, 6–8 soatga plyonkaga o'raladi. Dam olgan biskvit kamroq ushaladi."]},
+ tip:{ru:"Бисквит опал — чаще всего открыли дверцу раньше времени, мало взбили яйца или долго мешали муку. Вышла горка — духовка слишком горячая.",uz:"Biskvit cho'kdi — ko'pincha eshik erta ochilgan, tuxum kam ko'pirtirilgan yoki un uzoq aralashtirilgan. Do'ng chiqdi — duxovka juda issiq."},
+ quiz:[
+  {a:1,ru:{q:"Сколько взбивать яйца с сахаром?",o:["30 секунд","8–10 минут","1 час"],e:"До объёма ×3 и «ленты»."},uz:{q:"Tuxumni shakar bilan qancha ko'pirtirish kerak?",o:["30 soniya","8–10 daqiqa","1 soat"],e:"Hajm ×3 va «lenta» bo'lguncha."}},
+  {a:0,ru:{q:"Как вмешивать муку в бисквит?",o:["Лопаткой снизу вверх","Миксером на полной скорости 5 минут","Руками"],e:"Иначе пузырьки лопнут и бисквит будет резиновым."},uz:{q:"Biskvitga unni qanday aralashtirish kerak?",o:["Kurakcha bilan pastdan yuqoriga","Mikserda to'liq tezlikda 5 daqiqa","Qo'l bilan"],e:"Aks holda pufakchalar yoriladi va biskvit rezinadek bo'ladi."}},
+  {a:2,ru:{q:"Почему бисквит опал?",o:["Много муки","Мало сахара","Открыли духовку в первые 20 минут"],e:"Холодный воздух — и бисквит садится."},uz:{q:"Nega biskvit cho'kdi?",o:["Un ko'p","Shakar kam","Dastlabki 20 daqiqada duxovka ochildi"],e:"Sovuq havo — va biskvit cho'kadi."}},
+  {a:1,ru:{q:"Как проверить готовность бисквита?",o:["По часам, без проверки","Сухая деревянная шпажка","Нажать пальцем до дна"],e:"Шпажка выходит сухой — готов."},uz:{q:"Biskvit tayyorligini qanday tekshirish mumkin?",o:["Soat bo'yicha, tekshirmasdan","Quruq yog'och cho'p","Barmoq bilan tagigacha bosish"],e:"Cho'p quruq chiqsa — tayyor."}}]},
+
+{id:'b5',lv:0,min:7,calc:true,
+ warnB:{ru:"Горячий противень.",uz:"Issiq patnis."},warn:{ru:"Груз для слепой выпечки (фасоль, горох) очень горячий — снимайте вместе с пергаментом прихватками.",uz:"Ko'r pishirish yuki (loviya, no'xat) juda issiq — pergament bilan birga ushlagichda oling."},
+ t:{ru:"Песочное тесто 1-2-3",uz:"Qumoq xamir 1-2-3"},s:{ru:"Тарты, тарталетки, печенье",uz:"Tartlar, tartaletkalar, pechenye"},
+ svg:l=>svg(
+  `<rect x="40" y="150" width="70" height="40" rx="4" fill="#f4f1ea" stroke="var(--fg)" stroke-width="1.5"/><rect x="145" y="110" width="70" height="80" rx="4" fill="#f3d27a" stroke="var(--fg)" stroke-width="1.5"/><rect x="250" y="70" width="70" height="120" rx="4" fill="#efe3c9" stroke="var(--fg)" stroke-width="1.5"/>`+
+  tx(75,174,'1',{s:18,w:700})+tx(180,156,'2',{s:18,w:700})+tx(285,136,'3',{s:18,w:700})+
+  tx(75,210,R(l,'сахар 100 г','shakar 100 g'),{w:600})+tx(180,210,R(l,'масло 200 г','sariyog\' 200 g'),{w:600})+tx(285,210,R(l,'мука 300 г','un 300 g'),{w:600})+
+  tx(180,36,R(l,'+ 1 яйцо или 2 желтка, щепотка соли','+ 1 tuxum yoki 2 sarig\', bir chimdim tuz'),{s:12,w:600})+tx(180,56,R(l,'масло холодное, месить быстро','sariyog\' sovuq, tez qorish'),{s:11,c:'var(--muted)'}),
+  R(l,"Пропорция песочного теста: сахар 1 часть, масло 2 части, мука 3 части","Qumoq xamir nisbati: shakar 1 qism, sariyog' 2 qism, un 3 qism"),230),
+ steps:{ru:["Холодное масло кубиками перетирают с мукой и сахаром (пудрой) в крошку.","Добавляют яйцо и соль, быстро собирают в ком. Долго не месят — тесто «затянется» и станет жёстким.","Ком плющат в лепёшку, заворачивают в плёнку и убирают в холодильник на 30–60 минут.","Раскатывают между двумя листами пергамента в пласт 3–4 мм, укладывают в форму, накалывают вилкой.","<b>Слепая выпечка</b>: сверху пергамент и груз (фасоль), 180 °C 15 минут, потом без груза ещё 5–10 минут до золотистого цвета.","Остывшую корзинку заполняют кремом и ягодами. Влажную начинку — только перед подачей."],
+       uz:["Sovuq sariyog' kubiklari un va shakar (upa) bilan ushoq bo'lguncha ishqalanadi.","Tuxum va tuz qo'shiladi, tez bir bo'lakka yig'iladi. Uzoq qorilmaydi — xamir «tortilib» qattiq bo'ladi.","Bo'lak yassilanadi, plyonkaga o'raladi va 30–60 daqiqaga muzlatgichga qo'yiladi.","Ikki varaq pergament orasida 3–4 mm qatlam qilib yoyiladi, qolipga yotqiziladi, vilka bilan teshiladi.","<b>Ko'r pishirish</b>: ustiga pergament va yuk (loviya), 180 °C 15 daqiqa, keyin yuksiz yana 5–10 daqiqa oltin rangga kirguncha.","Sovigan savatcha krem va rezavorlar bilan to'ldiriladi. Nam ichlik — faqat dasturxonga tortishdan oldin."]},
+ tip:{ru:"Тесто липнет к рукам и рвётся — оно согрелось. Уберите на 15 минут в холодильник и продолжайте.",uz:"Xamir qo'lga yopishib, yirtilyapti — u isib ketgan. 15 daqiqaga muzlatgichga qo'ying va davom eting."},
+ quiz:[
+  {a:0,ru:{q:"Что значит «1-2-3» в песочном тесте?",o:["Сахар 1 : масло 2 : мука 3","Мука 1 : яйца 2 : сахар 3","Три часа в холодильнике"],e:"Например, 100 г сахара, 200 г масла, 300 г муки."},uz:{q:"Qumoq xamirda «1-2-3» nimani bildiradi?",o:["Shakar 1 : sariyog' 2 : un 3","Un 1 : tuxum 2 : shakar 3","Muzlatgichda uch soat"],e:"Masalan, 100 g shakar, 200 g sariyog', 300 g un."}},
+  {a:2,ru:{q:"Каким должно быть масло для песочного теста?",o:["Растопленным","Тёплым, мягким","Холодным"],e:"Холодное масло даёт рассыпчатость."},uz:{q:"Qumoq xamir uchun sariyog' qanday bo'lishi kerak?",o:["Eritilgan","Iliq, yumshoq","Sovuq"],e:"Sovuq sariyog' ushalovchanlik beradi."}},
+  {a:1,ru:{q:"Зачем груз при слепой выпечке?",o:["Для запаха","Чтобы корзинка не вздулась и бортики не сползли","Чтобы быстрее остыла"],e:"Груз держит форму корзинки."},uz:{q:"Ko'r pishirishda yuk nima uchun?",o:["Hid uchun","Savatcha ko'pchimasligi va chetlari sirpanmasligi uchun","Tezroq sovishi uchun"],e:"Yuk savatcha shaklini ushlab turadi."}},
+  {a:0,ru:{q:"Песочное тесто стало жёстким. Почему?",o:["Долго месили","Мало вымешивали","Положили соль"],e:"Песочное тесто собирают быстро, не вымешивая."},uz:{q:"Qumoq xamir qattiq bo'lib qoldi. Nega?",o:["Uzoq qorildi","Kam qorildi","Tuz solindi"],e:"Qumoq xamir qorilmasdan, tez yig'iladi."}}]},
+
+/* ---------- INTERMEDIATE ---------- */
+{id:'m1',lv:1,min:9,nowarn:true,
+ t:{ru:"Кремы для тортов",uz:"Tort kremlari"},s:{ru:"Крем-чиз, масляный, заварной, сливки",uz:"Krem-chiz, sariyog'li, qaynatilgan, qaymoq"},
+ table:{head:{ru:["Крем","Состав","Для чего"],uz:["Krem","Tarkibi","Nima uchun"]},rows:{
+  ru:[["Крем-чиз","Сливочный сыр 300 г, сливки 33 % 100 г, пудра 60–80 г","Начинка и выравнивание, держит форму"],["Масляный","Масло 82,5 % 200 г, сгущёнка 150–200 г","Самый стойкий, под мастику, для цветов"],["Заварной","Молоко 500 г, желтки 4, сахар 120 г, крахмал 40 г, масло 30 г","Эклеры, наполеон, прослойка. Не для покрытия"],["Взбитые сливки","Сливки 33 % 500 г, пудра 50 г","Лёгкие торты, капкейки. Держатся недолго"]],
+  uz:[["Krem-chiz","Qaymoqli pishloq 300 g, 33 % qaymoq 100 g, upa 60–80 g","Ichlik va tekislash, shaklni ushlaydi"],["Sariyog'li","82,5 % sariyog' 200 g, quyultirilgan sut 150–200 g","Eng chidamli, mastika ostiga, gullar uchun"],["Qaynatilgan","Sut 500 g, 4 sarig', shakar 120 g, kraxmal 40 g, sariyog' 30 g","Ekler, napoleon, qatlam. Qoplash uchun emas"],["Ko'pirtirilgan qaymoq","33 % qaymoq 500 g, upa 50 g","Yengil tortlar, kapkeyklar. Uzoq turmaydi"]]}},
+ steps:{ru:["<b>Крем-чиз</b>: сыр и сливки — холодные, прямо из холодильника. Сначала сливки с пудрой до мягких пиков, потом сыр на малой скорости.","Перебили крем-чиз — он становится жидким или идёт крупкой. Взбивайте только до гладкости, 1–3 минуты.","<b>Масляный</b>: масло комнатной температуры взбивают до белизны 5–7 минут, сгущёнку вливают по ложке.","<b>Заварной</b>: желтки, сахар и крахмал растирают, вливают горячее молоко, варят до загустения и 1 минуту после закипания, помешивая.","Готовый заварной крем накрывают плёнкой «в контакт» и быстро остужают. Масло добавляют в горячий.","Цвет: гелевые красители по капле. Водные краски разжижают крем."],
+       uz:["<b>Krem-chiz</b>: pishloq va qaymoq — sovuq, to'g'ri muzlatgichdan. Avval qaymoq upa bilan yumshoq cho'qqilarga, keyin pishloq past tezlikda.","Krem-chiz ortiqcha ko'pirtirilsa — suyuq bo'ladi yoki donador chiqadi. Faqat silliq bo'lguncha, 1–3 daqiqa ko'pirtiring.","<b>Sariyog'li</b>: xona haroratidagi sariyog' 5–7 daqiqa oqarguncha ko'pirtiriladi, quyultirilgan sut qoshiqlab quyiladi.","<b>Qaynatilgan</b>: sarig', shakar va kraxmal ezildi, issiq sut quyiladi, quyuqlashguncha va qaynagandan keyin 1 daqiqa aralashtirib pishiriladi.","Tayyor qaynatilgan krem plyonka bilan «kontaktda» yopiladi va tez sovitiladi. Sariyog' issiqligida qo'shiladi.","Rang: gelli bo'yoqlar tomchilab. Suvli bo'yoqlar kremni suyultiradi."]},
+ tip:{ru:"Для торта под мастику или в жару выбирайте масляный крем или ганаш. Крем на сливках в тепле поплывёт.",uz:"Mastika ostidagi yoki issiqdagi tort uchun sariyog'li krem yoki ganash tanlang. Qaymoqli krem issiqda oqib ketadi."},
+ quiz:[
+  {a:1,ru:{q:"Какими должны быть сыр и сливки для крем-чиза?",o:["Тёплыми","Холодными","Замороженными"],e:"Холодные ингредиенты — стабильный крем."},uz:{q:"Krem-chiz uchun pishloq va qaymoq qanday bo'lishi kerak?",o:["Iliq","Sovuq","Muzlatilgan"],e:"Sovuq ingredientlar — barqaror krem."}},
+  {a:0,ru:{q:"Какой крем самый стойкий, под мастику?",o:["Масляный","Взбитые сливки","Заварной"],e:"Масляный крем держит форму и в тепле."},uz:{q:"Qaysi krem eng chidamli, mastika ostiga?",o:["Sariyog'li","Ko'pirtirilgan qaymoq","Qaynatilgan"],e:"Sariyog'li krem issiqda ham shaklini ushlaydi."}},
+  {a:2,ru:{q:"Крем-чиз стал жидким. Вероятная причина?",o:["Мало взбивали","Положили пудру","Перебили"],e:"Взбивают только до гладкости."},uz:{q:"Krem-chiz suyulib qoldi. Ehtimoliy sabab?",o:["Kam ko'pirtirilgan","Upa solingan","Ortiqcha ko'pirtirilgan"],e:"Faqat silliq bo'lguncha ko'pirtiriladi."}},
+  {a:1,ru:{q:"Каким красителем красить крем?",o:["Водным","Гелевым","Акварелью"],e:"Гелевые дают яркий цвет и не разжижают."},uz:{q:"Kremni qanday bo'yoq bilan bo'yash kerak?",o:["Suvli","Gelli","Akvarel"],e:"Gelli bo'yoq yorqin rang beradi va suyultirmaydi."}}]},
+
+{id:'m2',lv:1,min:9,nowarn:true,
+ t:{ru:"Сборка и выравнивание торта",uz:"Tortni yig'ish va tekislash"},s:{ru:"Пропитка, кольцо, бортик, «под ноль»",uz:"Shimdirish, halqa, chet, «nolga»"},
+ svg:l=>svg(
+  `<rect x="14" y="206" width="200" height="10" rx="3" fill="${GREY}" stroke="var(--fg)" stroke-width="1.5"/>`+
+  `<rect x="24" y="40" width="180" height="166" rx="6" fill="#fbf3f5" stroke="var(--fg)" stroke-width="1.5"/>`+
+  [0,1,2].map(i=>{const y=166-i*58;return `<rect x="36" y="${y}" width="156" height="34" fill="${SPONGE}" stroke="var(--fg)" stroke-width="1"/>`+(i<2?`<rect x="36" y="${y-24}" width="156" height="24" fill="${CREAM}"/><rect x="60" y="${y-18}" width="108" height="12" rx="3" fill="${BERRY}" opacity=".85"/>`:'')}).join('')+
+  line('M206 60H226',GREY,1.5)+tx(232,64,R(l,'крем «под ноль»','krem «nolga»'),{a:'start',s:10,w:600})+
+  line('M192 124H226',GREY,1.5)+tx(232,128,R(l,'бортик из крема','krem cheti'),{a:'start',s:10,w:600})+
+  line('M168 136H226',GREY,1.5)+tx(232,142,R(l,'начинка — не у края','ichlik — chetda emas'),{a:'start',s:10})+
+  line('M192 184H226',GREY,1.5)+tx(232,188,R(l,'корж + пропитка','korj + shimdirish'),{a:'start',s:10,w:600})+
+  line('M214 211H226',GREY,1.5)+tx(232,215,R(l,'подложка','taglik'),{a:'start',s:10})+
+  tx(114,236,R(l,'3 коржа, 2 слоя крема с начинкой','3 korj, ichlikli 2 qatlam krem'),{s:11,w:600}),
+  R(l,"Разрез торта: подложка, три коржа с пропиткой, бортик из крема, начинка в центре, крем снаружи","Tort kesimi: taglik, shimdirilgan uchta korj, krem cheti, markazda ichlik, tashqarida krem"),245),
+ steps:{ru:["Отдохнувший бисквит режут на 3 коржа ниткой или ножом-струной, срезают верхнюю корочку.","Коржи пропитывают сиропом (сахар и вода 1 : 1, можно с соком): 20–30 мл на корж 20 см, без луж.","Сборку делают в кольце с ацетатной лентой: корж, по краю — бортик из крема, внутри — крем и начинка.","Влажную начинку (конфи, ягоды) кладут не до края — иначе она выступит сквозь крем.","Торт в кольце охлаждают 4–6 часов, лучше ночь. Так он становится плотным и не «едет».","Выравнивание: тонкий слой крема (закрывает крошки), 20–30 минут в холодильник, затем второй слой скребком на поворотном столике."],
+       uz:["Dam olgan biskvit ip yoki pichoq-tor bilan 3 ta korjga kesiladi, ustki qobig'i olinadi.","Korjlar sirop bilan shimdiriladi (shakar va suv 1 : 1, sharbat bilan ham mumkin): 20 sm korjga 20–30 ml, ko'lmaksiz.","Asetat lentali halqada yig'iladi: korj, chetiga — krem cheti, ichiga — krem va ichlik.","Nam ichlik (konfi, rezavor) chetigacha qo'yilmaydi — aks holda krem orqali chiqadi.","Halqadagi tort 4–6 soat, yaxshisi bir kecha sovitiladi. Shunda zich bo'ladi va «siljimaydi».","Tekislash: yupqa krem qatlami (ushoqlarni yopadi), 20–30 daqiqa muzlatgichga, keyin aylanadigan stolchada qirg'ich bilan ikkinchi qatlam."]},
+ tip:{ru:"Ровный торт делает холод. Не спешите: каждый раз, когда крем начинает мазаться, торт на 15–20 минут в холодильник.",uz:"Tekis tortni sovuq yaratadi. Shoshilmang: har safar krem surkala boshlasa, tortni 15–20 daqiqaga muzlatgichga qo'ying."},
+ quiz:[
+  {a:1,ru:{q:"Зачем нужен бортик из крема по краю коржа?",o:["Для красоты внутри","Чтобы начинка не вытекла","Чтобы сэкономить крем"],e:"Бортик держит влажную начинку внутри."},uz:{q:"Korj chetidagi krem cheti nima uchun?",o:["Ichki chiroy uchun","Ichlik oqib chiqmasligi uchun","Kremni tejash uchun"],e:"Chet nam ichlikni ichida ushlab turadi."}},
+  {a:0,ru:{q:"Что такое первый тонкий слой крема?",o:["Он закрывает крошки перед финишным слоем","Это лишнее","Слой для надписи"],e:"После него торт охлаждают."},uz:{q:"Birinchi yupqa krem qatlami nima?",o:["Yakuniy qatlamdan oldin ushoqlarni yopadi","Bu ortiqcha","Yozuv uchun qatlam"],e:"Undan keyin tort sovitiladi."}},
+  {a:2,ru:{q:"Сколько пропитки на корж 20 см?",o:["300 мл","Совсем не нужно","20–30 мл"],e:"Много пропитки — торт поплывёт."},uz:{q:"20 sm korjga qancha shimdirish kerak?",o:["300 ml","Umuman kerak emas","20–30 ml"],e:"Shimdirish ko'p bo'lsa — tort oqib ketadi."}},
+  {a:1,ru:{q:"Сколько охлаждать собранный торт в кольце?",o:["5 минут","4–6 часов или ночь","Не нужно"],e:"Плотный холодный торт легко выровнять."},uz:{q:"Halqadagi yig'ilgan tortni qancha sovitish kerak?",o:["5 daqiqa","4–6 soat yoki bir kecha","Kerak emas"],e:"Zich sovuq tortni tekislash oson."}}]},
+
+{id:'m3',lv:1,min:9,
+ warnB:{ru:"Горячий шоколад и сливки.",uz:"Issiq shokolad va qaymoq."},warn:{ru:"Растапливайте на водяной бане или в микроволновке по 15–20 секунд. Ни капли воды в шоколад.",uz:"Suv hammomida yoki mikroto'lqinli pechda 15–20 soniyadan eriting. Shokoladga bir tomchi ham suv tushmasin."},
+ t:{ru:"Шоколад и ганаш",uz:"Shokolad va ganash"},s:{ru:"Темперирование, пропорции ганаша, капли",uz:"Temperlash, ganash nisbatlari, tomchilar"},
+ svg:l=>svg(
+  line('M40 30V200H340',GREY,1.5)+tx(36,52,'50',{a:'end',s:10})+tx(36,148,'27',{a:'end',s:10})+tx(36,120,'31',{a:'end',s:10})+
+  line('M40 48H120L200 146L270 118H330',PINK,4)+circ(120,48,6,RED)+circ(200,146,6,BLUE)+circ(270,118,6,GR)+
+  tx(120,36,R(l,'1. растопить 45–50 °C','1. eritish 45–50 °C'),{s:10,w:600})+tx(200,170,R(l,'2. остудить до 27–28 °C','2. 27–28 °C gacha sovitish'),{s:10,w:600})+tx(282,104,R(l,'3. подогреть 31–32 °C','3. 31–32 °C gacha isitish'),{s:10,w:600})+
+  tx(190,218,R(l,'Тёмный шоколад: блеск и хруст','Qora shokolad: yaltirash va qarsillash'),{s:11,w:600})+tx(190,236,R(l,'молочный 45 → 27 → 30 °C · белый 42 → 26 → 28 °C','sutli 45 → 27 → 30 °C · oq 42 → 26 → 28 °C'),{s:10,c:'var(--muted)'}),
+  R(l,"График темперирования тёмного шоколада: растопить до 50, остудить до 27, подогреть до 31 градуса","Qora shokoladni temperlash grafigi: 50 gacha eritish, 27 gacha sovitish, 31 gacha isitish"),245),
+ table:{head:{ru:["Ганаш","Шоколад : сливки 33 %"],uz:["Ganash","Shokolad : 33 % qaymoq"]},rows:{
+  ru:[["Тёмный, выравнивание торта","2 : 1"],["Тёмный, начинка и капли","1 : 1"],["Молочный, выравнивание","3 : 1"],["Белый, выравнивание","3 : 1 (капли — 2,5 : 1)"]],
+  uz:[["Qora, tortni tekislash","2 : 1"],["Qora, ichlik va tomchilar","1 : 1"],["Sutli, tekislash","3 : 1"],["Oq, tekislash","3 : 1 (tomchilar — 2,5 : 1)"]]}},
+ steps:{ru:["Для конфет, плиток и декора шоколад <b>темперируют</b>, иначе он застынет серым и мягким.","Проверка: капля на ноже за 3–5 минут застывает с блеском — шоколад готов.","Ганаш: сливки нагревают до первых пузырьков (не кипятят), заливают рубленый шоколад, ждут 1 минуту и перемешивают от центра.","Ганаш для выравнивания ставят на ночь при комнатной температуре — к утру он как паста.","Капли (дрип): ганаш 1 : 1 при 30–32 °C на хорошо охлаждённый торт. Пробуйте сначала одну каплю.","Попала вода и шоколад «заварился» комками — для темперирования он уже не годится, но пойдёт в выпечку."],
+       uz:["Konfet, plitka va bezak uchun shokolad <b>temperlanadi</b>, aks holda kulrang va yumshoq qotadi.","Tekshirish: pichoqdagi tomchi 3–5 daqiqada yaltirab qotadi — shokolad tayyor.","Ganash: qaymoq birinchi pufakchalargacha isitiladi (qaynatilmaydi), maydalangan shokoladga quyiladi, 1 daqiqa kutiladi va markazdan aralashtiriladi.","Tekislash uchun ganash bir kechaga xona haroratida qoldiriladi — ertalabga pastaga o'xshaydi.","Tomchilar (drip): 30–32 °C dagi 1 : 1 ganash yaxshi sovitilgan tortga. Avval bitta tomchini sinab ko'ring.","Suv tushib, shokolad kesak bo'lib «qaynab qoldi» — temperlashga yaramaydi, lekin pishiriqqa ketadi."]},
+ tip:{ru:"Белый шоколад капризнее всех: перегреете выше 45 °C — он свернётся. Грейте короткими подходами.",uz:"Oq shokolad eng injiq: 45 °C dan oshirsangiz — ivib qoladi. Qisqa-qisqa isiting."},
+ quiz:[
+  {a:1,ru:{q:"Как темперируют тёмный шоколад?",o:["Кипятят 5 минут","45–50 → 27–28 → 31–32 °C","Сразу в холодильник"],e:"Растопить, остудить, чуть подогреть."},uz:{q:"Qora shokolad qanday temperlanadi?",o:["5 daqiqa qaynatiladi","45–50 → 27–28 → 31–32 °C","Darrov muzlatgichga"],e:"Eritish, sovitish, biroz isitish."}},
+  {a:0,ru:{q:"Пропорция тёмного ганаша для выравнивания?",o:["2 : 1","1 : 3","1 : 1"],e:"2 части шоколада на 1 часть сливок."},uz:{q:"Tekislash uchun qora ganash nisbati?",o:["2 : 1","1 : 3","1 : 1"],e:"2 qism shokoladga 1 qism qaymoq."}},
+  {a:2,ru:{q:"Для капель (дрип) ганаш должен быть…",o:["Горячим 70 °C","Холодным из холодильника","30–32 °C на холодный торт"],e:"Горячий растопит крем, холодный не стечёт."},uz:{q:"Tomchilar (drip) uchun ganash qanday bo'lishi kerak?",o:["70 °C issiq","Muzlatgichdan sovuq","Sovuq tortga 30–32 °C"],e:"Issiq kremni eritadi, sovuq oqmaydi."}},
+  {a:1,ru:{q:"Что испортит шоколад при растапливании?",o:["Сахар","Капля воды","Сливки после растапливания"],e:"Вода — и шоколад сворачивается комками."},uz:{q:"Eritishda shokoladni nima buzadi?",o:["Shakar","Bir tomchi suv","Eritgandan keyin qaymoq"],e:"Suv — va shokolad kesak bo'lib qoladi."}}]},
+
+{id:'m4',lv:1,min:9,
+ warnB:{ru:"Горячее тесто и пар.",uz:"Issiq xamir va bug'."},warn:{ru:"Заварное тесто брызгает при перемешивании, а из духовки выходит горячий пар.",uz:"Qaynatma xamir aralashtirganda sachraydi, duxovkadan esa issiq bug' chiqadi."},
+ t:{ru:"Заварное тесто и эклеры",uz:"Qaynatma xamir va eklerlar"},s:{ru:"Профитроли, эклеры, шу",uz:"Profitrol, ekler, shu"},
+ svg:l=>svg(
+  `<path d="M60 120q-30 0-30-26t30-26h180q30 0 30 26t-30 26z" fill="${SPONGE}" stroke="var(--fg)" stroke-width="1.5"/><path d="M60 82q-18 2-18 12" fill="none" stroke="#b07a2a" stroke-width="2"/><path d="M50 74q90-14 200 0" fill="none" stroke="${CHOC}" stroke-width="10" stroke-linecap="round"/>`+
+  `<path d="M70 100h160" stroke="${CREAM}" stroke-width="10" stroke-linecap="round" opacity=".9"/>`+tx(150,140,R(l,'внутри пусто — значит, готово','ichi bo\'sh — demak, tayyor'),{s:11,w:600})+
+  `<rect x="40" y="160" width="130" height="64" rx="8" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(105,186,'200 °C',{s:16,w:700,c:RED})+tx(105,206,R(l,'10–15 мин','10–15 daq'),{s:11})+
+  `<rect x="190" y="160" width="130" height="64" rx="8" fill="var(--surface)" stroke="var(--fg)" stroke-width="1.5"/>`+tx(255,186,'170 °C',{s:16,w:700,c:OR})+tx(255,206,R(l,'ещё 20–25 мин','yana 20–25 daq'),{s:11})+
+  `<path d="M172 192h16" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/>`+tx(180,244,R(l,'Дверцу не открывать — иначе осядут','Eshikni ochmang — aks holda cho\'kadi'),{s:11,c:RED,w:600}),
+  R(l,"Эклер в разрезе пустой внутри, режим выпечки 200 градусов, потом 170","Kesimdagi ekler ichi bo'sh, pishirish rejimi 200 daraja, keyin 170"),250),
+ steps:{ru:["Вода 125 г, молоко 125 г, масло 100 г, щепотка соли и 5 г сахара доводят до кипения.","Всю муку (150 г) всыпают сразу и энергично мешают. Проваривают 1–2 минуты, пока на дне не появится плёнка.","Тесто остужают до 60 °C, потом по одному вбивают яйца — всего 4–5 шт. (около 250 г).","Готовность: тесто блестит и стекает с лопатки «ласточкиным хвостом» — треугольником.","Отсаживают насадкой 12–16 мм полоски 12–14 см, с расстоянием — эклеры растут в 2 раза.","200 °C 10–15 минут, потом 170 °C 20–25 минут. Дверцу не открывать. Остывшие эклеры заполняют заварным кремом и покрывают глазурью."],
+       uz:["Suv 125 g, sut 125 g, sariyog' 100 g, bir chimdim tuz va 5 g shakar qaynaguncha isitiladi.","Hamma un (150 g) birdan solinadi va tez aralashtiriladi. Tagida plyonka paydo bo'lguncha 1–2 daqiqa qaynatiladi.","Xamir 60 °C gacha sovitiladi, keyin tuxumlar bittadan qo'shiladi — jami 4–5 ta (taxminan 250 g).","Tayyorligi: xamir yaltiraydi va kurakchadan «qaldirg'och dumi» — uchburchak bo'lib oqadi.","12–16 mm nasadka bilan 12–14 sm tasmalar oraliq bilan siqiladi — eklerlar 2 barobar o'sadi.","200 °C da 10–15 daqiqa, keyin 170 °C da 20–25 daqiqa. Eshik ochilmaydi. Sovigan eklerlar qaynatilgan krem bilan to'ldirilib, glazur bilan qoplanadi."]},
+ tip:{ru:"Яйца бывают разные — последнее добавляйте по частям и смотрите на «хвост». Жидкое тесто растечётся и не поднимется.",uz:"Tuxumlar har xil bo'ladi — oxirgisini qismlab qo'shing va «dum»ga qarang. Suyuq xamir yoyilib ketadi va ko'tarilmaydi."},
+ quiz:[
+  {a:0,ru:{q:"Зачем проваривать муку 1–2 минуты?",o:["Чтобы тесто заварилось и ушла лишняя влага","Для цвета","Это не нужно"],e:"На дне появляется плёнка — тесто готово к яйцам."},uz:{q:"Unni 1–2 daqiqa qaynatish nima uchun?",o:["Xamir qaynab, ortiqcha namlik ketishi uchun","Rang uchun","Shart emas"],e:"Tagida plyonka paydo bo'ladi — xamir tuxumga tayyor."}},
+  {a:2,ru:{q:"Когда добавлять яйца в заварное тесто?",o:["Сразу в кипящее","До муки","Когда остынет до 60 °C"],e:"В горячем тесте яйца свернутся."},uz:{q:"Qaynatma xamirga tuxum qachon qo'shiladi?",o:["Darrov qaynayotganiga","Undan oldin","60 °C gacha soviganda"],e:"Issiq xamirda tuxum pishib qoladi."}},
+  {a:1,ru:{q:"Почему эклеры осели?",o:["Много крема","Открыли духовку во время выпечки","Мало сахара"],e:"Пар держит эклер, пока корочка не застынет."},uz:{q:"Nega eklerlar cho'kdi?",o:["Krem ko'p","Pishirish paytida duxovka ochildi","Shakar kam"],e:"Qobiq qotguncha eklerni bug' ushlab turadi."}},
+  {a:1,ru:{q:"Как понять, что тесто нужной густоты?",o:["Оно стоит как камень","Стекает с лопатки «ласточкиным хвостом»","Оно жидкое как вода"],e:"Блестящий треугольник на лопатке."},uz:{q:"Xamir kerakli quyuqlikda ekanini qanday bilish mumkin?",o:["Toshdek turadi","Kurakchadan «qaldirg'och dumi» bo'lib oqadi","Suvdek suyuq"],e:"Kurakchada yaltiroq uchburchak."}}]},
+
+/* ---------- ADVANCED ---------- */
+{id:'a1',lv:2,min:8,nowarn:true,calc:true,
+ t:{ru:"Пересчёт рецепта под форму и гостей",uz:"Retseptni qolip va mehmonlarga qayta hisoblash"},s:{ru:"Площадь формы, вес торта на гостя",uz:"Qolip yuzasi, mehmonga tort og'irligi"},
+ svg:l=>svg(
+  circ(90,110,54,'#fbe3ea')+tx(90,106,'18 см',{s:14,w:700})+tx(90,124,R(l,'254 см²','254 sm²'),{s:11,c:'var(--muted)'})+
+  circ(250,110,72,'#f7c9d7')+tx(250,106,'24 см',{s:14,w:700})+tx(250,124,R(l,'452 см²','452 sm²'),{s:11,c:'var(--muted)'})+
+  tx(180,212,R(l,'452 ÷ 254 = 1,78 → всё умножаем на 1,78','452 ÷ 254 = 1,78 → hammasini 1,78 ga ko\'paytiramiz'),{s:12,w:600})+
+  tx(180,232,R(l,'4 яйца × 1,78 ≈ 7 яиц (или 380 г яичной массы)','4 tuxum × 1,78 ≈ 7 tuxum (yoki 380 g tuxum massasi)'),{s:10,c:'var(--muted)'}),
+  R(l,"Форма 18 сантиметров площадью 254 и форма 24 сантиметра площадью 452, коэффициент 1,78","18 santimetrli 254 yuzali va 24 santimetrli 452 yuzali qolip, koeffitsiyent 1,78"),245),
+ table:{head:{ru:["Форма, высота 10–12 см","Вес торта","Гостей"],uz:["Qolip, balandligi 10–12 sm","Tort og'irligi","Mehmonlar"]},rows:{
+  ru:[["16 см","1,2–1,5 кг","8–10"],["18 см","1,8–2 кг","12–14"],["20 см","2,2–2,5 кг","15–17"],["22 см","2,8–3 кг","19–20"],["24 см","3,5 кг","23–25"]],
+  uz:[["16 sm","1,2–1,5 kg","8–10"],["18 sm","1,8–2 kg","12–14"],["20 sm","2,2–2,5 kg","15–17"],["22 sm","2,8–3 kg","19–20"],["24 sm","3,5 kg","23–25"]]}},
+ steps:{ru:["Рецепт пересчитывают по <b>площади</b>, а не по диаметру. Форма 24 см больше формы 18 см не в 1,3, а в 1,78 раза.","Коэффициент = (новый диаметр ÷ старый)². Для прямоугольной формы — длина × ширина.","Все продукты умножают на коэффициент. Яйца удобнее считать в граммах: одно яйцо ≈ 50 г.","Если торт будет выше, умножьте ещё на отношение высот.","Время выпечки в большой форме растёт, температуру лучше снизить на 10 °C. Проверяйте шпажкой.","На гостя кладут 120–150 г торта, на детский праздник — около 100 г. Калькулятор подскажет вес и форму."],
+       uz:["Retsept diametr bo'yicha emas, <b>yuza</b> bo'yicha qayta hisoblanadi. 24 sm qolip 18 sm qolipdan 1,3 emas, 1,78 barobar katta.","Koeffitsiyent = (yangi diametr ÷ eski)². To'rtburchak qolip uchun — uzunlik × kenglik.","Barcha mahsulotlar koeffitsiyentga ko'paytiriladi. Tuxumni grammda hisoblash qulay: bitta tuxum ≈ 50 g.","Tort balandroq bo'lsa, balandliklar nisbatiga ham ko'paytiring.","Katta qolipda pishirish vaqti oshadi, haroratni 10 °C pasaytirish yaxshi. Cho'p bilan tekshiring.","Har mehmonga 120–150 g tort, bolalar bayramiga — taxminan 100 g. Kalkulyator og'irlik va qolipni aytib beradi."]},
+ tip:{ru:"Торт больше 3,5 кг лучше делать в два яруса: одноярусный высокий торт тяжело резать и перевозить.",uz:"3,5 kg dan katta tortni ikki qavat qilish yaxshi: baland bir qavatli tortni kesish va tashish qiyin."},
+ quiz:[
+  {a:1,ru:{q:"Рецепт на форму 18 см, нужна 24 см. Во сколько раз больше продуктов?",o:["1,3","1,78","2,5"],e:"(24 ÷ 18)² = 1,78."},uz:{q:"Retsept 18 sm qolipga, 24 sm kerak. Mahsulot necha barobar ko'p?",o:["1,3","1,78","2,5"],e:"(24 ÷ 18)² = 1,78."}},
+  {a:0,ru:{q:"По чему правильно пересчитывать рецепт?",o:["По площади формы","По диаметру","По цвету формы"],e:"Объём теста зависит от площади дна."},uz:{q:"Retseptni nima bo'yicha qayta hisoblash to'g'ri?",o:["Qolip yuzasi bo'yicha","Diametr bo'yicha","Qolip rangi bo'yicha"],e:"Xamir hajmi tag yuzasiga bog'liq."}},
+  {a:2,ru:{q:"Сколько торта класть на одного взрослого гостя?",o:["30 г","500 г","120–150 г"],e:"20 гостей × 150 г = 3 кг."},uz:{q:"Bitta katta yoshli mehmonga qancha tort hisoblanadi?",o:["30 g","500 g","120–150 g"],e:"20 mehmon × 150 g = 3 kg."}},
+  {a:1,ru:{q:"Форма 20 см, нужна 16 см. Коэффициент?",o:["0,8","0,64","1,25"],e:"(16 ÷ 20)² = 0,64."},uz:{q:"Qolip 20 sm, 16 sm kerak. Koeffitsiyent?",o:["0,8","0,64","1,25"],e:"(16 ÷ 20)² = 0,64."}}]},
+
+{id:'a2',lv:2,min:8,nowarn:true,calc:true,
+ t:{ru:"Себестоимость и цена торта",uz:"Tort tannarxi va narxi"},s:{ru:"Продукты, упаковка, работа, цена за кг",uz:"Mahsulot, qadoq, mehnat, kilogramm narxi"},
+ table:{head:{ru:["Статья","Пример, торт 2 кг"],uz:["Modda","Misol, 2 kg tort"]},rows:{
+  ru:[["Продукты по рецепту","180 000 сум"],["Коробка, подложка, топпер","25 000 сум"],["Газ, свет, вода, пергамент (+10 %)","20 500 сум"],["Работа: 5 часов × 30 000","150 000 сум"],["Итого — цена","≈ 376 000 → 380 000 сум"],["Цена за кг","190 000 сум"]],
+  uz:[["Retsept bo'yicha mahsulot","180 000 so'm"],["Quti, taglik, topper","25 000 so'm"],["Gaz, svet, suv, pergament (+10 %)","20 500 so'm"],["Mehnat: 5 soat × 30 000","150 000 so'm"],["Jami — narx","≈ 376 000 → 380 000 so'm"],["Kilogramm narxi","190 000 so'm"]]}},
+ steps:{ru:["Распишите рецепт по граммам и посчитайте каждый продукт: цена за кг × граммы ÷ 1000.","Добавьте упаковку: коробка, подложка, лента, топпер, свечи, если они входят в цену.","Прибавьте около 10 % на газ, свет, воду, пергамент и мелочи.","Посчитайте <b>свою работу</b>: все часы — покупки, выпечка, сборка, декор, мытьё. Ставку за час выберите честно.","Цена = продукты + упаковка + 10 % + работа. Разделите на вес — получите цену за кг для прайса.","Сложный декор, фигурки и срочные заказы — дороже. Берите предоплату 30–50 % при заказе."],
+       uz:["Retseptni grammlab yozing va har bir mahsulotni hisoblang: kilogramm narxi × gramm ÷ 1000.","Qadoqni qo'shing: quti, taglik, lenta, topper, sham — agar narxga kirsa.","Gaz, svet, suv, pergament va mayda-chuydaga taxminan 10 % qo'shing.","<b>O'z mehnatingizni</b> hisoblang: barcha soatlar — xarid, pishirish, yig'ish, bezak, yuvish. Soatbay stavkani halol tanlang.","Narx = mahsulot + qadoq + 10 % + mehnat. Og'irlikka bo'ling — prays uchun kilogramm narxi chiqadi.","Murakkab bezak, figuralar va shoshilinch buyurtmalar — qimmatroq. Buyurtmada 30–50 % oldindan to'lov oling."]},
+ tip:{ru:"Не продавайте по цене продуктов: торт без оплаты вашего времени — это работа в убыток. Калькулятор посчитает цену за кг.",uz:"Mahsulot narxida sotmang: vaqtingiz to'lanmagan tort — zarariga ishlash. Kalkulyator kilogramm narxini hisoblaydi."},
+ quiz:[
+  {a:2,ru:{q:"Что чаще всего забывают включить в цену торта?",o:["Муку","Сахар","Свою работу и упаковку"],e:"Время кондитера — тоже часть цены."},uz:{q:"Tort narxiga ko'pincha nimani qo'shish unutiladi?",o:["Un","Shakar","O'z mehnati va qadoq"],e:"Qandolatchining vaqti — ham narxning bir qismi."}},
+  {a:0,ru:{q:"Масло 120 000 сум/кг, нужно 250 г. Сколько стоит?",o:["30 000 сум","12 000 сум","250 000 сум"],e:"120 000 × 250 ÷ 1000 = 30 000."},uz:{q:"Sariyog' 120 000 so'm/kg, 250 g kerak. Qancha turadi?",o:["30 000 so'm","12 000 so'm","250 000 so'm"],e:"120 000 × 250 ÷ 1000 = 30 000."}},
+  {a:1,ru:{q:"Торт 2 кг стоит 380 000 сум. Цена за кг?",o:["760 000 сум","190 000 сум","38 000 сум"],e:"380 000 ÷ 2 = 190 000."},uz:{q:"2 kg tort 380 000 so'm. Kilogramm narxi?",o:["760 000 so'm","190 000 so'm","38 000 so'm"],e:"380 000 ÷ 2 = 190 000."}},
+  {a:1,ru:{q:"Какую предоплату обычно берут за торт на заказ?",o:["Не берут","30–50 %","200 %"],e:"Предоплата защищает от отмены заказа в последний день."},uz:{q:"Buyurtma tort uchun odatda qancha oldindan to'lov olinadi?",o:["Olinmaydi","30–50 %","200 %"],e:"Oldindan to'lov oxirgi kuni bekor qilishdan himoya qiladi."}}]},
+
+{id:'a3',lv:2,min:8,nowarn:true,
+ t:{ru:"Декор: насадки, цвет, мастика, ягоды",uz:"Bezak: nasadkalar, rang, mastika, rezavorlar"},s:{ru:"Розочки, капли, покрытие, живые цветы",uz:"Gulchalar, tomchilar, qoplama, tirik gullar"},
+ svg:l=>svg(
+  `<g transform="translate(60 70)">${[0,1,2,3,4].map(i=>`<circle r="${30-i*6}" fill="none" stroke="${PINK}" stroke-width="7" opacity="${.5+i*.1}"/>`).join('')}</g>`+tx(60,130,R(l,'1M — розочка','1M — gulcha'),{w:600})+tx(60,146,R(l,'от центра по спирали','markazdan spiral'),{s:9,c:'var(--muted)'})+
+  `<g fill="${PINK}">${[0,1,2,3,4].map(i=>`<circle cx="${150+i*14}" cy="${70+(i%2?6:0)}" r="6"/>`).join('')}</g>`+tx(180,130,R(l,'Круглая — точки','Dumaloq — nuqtalar'),{w:600})+tx(180,146,R(l,'и надписи','va yozuvlar'),{s:9,c:'var(--muted)'})+
+  `<g fill="${PINK}" opacity=".85"><path d="M280 90q-20-30 10-46q4 26-10 46z"/><path d="M290 92q4-36 34-32q-10 24-34 32z"/><path d="M286 94q30-6 40 18q-26 4-40-18z"/></g>`+tx(300,130,R(l,'Лепестковая 104','Gulbarg 104'),{w:600})+tx(300,146,R(l,'лепестки, рюши','gulbarglar, burmalar'),{s:9,c:'var(--muted)'})+
+  `<rect x="60" y="178" width="240" height="46" rx="4" fill="#fbf3f5" stroke="var(--fg)" stroke-width="1.5"/><path d="M60 182h240" stroke="${CHOC}" stroke-width="8"/>`+[80,110,140,175,205,240,270].map((x,i)=>`<path d="M${x} 184v${8+(i*7)%16}" stroke="${CHOC}" stroke-width="7" stroke-linecap="round"/>`).join('')+tx(180,240,R(l,'Капли ганашем 30–32 °C на холодный торт','Sovuq tortga 30–32 °C ganash tomchilari'),{s:10,w:600}),
+  R(l,"Насадки: 1M для розочек, круглая для точек и надписей, лепестковая для лепестков, и капли ганаша на торте","Nasadkalar: gulchalar uchun 1M, nuqta va yozuv uchun dumaloq, gulbarglar uchun gulbarg nasadka va tortdagi ganash tomchilari"),250),
+ steps:{ru:["Розочка насадкой 1M: держите мешок вертикально, начните из центра и ведите спираль наружу, в конце ослабьте нажим.","Цвет — гелевыми красителями. Яркий цвет со временем темнеет: красный и чёрный окрашивайте за 1–2 часа до работы.","Мастика ложится только на плотное покрытие — масляный крем или ганаш. На сливках и крем-чизе она «поплывёт».","Торт в мастике в холодильнике может «заплакать» каплями влаги. Достаньте и дайте обсохнуть, не вытирайте.","Ягоды моют и полностью обсушивают на полотенце. Мокрые ягоды пускают сок в крем.","Живые цветы — только без химии, стебли оборачивают плёнкой или вставляют в трубочки. Ядовитые цветы (например, ландыш, гортензия) — нельзя."],
+       uz:["1M nasadka bilan gulcha: qopni tik ushlang, markazdan boshlab tashqariga spiral qiling, oxirida bosishni bo'shating.","Rang — gelli bo'yoqlar bilan. Yorqin rang vaqt o'tib to'qlashadi: qizil va qorani ishdan 1–2 soat oldin bo'yang.","Mastika faqat zich qoplamaga yotadi — sariyog'li krem yoki ganash. Qaymoq va krem-chizda u «oqib» ketadi.","Mastikali tort muzlatgichda namlik tomchilari bilan «yig'lashi» mumkin. Oling va qurishini kuting, artmang.","Rezavorlar yuviladi va sochiqda to'liq quritiladi. Nam rezavorlar kremga sharbat chiqaradi.","Tirik gullar — faqat kimyosiz, poyalari plyonkaga o'raladi yoki naychalarga solinadi. Zaharli gullar (masalan, marvaridgul, gortenziya) — mumkin emas."]},
+ tip:{ru:"Сначала потренируйтесь на тарелке: 10 розочек на тарелке — и на торте рука уже уверенная. Крем потом можно собрать обратно.",uz:"Avval likopchada mashq qiling: likopchada 10 ta gulcha — tortda qo'l allaqachon ishonchli. Kremni keyin qayta yig'ish mumkin."},
+ quiz:[
+  {a:1,ru:{q:"На какой крем можно класть мастику?",o:["Взбитые сливки","Масляный крем или ганаш","Заварной крем"],e:"Мастике нужно плотное покрытие."},uz:{q:"Mastikani qaysi kremga qo'yish mumkin?",o:["Ko'pirtirilgan qaymoq","Sariyog'li krem yoki ganash","Qaynatilgan krem"],e:"Mastikaga zich qoplama kerak."}},
+  {a:0,ru:{q:"Как делают розочку насадкой 1M?",o:["Из центра по спирали наружу","Точками по кругу","Прямой линией"],e:"В конце ослабляют нажим."},uz:{q:"1M nasadka bilan gulcha qanday qilinadi?",o:["Markazdan tashqariga spiral","Aylana bo'ylab nuqtalar","To'g'ri chiziq"],e:"Oxirida bosish bo'shatiladi."}},
+  {a:2,ru:{q:"Что сделать с ягодами перед декором?",o:["Положить мокрыми","Обвалять в муке","Помыть и полностью обсушить"],e:"Мокрые ягоды пускают сок в крем."},uz:{q:"Bezakdan oldin rezavorlar bilan nima qilinadi?",o:["Nam holda qo'yish","Unga belash","Yuvib, to'liq quritish"],e:"Nam rezavorlar kremga sharbat chiqaradi."}},
+  {a:1,ru:{q:"Почему красный крем красят заранее?",o:["Так дешевле","Цвет со временем темнеет","Иначе он кислый"],e:"За 1–2 часа цвет «дойдёт»."},uz:{q:"Nega qizil krem oldindan bo'yaladi?",o:["Arzonroq","Rang vaqt o'tib to'qlashadi","Aks holda nordon bo'ladi"],e:"1–2 soatda rang «yetiladi»."}}]},
+
+{id:'a4',lv:2,min:7,nowarn:true,
+ t:{ru:"Заказы, хранение и доставка",uz:"Buyurtmalar, saqlash va yetkazib berish"},s:{ru:"Приём заказа, аллергии, перевозка торта",uz:"Buyurtma qabul qilish, allergiya, tortni tashish"},
+ table:{head:{ru:["Спросить при заказе","Зачем"],uz:["Buyurtmada so'rash","Nima uchun"]},rows:{
+  ru:[["Дата, время, самовывоз или доставка","Планировать выпечку и сборку"],["Сколько гостей","Вес торта и форма"],["Начинка и крем","Вкус и стойкость декора"],["Фото-пример дизайна, надпись","Чтобы не было «я хотела по-другому»"],["Аллергии: орехи, молоко, яйца, глютен","Здоровье гостей, особенно детей"],["Предоплата 30–50 %","Защита от отмены в последний день"]],
+  uz:[["Sana, vaqt, olib ketish yoki yetkazish","Pishirish va yig'ishni rejalash"],["Mehmonlar soni","Tort og'irligi va qolip"],["Ichlik va krem","Ta'm va bezak chidamliligi"],["Dizayn rasmi, yozuv","«Men boshqacha xohlagandim» bo'lmasligi uchun"],["Allergiya: yong'oq, sut, tuxum, glyuten","Mehmonlar, ayniqsa bolalar sog'lig'i"],["30–50 % oldindan to'lov","Oxirgi kuni bekor qilishdan himoya"]]}},
+ steps:{ru:["Всё, о чём договорились, запишите в чат: дата, вес, начинка, дизайн, цена, предоплата. Это и есть ваш договор.","План: бисквит — за день, сборка — накануне вечером или утром, декор — в день выдачи.","Готовый торт хранят в коробке в холодильнике при +2…+6 °C, вдали от лука, рыбы и колбасы — крем впитывает запахи.","Перевозят только хорошо охлаждённый торт: на ровном полу машины или в багажнике, не на коленях и не на сиденье.","Летом — кондиционер в машине и термосумка с хладоэлементами. Скажите клиенту, сколько торт может стоять без холодильника.","Сфотографируйте торт до выдачи — для портфолио и на случай спора. Хорошие фото в Telegram и Instagram приводят новых клиентов."],
+       uz:["Kelishilgan hamma narsani chatga yozing: sana, og'irlik, ichlik, dizayn, narx, oldindan to'lov. Bu sizning shartnomangiz.","Reja: biskvit — bir kun oldin, yig'ish — oldingi kech yoki ertalab, bezak — topshirish kuni.","Tayyor tort qutida muzlatgichda +2…+6 °C da, piyoz, baliq va kolbasadan uzoqda saqlanadi — krem hidlarni shimadi.","Faqat yaxshi sovitilgan tort tashiladi: mashinaning tekis polida yoki yukxonada, tizzada yoki o'rindiqda emas.","Yozda — mashinada konditsioner va sovutgich elementli termosumka. Mijozga tort muzlatgichsiz qancha tura olishini ayting.","Topshirishdan oldin tortni suratga oling — portfolio uchun va nizo bo'lsa. Telegram va Instagramdagi yaxshi suratlar yangi mijozlar olib keladi."]},
+ tip:{ru:"Если торт для ребёнка с аллергией — уточните всё письменно и не используйте общий инструмент с орехами. Лучше отказаться, чем рисковать.",uz:"Tort allergiyasi bor bola uchun bo'lsa — hammasini yozma aniqlang va yong'oq bilan umumiy asbobdan foydalanmang. Tavakkal qilgandan ko'ra, rad etgan yaxshi."},
+ quiz:[
+  {a:2,ru:{q:"Где перевозить торт в машине?",o:["На коленях","На заднем сиденье","На ровном полу или в багажнике"],e:"Ровная поверхность — торт не съедет."},uz:{q:"Tortni mashinada qayerda tashish kerak?",o:["Tizzada","Orqa o'rindiqda","Tekis polda yoki yukxonada"],e:"Tekis sirt — tort siljimaydi."}},
+  {a:0,ru:{q:"Почему торт держат вдали от лука и рыбы?",o:["Крем впитывает запахи","Лук портит цвет","Так не положено"],e:"Сливочные кремы быстро берут чужой запах."},uz:{q:"Nega tort piyoz va baliqdan uzoqda saqlanadi?",o:["Krem hidlarni shimadi","Piyoz rangni buzadi","Shunday qoida"],e:"Qaymoqli kremlar begona hidni tez oladi."}},
+  {a:1,ru:{q:"Что обязательно спросить про здоровье гостей?",o:["Рост","Аллергии","Любимый цвет"],e:"Орехи, молоко, яйца, глютен."},uz:{q:"Mehmonlar sog'lig'i haqida nimani albatta so'rash kerak?",o:["Bo'yi","Allergiya","Sevimli rangi"],e:"Yong'oq, sut, tuxum, glyuten."}},
+  {a:0,ru:{q:"Зачем фотографировать торт до выдачи?",o:["Портфолио и защита при споре","Не нужно","Чтобы клиент заплатил больше"],e:"И для новых клиентов в соцсетях."},uz:{q:"Nega tortni topshirishdan oldin suratga olish kerak?",o:["Portfolio va nizoda himoya","Kerak emas","Mijoz ko'proq to'lashi uchun"],e:"Ijtimoiy tarmoqlarda yangi mijozlar uchun ham."}}]}
+];
+
+// UI for Кондитер Pro (Qandolatchi Pro). Needs LESSONS from lessons.js.
+const PAYWALL=false; // true = intermediate and advanced levels need payment
+const UI={
+ru:{brand:'Кондитер Pro',tag:'Бисквит, кремы, декор и цена торта · 13 уроков',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ lv:['Начальный','Средний','Продвинутый'],free:'Бесплатно',pro:'Pro',lockedHint:'Пройдите предыдущий урок',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(lv,n,m)=>`${lv} уровень · урок ${n} · ~${m} мин`,
+ leg:{},
+ warnB:'Осторожно: горячо.',warn:'Работайте прихватками, чистыми руками и с убранными волосами.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Вы прошли все уроки этого уровня.',fail:(k,n)=>`Нужно ${k} правильных ответа из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ rT:'Рецепт под вашу форму',rSub:'Пересчёт по площади круглой формы',rec:'Рецепт',recO:['Бисквит','Песочное','Крем‑чиз','Ганаш'],base:d=>`Рецепт на форму ${d} см`,myD:'Ваша форма, см',k:'Коэф.',
+ ing:{egg:'Яйца',sugar:'Сахар',flour:'Мука',starch:'Крахмал',butter:'Масло',yolk:'Желток',cheese:'Сыр сливочный',cream:'Сливки 33 %',powder:'Пудра',choc:'Шоколад'},
+ pcs:'шт.',g:'г',kg:'кг',cm:'см',
+ rNote:'Если форма выше или ниже, умножьте ещё на отношение высот. В большой форме печь дольше и на 10 °C ниже, проверяйте шпажкой.',
+ wT:'Какой торт нужен на праздник',wSub:'Вес по числу гостей и размер формы',guests:'Гостей',por:'Кусок',porO:['Детский','Обычный','Большой'],w:'Вес',form:'Форма',tiers:'Ярусы',
+ wNote:'Высота торта 10–12 см. Больше 3,5 кг лучше делать в два яруса.',
+ cT:'Себестоимость и цена торта',cSub:'Продукты, упаковка, работа',prod:'Продукты, сум',pack:'Упаковка, сум',wt:'Вес торта, кг',hrs:'Часов работы',rate:'Ставка за час, сум',
+ cp:'Себест.',price:'Цена',pkg:'За 1 кг',sum:'сум',
+ cNote:'Себестоимость = (продукты + упаковка) + 10 % на газ, свет и мелочи. Цена = себестоимость + работа, округлено вверх до 5 000 сум.',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Qandolatchi Pro',tag:'Biskvit, kremlar, bezak va tort narxi · 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ lv:['Boshlang\'ich','O\'rta','Yuqori'],free:'Bepul',pro:'Pro',lockedHint:'Oldingi darsni o\'ting',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(lv,n,m)=>`${lv} daraja · ${n}-dars · ~${m} daq`,
+ leg:{},
+ warnB:'Ehtiyot bo\'ling: issiq.',warn:'Ushlagich bilan, toza qo\'llar va yig\'ilgan soch bilan ishlang.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Siz bu darajadagi barcha darslarni o\'tdingiz.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ rT:'Retsept qolipingizga',rSub:'Dumaloq qolip yuzasi bo\'yicha qayta hisoblash',rec:'Retsept',recO:['Biskvit','Qumoq','Krem‑chiz','Ganash'],base:d=>`Retsept ${d} sm qolipga`,myD:'Qolipingiz, sm',k:'Koef.',
+ ing:{egg:'Tuxum',sugar:'Shakar',flour:'Un',starch:'Kraxmal',butter:'Sariyog\'',yolk:'Sarig\'',cheese:'Qaymoqli pishloq',cream:'Qaymoq 33 %',powder:'Upa',choc:'Shokolad'},
+ pcs:'dona',g:'g',kg:'kg',cm:'sm',
+ rNote:'Qolip balandroq yoki pastroq bo\'lsa, balandliklar nisbatiga ham ko\'paytiring. Katta qolipda uzoqroq va 10 °C pastroq pishiring, cho\'p bilan tekshiring.',
+ wT:'Bayramga qanday tort kerak',wSub:'Mehmonlar soniga ko\'ra og\'irlik va qolip o\'lchami',guests:'Mehmonlar',por:'Bo\'lak',porO:['Bolalar','Oddiy','Katta'],w:'Og\'irlik',form:'Qolip',tiers:'Qavatlar',
+ wNote:'Tort balandligi 10–12 sm. 3,5 kg dan kattasini ikki qavat qilish yaxshi.',
+ cT:'Tort tannarxi va narxi',cSub:'Mahsulot, qadoq, mehnat',prod:'Mahsulot, so\'m',pack:'Qadoq, so\'m',wt:'Tort og\'irligi, kg',hrs:'Ish soatlari',rate:'Soatbay stavka, so\'m',
+ cp:'Tannarx',price:'Narx',pkg:'1 kg uchun',sum:'so\'m',
+ cNote:'Tannarx = (mahsulot + qadoq) + gaz, svet va mayda-chuydaga 10 %. Narx = tannarx + mehnat, 5 000 so\'mgacha yuqoriga yaxlitlangan.',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub and Электрик Pro (ep_lang); progress is ours (kd_)
+const pk=k=>(k==='lang'?'ep_':'kd_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let S={screen:'home',tab:0,id:null,qi:0,score:0,picked:null,calc:{rec:0,d:24,g:15,por:1,prod:180000,pack:25000,wt:2,hrs:5,rate:30000}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+
+const bolt='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M5 20v-6h14v6M5 16.5q2.3 1.5 4.7 0t4.6 0 4.7 0M7 14v-3h10v3M12 11V8" fill="none" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3.5q1.6 1.8 0 3.2-1.6-1.4 0-3.2z" fill="var(--accent-ink)"/></svg>';
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+const swatch={};
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div><a class="game" href="igra/"><span class="gi">🎂</span><span class="tx"><b>${lang==='uz'?'O\'yin «Tortni yig\'»':'Игра «Собери торт»'}</b><span class="s">${lang==='uz'?'2 daqiqa: buyurtma tortlarni xatosiz yig\'ing':'2 минуты: собери торты на заказ без ошибок'}</span></span><span class="go">›</span></a>`;
+  [0,1,2].forEach(lv=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone?(isPaid(x)?L.paid:tr(x.s)):tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.lv[x.lv],n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg){h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div>`;
+    if(x.legend)h+=`<div class="legend">${x.legend.map(k=>`<span><i class="sw" style="background:${swatch[k]}"></i>${L.leg[k]}</span>`).join('')}</div>`;h+='</div>'}
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warnB?tr(x.warnB):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function quiz(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const QZ=x.quiz;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.toL}</button>${langSw()}</div><h1 class="ttl">${L.qt}: ${tr(x.t)}</h1><p>${L.qsub(need(QZ.length),QZ.length)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{const pass=S.score>=need(QZ.length);if(pass){done.add(x.id);store.set('done',[...done])}go('result')}};
+}
+
+function result(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const n=x.quiz.length;const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+}
+
+/* calculators: recipe scaled to a round form, cake weight and form by guests, cake cost and price */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',').replace('-','−');
+const big=n=>Math.round(n).toLocaleString('ru-RU').replace(/\s/g,' ');
+const numv=v=>+String(v).replace(',','.')||0;
+const seg=(k,opts)=>`<div class="seg" role="group">${opts.map((o,i)=>`<button type="button" data-seg="${k}" data-v="${i}" aria-pressed="${S.calc[k]===i}">${o}</button>`).join('')}</div>`;
+const fld=(id,lab,v,step=1)=>`<label class="fld" for="${id}">${lab}<input id="${id}" type="number" inputmode="decimal" min="0" step="${step}" value="${v}"></label>`;
+const cell=(t,v,c='')=>`<div${c?` class="${c}"`:''}><span>${t}</span><b>${v}</b></div>`;
+// base recipes: form diameter (cm) and grams
+const RECIPES=[
+ {d:20,items:[['egg',200],['sugar',120],['flour',100],['starch',20]]},
+ {d:22,items:[['flour',150],['butter',100],['sugar',50],['yolk',20]]},
+ {d:20,items:[['cheese',600],['cream',200],['powder',140]]},
+ {d:20,items:[['choc',300],['cream',150]]}];
+const RINGS=[14,16,18,20,22,24,26,28,30];
+// cake weight (g) from diameter at 11 cm height, ~0.7 g/cm³ — matches the lesson table
+const diaFor=w=>{const d=2*Math.sqrt(w/(0.7*11*Math.PI));return RINGS.find(r=>r>=d-0.6)||30};
+function calcBlock(){const L=U();const c=S.calc;
+  return `<div class="card stack"><div><h3>${L.rT}</h3><p class="expl">${L.rSub}</p></div>
+  <div class="fld">${L.rec}${seg('rec',L.recO)}</div>
+  <div class="pair">${fld('cd',L.myD,c.d)}<p class="expl" id="rb" style="align-self:end;margin:0 0 12px"></p></div>
+  <div class="out" id="out1"></div><p class="expl">${L.rNote}</p></div>
+  <div class="card stack"><div><h3>${L.wT}</h3><p class="expl">${L.wSub}</p></div>
+  <div class="pair">${fld('cg',L.guests,c.g)}<div></div></div>
+  <div class="fld">${L.por}${seg('por',L.porO.map((o,i)=>`${o} ${[100,150,200][i]} ${L.g}`))}</div>
+  <div class="out" id="out2"></div><p class="expl">${L.wNote}</p></div>
+  <div class="card stack"><div><h3>${L.cT}</h3><p class="expl">${L.cSub}</p></div>
+  <div class="pair">${fld('cpr',L.prod,c.prod,1000)}${fld('cpk',L.pack,c.pack,1000)}</div>
+  <div class="pair">${fld('cwt',L.wt,c.wt,0.1)}${fld('chr',L.hrs,c.hrs,0.5)}</div>
+  <div class="pair">${fld('crt',L.rate,c.rate,1000)}<div></div></div>
+  <div class="out" id="out3"></div><p class="expl" id="cv"></p><p class="expl">${L.cNote}</p></div>`}
+const gk=(g,L)=>g>=1000?`${fmt(g/1000,2)} ${L.kg}`:`${fmt(Math.round(g))} ${L.g}`;
+function paintCalc(){const L=U();const c=S.calc;const ru=lang==='ru';
+  // recipe scaling by area
+  const R0=RECIPES[c.rec];const d=Math.max(0,numv(c.d));const k=d>0?(d/R0.d)**2:0;
+  $('#rb').textContent=L.base(R0.d);
+  $('#out1').innerHTML=cell(L.k,d?fmt(k,2):'—')+R0.items.map(([n,g])=>{const v=g*k;
+    if(n==='egg')return cell(L.ing.egg,d?`${fmt(Math.max(1,Math.round(v/50)))} ${L.pcs}`:'—')+'';
+    if(n==='yolk')return cell(L.ing.yolk,d?`${fmt(Math.max(1,Math.round(v/20)))} ${L.pcs}`:'—');
+    return cell(L.ing[n],d?gk(v,L):'—')}).join('')+(R0.items[0][0]==='egg'&&d?cell(ru?'Яйца, вес':'Tuxum, vazni',gk(200*k,L)):'');
+  // cake by guests
+  const g=Math.max(0,numv(c.g));const w=g*[100,150,200][c.por];
+  let form='—',tiers='1';
+  if(w>0){if(w<=3600){form=`${diaFor(w)} ${L.cm}`}else{const a=diaFor(w*0.62),b=diaFor(w*0.38);form=`${a} + ${b} ${L.cm}`;tiers='2'}}
+  $('#out2').innerHTML=cell(L.w,w?gk(w,L):'—')+cell(L.form,form)+cell(L.tiers,w?tiers:'—');
+  // cost and price
+  const prod=Math.max(0,numv(c.prod)),pack=Math.max(0,numv(c.pack)),wt=Math.max(0,numv(c.wt)),hrs=Math.max(0,numv(c.hrs)),rate=Math.max(0,numv(c.rate));
+  const cost=(prod+pack)*1.1;const price=cost+hrs*rate>0?Math.ceil((cost+hrs*rate)/5000)*5000:0;
+  $('#out3').innerHTML=cell(L.cp,cost?big(cost):'—')+cell(L.price,price?big(price):'—')+cell(L.pkg,price&&wt?big(price/wt):'—');
+  const v=$('#cv');
+  if(price&&hrs*rate===0){v.textContent=ru?'Вы не посчитали свою работу. Укажите часы и ставку — иначе торт продаётся в убыток.':'Mehnatingiz hisoblanmadi. Soat va stavkani kiriting — aks holda tort zarariga sotiladi.';v.className='expl badc'}
+  else if(price){v.textContent=ru?`Продавайте торт примерно за ${big(price)} сум. Ваша работа в цене: ${big(hrs*rate)} сум.`:`Tortni taxminan ${big(price)} so'mga soting. Narxdagi mehnatingiz: ${big(hrs*rate)} so'm.`;v.className='expl okc'}
+  else v.textContent='';
+}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  on('#cd','d');on('#cg','g');on('#cpr','prod');on('#cpk','pack');on('#cwt','wt');on('#chr','hrs');on('#crt','rate');
+  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const k=b.dataset.seg;S.calc[k]=+b.dataset.v;
+    document.querySelectorAll(`[data-seg="${k}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>
