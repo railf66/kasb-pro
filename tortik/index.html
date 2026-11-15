@@ -34,7 +34,29 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
 #patience i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--mint),#b9e769);transition:width .2s linear}
 #patience i.low{background:linear-gradient(90deg,#ff6f6f,var(--gold))}
 /* stage */
-#stage{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center}
+#stage{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;border-radius:22px;overflow:hidden;
+ background:linear-gradient(180deg,transparent 72%,#e9a97a 72%,#d68d5c 74%,#c97f50 100%),
+ repeating-linear-gradient(90deg,rgba(255,255,255,.0) 0 26px,rgba(255,255,255,.45) 26px 28px),
+ linear-gradient(180deg,#ffe9f1,#ffd9e7 72%);box-shadow:inset 0 -6px 0 rgba(0,0,0,.06),0 3px 0 var(--line)}
+#bunting{position:absolute;left:0;top:0;width:100%;height:34px;pointer-events:none}
+#shelf{position:absolute;left:10px;top:40px;display:flex;gap:6px;font-size:20px;opacity:.85;pointer-events:none}
+#shelf2{position:absolute;right:10px;top:40px;display:flex;gap:6px;font-size:20px;opacity:.85;pointer-events:none}
+#shelf:after,#shelf2:after{content:"";position:absolute;left:-6px;right:-6px;bottom:-3px;height:5px;border-radius:3px;background:#c98a5d}
+#combo{position:absolute;right:10px;bottom:8px;background:#fff;border-radius:999px;padding:3px 10px;font-weight:900;font-size:13px;color:var(--pink);box-shadow:0 2px 0 var(--line);opacity:0;transition:opacity .2s}
+#combo.on{opacity:1}
+.conf{position:fixed;width:9px;height:14px;border-radius:2px;pointer-events:none;z-index:5;animation:conf 1.4s ease-in forwards}
+@keyframes conf{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
+#float{white-space:pre;text-align:center;line-height:1.15;text-shadow:0 2px 0 #fff,0 0 6px #fff,0 0 12px #fff}
+#float small{display:block;font-size:15px;color:#c27a00}
+.shopItem{display:flex;align-items:center;gap:10px;background:var(--bg2);border-radius:16px;padding:8px 10px;margin:8px 0;text-align:left}
+.shopItem svg{width:44px;height:44px;flex:none}
+.shopItem div{flex:1;font-weight:800;font-size:15px}
+.shopItem small{display:block;color:var(--muted);font-size:12px}
+.shopItem button{border:0;border-radius:12px;padding:8px 12px;font:900 14px Nunito,sans-serif;background:linear-gradient(180deg,#ffd36b,var(--gold));color:#5a3a00;box-shadow:0 3px 0 #d99a1f;cursor:pointer}
+.shopItem button:disabled{opacity:.45}
+.shopItem .own{color:#2fa36b;font-weight:900;font-size:14px}
+.btn2{border:2px solid var(--line);background:var(--bg2);color:var(--ink);border-radius:16px;font:900 16px Nunito,sans-serif;padding:11px;cursor:pointer;width:100%;margin-top:10px}
+#bank{font-weight:900;color:#c27a00;margin-top:10px}
 #cake{width:100%;height:100%;max-height:300px}
 #float{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-weight:900;font-size:30px;color:var(--pink);text-shadow:0 2px 0 #fff;pointer-events:none;opacity:0}
 #float.show{animation:up 1s forwards}
@@ -86,7 +108,7 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
       <div id="patience"><i></i></div>
     </div>
   </div>
-  <div id="stage"><svg id="cake" viewBox="0 0 200 200"></svg><div id="float"></div></div>
+  <div id="stage"><svg id="bunting" viewBox="0 0 300 34" preserveAspectRatio="none"></svg><div id="shelf">🧁🍪🫙</div><div id="shelf2">🍩🥐🧁</div><svg id="cake" viewBox="0 0 200 200"></svg><div id="float"></div><div id="combo"></div></div>
   <div id="controls">
     <div class="row"><b data-t="shape"></b><div class="opts" id="o-shape"></div></div>
     <div class="row"><b data-t="tiers"></b><div class="opts" id="o-tiers"></div></div>
@@ -102,6 +124,8 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
     <div class="title" id="mTitle"></div>
     <p id="mText"></p>
     <button class="btn big" id="play" data-t="play"></button>
+    <button class="btn2" id="shopBtn" data-t="shop"></button>
+    <p id="bank"></p>
     <p class="muted" id="mBest"></p>
   </div>
 </div>
@@ -113,8 +137,19 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
       <div><b id="rS">0</b><small data-t="servedL"></small></div>
       <div><b id="rP">0</b><small data-t="perfectL"></small></div>
     </div>
+    <p id="oBank" style="font-weight:900;color:#c27a00"></p>
     <p id="oBest"></p>
     <button class="btn big" id="again" data-t="again"></button>
+    <button class="btn2" id="toMenu" data-t="menuB"></button>
+  </div>
+</div>
+
+<div id="shop" class="screen hidden">
+  <div class="panel">
+    <div class="title" style="font-size:28px" data-t="shopT"></div>
+    <p id="shopBank" style="margin:8px 0;font-weight:900;color:#c27a00"></p>
+    <div id="shopList"></div>
+    <button class="btn big" id="shopBack" data-t="back" style="margin-top:8px"></button>
   </div>
 </div>
 
@@ -130,23 +165,33 @@ const T = {
     title: 'Тортик-студия', sub: 'Кондитерская на 2 минуты',
     intro: 'Клиенты приходят с заказом. Соберите точно такой торт, как на картинке, и нажмите «Подать торт». Чем точнее и быстрее, тем больше монет!',
     coinsL: 'монет', servedL: 'тортов', perfectL: 'идеальных', over: 'Студия закрыта!', timeup: 'Время вышло!', best: 'Рекорд: ', newBest: '🏆 Новый рекорд!',
-    perfect: 'Идеально!', good: 'Почти!', bad: 'Не то…', left: 'Ушла…', order: 'Заказ' },
+    perfect: 'Идеально!', good: 'Почти!', bad: 'Не то…', left: 'Ушла…', order: 'Заказ',
+    shop: '🛍 Магазин украшений', shopT: 'Магазин', back: 'Назад', menuB: 'В меню', bank: 'В копилке: ', toBank: ' монет в копилку. Всего: ', fast: '⚡ быстро', tip: '💝 чаевые', streak: '🔥 серия', own: '✓ Есть', newIn: 'Новые украшения появятся и в заказах клиентов.', combo: '🔥 Серия ' },
   uz: { shape: 'Shakl', tiers: 'Qavat', cream: 'Krem', top: 'Bezak', clear: 'Tozalash', serve: 'Tortni berish', play: 'Studiyani ochish', again: 'Yana o‘ynash',
     title: 'Tortik studiyasi', sub: '2 daqiqalik qandolatxona',
     intro: 'Mijozlar buyurtma bilan keladi. Rasmdagidek tort yig‘ing va «Tortni berish» tugmasini bosing. Qancha aniq va tez bo‘lsa, shuncha ko‘p tanga!',
     coinsL: 'tanga', servedL: 'tort', perfectL: 'a’lo', over: 'Studiya yopildi!', timeup: 'Vaqt tugadi!', best: 'Rekord: ', newBest: '🏆 Yangi rekord!',
-    perfect: 'A’lo!', good: 'Deyarli!', bad: 'Bu emas…', left: 'Ketib qoldi…', order: 'Buyurtma' }
+    perfect: 'A’lo!', good: 'Deyarli!', bad: 'Bu emas…', left: 'Ketib qoldi…', order: 'Buyurtma',
+    shop: '🛍 Bezaklar do‘koni', shopT: 'Do‘kon', back: 'Orqaga', menuB: 'Menyuga', bank: 'Cho‘chqachada: ', toBank: ' tanga cho‘chqachaga. Jami: ', fast: '⚡ tez', tip: '💝 choychaqa', streak: '🔥 seriya', own: '✓ Bor', newIn: 'Yangi bezaklar mijozlar buyurtmalarida ham chiqadi.', combo: '🔥 Seriya ' }
 };
 const SHAPES = ['round', 'square', 'heart'];
-const CREAMS = { pink: '#f9a8c6', choco: '#8a5434', vanilla: '#fbe6b0', mint: '#a6e6cc', berry: '#b48ae0' };
-const TOPS = ['straw', 'candle', 'sprinkle', 'cherry'];
+const CREAMS = { pink: '#f9a8c6', choco: '#8a5434', vanilla: '#fbe6b0', mint: '#a6e6cc', berry: '#b48ae0', caramel: '#e8a25a' };
+const TOPS = ['straw', 'candle', 'sprinkle', 'cherry', 'macaron', 'star', 'chocobar'];
+const SHOP = [{ g: 'cream', v: 'caramel', price: 150 }, { g: 'top', v: 'macaron', price: 200 }, { g: 'top', v: 'star', price: 300 }, { g: 'top', v: 'chocobar', price: 450 }];
+const ITEMN = { ru: { caramel: 'Карамельный крем', macaron: 'Макаруны', star: 'Золотые звёздочки', chocobar: 'Шоколадные плитки' }, uz: { caramel: 'Karamelli krem', macaron: 'Makarunlar', star: 'Oltin yulduzchalar', chocobar: 'Shokolad bo‘laklari' } };
+let bank = 0, owned = [];
+try { bank = +localStorage.getItem('kp_tortik_bank') || 0; owned = JSON.parse(localStorage.getItem('kp_tortik_owned') || '[]'); } catch (e) {}
+function saveBank() { try { localStorage.setItem('kp_tortik_bank', bank); localStorage.setItem('kp_tortik_owned', JSON.stringify(owned)); } catch (e) {} }
+const BASE_CREAMS = ['pink', 'choco', 'vanilla', 'mint', 'berry'], BASE_TOPS = ['straw', 'candle', 'sprinkle', 'cherry'];
+const creamsOpen = () => Object.keys(CREAMS).filter(k => BASE_CREAMS.includes(k) || owned.includes(k));
+const topsOpen = () => TOPS.filter(k => BASE_TOPS.includes(k) || owned.includes(k));
 const W = {
   ru: { shape: { round: 'круглый торт', square: 'квадратный торт', heart: 'торт-сердечко' }, two: 'двухъярусный ',
-        cream: { pink: 'розовым', choco: 'шоколадным', vanilla: 'ванильным', mint: 'мятным', berry: 'черничным' },
-        top: { straw: 'клубникой', candle: 'свечками', sprinkle: 'посыпкой', cherry: 'вишней' } },
+        cream: { pink: 'розовым', choco: 'шоколадным', vanilla: 'ванильным', mint: 'мятным', berry: 'черничным', caramel: 'карамельным' },
+        top: { straw: 'клубникой', candle: 'свечками', sprinkle: 'посыпкой', cherry: 'вишней', macaron: 'макарунами', star: 'звёздочками', chocobar: 'шоколадом' } },
   uz: { shape: { round: 'dumaloq tort', square: 'kvadrat tort', heart: 'yurak shaklidagi tort' }, two: 'ikki qavatli ',
-        cream: { pink: 'pushti', choco: 'shokoladli', vanilla: 'vanilli', mint: 'yalpizli', berry: 'qorag‘atli' },
-        top: { straw: 'qulupnay', candle: 'shamlar', sprinkle: 'rangli sepma', cherry: 'olcha' } }
+        cream: { pink: 'pushti', choco: 'shokoladli', vanilla: 'vanilli', mint: 'yalpizli', berry: 'qorag‘atli', caramel: 'karamelli' },
+        top: { straw: 'qulupnay', candle: 'shamlar', sprinkle: 'rangli sepma', cherry: 'olcha', macaron: 'makarunlar', star: 'yulduzchalar', chocobar: 'shokolad' } }
 };
 const NAMES = ['Малика', 'Дилноза', 'Сабина', 'Камила', 'Нигора', 'Лола', 'Мадина', 'Шахзода', 'Зарина', 'Севара', 'Амир', 'Тимур'];
 const NAMES_UZ = ['Malika', 'Dilnoza', 'Sabina', 'Kamila', 'Nigora', 'Lola', 'Madina', 'Shahzoda', 'Zarina', 'Sevara', 'Amir', 'Temur'];
@@ -156,18 +201,19 @@ const t = k => T[lang][k];
 function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; }
 function shade(hex, f) { const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = n >> 8 & 255, b = n & 255; r = Math.round(r * f); g = Math.round(g * f); b = Math.round(b * f); return `rgb(${Math.min(255, r)},${Math.min(255, g)},${Math.min(255, b)})`; }
 function heartPt(tt, s) { const x = 16 * Math.pow(Math.sin(tt), 3), y = 13 * Math.cos(tt) - 5 * Math.cos(2 * tt) - 2 * Math.cos(3 * tt) - Math.cos(4 * tt); return [x / 17 * s, -(y + 2.5) / 17 * s]; }
+let YS = 1;
 function shapePath(shape, cx, cy, s) {
-  if (shape === 'round') return `M${cx - s},${cy} a${s},${s * .82} 0 1,0 ${2 * s},0 a${s},${s * .82} 0 1,0 ${-2 * s},0Z`;
-  if (shape === 'square') { const r = s * .18, w = s * .92, h = s * .78; return `M${cx - w + r},${cy - h} H${cx + w - r} Q${cx + w},${cy - h} ${cx + w},${cy - h + r} V${cy + h - r} Q${cx + w},${cy + h} ${cx + w - r},${cy + h} H${cx - w + r} Q${cx - w},${cy + h} ${cx - w},${cy + h - r} V${cy - h + r} Q${cx - w},${cy - h} ${cx - w + r},${cy - h}Z`; }
-  let d = ''; for (let i = 0; i <= 60; i++) { const [x, y] = heartPt(i / 60 * Math.PI * 2, s); d += (i ? 'L' : 'M') + (cx + x).toFixed(1) + ',' + (cy + y * .85).toFixed(1); } return d + 'Z';
+  if (shape === 'round') return `M${cx - s},${cy} a${s},${s * .82 * YS} 0 1,0 ${2 * s},0 a${s},${s * .82 * YS} 0 1,0 ${-2 * s},0Z`;
+  if (shape === 'square') { const r = s * .18, w = s * .92, h = s * .78 * YS; return `M${cx - w + r},${cy - h} H${cx + w - r} Q${cx + w},${cy - h} ${cx + w},${cy - h + r} V${cy + h - r} Q${cx + w},${cy + h} ${cx + w - r},${cy + h} H${cx - w + r} Q${cx - w},${cy + h} ${cx - w},${cy + h - r} V${cy - h + r} Q${cx - w},${cy - h} ${cx - w + r},${cy - h}Z`; }
+  let d = ''; for (let i = 0; i <= 60; i++) { const [x, y] = heartPt(i / 60 * Math.PI * 2, s); d += (i ? 'L' : 'M') + (cx + x).toFixed(1) + ',' + (cy + y * .85 * YS).toFixed(1); } return d + 'Z';
 }
 function ringPts(shape, cx, cy, s, n) {
   const pts = [];
   for (let k = 0; k < n; k++) {
     const a = k / n * Math.PI * 2 + .3;
-    if (shape === 'round') pts.push([cx + Math.cos(a) * s * .68, cy + Math.sin(a) * s * .56]);
-    else if (shape === 'square') { const c = Math.cos(a), si = Math.sin(a), m = Math.max(Math.abs(c), Math.abs(si)); pts.push([cx + c / m * s * .66, cy + si / m * s * .54]); }
-    else { const [x, y] = heartPt(k / n * Math.PI * 2, s * .62); pts.push([cx + x, cy + y * .85 - s * .04]); }
+    if (shape === 'round') pts.push([cx + Math.cos(a) * s * .68, cy + Math.sin(a) * s * .56 * YS]);
+    else if (shape === 'square') { const c = Math.cos(a), si = Math.sin(a), m = Math.max(Math.abs(c), Math.abs(si)); pts.push([cx + c / m * s * .66, cy + si / m * s * .54 * YS]); }
+    else { const [x, y] = heartPt(k / n * Math.PI * 2, s * .62); pts.push([cx + x, cy + (y * .85 - s * .04) * YS]); }
   }
   return pts;
 }
@@ -176,6 +222,7 @@ function drawTopping(g, kind, x, y, sc = 1, i = 0) {
     el('path', { d: `M${x},${y + 7 * sc} C${x - 8 * sc},${y} ${x - 6 * sc},${y - 7 * sc} ${x},${y - 6 * sc} C${x + 6 * sc},${y - 7 * sc} ${x + 8 * sc},${y} ${x},${y + 7 * sc}Z`, fill: '#ef3b5a', stroke: '#b81e3c', 'stroke-width': .8 * sc }, g);
     el('path', { d: `M${x - 4 * sc},${y - 6 * sc} L${x},${y - 3 * sc} L${x + 4 * sc},${y - 6 * sc} L${x},${y - 8 * sc}Z`, fill: '#4cb85a' }, g);
     [[-2, -1], [2, 0], [0, 3]].forEach(([a, b]) => el('circle', { cx: x + a * sc, cy: y + b * sc, r: .8 * sc, fill: '#ffe08a' }, g));
+    el('ellipse', { cx: x - 2.5 * sc, cy: y - 2 * sc, rx: 1.4 * sc, ry: 2.4 * sc, fill: 'rgba(255,255,255,.45)' }, g);
   } else if (kind === 'cherry') {
     el('path', { d: `M${x},${y - 3 * sc} q${3 * sc},${-7 * sc} ${7 * sc},${-9 * sc}`, stroke: '#5b7b2a', 'stroke-width': 1.4 * sc, fill: 'none' }, g);
     el('circle', { cx: x, cy: y, r: 5 * sc, fill: '#b0102e' }, g); el('circle', { cx: x - 1.6 * sc, cy: y - 1.6 * sc, r: 1.4 * sc, fill: '#ff8fa3' }, g);
@@ -184,33 +231,66 @@ function drawTopping(g, kind, x, y, sc = 1, i = 0) {
     el('rect', { x: x - 2.4 * sc, y: y - 14 * sc, width: 4.8 * sc, height: 14 * sc, rx: 1.2 * sc, fill: cols[i % 4], stroke: 'rgba(0,0,0,.15)', 'stroke-width': .6 }, g);
     el('path', { d: `M${x},${y - 22 * sc} q${3.5 * sc},${4 * sc} 0,${7 * sc} q${-3.5 * sc},${-3 * sc} 0,${-7 * sc}Z`, fill: '#ffb21e' }, g);
     el('circle', { cx: x, cy: y - 17 * sc, r: 1.3 * sc, fill: '#fff6c2' }, g);
+  } else if (kind === 'macaron') {
+    const cols = ['#ffb3cb', '#b9e4c9', '#cdb8f0', '#ffe08a'], c = cols[i % 4];
+    el('ellipse', { cx: x, cy: y + 2.5 * sc, rx: 6.5 * sc, ry: 3 * sc, fill: shade(c, .85) }, g);
+    el('rect', { x: x - 6 * sc, y: y - .5 * sc, width: 12 * sc, height: 2.6 * sc, fill: '#fff8ef' }, g);
+    el('ellipse', { cx: x, cy: y - 1 * sc, rx: 6.5 * sc, ry: 3.2 * sc, fill: c }, g);
+    el('ellipse', { cx: x - 2 * sc, cy: y - 2 * sc, rx: 2.2 * sc, ry: 1 * sc, fill: 'rgba(255,255,255,.6)' }, g);
+  } else if (kind === 'star') {
+    let d = ''; for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, r = (k % 2 ? 2.8 : 6.5) * sc; d += (k ? 'L' : 'M') + (x + Math.cos(a) * r).toFixed(1) + ',' + (y - 2 * sc + Math.sin(a) * r).toFixed(1); }
+    el('path', { d: d + 'Z', fill: '#ffcf3a', stroke: '#e09a00', 'stroke-width': .8 * sc, 'stroke-linejoin': 'round' }, g);
+    el('circle', { cx: x - 1.5 * sc, cy: y - 3.5 * sc, r: 1.2 * sc, fill: '#fff6c2' }, g);
+  } else if (kind === 'chocobar') {
+    const tf = `rotate(${(i * 37) % 50 - 25} ${x} ${y})`;
+    el('rect', { x: x - 5 * sc, y: y - 9 * sc, width: 10 * sc, height: 12 * sc, rx: 1.2 * sc, fill: '#4a2614', transform: tf }, g);
+    el('rect', { x: x - 4 * sc, y: y - 8 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
+    el('rect', { x: x + .4 * sc, y: y - 8 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
+    el('rect', { x: x - 4 * sc, y: y - 2.6 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
+    el('rect', { x: x + .4 * sc, y: y - 2.6 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
   } else if (kind === 'sprinkle') {
     const cols = ['#ff5c8a', '#4fc3f7', '#ffd54f', '#81c784', '#ba68c8'];
     for (let j = 0; j < 5; j++) { const a = (i * 5 + j) * 2.4, r = 6 * sc; const px = x + Math.cos(a) * r * (j % 3) / 2, py = y + Math.sin(a) * r * (j % 3) / 2; el('rect', { x: px - 2.5 * sc, y: py - .9 * sc, width: 5 * sc, height: 1.8 * sc, rx: .9 * sc, fill: cols[(i + j) % 5], transform: `rotate(${(i * 47 + j * 73) % 180} ${px} ${py})` }, g); }
   }
 }
+let gid = 0;
+function grad(defs, type, stops, attrs = {}) {
+  const id = 'g' + (++gid), gr = el(type, Object.assign({ id }, attrs), defs);
+  stops.forEach(([o, c, op]) => el('stop', { offset: o, 'stop-color': c, 'stop-opacity': op === undefined ? 1 : op }, gr));
+  return 'url(#' + id + ')';
+}
 function drawCake(svg, c, opts = {}) {
   svg.innerHTML = '';
-  const g = el('g', {}, svg);
-  el('ellipse', { cx: 100, cy: 128, rx: 92, ry: 66, fill: '#ffffff', stroke: '#f0c6d6', 'stroke-width': 3 }, g);
-  el('ellipse', { cx: 100, cy: 128, rx: 80, ry: 56, fill: 'none', stroke: '#f7dbe6', 'stroke-width': 1.5, 'stroke-dasharray': '3 4' }, g);
-  if (!c.shape) { if (opts.hint) { const tx = el('text', { x: 100, y: 133, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 800, fill: '#c99aae', 'font-family': 'Nunito,sans-serif' }, g); tx.textContent = opts.hint; } return; }
+  const defs = el('defs', {}, svg), g = el('g', {}, svg);
+  // cake stand: soft shadow, glass plate with shine, short stem
+  el('ellipse', { cx: 100, cy: 186, rx: 70, ry: 9, fill: 'rgba(120,60,80,.18)' }, g);
+  el('path', { d: 'M86,150 L80,182 Q100,188 120,182 L114,150Z', fill: grad(defs, 'linearGradient', [[0, '#e9d7e0'], [.45, '#ffffff'], [1, '#d7c1cc']]) }, g);
+  el('ellipse', { cx: 100, cy: 150, rx: 94, ry: 30, fill: '#e3cbd6' }, g);
+  el('ellipse', { cx: 100, cy: 145, rx: 94, ry: 30, fill: grad(defs, 'radialGradient', [[0, '#ffffff'], [.75, '#fbf1f5'], [1, '#ead6df']], { cx: .4, cy: .35, r: .7 }) }, g);
+  el('ellipse', { cx: 70, cy: 136, rx: 30, ry: 6, fill: 'rgba(255,255,255,.8)' }, g);
+  if (!c.shape) { if (opts.hint) { const tx = el('text', { x: 100, y: 150, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 800, fill: '#c99aae', 'font-family': 'Nunito,sans-serif' }, g); tx.textContent = opts.hint; } return; }
   const col = CREAMS[c.cream] || '#fff4e6';
-  const layers = c.tiers === 2 ? [[122, 74], [96, 46]] : [[112, 72]];
+  YS = .62;
+  const layers = c.tiers === 2 ? [[110, 72], [76, 46]] : [[98, 72]];
+  const sideFill = grad(defs, 'linearGradient', [[0, shade(col, .62)], [.3, shade(col, .92)], [.42, shade(col, 1.06)], [.7, shade(col, .82)], [1, shade(col, .58)]]);
+  const topFill = grad(defs, 'radialGradient', [[0, shade(col, 1.12)], [.7, col], [1, shade(col, .9)]], { cx: .38, cy: .3, r: .8 });
   layers.forEach(([cy, s], li) => {
-    const side = 18;
-    el('path', { d: shapePath(c.shape, 100, cy + side, s), fill: shade(col, .72) }, g);
-    for (let k = side; k > 0; k -= 3) el('path', { d: shapePath(c.shape, 100, cy + k, s), fill: shade(col, .8 + (side - k) / side * .12) }, g);
-    el('path', { d: shapePath(c.shape, 100, cy, s), fill: col, stroke: shade(col, .88), 'stroke-width': 1.5 }, g);
-    // cream drops on edge
-    ringPts(c.shape, 100, cy, s * 1.38, 14).forEach(([x, y]) => { if (y > cy) el('ellipse', { cx: x, cy: y + 3, rx: 4, ry: 6, fill: col, opacity: .95 }, g); });
-    el('path', { d: shapePath(c.shape, 100, cy - 2, s * .9), fill: 'rgba(255,255,255,.22)' }, g);
+    const side = li ? 24 : 30;
+    for (let k = side; k > 0; k -= 2) el('path', { d: shapePath(c.shape, 100, cy + k, s), fill: sideFill }, g);
+    // filling stripe seen on the side
+    el('path', { d: shapePath(c.shape, 100, cy + side * .55, s), fill: 'none', stroke: 'rgba(255,255,255,.35)', 'stroke-width': 2.2, 'stroke-dasharray': `0 ${s * 1.6} ${s * 3.2} 999` }, g);
+    // piped cream beads along the bottom edge (front half)
+    ringPts(c.shape, 100, cy + side, s * 1.42, 22).forEach(([x, y]) => { if (y > cy + side - 2) { el('circle', { cx: x, cy: y + 1, r: 3.8, fill: shade(col, 1.08) }, g); el('circle', { cx: x - 1.2, cy: y - .3, r: 1.2, fill: 'rgba(255,255,255,.55)' }, g); } });
+    el('path', { d: shapePath(c.shape, 100, cy, s), fill: topFill, stroke: shade(col, .85), 'stroke-width': 1.2 }, g);
+    // drips on the front edge
+    ringPts(c.shape, 100, cy, s * 1.38, 16).forEach(([x, y], k) => { if (y > cy + 2) { const h = 6 + (k * 7) % 9; el('path', { d: `M${x - 4},${y - 1} q0,${h} 4,${h} q4,0 4,${-h}Z`, fill: shade(col, 1.02) }, g); el('ellipse', { cx: x - 1.4, cy: y + h * .45, rx: .9, ry: 2, fill: 'rgba(255,255,255,.45)' }, g); } });
     if (li === layers.length - 1 && c.tops && c.tops.length) {
       const n = c.tops.length === 1 ? 6 : 8, pts = ringPts(c.shape, 100, cy, s, n);
       pts.sort((a, b) => a[1] - b[1]).forEach(([x, y], i) => drawTopping(g, c.tops[i % c.tops.length], x, y, s < 60 ? .9 : 1.1, i));
       if (c.tops.length === 1 && c.tops[0] !== 'candle') drawTopping(g, c.tops[0], 100, cy, s < 60 ? .9 : 1.15, 9);
     }
   });
+  YS = 1;
 }
 function icon(kind, val) {
   const s = document.createElementNS(NS, 'svg'); s.setAttribute('viewBox', '0 0 40 40');
@@ -223,13 +303,15 @@ function icon(kind, val) {
 function drawFace(svg, who, mood) {
   svg.innerHTML = '';
   el('circle', { cx: 40, cy: 40, r: 38, fill: who.bg }, svg);
+  el('path', { d: 'M14,80 Q16,62 40,60 Q64,62 66,80Z', fill: who.shirt || '#7cc7ff' }, svg);
+  el('rect', { x: 35, y: 56, width: 10, height: 8, rx: 3, fill: who.skin }, svg);
   if (!who.boy) el('path', { d: 'M12,44 Q10,12 40,10 Q70,12 68,44 Q66,62 60,66 L20,66 Q14,62 12,44Z', fill: who.hair }, svg);
   el('circle', { cx: 40, cy: 42, r: 21, fill: who.skin }, svg);
   el('path', { d: who.boy ? 'M19,38 Q20,18 40,18 Q60,18 61,38 Q52,28 40,30 Q28,28 19,38Z' : 'M19,40 Q22,19 40,19 Q58,19 61,40 Q50,26 34,30 Q24,32 19,40Z', fill: who.hair }, svg);
   if (who.bow) { el('path', { d: 'M52,20 l10,-6 l0,12z M52,20 l-8,-7 l-1,12z', fill: who.bow }, svg); el('circle', { cx: 52, cy: 20, r: 3, fill: who.bow }, svg); }
   const ey = mood === 'sad' ? 44 : 42;
   if (mood === 'happy') { el('path', { d: 'M30,42 q3,-4 6,0 M44,42 q3,-4 6,0', stroke: '#3b2530', 'stroke-width': 2.2, fill: 'none', 'stroke-linecap': 'round' }, svg); }
-  else { el('circle', { cx: 33, cy: ey, r: 2.6, fill: '#3b2530' }, svg); el('circle', { cx: 47, cy: ey, r: 2.6, fill: '#3b2530' }, svg); }
+  else { el('circle', { cx: 33, cy: ey, r: 3, fill: '#3b2530' }, svg); el('circle', { cx: 47, cy: ey, r: 3, fill: '#3b2530' }, svg); el('circle', { cx: 34, cy: ey - 1.2, r: 1, fill: '#fff' }, svg); el('circle', { cx: 48, cy: ey - 1.2, r: 1, fill: '#fff' }, svg); }
   el('circle', { cx: 28, cy: 50, r: 3.5, fill: '#ff9db8', opacity: .55 }, svg); el('circle', { cx: 52, cy: 50, r: 3.5, fill: '#ff9db8', opacity: .55 }, svg);
   const m = mood === 'happy' ? 'M33,52 Q40,60 47,52' : mood === 'sad' ? 'M34,57 Q40,51 46,57' : mood === 'wait' ? 'M35,54 L45,54' : 'M34,53 Q40,57 46,53';
   el('path', { d: m, stroke: '#3b2530', 'stroke-width': 2.4, fill: mood === 'happy' ? '#fff' : 'none', 'stroke-linecap': 'round' }, svg);
@@ -237,18 +319,19 @@ function drawFace(svg, who, mood) {
 
 // ---------- game state ----------
 const ROUND = 120;
-let state = 'menu', time = ROUND, coins = 0, hearts = 3, served = 0, perfect = 0, order = null, cur = { shape: null, cream: null, tiers: 1, tops: [] }, who = null, patience = 1, patienceMax = 25, busy = false;
+let streak = 0, state = 'menu', time = ROUND, coins = 0, hearts = 3, served = 0, perfect = 0, order = null, cur = { shape: null, cream: null, tiers: 1, tops: [] }, who = null, patience = 1, patienceMax = 25, busy = false;
 let best = 0; try { best = +localStorage.getItem('kp_tortik_best') || 0; } catch (e) {}
 const pick = a => a[Math.random() * a.length | 0];
 
 function newOrder() {
   const lvl = served;
-  const o = { shape: pick(SHAPES), cream: pick(Object.keys(CREAMS).slice(0, lvl < 4 ? 4 : 5)), tiers: lvl >= 3 && Math.random() < .55 ? 2 : 1, tops: [pick(TOPS)] };
-  if (lvl >= 6 && Math.random() < .6) { let t2; do t2 = pick(TOPS); while (t2 === o.tops[0]); o.tops.push(t2); }
+  const cr = creamsOpen(), tp = topsOpen();
+  const o = { shape: pick(SHAPES), cream: pick(lvl < 4 ? cr.filter(k => k !== 'berry') : cr), tiers: lvl >= 3 && Math.random() < .55 ? 2 : 1, tops: [pick(tp)] };
+  if (lvl >= 6 && Math.random() < .6) { let t2; do t2 = pick(tp); while (t2 === o.tops[0]); o.tops.push(t2); }
   order = o;
   const i = Math.random() * NAMES.length | 0;
   const boy = i >= 10;
-  who = { i, boy, skin: pick(['#f6d2b8', '#eec19f', '#d9a37f', '#f9dcc6']), hair: pick(['#3a2418', '#5b3622', '#1f1a17', '#8a5a2b']), bg: pick(['#ffe3ee', '#e3f4ff', '#fff2cc', '#e6f7ec', '#efe6ff']), bow: !boy && Math.random() < .6 ? pick(['#ff6f9f', '#7cc7ff', '#ffb938']) : null };
+  who = { i, boy, skin: pick(['#f6d2b8', '#eec19f', '#d9a37f', '#f9dcc6']), hair: pick(['#3a2418', '#5b3622', '#1f1a17', '#8a5a2b']), bg: pick(['#ffe3ee', '#e3f4ff', '#fff2cc', '#e6f7ec', '#efe6ff']), shirt: pick(['#7cc7ff', '#ff8fb8', '#9be38c', '#ffd25e', '#b9a2ff']), bow: !boy && Math.random() < .6 ? pick(['#ff6f9f', '#7cc7ff', '#ffb938']) : null };
   patienceMax = Math.max(12, 26 - served * 1.2); patience = patienceMax;
   cur = { shape: null, cream: null, tiers: 1, tops: [] };
   $('face').classList.remove('pop'); void $('face').offsetWidth; $('face').classList.add('pop');
@@ -270,6 +353,7 @@ function render() {
   $('mTitle').innerHTML = t('title') + '<span>' + t('sub') + '</span>';
   $('mText').textContent = t('intro');
   $('mBest').textContent = best ? t('best') + best + ' 🪙' : '';
+  $('bank').textContent = t('bank') + bank + ' 🪙';
   if (order) {
     const nm = (lang === 'uz' ? NAMES_UZ : NAMES)[who.i];
     $('say').innerHTML = '<small>' + nm + ' · ' + t('order') + ' №' + (served + 1) + '</small>' + phrase(order);
@@ -280,7 +364,7 @@ function render() {
   hud();
 }
 function buildOpts() {
-  const groups = { shape: SHAPES, tiers: [1, 2], cream: Object.keys(CREAMS), top: TOPS };
+  const groups = { shape: SHAPES, tiers: [1, 2], cream: creamsOpen(), top: topsOpen() };
   for (const g in groups) {
     const box = $('o-' + g); box.innerHTML = '';
     groups[g].forEach(v => {
@@ -307,7 +391,7 @@ function hud() {
   $('hearts').textContent = '♥'.repeat(hearts) + '♡'.repeat(3 - hearts);
   const p = patience / patienceMax; const bar = $('patience').firstElementChild; bar.style.width = (p * 100) + '%'; bar.classList.toggle('low', p < .35);
 }
-function floatText(txt, color) { const f = $('float'); f.textContent = txt; f.style.color = color; f.classList.remove('show'); void f.offsetWidth; f.classList.add('show'); }
+function floatText(txt, color, extra) { const f = $('float'); f.textContent = txt; if (extra) { const sm = document.createElement('small'); sm.textContent = extra; f.appendChild(sm); } f.style.color = color; f.classList.remove('show'); void f.offsetWidth; f.classList.add('show'); }
 function serve(timeout) {
   if (state !== 'play' || busy) return;
   busy = true;
@@ -320,23 +404,31 @@ function serve(timeout) {
     if (want === got) score++;
   }
   let mood, gain = 0;
-  if (timeout) { mood = 'sad'; hearts--; floatText(t('left'), '#e2365b'); tone([300, 220], .15); }
-  else if (score === total) { mood = 'happy'; gain = 30 + Math.round(patience / patienceMax * 30); perfect++; served++; floatText(t('perfect') + ' +' + gain, '#ff6f9f'); tone([660, 880, 1320], .09); }
-  else if (score >= 3) { mood = 'ok'; gain = 12; served++; floatText(t('good') + ' +' + gain, '#f39c12'); tone([520, 660], .1); }
-  else { mood = 'sad'; hearts--; floatText(t('bad'), '#e2365b'); tone([300, 220], .15); }
+  if (timeout) { mood = 'sad'; hearts--; streak = 0; floatText(t('left'), '#e2365b'); tone([300, 220], .15); }
+  else if (score === total) {
+    mood = 'happy'; perfect++; served++; streak++;
+    const pf = patience / patienceMax, fast = Math.round(pf * 25), st = Math.min(25, (streak - 1) * 5), tip = pf > .5 ? 5 + (Math.random() * 11 | 0) : 0;
+    gain = 25 + fast + st + tip;
+    const extra = [fast ? t('fast') + ' +' + fast : '', st ? t('streak') + ' +' + st : '', tip ? t('tip') + ' +' + tip : ''].filter(Boolean).join('\n');
+    floatText(t('perfect') + ' +' + gain, '#ff6f9f', extra); tone([660, 880, 1320], .09); confetti(); coinSound(Math.min(6, 2 + (gain / 20 | 0)));
+  }
+  else if (score >= 3) { mood = 'ok'; streak = 0; const fast = Math.round(patience / patienceMax * 10); gain = 10 + fast; served++; floatText(t('good') + ' +' + gain, '#f39c12', fast ? t('fast') + ' +' + fast : ''); tone([520, 660], .1); }
+  else { mood = 'sad'; streak = 0; hearts--; floatText(t('bad'), '#e2365b'); tone([300, 220], .15); }
+  $('combo').textContent = t('combo') + 'x' + streak; $('combo').classList.toggle('on', streak >= 2);
   coins += gain;
   drawFace($('face'), who, mood); hud();
   setTimeout(() => { busy = false; if (hearts <= 0) end(false); else if (state === 'play') newOrder(), drawFace($('face'), who, 'wait'); }, 1100);
 }
 function start() {
   audio();
-  state = 'play'; time = ROUND; coins = 0; hearts = 3; served = 0; perfect = 0; busy = false;
+  state = 'play'; time = ROUND; coins = 0; hearts = 3; served = 0; perfect = 0; busy = false; streak = 0; $('combo').classList.remove('on');
   $('menu').classList.add('hidden'); $('over').classList.add('hidden');
   newOrder(); drawFace($('face'), who, 'wait');
 }
 function end(timeUp) {
   state = 'over';
   $('oTitle').textContent = timeUp ? t('timeup') : t('over');
+  bank += coins; saveBank(); $('oBank').textContent = '🪙 +' + coins + t('toBank') + bank;
   $('rC').textContent = coins; $('rS').textContent = served; $('rP').textContent = perfect;
   if (coins > best) { best = coins; try { localStorage.setItem('kp_tortik_best', best); } catch (e) {} $('oBest').textContent = t('newBest'); }
   else $('oBest').textContent = t('best') + best + ' 🪙';
@@ -348,6 +440,28 @@ let AC = null;
 function audio() { try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) {} }
 function tone(freqs, step) { if (!AC) return; freqs.forEach((f, i) => { const o = AC.createOscillator(), g = AC.createGain(), t0 = AC.currentTime + i * step; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(.12, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + step * 1.8); o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + step * 2); }); }
 function click(f) { tone([f], .04); }
+function coinSound(n) { if (!AC) return; for (let i = 0; i < n; i++) { const o = AC.createOscillator(), g = AC.createGain(), t0 = AC.currentTime + .25 + i * .07; o.type = 'square'; o.frequency.setValueAtTime(1320, t0); o.frequency.setValueAtTime(1760, t0 + .03); g.gain.setValueAtTime(.04, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + .12); o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + .13); } }
+function confetti() {
+  const r = $('cake').getBoundingClientRect(), cols = ['#ff6f9f', '#ffd25e', '#7cc7ff', '#9be38c', '#b9a2ff'];
+  for (let i = 0; i < 26; i++) { const d = document.createElement('div'); d.className = 'conf'; d.style.left = (r.left + r.width / 2) + 'px'; d.style.top = (r.top + r.height * .4) + 'px'; d.style.background = cols[i % 5];
+    d.style.setProperty('--dx', (Math.random() * 260 - 130) + 'px'); d.style.setProperty('--dy', (Math.random() * 200 - 40) + 'px'); d.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg'); d.style.animationDelay = (Math.random() * .1) + 's';
+    document.body.appendChild(d); setTimeout(() => d.remove(), 1600); }
+}
+function drawBunting() {
+  const b = $('bunting'); b.innerHTML = ''; const cols = ['#ff8fb8', '#ffd25e', '#7cc7ff', '#9be38c', '#b9a2ff'];
+  el('path', { d: 'M0,4 Q150,16 300,4', stroke: '#c98a5d', 'stroke-width': 1.2, fill: 'none' }, b);
+  for (let i = 0; i < 12; i++) { const x = 12 + i * 25, y = 4 + Math.sin(x / 300 * Math.PI) * 10; el('path', { d: `M${x - 9},${y} L${x + 9},${y} L${x},${y + 16}Z`, fill: cols[i % 5] }, b); }
+}
+function renderShop() {
+  $('shopBank').innerHTML = t('bank') + bank + ' 🪙<br><small style="color:#9a7486;font-weight:700">' + t('newIn') + '</small>'; const L = $('shopList'); L.innerHTML = '';
+  SHOP.forEach(it => {
+    const row = document.createElement('div'); row.className = 'shopItem'; row.appendChild(icon(it.g, it.v));
+    const d = document.createElement('div'); d.textContent = ITEMN[lang][it.v]; row.appendChild(d);
+    if (owned.includes(it.v)) { const o = document.createElement('span'); o.className = 'own'; o.textContent = t('own'); row.appendChild(o); }
+    else { const btn = document.createElement('button'); btn.textContent = it.price + ' 🪙'; btn.disabled = bank < it.price; btn.onclick = () => { if (bank < it.price) return; bank -= it.price; owned.push(it.v); saveBank(); audio(); tone([660, 880, 1320], .08); coinSound(4); renderShop(); }; row.appendChild(btn); }
+    L.appendChild(row);
+  });
+}
 
 // ---------- loop ----------
 let last = performance.now();
@@ -365,11 +479,16 @@ function loop(now) {
 $('serve').onclick = () => serve(false);
 $('clear').onclick = () => { if (state !== 'play' || busy) return; cur = { shape: null, cream: null, tiers: 1, tops: [] }; render(); };
 $('play').onclick = start; $('again').onclick = start;
+$('shopBtn').onclick = () => { audio(); renderShop(); $('menu').classList.add('hidden'); $('shop').classList.remove('hidden'); };
+$('shopBack').onclick = () => { $('shop').classList.add('hidden'); $('menu').classList.remove('hidden'); render(); };
+$('toMenu').onclick = () => { $('over').classList.add('hidden'); $('menu').classList.remove('hidden'); state = 'menu'; render(); };
+drawBunting();
 $('langBtn').onclick = () => { lang = lang === 'ru' ? 'uz' : 'ru'; try { localStorage.setItem('ep_lang', lang); } catch (e) {} render(); };
 
 drawCake($('hero'), { shape: 'heart', tiers: 2, cream: 'pink', tops: ['straw', 'candle'] });
 render();
 requestAnimationFrame(loop);
+window.__bank = v => { bank = v; saveBank(); render(); };
 window.__tort = { get order() { return order; }, get cur() { return cur; }, start, serve, choose, get coins() { return coins; } };
 })();
 </script>
