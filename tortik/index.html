@@ -183,8 +183,11 @@ let bank = 0, owned = [];
 try { bank = +localStorage.getItem('kp_tortik_bank') || 0; owned = JSON.parse(localStorage.getItem('kp_tortik_owned') || '[]'); } catch (e) {}
 function saveBank() { try { localStorage.setItem('kp_tortik_bank', bank); localStorage.setItem('kp_tortik_owned', JSON.stringify(owned)); } catch (e) {} }
 const BASE_CREAMS = ['pink', 'choco', 'vanilla', 'mint', 'berry'], BASE_TOPS = ['straw', 'candle', 'sprinkle', 'cherry'];
-const creamsOpen = () => Object.keys(CREAMS).filter(k => BASE_CREAMS.includes(k) || owned.includes(k));
-const topsOpen = () => TOPS.filter(k => BASE_TOPS.includes(k) || owned.includes(k));
+const ADMIN_HASH = 'ca0ece14dcd3eff1b9d6789bf0a2c2009abcff64d43df1342d0c1f444ee19960';
+let admin = false; try { admin = localStorage.getItem('kp_tortik_admin') === '1'; } catch (e) {}
+const has = v => admin || owned.includes(v);
+const creamsOpen = () => Object.keys(CREAMS).filter(k => BASE_CREAMS.includes(k) || has(k));
+const topsOpen = () => TOPS.filter(k => BASE_TOPS.includes(k) || has(k));
 const W = {
   ru: { shape: { round: 'круглый торт', square: 'квадратный торт', heart: 'торт-сердечко' }, two: 'двухъярусный ',
         cream: { pink: 'розовым', choco: 'шоколадным', vanilla: 'ванильным', mint: 'мятным', berry: 'черничным', caramel: 'карамельным' },
@@ -353,7 +356,7 @@ function render() {
   $('mTitle').innerHTML = t('title') + '<span>' + t('sub') + '</span>';
   $('mText').textContent = t('intro');
   $('mBest').textContent = best ? t('best') + best + ' 🪙' : '';
-  $('bank').textContent = t('bank') + bank + ' 🪙';
+  $('bank').innerHTML = (admin ? (lang === 'ru' ? '👑 Режим владельца: всё бесплатно<br>' : '👑 Egasi rejimi: hammasi bepul<br>') : '') + t('bank') + bank + ' 🪙';
   if (order) {
     const nm = (lang === 'uz' ? NAMES_UZ : NAMES)[who.i];
     $('say').innerHTML = '<small>' + nm + ' · ' + t('order') + ' №' + (served + 1) + '</small>' + phrase(order);
@@ -457,7 +460,7 @@ function renderShop() {
   SHOP.forEach(it => {
     const row = document.createElement('div'); row.className = 'shopItem'; row.appendChild(icon(it.g, it.v));
     const d = document.createElement('div'); d.textContent = ITEMN[lang][it.v]; row.appendChild(d);
-    if (owned.includes(it.v)) { const o = document.createElement('span'); o.className = 'own'; o.textContent = t('own'); row.appendChild(o); }
+    if (has(it.v)) { const o = document.createElement('span'); o.className = 'own'; o.textContent = t('own'); row.appendChild(o); }
     else { const btn = document.createElement('button'); btn.textContent = it.price + ' 🪙'; btn.disabled = bank < it.price; btn.onclick = () => { if (bank < it.price) return; bank -= it.price; owned.push(it.v); saveBank(); audio(); tone([660, 880, 1320], .08); coinSound(4); renderShop(); }; row.appendChild(btn); }
     L.appendChild(row);
   });
@@ -488,6 +491,14 @@ $('langBtn').onclick = () => { lang = lang === 'ru' ? 'uz' : 'ru'; try { localSt
 drawCake($('hero'), { shape: 'heart', tiers: 2, cream: 'pink', tops: ['straw', 'candle'] });
 render();
 requestAnimationFrame(loop);
+(async () => {
+  try {
+    const q = new URLSearchParams(location.search).get('admin'); if (q === null) return;
+    if (q === 'off') { admin = false; localStorage.removeItem('kp_tortik_admin'); }
+    else { const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(q)); const h = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join(''); if (h === ADMIN_HASH) { admin = true; localStorage.setItem('kp_tortik_admin', '1'); } }
+    history.replaceState(null, '', location.pathname); render();
+  } catch (e) {}
+})();
 window.__bank = v => { bank = v; saveBank(); render(); };
 window.__tort = { get order() { return order; }, get cur() { return cur; }, start, serve, choose, get coins() { return coins; } };
 })();
