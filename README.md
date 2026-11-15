@@ -19,6 +19,7 @@
 - `povar/` — приложение для поваров (исходники: папка проекта povar-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"` и SEO-тегами).
 - `slabotochnik/` — приложение для слаботочников «Слаботочник Pro»: СКС, домофоны, охранная и пожарная сигнализация, СКУД (исходники: папка проекта slabotochnik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`, `tg.js` и SEO-тегами).
 - `konditer/` — приложение для кондитеров «Кондитер Pro» (исходники: папка проекта konditer-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`, `tg.js` и SEO-тегами).
+- `modeler/` — приложение для портних и модельеров «Модельер Pro»: мерки, ткани, швы, чертёж и пошив юбки, примерка, перевод вытачки, юбка-солнце, дизайн, своё ателье (исходники: папка проекта modeler-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`, `tg.js` и SEO-тегами). Прогресс `mo_*`.
 
 ## Telegram
 
