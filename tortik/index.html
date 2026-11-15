@@ -88,6 +88,13 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
 .res b{display:block;font-size:26px}
 .res small{font-size:12px;color:var(--muted);font-weight:800}
 .hidden{display:none!important}
+.screen{overflow-y:auto;align-items:safe center}
+@media (max-height:700px){#hero{width:96px;height:96px}.panel p{margin:8px 0}.title{font-size:28px}}
+#days{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0 4px}
+#days button{border:2px solid var(--line);background:var(--bg2);border-radius:12px;padding:7px 9px;font:900 14px Nunito,sans-serif;color:var(--ink);cursor:pointer}
+#days button.on{border-color:var(--pink);background:#ffe3ee;color:var(--pink)}
+#days button.lock{opacity:.5}
+#dayNote{font-size:13px;color:var(--muted);font-weight:800;margin:4px 0 10px}
 #hero{width:150px;height:150px;margin:0 auto 6px;display:block}
 .muted{color:var(--muted);font-size:13px}
 </style>
@@ -123,6 +130,8 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
     <svg id="hero" viewBox="0 0 200 200"></svg>
     <div class="title" id="mTitle"></div>
     <p id="mText"></p>
+    <div id="days"></div>
+    <p id="dayNote"></p>
     <button class="btn big" id="play" data-t="play"></button>
     <button class="btn2" id="shopBtn" data-t="shop"></button>
     <p id="bank"></p>
@@ -137,6 +146,7 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
       <div><b id="rS">0</b><small data-t="servedL"></small></div>
       <div><b id="rP">0</b><small data-t="perfectL"></small></div>
     </div>
+    <p id="oDay" style="font-weight:900;white-space:pre-line"></p>
     <p id="oBank" style="font-weight:900;color:#c27a00"></p>
     <p id="oBest"></p>
     <button class="btn big" id="again" data-t="again"></button>
@@ -162,14 +172,18 @@ try { lang = localStorage.getItem('ep_lang') === 'uz' ? 'uz' : 'ru'; } catch (e)
 
 const T = {
   ru: { shape: 'Форма', tiers: 'Ярусы', cream: 'Крем', top: 'Декор', clear: 'Сброс', serve: 'Подать торт', play: 'Открыть студию', again: 'Ещё раз',
-    title: 'Тортик-студия', sub: 'Кондитерская на 2 минуты',
-    intro: 'Клиенты приходят с заказом. Соберите точно такой торт, как на картинке, и нажмите «Подать торт». Чем точнее и быстрее, тем больше монет!',
+    title: 'Тортик-студия', sub: '5 дней в кондитерской',
+    intro: 'Соберите такой же торт, как на картинке клиента, и нажмите «Подать торт». Наберите нужное число монет за день, чтобы открыть следующий день!',
+    day: 'День ', goal: 'Цель', dayPass: ' пройден!', dayFail: 'Не хватило монет до цели', reward: '🎁 Награда за день: +', lockD: 'Сначала пройдите день ', nextDay: 'Дальше: день ', allDone: '🏆 Все 5 дней пройдены!',
+    dn: ['Простые заказы, клиенты терпеливые.', 'Появляются двухъярусные торты.', 'Два украшения сразу, все кремы.', 'Клиенты торопятся!', 'Шеф-кондитер: всё сложно и быстро.'],
     coinsL: 'монет', servedL: 'тортов', perfectL: 'идеальных', over: 'Студия закрыта!', timeup: 'Время вышло!', best: 'Рекорд: ', newBest: '🏆 Новый рекорд!',
     perfect: 'Идеально!', good: 'Почти!', bad: 'Не то…', left: 'Ушла…', order: 'Заказ',
     shop: '🛍 Магазин украшений', shopT: 'Магазин', back: 'Назад', menuB: 'В меню', bank: 'В копилке: ', toBank: ' монет в копилку. Всего: ', fast: '⚡ быстро', tip: '💝 чаевые', streak: '🔥 серия', own: '✓ Есть', newIn: 'Новые украшения появятся и в заказах клиентов.', combo: '🔥 Серия ' },
   uz: { shape: 'Shakl', tiers: 'Qavat', cream: 'Krem', top: 'Bezak', clear: 'Tozalash', serve: 'Tortni berish', play: 'Studiyani ochish', again: 'Yana o‘ynash',
-    title: 'Tortik studiyasi', sub: '2 daqiqalik qandolatxona',
-    intro: 'Mijozlar buyurtma bilan keladi. Rasmdagidek tort yig‘ing va «Tortni berish» tugmasini bosing. Qancha aniq va tez bo‘lsa, shuncha ko‘p tanga!',
+    title: 'Tortik studiyasi', sub: 'Qandolatxonada 5 kun',
+    intro: 'Mijoz rasmidagidek tort yig‘ing va «Tortni berish» tugmasini bosing. Keyingi kunni ochish uchun kunlik tanga maqsadiga yeting!',
+    day: 'Kun ', goal: 'Maqsad', dayPass: ' o‘tildi!', dayFail: 'Maqsadga tanga yetmadi', reward: '🎁 Kun mukofoti: +', lockD: 'Avval o‘ting: kun ', nextDay: 'Keyingi: kun ', allDone: '🏆 5 kunning hammasi o‘tildi!',
+    dn: ['Oddiy buyurtmalar, mijozlar sabrli.', 'Ikki qavatli tortlar paydo bo‘ladi.', 'Bir vaqtda ikki bezak, barcha kremlar.', 'Mijozlar shoshilmoqda!', 'Bosh qandolatchi: hammasi qiyin va tez.'],
     coinsL: 'tanga', servedL: 'tort', perfectL: 'a’lo', over: 'Studiya yopildi!', timeup: 'Vaqt tugadi!', best: 'Rekord: ', newBest: '🏆 Yangi rekord!',
     perfect: 'A’lo!', good: 'Deyarli!', bad: 'Bu emas…', left: 'Ketib qoldi…', order: 'Buyurtma',
     shop: '🛍 Bezaklar do‘koni', shopT: 'Do‘kon', back: 'Orqaga', menuB: 'Menyuga', bank: 'Cho‘chqachada: ', toBank: ' tanga cho‘chqachaga. Jami: ', fast: '⚡ tez', tip: '💝 choychaqa', streak: '🔥 seriya', own: '✓ Bor', newIn: 'Yangi bezaklar mijozlar buyurtmalarida ham chiqadi.', combo: '🔥 Seriya ' }
@@ -322,20 +336,29 @@ function drawFace(svg, who, mood) {
 
 // ---------- game state ----------
 const ROUND = 120;
+const DAYS = [
+  { time: 90, goal: 220, tiers: 0, two: 0, pat: 28, noBerry: 1, reward: 50 },
+  { time: 100, goal: 300, tiers: .5, two: 0, pat: 25, noBerry: 1, reward: 80 },
+  { time: 110, goal: 380, tiers: .5, two: .5, pat: 22, noBerry: 0, reward: 120 },
+  { time: 110, goal: 440, tiers: .6, two: .6, pat: 17, noBerry: 0, reward: 160 },
+  { time: 120, goal: 500, tiers: .75, two: .8, pat: 14, noBerry: 0, reward: 250 },
+];
+let day = 0, dayOpen = 0;
+try { dayOpen = Math.min(4, +localStorage.getItem('kp_tortik_day') || 0); day = Math.min(dayOpen, +localStorage.getItem('kp_tortik_sel') || 0); } catch (e) {}
+const canDay = i => admin || i <= dayOpen;
 let streak = 0, state = 'menu', time = ROUND, coins = 0, hearts = 3, served = 0, perfect = 0, order = null, cur = { shape: null, cream: null, tiers: 1, tops: [] }, who = null, patience = 1, patienceMax = 25, busy = false;
 let best = 0; try { best = +localStorage.getItem('kp_tortik_best') || 0; } catch (e) {}
 const pick = a => a[Math.random() * a.length | 0];
 
 function newOrder() {
-  const lvl = served;
-  const cr = creamsOpen(), tp = topsOpen();
-  const o = { shape: pick(SHAPES), cream: pick(lvl < 4 ? cr.filter(k => k !== 'berry') : cr), tiers: lvl >= 3 && Math.random() < .55 ? 2 : 1, tops: [pick(tp)] };
-  if (lvl >= 6 && Math.random() < .6) { let t2; do t2 = pick(tp); while (t2 === o.tops[0]); o.tops.push(t2); }
+  const D = DAYS[day], cr = creamsOpen(), tp = topsOpen();
+  const o = { shape: pick(SHAPES), cream: pick(D.noBerry ? cr.filter(k => k !== 'berry') : cr), tiers: Math.random() < D.tiers ? 2 : 1, tops: [pick(tp)] };
+  if (Math.random() < D.two) { let t2; do t2 = pick(tp); while (t2 === o.tops[0]); o.tops.push(t2); }
   order = o;
   const i = Math.random() * NAMES.length | 0;
   const boy = i >= 10;
   who = { i, boy, skin: pick(['#f6d2b8', '#eec19f', '#d9a37f', '#f9dcc6']), hair: pick(['#3a2418', '#5b3622', '#1f1a17', '#8a5a2b']), bg: pick(['#ffe3ee', '#e3f4ff', '#fff2cc', '#e6f7ec', '#efe6ff']), shirt: pick(['#7cc7ff', '#ff8fb8', '#9be38c', '#ffd25e', '#b9a2ff']), bow: !boy && Math.random() < .6 ? pick(['#ff6f9f', '#7cc7ff', '#ffb938']) : null };
-  patienceMax = Math.max(12, 26 - served * 1.2); patience = patienceMax;
+  patienceMax = Math.max(10, DAYS[day].pat - served * .6); patience = patienceMax;
   cur = { shape: null, cream: null, tiers: 1, tops: [] };
   $('face').classList.remove('pop'); void $('face').offsetWidth; $('face').classList.add('pop');
   render();
@@ -356,6 +379,10 @@ function render() {
   $('mTitle').innerHTML = t('title') + '<span>' + t('sub') + '</span>';
   $('mText').textContent = t('intro');
   $('mBest').textContent = best ? t('best') + best + ' 🪙' : '';
+  const dz = $('days'); dz.innerHTML = '';
+  DAYS.forEach((d, i) => { const b = document.createElement('button'); b.textContent = (canDay(i) ? '' : '🔒 ') + (i + 1); b.classList.toggle('on', i === day); b.classList.toggle('lock', !canDay(i));
+    b.onclick = () => { if (!canDay(i)) { $('dayNote').textContent = t('lockD') + i; return; } day = i; try { localStorage.setItem('kp_tortik_sel', i); } catch (e) {} render(); }; dz.appendChild(b); });
+  $('dayNote').textContent = t('day') + (day + 1) + ': ' + t('dn')[day] + ' ' + t('goal') + ': ' + DAYS[day].goal + ' 🪙';
   $('bank').innerHTML = (admin ? (lang === 'ru' ? '👑 Режим владельца: всё бесплатно<br>' : '👑 Egasi rejimi: hammasi bepul<br>') : '') + t('bank') + bank + ' 🪙';
   if (order) {
     const nm = (lang === 'uz' ? NAMES_UZ : NAMES)[who.i];
@@ -390,7 +417,7 @@ function choose(g, v) {
 function hud() {
   const s = Math.max(0, Math.ceil(time));
   $('timer').textContent = '⏱ ' + (s / 60 | 0) + ':' + String(s % 60).padStart(2, '0'); $('timer').classList.toggle('low', s <= 15);
-  $('coins').textContent = '🪙 ' + coins;
+  $('coins').textContent = '🪙 ' + coins + (state === 'play' ? ' / ' + DAYS[day].goal : '');
   $('hearts').textContent = '♥'.repeat(hearts) + '♡'.repeat(3 - hearts);
   const p = patience / patienceMax; const bar = $('patience').firstElementChild; bar.style.width = (p * 100) + '%'; bar.classList.toggle('low', p < .35);
 }
@@ -424,13 +451,20 @@ function serve(timeout) {
 }
 function start() {
   audio();
-  state = 'play'; time = ROUND; coins = 0; hearts = 3; served = 0; perfect = 0; busy = false; streak = 0; $('combo').classList.remove('on');
+  state = 'play'; time = DAYS[day].time; coins = 0; hearts = 3; served = 0; perfect = 0; busy = false; streak = 0; $('combo').classList.remove('on');
   $('menu').classList.add('hidden'); $('over').classList.add('hidden');
   newOrder(); drawFace($('face'), who, 'wait');
 }
 function end(timeUp) {
   state = 'over';
-  $('oTitle').textContent = timeUp ? t('timeup') : t('over');
+  const D = DAYS[day], pass = coins >= D.goal;
+  let extra = 0;
+  if (pass) { extra = D.reward; if (day + 1 > dayOpen && day < 4) { dayOpen = day + 1; try { localStorage.setItem('kp_tortik_day', dayOpen); } catch (e) {} } tone([660, 880, 1320, 1760], .1); confetti(); }
+  $('oTitle').textContent = pass ? t('day') + (day + 1) + t('dayPass') : (timeUp ? t('timeup') : t('over'));
+  $('oDay').textContent = pass ? t('reward') + extra + ' 🪙' + (day === 4 ? '\n' + t('allDone') : '') : t('dayFail') + ': ' + coins + ' / ' + D.goal;
+  const was = day; if (pass && day < 4) { day++; try { localStorage.setItem('kp_tortik_sel', day); } catch (e) {} }
+  $('again').textContent = pass && was < 4 ? t('nextDay') + (day + 1) : t('again');
+  coins += extra;
   bank += coins; saveBank(); $('oBank').textContent = '🪙 +' + coins + t('toBank') + bank;
   $('rC').textContent = coins; $('rS').textContent = served; $('rP').textContent = perfect;
   if (coins > best) { best = coins; try { localStorage.setItem('kp_tortik_best', best); } catch (e) {} $('oBest').textContent = t('newBest'); }
@@ -500,7 +534,7 @@ requestAnimationFrame(loop);
   } catch (e) {}
 })();
 window.__bank = v => { bank = v; saveBank(); render(); };
-window.__tort = { get order() { return order; }, get cur() { return cur; }, start, serve, choose, get coins() { return coins; } };
+window.__tort = { endNow: () => end(true), get order() { return order; }, get cur() { return cur; }, start, serve, choose, get coins() { return coins; } };
 })();
 </script>
 </body>
