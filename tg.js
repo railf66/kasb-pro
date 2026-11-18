@@ -1,10 +1,10 @@
 // Kasb Pro: outside Telegram, show a small bar "Открыть в Telegram" that opens the app in the bot.
 (function(){
-  var BOT='kasbpro_uz_bot';
+  var BOT=window.KASB_BOT||'kasbpro_uz_bot';
   var tg=window.Telegram&&window.Telegram.WebApp;
   if(tg&&tg.initData)return; // already inside Telegram
   try{if(sessionStorage.getItem('kp_tg_hide'))return}catch(e){}
-  var app=(location.pathname.split('/').filter(Boolean)[0]||'site').replace(/[^a-z]/g,'');
+  var app=window.KASB_BOT?'site':(location.pathname.split('/').filter(Boolean)[0]||'site').replace(/[^a-z]/g,'');
   var T={ru:['Удобнее в Telegram','Открыть'],uz:['Telegramda qulayroq','Ochish']};
   function show(){
     var l=(document.documentElement.lang||'ru').slice(0,2)==='uz'?'uz':'ru';
