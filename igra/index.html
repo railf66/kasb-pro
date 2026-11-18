@@ -1725,7 +1725,7 @@ function recStart() {
   const stream = rec.cv.captureStream(30);
   try { if (AC && master) { if (!rec.dest) { rec.dest = AC.createMediaStreamDestination(); master.connect(rec.dest); } rec.dest.stream.getAudioTracks().forEach(t => stream.addTrack(t)); } } catch (e) {}
   const mime = recMime(); rec.ext = mime.includes('mp4') ? 'mp4' : 'webm';
-  try { rec.mr = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 4e6 } : { videoBitsPerSecond: 4e6 }); }
+  try { rec.mr = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 2.2e6 } : { videoBitsPerSecond: 2.2e6 }); }
   catch (e) { try { rec.mr = new MediaRecorder(stream); rec.ext = 'webm'; } catch (e2) { center('Не получилось начать запись', 2); return; } }
   rec.chunks = []; rec.t = 0; rec.on = true; rec.kills0 = P.kills;
   rec.mr.ondataavailable = e => { if (e.data && e.data.size) rec.chunks.push(e.data); };
