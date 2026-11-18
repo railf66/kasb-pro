@@ -116,6 +116,14 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 @media (max-height:420px){#bCrouch{right:calc(224px + env(safe-area-inset-right));bottom:calc(30px + env(safe-area-inset-bottom))}#bProne{right:calc(224px + env(safe-area-inset-right));bottom:calc(100px + env(safe-area-inset-bottom))}#touch.big #bCrouch,#touch.big #bProne{right:calc(258px + env(safe-area-inset-right))}#touch.big #bCrouch{bottom:calc(30px + env(safe-area-inset-bottom))}#touch.big #bProne{bottom:calc(112px + env(safe-area-inset-bottom))}}
 #stance{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);font-size:12px;font-weight:700;background:rgba(10,14,20,.55);padding:3px 10px;border-radius:8px;opacity:0;transition:opacity .2s}
 #stance.on{opacity:.85}
+#bRec{width:40px;height:40px;left:calc(110px + env(safe-area-inset-left));top:calc(136px + env(safe-area-inset-top));font-size:16px;color:#ff4d4d}
+#bRec.on{background:rgba(255,40,40,.5);color:#fff}
+#recInd{left:50%;top:calc(max(8px,env(safe-area-inset-top)) + 82px);transform:translateX(-50%);font:700 13px ui-monospace,monospace;background:rgba(200,20,20,.75);padding:3px 10px;border-radius:8px}
+#recInd i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;margin-right:6px;animation:recb 1s infinite}
+@keyframes recb{50%{opacity:.2}}
+#recBox{z-index:30}
+#recBox .card{max-height:96vh;overflow:auto;padding-top:14px;padding-bottom:14px}
+#recBox video{width:auto;max-width:100%;max-height:40vh;border-radius:10px;background:#000;display:block;margin:8px auto}
 #joyHint{position:fixed;left:24px;bottom:28px;font-size:12px;opacity:.45;pointer-events:none}
 </style>
 </head>
@@ -145,6 +153,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="center" class="hud"></div>
 <div id="fps" class="hud hidden"></div>
 <div id="stance" class="hud"></div>
+<div id="recInd" class="hud hidden"><i></i>ЗАПИСЬ <span id="recTime">0:00</span> / 1:00</div>
 <div id="reloadMsg" class="hud">Перезарядка…</div>
 
 <div id="touch" class="hidden">
@@ -155,6 +164,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
   <div id="bProne" class="tbtn">ЛЕЧЬ</div>
   <div id="bSnd" class="tbtn">🔊</div>
   <div id="bPause" class="tbtn">II</div>
+  <div id="bRec" class="tbtn">⏺</div>
   <div id="bZoom" class="tbtn hidden">ПРИЦЕЛ</div>
   <div id="bReload" class="tbtn">R</div>
   <div id="bFire" class="tbtn">ОГОНЬ</div>
@@ -231,12 +241,26 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
   </div>
 </div>
 
+<div id="recBox" class="screen hidden">
+  <div class="card">
+    <div class="logo" style="font-size:26px">ВИДЕО ГОТОВО</div>
+    <video id="recVid" playsinline controls></video>
+    <p class="sub" id="recInfo" style="margin:4px 0"></p>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+      <button class="btn2" id="recShare">📤 ПОДЕЛИТЬСЯ (YouTube, Telegram)</button>
+      <button class="btn2" id="recSave">💾 СОХРАНИТЬ</button>
+    </div>
+    <p class="help">Видео вертикальное, как раз для YouTube Shorts. В описании оставьте ссылку: kasbpro.uz/igra</p>
+    <button class="btn" id="recClose" style="margin-top:10px">ПРОДОЛЖИТЬ ИГРУ</button>
+  </div>
+</div>
 <div id="pause" class="screen hidden">
   <div class="card">
     <div class="logo" style="font-size:30px">ПАУЗА</div>
     <button class="btn2 snd" style="margin:12px 0">🔊 Звук вкл</button>
     <p class="sub">Нажмите, чтобы продолжить</p>
     <button class="btn" id="resume">ПРОДОЛЖИТЬ</button>
+    <div style="margin-top:12px"><button class="btn2" id="recBtn">⏺ ЗАПИСАТЬ ВИДЕО</button></div>
     <div style="margin-top:12px"><button class="btn2" id="quit">В МЕНЮ</button></div>
   </div>
 </div>
@@ -264,8 +288,8 @@ const rand = (a, b) => a + Math.random() * (b - a);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 $('helpText').innerHTML = isTouch
-  ? 'Левый палец — ходить, правый — смотреть.<br>ОГОНЬ — стрелять (можно вести пальцем), R — перезарядка, ⇄ — сменить оружие.<br>СЕСТЬ / ЛЕЧЬ — пригнуться за укрытием (нажмите ещё раз, чтобы встать).<br>Лучше держать телефон горизонтально.'
-  : 'WASD — ходить, мышь — смотреть, ЛКМ — стрелять<br>R — перезарядка, 1/2 или колесо — оружие, Shift — бег, Esc — пауза<br>C — присесть, Z — лечь, Пробел — встать';
+  ? 'Левый палец — ходить, правый — смотреть.<br>ОГОНЬ — стрелять (можно вести пальцем), R — перезарядка, ⇄ — сменить оружие.<br>СЕСТЬ / ЛЕЧЬ — пригнуться за укрытием (нажмите ещё раз, чтобы встать).<br>Лук: держите ОГОНЬ — тетива натягивается, отпустите — выстрел.<br>⏺ — записать видео до 1 минуты для YouTube.<br>Лучше держать телефон горизонтально.'
+  : 'WASD — ходить, мышь — смотреть, ЛКМ — стрелять<br>R — перезарядка, 1/2 или колесо — оружие, Shift — бег, Esc — пауза<br>C — присесть, Z — лечь, Пробел — встать, 6 — лук (держите ЛКМ и отпустите)<br>V — записать видео до 1 минуты (для YouTube Shorts)';
 
 let best = 0;
 function loadBest() {
@@ -1683,6 +1707,106 @@ addEventListener('touchend', touchEnd); addEventListener('touchcancel', touchEnd
 addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); });
 addEventListener('contextmenu', e => e.preventDefault());
 
+// ---------- video recording (vertical 9:16 for YouTube Shorts) ----------
+const REC_MAX = 60, RW = 720, RH = 1280;
+const rec = { on: false, t: 0, mr: null, chunks: [], cv: null, cx: null, dest: null, blob: null, url: '', ext: 'webm', kills0: 0, drawT: 0 };
+function recSupported() { return !!(window.MediaRecorder && HTMLCanvasElement.prototype.captureStream); }
+function recMime() {
+  const list = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+  for (const m of list) { try { if (MediaRecorder.isTypeSupported(m)) return m; } catch (e) {} }
+  return '';
+}
+function recStart() {
+  if (rec.on || state !== 'play') return;
+  if (!recSupported()) { center('Этот браузер не умеет записывать видео. Откройте игру в Chrome.', 3); return; }
+  audioInit();
+  if (!rec.cv) { rec.cv = document.createElement('canvas'); rec.cv.width = RW; rec.cv.height = RH; rec.cx = rec.cv.getContext('2d'); }
+  recCompose();
+  const stream = rec.cv.captureStream(30);
+  try { if (AC && master) { if (!rec.dest) { rec.dest = AC.createMediaStreamDestination(); master.connect(rec.dest); } rec.dest.stream.getAudioTracks().forEach(t => stream.addTrack(t)); } } catch (e) {}
+  const mime = recMime(); rec.ext = mime.includes('mp4') ? 'mp4' : 'webm';
+  try { rec.mr = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 4e6 } : { videoBitsPerSecond: 4e6 }); }
+  catch (e) { try { rec.mr = new MediaRecorder(stream); rec.ext = 'webm'; } catch (e2) { center('Не получилось начать запись', 2); return; } }
+  rec.chunks = []; rec.t = 0; rec.on = true; rec.kills0 = P.kills;
+  rec.mr.ondataavailable = e => { if (e.data && e.data.size) rec.chunks.push(e.data); };
+  rec.mr.onstop = recDone;
+  rec.mr.start(1000);
+  $('recInd').classList.remove('hidden'); $('bRec').classList.add('on'); $('recBtn').textContent = '⏹ ОСТАНОВИТЬ ЗАПИСЬ';
+  feed('<span style="color:#ff6b6b">⏺ Запись пошла</span>');
+}
+function recStop() {
+  if (!rec.on) return; rec.on = false;
+  $('recInd').classList.add('hidden'); $('bRec').classList.remove('on'); $('recBtn').textContent = '⏺ ЗАПИСАТЬ ВИДЕО';
+  try { rec.mr.stop(); } catch (e) { recDone(); }
+}
+function recToggle() { rec.on ? recStop() : recStart(); }
+function recDone() {
+  const type = rec.ext === 'mp4' ? 'video/mp4' : 'video/webm';
+  rec.blob = new Blob(rec.chunks, { type }); rec.chunks = [];
+  if (!rec.blob.size) return;
+  if (rec.url) URL.revokeObjectURL(rec.url);
+  rec.url = URL.createObjectURL(rec.blob);
+  if (state === 'play' && !paused) { paused = true; mouseDown = false; firing = false; if (document.pointerLockElement) document.exitPointerLock(); }
+  $('pause').classList.add('hidden');
+  const v = $('recVid'); v.src = rec.url; v.muted = false;
+  $('recInfo').textContent = Math.round(rec.t) + ' сек · ' + (rec.blob.size / 1048576).toFixed(1) + ' МБ · ' + rec.ext.toUpperCase();
+  $('recShare').style.display = recFile() && navigator.canShare && navigator.canShare({ files: [recFile()] }) ? '' : 'none';
+  $('recBox').classList.remove('hidden');
+}
+let recF = null;
+function recFile() {
+  if (!rec.blob) return null;
+  if (!recF || recF._b !== rec.blob) { try { recF = new File([rec.blob], 'stalnoy-dvor-' + Date.now() + '.' + rec.ext, { type: rec.blob.type }); recF._b = rec.blob; } catch (e) { recF = null; } }
+  return recF;
+}
+$('recSave').onclick = () => { const a = document.createElement('a'); a.href = rec.url; a.download = (recFile() || {}).name || 'stalnoy-dvor.' + rec.ext; document.body.appendChild(a); a.click(); a.remove(); };
+$('recShare').onclick = async () => { const f = recFile(); if (!f) return; try { await navigator.share({ files: [f], title: 'Стальной двор', text: 'Играй бесплатно: https://kasbpro.uz/igra/' }); } catch (e) {} };
+$('recClose').onclick = () => { $('recBox').classList.add('hidden'); $('pause').classList.add('hidden'); $('recVid').pause(); if (state === 'play') { paused = false; if (!isTouch) lockPointer(); clock.getDelta(); } };
+$('recBtn').onclick = () => { if (rec.on) { recStop(); return; } $('pause').classList.add('hidden'); paused = false; if (!isTouch) lockPointer(); clock.getDelta(); recStart(); };
+btn('bRec', () => recToggle());
+addEventListener('keydown', e => { if (e.code === 'KeyV' && state === 'play' && !paused) recToggle(); });
+function rr(x, y, w, h, r) { const c = rec.cx; c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function recCompose() {
+  const c = rec.cx, src = renderer.domElement, sw = src.width, sh = src.height;
+  // background bands
+  const gr = c.createLinearGradient(0, 0, 0, RH); gr.addColorStop(0, '#10161f'); gr.addColorStop(.5, '#0b0f14'); gr.addColorStop(1, '#151b24');
+  c.fillStyle = gr; c.fillRect(0, 0, RW, RH);
+  // gameplay: square crop from the centre of the screen
+  const side = Math.min(sw, sh), gy = 280;
+  c.drawImage(src, (sw - side) / 2, (sh - side) / 2, side, side, 0, gy, RW, RW);
+  // crosshair
+  c.strokeStyle = '#fff'; c.lineWidth = 3; const mx = RW / 2, my = gy + RW / 2;
+  c.beginPath(); c.moveTo(mx - 18, my); c.lineTo(mx - 7, my); c.moveTo(mx + 7, my); c.lineTo(mx + 18, my); c.moveTo(mx, my - 18); c.lineTo(mx, my - 7); c.moveTo(mx, my + 7); c.lineTo(mx, my + 18); c.stroke();
+  // watermark on the picture
+  c.font = 'bold 26px system-ui,sans-serif'; c.textAlign = 'right'; c.fillStyle = 'rgba(255,255,255,.55)'; c.fillText('kasbpro.uz/igra', RW - 18, gy + RW - 18);
+  // top: logo + mode
+  c.textAlign = 'center'; c.fillStyle = '#ff8a3d'; c.font = '900 76px system-ui,sans-serif'; c.fillText('СТАЛЬНОЙ ДВОР', RW / 2, 130);
+  c.fillStyle = '#c9d3dd'; c.font = '600 32px system-ui,sans-serif';
+  const sub = mode === 'online' ? '🌐 Онлайн-бой · ' + (MAPNAME[curMap] || '') : mode === 'skirmish' ? 'Схватка · ' + D.name : 'Кампания · ' + (MAPNAME[curMap] || '');
+  c.fillText(sub, RW / 2, 190);
+  // stats under the picture
+  const y2 = gy + RW + 30;
+  const hpMax = HPMAX(), hp = Math.max(0, P.hp);
+  c.textAlign = 'left'; c.font = '700 34px system-ui,sans-serif'; c.fillStyle = '#fff'; c.fillText('❤ ' + Math.round(hp), 40, y2 + 34);
+  c.fillStyle = 'rgba(255,255,255,.15)'; rr(170, y2 + 10, 200, 22, 11); c.fill();
+  c.fillStyle = hp / hpMax > .3 ? '#3ddc84' : '#ff3b3b'; rr(170, y2 + 10, Math.max(22, 200 * hp / hpMax), 22, 11); c.fill();
+  c.textAlign = 'right'; c.fillStyle = '#5ec8ff'; c.font = '800 38px system-ui,sans-serif'; c.fillText('Сбито: ' + P.kills, RW - 40, y2 + 36);
+  c.fillStyle = '#c9d3dd'; c.font = '600 28px system-ui,sans-serif'; c.textAlign = 'center'; c.fillText(W[wi].name + (P.stance ? ' · ' + STANCE_NAME[P.stance] : ''), RW / 2, y2 + 82);
+  // call to action
+  c.fillStyle = '#ff8a3d'; rr(70, RH - 128, RW - 140, 86, 43); c.fill();
+  c.fillStyle = '#111'; c.font = '900 40px system-ui,sans-serif'; c.fillText('▶ Играй: kasbpro.uz/igra', RW / 2, RH - 71);
+  // red dot
+  if (rec.on && (performance.now() / 500 | 0) % 2) { c.fillStyle = '#ff3b3b'; c.beginPath(); c.arc(40, 40, 12, 0, 7); c.fill(); }
+}
+function recTick(dt) {
+  if (!rec.on) return;
+  if (state !== 'play') { recStop(); return; }
+  rec.t += dt; rec.drawT -= dt;
+  if (rec.drawT <= 0) { recCompose(); rec.drawT = 1 / 30; }
+  const s = Math.floor(rec.t); $('recTime').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  if (rec.t >= REC_MAX) recStop();
+}
+
 // ---------- minimap ----------
 const mm = $('mm').getContext('2d'), MS = 236, sc = MS / (H * 2);
 function drawMap() {
@@ -1767,6 +1891,7 @@ function frame() {
   const fov = zoom ? 24 : 75 - (drawing ? 12 * drawT / BOW_FULL : 0); if (Math.abs(camera.fov - fov) > .1) { camera.fov += (fov - camera.fov) * Math.min(1, dt * 14); camera.updateProjectionMatrix(); }
   mmT -= dt; if (mmT <= 0) { drawMap(); mmT = .1; }
   renderer.render(scene, camera);
+  recTick(dt);
 }
 hud(); frame();
 window.__game = { P, bots, remotes, addRemote, arrows, get state() { return state; }, startRound, get myId() { return myId; } }; window.__onKill = onKill; window.__shoot = () => shoot(); window.__assist = () => assistDir();
