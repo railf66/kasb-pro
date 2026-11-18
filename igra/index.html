@@ -117,6 +117,9 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 #stance{position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);font-size:12px;font-weight:700;background:rgba(10,14,20,.55);padding:3px 10px;border-radius:8px;opacity:0;transition:opacity .2s}
 #stance.on{opacity:.85}
 #bRec{width:40px;height:40px;left:calc(110px + env(safe-area-inset-left));top:calc(136px + env(safe-area-inset-top));font-size:16px;color:#ff4d4d}
+#bMine,#bBoom{width:52px;height:52px;top:calc(186px + env(safe-area-inset-top));font-size:20px}
+#bMine{left:calc(14px + env(safe-area-inset-left))}
+#bBoom{left:calc(74px + env(safe-area-inset-left));font-size:10px;background:rgba(255,80,50,.25);border-color:rgba(255,120,80,.6)}
 #bRec.on{background:rgba(255,40,40,.5);color:#fff}
 #recInd{left:50%;top:calc(max(8px,env(safe-area-inset-top)) + 82px);transform:translateX(-50%);font:700 13px ui-monospace,monospace;background:rgba(200,20,20,.75);padding:3px 10px;border-radius:8px}
 #recInd i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#fff;margin-right:6px;animation:recb 1s infinite}
@@ -166,6 +169,8 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
   <div id="bSnd" class="tbtn">🔊</div>
   <div id="bPause" class="tbtn">II</div>
   <div id="bRec" class="tbtn">⏺</div>
+  <div id="bMine" class="tbtn hidden">💣</div>
+  <div id="bBoom" class="tbtn hidden">ВЗРЫВ</div>
   <div id="bZoom" class="tbtn hidden">ПРИЦЕЛ</div>
   <div id="bReload" class="tbtn">R</div>
   <div id="bFire" class="tbtn">ОГОНЬ</div>
@@ -289,8 +294,8 @@ const rand = (a, b) => a + Math.random() * (b - a);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 $('helpText').innerHTML = isTouch
-  ? 'Левый палец — ходить, правый — смотреть.<br>ОГОНЬ — стрелять (можно вести пальцем), R — перезарядка, ⇄ — сменить оружие.<br>СЕСТЬ / ЛЕЧЬ — пригнуться за укрытием (нажмите ещё раз, чтобы встать).<br>Лук: держите ОГОНЬ — тетива натягивается, отпустите — выстрел.<br>⏺ — записать видео до 1 минуты для YouTube.<br>Лучше держать телефон горизонтально.'
-  : 'WASD — ходить, мышь — смотреть, ЛКМ — стрелять<br>R — перезарядка, 1/2 или колесо — оружие, Shift — бег, Esc — пауза<br>C — присесть, Z — лечь, Пробел — встать, 6 — лук (держите ЛКМ и отпустите)<br>V — записать видео до 1 минуты (для YouTube Shorts)';
+  ? 'Левый палец — ходить, правый — смотреть.<br>ОГОНЬ — стрелять (можно вести пальцем), R — перезарядка, ⇄ — сменить оружие.<br>СЕСТЬ / ЛЕЧЬ — пригнуться за укрытием (нажмите ещё раз, чтобы встать).<br>Лук: держите ОГОНЬ — тетива натягивается, отпустите — выстрел.<br>⏺ — записать видео до 1 минуты для YouTube.<br>💣 — поставить мину, ВЗРЫВ — взорвать (если купили мины).<br>Лучше держать телефон горизонтально.'
+  : 'WASD — ходить, мышь — смотреть, ЛКМ — стрелять<br>R — перезарядка, 1/2 или колесо — оружие, Shift — бег, Esc — пауза<br>C — присесть, Z — лечь, Пробел — встать, 6 — лук (держите ЛКМ и отпустите)<br>V — записать видео до 1 минуты (для YouTube Shorts)<br>G — поставить мину, F — взорвать мины (если купили)';
 
 let best = 0;
 function loadBest() {
@@ -551,7 +556,7 @@ function placePacks(list) {
 function buildMap(id) {
   const mp = MAPS[id]; curMap = id;
   for (const c of [...mapGroup.children]) { mapGroup.remove(c); if (c.geometry) c.geometry.dispose(); }
-  boxes.length = 0; solids.length = 0; waypoints.length = 0;
+  boxes.length = 0; solids.length = 0; waypoints.length = 0; if (window.__bodiesReady) { clearBodies(); clearMines(); }
   scene.fog.color.setHex(mp.fog); scene.background.setHex(mp.fog); ground.material = M[mp.ground];
   addBox(0, -H - .5, H * 2 + 2, 1, 5, 'wall'); addBox(0, H + .5, H * 2 + 2, 1, 5, 'wall');
   addBox(-H - .5, 0, 1, H * 2 + 2, 5, 'wall'); addBox(H + .5, 0, 1, H * 2 + 2, 5, 'wall');
@@ -754,6 +759,7 @@ const has = id => admin || owned.includes(id);
 const GEAR = [
   { id: 'helmet', name: 'Каска «Купол»', price: 250, desc: 'Защищает голову: выстрел в голову наносит в 2 раза меньше урона. От ботов: −15% урона.' },
   { id: 'vest', name: 'Бронежилет «Щит»', price: 400, desc: 'Защищает тело: −40% урона от пуль и стрел, −25% от взрывов.' },
+  { id: 'mines', name: 'Мины «Капкан» с пультом', price: 350, desc: '3 мины на каждую жизнь. Ставите на землю, отходите и взрываете все разом с пульта. Сами не стойте рядом!' },
 ];
 const gearBits = () => (has('vest') ? 1 : 0) + (has('helmet') ? 2 : 0);
 // damage multiplier for someone with gear bits g: head shot or body; boom = explosion; bot = bots (no aimed head shots)
@@ -939,6 +945,7 @@ class Bot {
     this.p = new THREE.Vector3(wp.x, 0, wp.y); this.alive = true; this.deadT = 0;
     this.maxHp = this.type === 'boss' ? Math.round(STAGES[stage].boss.hp * BOSS_MULT[diff]) : this.type === 'soldier' ? 140 : 100; this.hp = this.maxHp;
     this.g.rotation.set(0, rand(0, 6.28), 0); this.g.position.copy(this.p); this.g.visible = true;
+    clearMarks(this); if (this.lost) { this.lost.forEach(o => o.visible = true); this.lost = null; }
     this.target = null; this.seeT = 0; this.alertT = 0; this.fireCD = rand(.5, 1.2); this.strafe = 1; this.strafeT = 0;
     this.stuckT = 0; this.last = this.p.clone(); this.walk = 0; this.lastSeen = null;
     this.speed = (this.type === 'boss' ? 1.7 : this.type === 'soldier' ? rand(2.8, 3.4) : rand(2.6, 3.4)) * D.speed;
@@ -949,7 +956,7 @@ class Bot {
     if (!this.alive) return false;
     this.hp -= d; this.alertT = 6; this.hurtT = 1; this.lastSeen = P.pos.clone();
     this.flashT = .1;
-    if (this.hp <= 0) { this.alive = false; this.deadT = 0; lastKill = this; deathFx(this); if (this.type === 'boss') setTimeout(bossDown, 0); return true; }
+    if (this.hp <= 0) { this.alive = false; this.deadT = 0; lastKill = this; deathFx(this); if (head || this.boomHit) knockOff(this); this.boomHit = false; if (this.type === 'boss') setTimeout(bossDown, 0); return true; }
     return false;
   }
   moveTo(tx, tz, dt, speed) {
@@ -1053,8 +1060,8 @@ class Bot {
   update(dt) {
     if (!this.active) return;
     if (!this.alive) {
-      this.deadT += dt; this.g.rotation.x = -Math.min(this.deadT * 4, Math.PI / 2); this.g.position.y = -Math.min(this.deadT, .3);
-      if (this.deadT > 3.5) { if (this.type === 'boss') { this.active = false; this.g.visible = false; } else this.spawn(); }
+      this.deadT += dt; this.g.rotation.x = -Math.min(this.deadT * 4, Math.PI / 2); this.g.position.y = Math.min(this.deadT, .3) * this.scale;
+      if (this.deadT > 3.5) { leaveBody(this); if (this.type === 'boss') { this.active = false; this.g.visible = false; } else this.spawn(); }
       return;
     }
     const eye = this.eye(_v2.clone()), pe = new THREE.Vector3(P.pos.x, P.eyeH, P.pos.z);
@@ -1114,12 +1121,12 @@ function spawnPlayer() {
   let bestS = playerSpawns[0], bd = -1;
   for (const s of playerSpawns) { let md = 1e9; for (const b of bots) if (b.alive) md = Math.min(md, Math.hypot(b.p.x - s[0], b.p.z - s[1])); for (const r of remotes.values()) if (r.alive) md = Math.min(md, Math.hypot(r.p.x - s[0], r.p.z - s[1])); md += Math.random() * 6; if (md > bd) { bd = md; bestS = s; } }
   P.pos.set(bestS[0], 0, bestS[1]); P.yaw = Math.atan2(bestS[0], bestS[1]); P.pitch = 0;
-  P.hp = HPMAX(); P.alive = true; setStance(0); P.eyeH = 1.6; W.forEach((w, i) => ammo[i] = w.mag); reloadT = 0;
+  P.hp = HPMAX(); P.alive = true; setStance(0); P.eyeH = 1.6; minesLeft = MINES_PER_LIFE; W.forEach((w, i) => ammo[i] = w.mag); reloadT = 0;
 }
 function startRound() {
   if (mode === 'online') { netStart(); return; }
   audioInit();
-  P.kills = P.deaths = P.shots = P.hits = 0; timeLeft = ROUND; roundCoins = 0;
+  P.kills = P.deaths = P.shots = P.hits = 0; timeLeft = ROUND; roundCoins = 0; clearBodies(); clearMines();
   setZoom(false); guns.forEach(g => g.visible = false); wi = 0; guns[0].visible = true; $('bZoom').classList.add('hidden');
   stageKills = 0; bossPhase = false; stageT = 0; $('bossbar').classList.add('hidden');
   if (curMap !== STAGES[stage].map) buildMap(STAGES[stage].map);
@@ -1179,7 +1186,8 @@ function endRound() {
 }
 function hud() {
   $('hpnum').textContent = Math.ceil(P.hp); $('hpfill').style.width = (P.hp / HPMAX() * 100) + '%'; $('hpfill').classList.toggle('low', P.hp < HPMAX() * .35);
-  $('gearHud').textContent = (has('vest') ? '🦺 ' : '') + (has('helmet') ? '⛑️' : '');
+  $('gearHud').textContent = (has('vest') ? '🦺 ' : '') + (has('helmet') ? '⛑️ ' : '') + (has('mines') ? '💣×' + minesLeft + (mines.length ? ' (стоит ' + mines.length + ')' : '') : '');
+  $('bMine').classList.toggle('hidden', !has('mines')); $('bBoom').classList.toggle('hidden', !has('mines'));
   $('ammo').innerHTML = ammo[wi] + '<small> / ∞</small>'; $('wname').textContent = W[wi].name;
   $('dLabel').textContent = mode === 'online' ? 'Гибели' : 'Ржавые';
   $('kills').textContent = P.kills; $('rcoins').textContent = roundCoins; $('deaths').textContent = P.deaths;
@@ -1267,16 +1275,120 @@ function explode(p, w, enemy, ghost) {
   if (mode === 'online') for (const q of remotes.values()) {
     if (!q.alive) continue;
     const d = Math.hypot(p.x - q.p.x, (p.y - 1) * .7, p.z - q.p.z);
-    if (d < r) { any = true; netHit(q.id, w.proj.dmg * PVP[W.indexOf(w)] * (1 - d / r * .6) * gearMul(q.gear, false, true)); }
+    if (d < r) { any = true; netHit(q.id, w.proj.dmg * (PVP[W.indexOf(w)] ?? .5) * (1 - d / r * .6) * gearMul(q.gear, false, true)); }
   }
   for (const b of bots) {
     if (!b.active || !b.alive) continue;
     const d = Math.hypot(p.x - b.p.x, (p.y - 1) * .7, p.z - b.p.z);
-    if (d < r) { any = true; if (b.damage(w.proj.dmg * (1 - d / r * .6))) onKill(false, ' 💥'); }
+    if (d < r) { any = true; b.boomHit = true; addMark(b, new THREE.Vector3(b.p.x + (p.x - b.p.x) * .3, 1.1 * b.scale, b.p.z + (p.z - b.p.z) * .3), 1.8); if (b.damage(w.proj.dmg * (1 - d / r * .6))) onKill(false, ' 💥'); b.boomHit = false; }
   }
   if (any) { P.hits++; $('cross').className = 'hud hit'; clearTimeout(hitTO); hitTO = setTimeout(() => $('cross').className = 'hud', 150); }
   const dp = Math.hypot(p.x - P.pos.x, (p.y - 1) * .7, p.z - P.pos.z);
   if (dp < r && P.alive) hurt(w.proj.dmg * (mode === 'online' ? .25 : .35) * (1 - dp / r), 'self');
+}
+
+
+// ---------- bodies that stay on the ground + hit marks (no gore: soot marks, robots lose metal parts) ----------
+const bodies = [], BODY_MAX = 10, BODY_LIFE = 90;
+const markGeo = new THREE.SphereGeometry(.055, 8, 6), markMat = new THREE.MeshBasicMaterial({ color: 0x0a0a0a }), markRim = new THREE.MeshBasicMaterial({ color: 0xe08a30 });
+function addMark(b, p, big = 1) {
+  if (!b || !b.g) return;
+  b.marks = b.marks || [];
+  if (b.marks.length >= 14) { const o = b.marks.shift(); o.parent && o.parent.remove(o); }
+  b.g.updateMatrixWorld(true);
+  const m = new THREE.Mesh(markGeo, markMat); m.position.copy(b.g.worldToLocal(p.clone())); m.scale.setScalar(big / b.scale);
+  const rim = new THREE.Mesh(markGeo, markRim); rim.scale.setScalar(1.5); rim.position.z = -.012; m.add(rim);
+  b.g.add(m); b.marks.push(m);
+}
+function clearMarks(b) { if (b.marks) b.marks.forEach(o => o.parent && o.parent.remove(o)); b.marks = []; }
+// robots (drones, boss) lose the head unit on a head shot or explosion; soldiers only drop the helmet look-alike? no: soldiers stay whole
+function knockOff(b) {
+  if (b.type === 'soldier') return;
+  const lost = [];
+  b.g.children.forEach(o => { if (o.isMesh && o.position.y > 1.68 && o.position.y < 2.4) lost.push(o); });
+  if (!lost.length) return;
+  b.g.updateMatrixWorld(true);
+  const part = new THREE.Group();
+  lost.forEach(o => { const c = new THREE.Mesh(o.geometry, o.material); c.position.copy(o.position).y -= 1.84; c.rotation.copy(o.rotation); c.scale.copy(o.scale); part.add(c); o.visible = false; });
+  part.scale.setScalar(b.scale);
+  const a = rand(0, 6.28), d = rand(.9, 1.6) * b.scale;
+  part.position.set(b.p.x + Math.cos(a) * d, .17 * b.scale, b.p.z + Math.sin(a) * d); part.rotation.set(rand(-1.2, 1.2), rand(0, 6.28), Math.PI / 2 + rand(-.3, .3));
+  scene.add(part); b.lost = lost;
+  b.lostPart = part;
+  for (let k = 0; k < 5; k++) spark(part.position.clone().add(new THREE.Vector3(rand(-.2, .2), rand(0, .3), rand(-.2, .2))), 0x9fd6ff);
+}
+function cloneVis(o) {
+  if (!o.visible || o.isSprite) return null;
+  const n = o.isMesh ? new THREE.Mesh(o.geometry, o.material) : new THREE.Group();
+  n.position.copy(o.position); n.quaternion.copy(o.quaternion); n.scale.copy(o.scale);
+  for (const c of o.children) { const k = cloneVis(c); if (k) n.add(k); }
+  return n;
+}
+function leaveBody(b) {
+  const g = cloneVis(b.g); if (!g) return;
+  scene.add(g);
+  const extra = b.lostPart || null; b.lostPart = null;
+  bodies.push({ g, extra, t: BODY_LIFE });
+  while (bodies.length > BODY_MAX) dropBody(0);
+}
+function dropBody(i) { const o = bodies[i]; scene.remove(o.g); if (o.extra) scene.remove(o.extra); bodies.splice(i, 1); }
+function clearBodies() {
+  while (bodies.length) dropBody(0);
+  for (const b of bots) if (b.lostPart) { scene.remove(b.lostPart); b.lostPart = null; }
+}
+function updateBodies(dt) {
+  for (let i = bodies.length - 1; i >= 0; i--) {
+    const o = bodies[i]; o.t -= dt;
+    if (o.t < 3) { o.g.position.y -= dt * .25; if (o.extra) o.extra.position.y -= dt * .25; }
+    if (o.t <= 0) dropBody(i);
+  }
+}
+
+// ---------- remote mines ----------
+const MINE = { proj: { radius: 5, dmg: 170 } }, MINES_PER_LIFE = 3;
+const mineGeo = new THREE.CylinderGeometry(.2, .24, .07, 14), mineMat = new THREE.MeshLambertMaterial({ color: 0x3d4630 });
+const mineLedGeo = new THREE.SphereGeometry(.035, 8, 6), mineLedMat = new THREE.MeshBasicMaterial({ color: 0xff2a2a });
+const mines = [], ghostMines = []; let minesLeft = MINES_PER_LIFE;
+function mineMesh(x, z) {
+  const g = new THREE.Group(); const b = new THREE.Mesh(mineGeo, mineMat); b.position.y = .035; g.add(b);
+  const led = new THREE.Mesh(mineLedGeo, mineLedMat); led.position.y = .08; g.add(led); g.userData.led = led;
+  g.position.set(x, 0, z); scene.add(g); return g;
+}
+function placeMine() {
+  if (state !== 'play' || !P.alive || !has('mines')) return;
+  if (minesLeft <= 0) { center('Мины кончились. Новые будут после возрождения.', 1.5); return; }
+  const x = P.pos.x - Math.sin(P.yaw) * 1.1, z = P.pos.z - Math.cos(P.yaw) * 1.1;
+  const p = new THREE.Vector3(x, 0, z); collide(p, .2);
+  mines.push({ g: mineMesh(p.x, p.z), p }); minesLeft--;
+  sfx('reload', .5); feed('💣 Мина установлена (' + minesLeft + ' осталось)');
+  if (mode === 'online') net({ t: 'proj', a: [Math.round(p.x * 100) / 100, 0, Math.round(p.z * 100) / 100, 0, 1, 0], k: 7 });
+  hud();
+}
+function blowMines() {
+  if (state !== 'play' || !mines.length) return;
+  mines.splice(0).forEach((o, i) => setTimeout(() => {
+    scene.remove(o.g);
+    const p = o.p.clone(); p.y = .3;
+    if (mode === 'online') net({ t: 'proj', a: [Math.round(p.x * 100) / 100, .3, Math.round(p.z * 100) / 100, 0, 2, 0], k: 7 });
+    explode(p, MINE, false, false);
+  }, i * 120));
+  hud();
+}
+function clearMines() { mines.splice(0).forEach(o => scene.remove(o.g)); ghostMines.splice(0).forEach(o => scene.remove(o.g)); minesLeft = MINES_PER_LIFE; }
+function netMine(m) {
+  const a = m.a, kind = a[4];
+  if (kind === 1) ghostMines.push({ id: m.id, g: mineMesh(a[0], a[2]) });
+  else if (kind === 2) {
+    let bi = -1, bd = 1e9; ghostMines.forEach((o, i) => { if (o.id !== m.id) return; const d = Math.hypot(o.g.position.x - a[0], o.g.position.z - a[2]); if (d < bd) { bd = d; bi = i; } });
+    if (bi >= 0 && bd < 1) { scene.remove(ghostMines[bi].g); ghostMines.splice(bi, 1); }
+    explode(new THREE.Vector3(a[0], .3, a[2]), MINE, false, true);
+  }
+}
+window.__bodiesReady = true;
+function updateMines() {
+  const on = (performance.now() / 400 | 0) % 2 === 0;
+  for (const o of mines) o.g.userData.led.visible = on;
+  for (const o of ghostMines) o.g.userData.led.visible = on;
 }
 
 // ---------- bow & arrows ----------
@@ -1334,7 +1446,7 @@ function updateArrows(dt) {
         o.stuck = .05;
       } else if (!o.ghost && bot) {
         P.hits++; spark(h.point, 0xff5a3d);
-        const killed = bot.damage(o.dmg * (head ? 2 : 1), head);
+        addMark(bot, h.point); const killed = bot.damage(o.dmg * (head ? 2 : 1), head);
         $('cross').className = 'hud ' + (head ? 'head' : 'hit'); clearTimeout(hitTO); hitTO = setTimeout(() => $('cross').className = 'hud', 150);
         if (killed) onKill(head, ' 🏹'); else sfx('hit', 1);
         o.stuck = .05;
@@ -1398,7 +1510,7 @@ function shoot() {
     } else if (bot) {
       const head = !!h.object.userData.head;
       P.hits++; spark(h.point, 0xff5a3d);
-      const killed = bot.damage(w.dmg * (head ? 2 : 1), head);
+      addMark(bot, h.point); const killed = bot.damage(w.dmg * (head ? 2 : 1), head);
       $('cross').className = 'hud ' + (head ? 'head' : 'hit'); clearTimeout(hitTO); hitTO = setTimeout(() => $('cross').className = 'hud', 120);
       if (killed) onKill(head); else sfx('hit', 1);
     } else spark(h.point);
@@ -1545,6 +1657,7 @@ function onNet(m) {
       break;
     }
     case 'proj': {
+      if (m.k === 7 && Array.isArray(m.a)) { netMine(m); break; }
       const a = m.a, w = W[m.k]; if (w && w.bow) { const f = new THREE.Vector3(a[0], a[1], a[2]); spawnArrow(f, new THREE.Vector3(a[3], a[4], a[5]), true, 0); sfx('bow', clamp(1 - Math.hypot(a[0] - P.pos.x, a[2] - P.pos.z) / 30, .05, .5), panTo(f)); break; }
       if (!w || !w.proj) break;
       const rocket = !w.proj.grav, mm = new THREE.Mesh(rocket ? rocketGeo : grenGeo, rocket ? rocketMat : grenMat);
@@ -1613,6 +1726,7 @@ addEventListener('keydown', e => {
   if (e.code === 'KeyM') setMute(!muted);
   if (state !== 'play') return;
   if (e.code === 'KeyR') reload(); const dg = /^Digit([1-6])$/.exec(e.code); if (dg) swap(+dg[1] - 1); if (e.code === 'KeyQ') swap();
+  if (e.code === 'KeyG') placeMine(); if (e.code === 'KeyF') blowMines();
   if (e.code === 'KeyC') setStance(1); if (e.code === 'KeyZ') setStance(2); if (e.code === 'Space') { e.preventDefault(); setStance(0); }
 });
 addEventListener('keyup', e => keys[e.code] = false);
@@ -1672,7 +1786,7 @@ function renderShop() {
     else { const b = document.createElement('button'); b.textContent = w.price + ' 🪙'; b.disabled = bank < w.price; b.onclick = () => { if (bank < w.price) return; bank -= w.price; owned.push(w.id); saveWallet(); audioInit(); sfx('kill', 1); renderShop(); updateMenu(); }; it.appendChild(b); }
     $('shopList').appendChild(it);
   });
-  const h = document.createElement('p'); h.className = 'sub'; h.style.margin = '14px 0 6px'; h.innerHTML = '<b>Защита</b> — работает всегда, во всех режимах и онлайн'; $('shopList').appendChild(h);
+  const h = document.createElement('p'); h.className = 'sub'; h.style.margin = '14px 0 6px'; h.innerHTML = '<b>Защита и снаряжение</b> — работает во всех режимах и онлайн'; $('shopList').appendChild(h);
   GEAR.forEach(w => {
     const it = document.createElement('div'); it.className = 'item';
     it.innerHTML = '<div><b>' + w.name + '</b><small>' + w.desc + '</small></div>';
@@ -1708,6 +1822,8 @@ btn('bReload', () => reload());
 btn('bSwap', () => swap());
 btn('bCrouch', () => setStance(1));
 btn('bProne', () => setStance(2));
+btn('bMine', () => placeMine());
+btn('bBoom', () => blowMines());
 btn('bPause', () => pauseGame());
 btn('bSnd', () => { setMute(!muted); $('bSnd').textContent = muted ? '🔇' : '🔊'; });
 $('bSnd').textContent = muted ? '🔇' : '🔊';
@@ -1922,14 +2038,14 @@ function frame() {
   gunHold.rotation.set(recoil * 2 + (reloadT > 0 ? .5 : 0), 0, 0);
   flashT -= dt; const g = guns[wi].userData.flash; g.visible = flashT > 0; if (g.visible) g.rotation.z = Math.random() * 3;
   flashLight.intensity = flashT > 0 ? 6 : 0;
-  updateFx(dt); updateProjs(dt); updateArrows(dt);
+  updateFx(dt); updateProjs(dt); updateArrows(dt); updateBodies(dt); updateMines();
   const fov = zoom ? 24 : 75 - (drawing ? 12 * drawT / BOW_FULL : 0); if (Math.abs(camera.fov - fov) > .1) { camera.fov += (fov - camera.fov) * Math.min(1, dt * 14); camera.updateProjectionMatrix(); }
   mmT -= dt; if (mmT <= 0) { drawMap(); mmT = .1; }
   renderer.render(scene, camera);
   recTick(dt);
 }
 hud(); frame();
-window.__game = { P, bots, remotes, addRemote, arrows, get state() { return state; }, startRound, get myId() { return myId; } }; window.__onKill = onKill; window.__shoot = () => shoot(); window.__assist = () => assistDir();
+window.__game = { P, bots, remotes, addRemote, arrows, bodies, mines, get state() { return state; }, startRound, get myId() { return myId; } }; window.__onKill = onKill; window.__shoot = () => shoot(); window.__assist = () => assistDir();
 </script>
 </body>
 </html>
