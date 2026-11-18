@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Прораб Pro — акты приёмки работ и скрытых работ по СНиП</title>
+<meta name="description" content="Бесплатный помощник прораба: акт приёмки выполненных работ и акт освидетельствования скрытых работ по СНиП за 5 минут. Электрика, отделка, монтаж, сантехника, кровля, бетон. Голосовой ввод, фото, PDF и Word.">
+<link rel="canonical" href="https://kasbpro.uz/prorab/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#1b2733">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:title" content="Прораб Pro — акты приёмки работ за 5 минут">
+<meta property="og:description" content="Акт приёмки и акт скрытых работ по СНиП: голосом, с фото, в PDF и Word.">
+<meta property="og:url" content="https://kasbpro.uz/prorab/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: one-column phone app; screens swapped in place. Construction-site navy with a safety-orange accent. */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2; --soft:#f5f7f9;
+  --accent:#f07c1e; --accent-ink:#2a1200; --navy:#1b2733; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --warn:#b7791f;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543; --soft:#1b2834;
+  --accent:#f5934a; --accent-ink:#2a1200; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --warn:#e0a84a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d151d; --surface:#16212c; --fg:#e7edf3; --muted:#9aa8b6; --line:#273543; --soft:#1b2834;
+  --accent:#f5934a; --accent-ink:#2a1200; --navy:#0a1118; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --warn:#e0a84a; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+button,input,textarea,select{font:inherit;color:inherit}
+.app{max-width:560px;margin:0 auto;min-height:100vh}
+.bar{background:var(--navy);color:var(--navy-fg);padding:16px max(16px,env(safe-area-inset-right)) 18px max(16px,env(safe-area-inset-left));position:sticky;top:0;z-index:5}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:18px;margin:0;line-height:1.2}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font-size:15px;padding:8px 10px 8px 0;cursor:pointer;display:flex;gap:4px;align-items:center}
+.wrap{padding:18px max(16px,env(safe-area-inset-right)) 120px max(16px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:16px}
+h2{font-family:var(--display);font-size:15px;margin:6px 0 0;letter-spacing:.01em}
+.hint{font-size:14px;color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 12px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:96px}
+.tile b{font-size:15px;line-height:1.25}
+.tile span{font-size:12.5px;color:var(--muted);line-height:1.3}
+.tile[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.tile svg{color:var(--accent)}
+.seg{display:flex;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:none;border-radius:9px;padding:10px 6px;font-size:14px;font-weight:600;cursor:pointer;line-height:1.2}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.card > h3{margin:0;font-size:15px;display:flex;align-items:center;gap:8px}
+.card > h3 i{font-style:normal;width:24px;height:24px;border-radius:7px;background:var(--navy);color:var(--navy-fg);display:grid;place-items:center;font-size:12px;flex:none}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);font-weight:500}
+.inp{display:flex;gap:6px;align-items:stretch}
+.inp input,.inp textarea,.inp select,input.plain{flex:1;min-width:0;width:100%;background:var(--soft);border:1.5px solid var(--line);border-radius:10px;padding:10px 11px;font-size:16px;color:var(--fg)}
+.inp textarea{min-height:76px;resize:vertical}
+.inp input:focus,.inp textarea:focus,input.plain:focus{outline:none;border-color:var(--accent)}
+.mic{flex:none;width:44px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--fg)}
+.mic.on{background:var(--bad);border-color:var(--bad);color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.6}}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px dashed var(--line);background:none;border-radius:99px;padding:6px 11px;font-size:13px;cursor:pointer;text-align:left;line-height:1.25}
+.chip:active{background:var(--soft)}
+.chip.sel{border-style:solid;border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.work{display:grid;grid-template-columns:1fr 66px 74px 34px;gap:6px;align-items:start}
+.work .name{grid-column:1/-1;display:flex;gap:6px}
+.work .name input{flex:1}
+.work input{background:var(--soft);border:1.5px solid var(--line);border-radius:9px;padding:9px;font-size:15px;min-width:0;width:100%}
+.work .del{grid-column:4;grid-row:2}
+.worklist{display:flex;flex-direction:column;gap:12px}
+.worklist > div{padding-bottom:12px;border-bottom:1px dashed var(--line)}
+.x{border:0;background:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;padding:6px}
+.btn{border:0;border-radius:12px;padding:14px 16px;font-weight:700;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.main{background:var(--accent);color:var(--accent-ink)}
+.btn.sec{background:var(--surface);border:1.5px solid var(--line);color:var(--fg)}
+.btn.small{padding:9px 12px;font-size:14px;border-radius:10px}
+.btn:disabled{opacity:.5}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:6;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.dock .in{max-width:528px;margin:0 auto;display:flex;gap:8px}
+.dock .btn{flex:1}
+.photos{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.ph{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--soft)}
+.ph img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.ph input{width:100%;border:0;border-top:1px solid var(--line);background:var(--surface);padding:7px 8px;font-size:13px}
+.ph .x{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.55);color:#fff;border-radius:99px;width:30px;height:30px;padding:0;font-size:18px}
+.addph{border:1.5px dashed var(--line);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;aspect-ratio:4/3;cursor:pointer;color:var(--muted);font-size:13px;background:none}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center}
+.item .t{flex:1;min-width:0;cursor:pointer}
+.item .t b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .t span{font-size:13px;color:var(--muted)}
+.item .acts{display:flex;gap:2px}
+.ibtn{border:0;background:var(--soft);border-radius:9px;width:38px;height:38px;display:grid;place-items:center;cursor:pointer;color:var(--fg)}
+.empty{font-size:14px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:14px;text-align:center}
+.note{font-size:13.5px;background:color-mix(in srgb,var(--accent) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));border-radius:12px;padding:11px 12px;line-height:1.4}
+.paper-wrap{overflow-x:auto;margin:0 -4px;padding:4px}
+.paper{background:#fff;color:#111;font-family:"Times New Roman",Times,serif;font-size:13px;line-height:1.35;padding:22px 18px;border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,.15);min-width:320px}
+.paper h4{text-align:center;margin:0;font-size:15px}
+.paper .c{text-align:center;margin:2px 0}
+.paper .rw{display:flex;justify-content:space-between;margin:12px 0}
+.paper p{margin:6px 0;text-align:left}
+.paper table{width:100%;border-collapse:collapse;margin:6px 0;font-size:12px}
+.paper td,.paper th{border:1px solid #444;padding:4px 5px;vertical-align:top}
+.paper th{background:#f0f0f0}
+.paper .sg{display:grid;grid-template-columns:1fr auto;gap:4px 10px;margin-top:6px}
+.paper .sg span:nth-child(2n){white-space:nowrap}
+.paper .phs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.paper .phs img{width:100%;border:1px solid #999}
+.paper .phs div{font-size:11px;text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--navy);color:var(--navy-fg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:50;max-width:calc(100% - 32px);box-shadow:0 4px 16px rgba(0,0,0,.3);opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+[hidden]{display:none!important}
+body:has(#kp-tg) .dock{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+body:has(#kp-tg) .wrap{padding-bottom:190px}
+body:has(#kp-tg) .toast{bottom:calc(160px + env(safe-area-inset-bottom))}
+@media (max-width:360px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="phfile" accept="image/*" multiple hidden>
+
+<script>
+/* ===== Data: work types with typical works, hidden works, documents and norms ===== */
+const TRADES = {
+  elektro:{name:'Электромонтажные работы',short:'Электрика',desc:'Кабель, щиты, розетки, заземление',
+    norms:'СНиП 3.05.06-85 «Электротехнические устройства», ПУЭ (7-е изд.)',
+    works:[['Прокладка кабеля ВВГнг-LS 3×2,5 в штробе','м'],['Прокладка кабеля ВВГнг-LS 3×1,5 в штробе','м'],['Прокладка кабеля в гофротрубе','м'],['Устройство штроб в стенах','м'],['Установка подрозетников','шт'],['Монтаж розеток','шт'],['Монтаж выключателей','шт'],['Монтаж распределительных коробок','шт'],['Сборка и монтаж электрощита','шт'],['Установка автоматических выключателей','шт'],['Установка УЗО / дифавтоматов','шт'],['Монтаж светильников','шт'],['Монтаж контура заземления','компл']],
+    hidden:['Прокладка кабеля в штробах до оштукатуривания стен','Прокладка кабеля в гофротрубе в стяжке пола','Прокладка кабеля за подвесным потолком','Монтаж контура заземления до обратной засыпки'],
+    docs:['Исполнительная схема электропроводки','Протокол измерения сопротивления изоляции','Протокол проверки цепи «фаза — нуль»','Протокол измерения сопротивления заземления','Протокол проверки УЗО','Сертификаты на кабель и оборудование'],
+    next:'оштукатуривание стен и устройство стяжки'},
+  otdelka:{name:'Отделочные работы',short:'Отделка',desc:'Штукатурка, плитка, стяжка, покраска',
+    norms:'СНиП 3.04.01-87 «Изоляционные и отделочные покрытия»',
+    works:[['Штукатурка стен по маякам','м²'],['Шпаклёвка стен','м²'],['Окраска стен водоэмульсионной краской','м²'],['Поклейка обоев','м²'],['Облицовка стен керамической плиткой','м²'],['Устройство цементно-песчаной стяжки пола','м²'],['Укладка керамогранита на пол','м²'],['Укладка ламината с подложкой','м²'],['Монтаж потолка из ГКЛ','м²'],['Монтаж перегородок из ГКЛ','м²'],['Монтаж натяжного потолка','м²'],['Установка плинтуса','м']],
+    hidden:['Гидроизоляция пола санузла перед устройством стяжки','Армирование стяжки сеткой','Грунтование основания перед штукатуркой','Установка маяков и армирующей сетки','Устройство каркаса потолка из ГКЛ до обшивки'],
+    docs:['Сертификаты на материалы','Исполнительная схема','Общий журнал работ'],
+    next:'чистовая отделка'},
+  montazh:{name:'Монтажные работы',short:'Монтаж',desc:'Металлоконструкции, окна, двери, оборудование',
+    norms:'СНиП 3.03.01-87 «Несущие и ограждающие конструкции», ГОСТ 30971-2012 (оконные швы)',
+    works:[['Монтаж металлоконструкций','т'],['Монтаж колонн','шт'],['Монтаж балок и ферм','шт'],['Монтаж сэндвич-панелей','м²'],['Монтаж профнастила','м²'],['Установка оконных блоков ПВХ','шт'],['Установка дверных блоков','шт'],['Монтаж витражей','м²'],['Монтаж оборудования','шт'],['Антикоррозионная окраска металлоконструкций','м²']],
+    hidden:['Сварные соединения закладных деталей','Анкеровка металлоконструкций к основанию','Антикоррозионная защита сварных швов','Устройство монтажного шва оконного блока'],
+    docs:['Сертификаты на металлопрокат','Исполнительная геодезическая схема','Журнал сварочных работ','Копии удостоверений сварщиков','Паспорта на оборудование'],
+    next:'последующие монтажные и отделочные работы'},
+  santeh:{name:'Санитарно-технические работы',short:'Сантехника',desc:'Водопровод, канализация, отопление',
+    norms:'СНиП 3.05.01-85 «Внутренние санитарно-технические системы»',
+    works:[['Прокладка труб водоснабжения PPR','м'],['Прокладка канализационных труб ПП','м'],['Монтаж коллектора','шт'],['Установка унитаза','шт'],['Установка раковины','шт'],['Установка ванны / душевого поддона','шт'],['Установка смесителей','шт'],['Монтаж радиаторов отопления','шт'],['Установка водонагревателя','шт'],['Монтаж тёплого пола','м²']],
+    hidden:['Прокладка трубопроводов в штробах','Прокладка трубопроводов в стяжке пола','Прокладка канализации под полом','Гидравлическое испытание трубопроводов до закрытия'],
+    docs:['Акт гидравлического испытания','Акт испытания канализации проливом','Сертификаты на трубы и фитинги','Исполнительная схема'],
+    next:'заделка штроб и устройство стяжки'},
+  krovlya:{name:'Кровельные работы',short:'Кровля',desc:'Утепление, гидроизоляция, покрытие',
+    norms:'СНиП II-26-76 «Кровли», СНиП 3.04.01-87',
+    works:[['Устройство пароизоляции','м²'],['Утепление кровли минплитой','м²'],['Устройство обрешётки','м²'],['Устройство гидроизоляционной мембраны','м²'],['Укладка наплавляемой кровли','м²'],['Монтаж металлочерепицы','м²'],['Монтаж водосточной системы','м'],['Устройство примыканий','м']],
+    hidden:['Устройство пароизоляционного слоя','Укладка утеплителя','Устройство обрешётки и контробрешётки','Устройство нижнего слоя гидроизоляции'],
+    docs:['Сертификаты на кровельные материалы','Исполнительная схема','Общий журнал работ'],
+    next:'устройство следующего слоя кровли'},
+  beton:{name:'Бетонные и каменные работы',short:'Бетон и кладка',desc:'Фундамент, армирование, кладка',
+    norms:'СНиП 3.03.01-87 «Несущие и ограждающие конструкции»',
+    works:[['Устройство песчаной подушки','м³'],['Устройство опалубки','м²'],['Армирование конструкций','т'],['Бетонирование фундамента','м³'],['Бетонирование монолитного перекрытия','м³'],['Кладка стен из кирпича','м³'],['Кладка стен из газоблока','м³'],['Устройство перемычек','шт'],['Устройство армопояса','м³']],
+    hidden:['Устройство песчаной подушки под фундамент','Армирование фундамента перед бетонированием','Армирование перекрытия перед бетонированием','Гидроизоляция фундамента до обратной засыпки','Армирование кладки сеткой'],
+    docs:['Документ о качестве бетонной смеси','Протокол испытания образцов бетона','Сертификаты на арматуру','Журнал бетонных работ','Исполнительная геодезическая схема'],
+    next:'бетонирование конструкций'},
+  other:{name:'Общестроительные работы',short:'Другие работы',desc:'Любые работы, впишите сами',
+    norms:'СНиП 3.01.01-85 «Организация строительного производства»',
+    works:[],hidden:[],docs:['Сертификаты на материалы','Исполнительная схема','Общий журнал работ'],next:'последующие работы'}
+};
+const ICONS = {
+  elektro:'<path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="currentColor"/>',
+  otdelka:'<path d="M4 4h12v5H4z M16 6h3v6h-8v3" fill="none" stroke="currentColor" stroke-width="2"/><rect x="9.5" y="15" width="3" height="7" rx="1" fill="currentColor"/>',
+  montazh:'<path d="M3 21h18M6 21V8l6-5 6 5v13M10 21v-6h4v6" fill="none" stroke="currentColor" stroke-width="2"/>',
+  santeh:'<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z" fill="none" stroke="currentColor" stroke-width="2"/>',
+  krovlya:'<path d="M2 12 12 4l10 8M5 10v10h14V10" fill="none" stroke="currentColor" stroke-width="2"/>',
+  beton:'<path d="M3 6h8v5H3zM13 6h8v5h-8zM7 13h10v5H7z" fill="none" stroke="currentColor" stroke-width="2"/>',
+  other:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z" fill="none" stroke="currentColor" stroke-width="2"/>'
+};
+const TYPES = {
+  priemka:{name:'Акт приёмки выполненных работ',short:'Приёмка работ'},
+  skrytye:{name:'Акт освидетельствования скрытых работ',short:'Скрытые работы'}
+};
+const UNITS = ['м','м²','м³','шт','т','кг','компл','п.м'];
+
+/* ===== Storage (all wrapped: Telegram/private windows may block it) ===== */
+const LS = {
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+};
+let acts = LS.get('pr_acts',[]);
+let profile = LS.get('pr_profile',{});
+let cur = null;        // act being edited
+let view = 'home';
+let pick = {type:'priemka',trade:null};
+let warnedQuota = false;
+
+function saveActs(){
+  if(!LS.set('pr_acts',acts)){
+    // too big (photos): keep text, drop photos from storage
+    const slim = acts.map(a=>Object.assign({},a,{photos:[]}));
+    LS.set('pr_acts',slim);
+    if(!warnedQuota){warnedQuota=true;toast('Память телефона заполнена: фото сохранятся только до закрытия')}
+  }
+}
+let saveT=null;
+function autosave(){clearTimeout(saveT);saveT=setTimeout(()=>{if(!cur)return;cur.updated=Date.now();const i=acts.findIndex(a=>a.id===cur.id);if(i<0)acts.unshift(cur);else acts[i]=cur;saveActs();
+  profile={city:cur.city,contractor:cur.contractor,contrRep:cur.contrRep,contrRepPos:cur.contrRepPos,customer:cur.customer,custRep:cur.custRep,custRepPos:cur.custRepPos};LS.set('pr_profile',profile)},400)}
+
+/* ===== Helpers ===== */
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today = ()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const MONTHS=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+function fdate(s,long){if(!s)return long?'«___» ____________ 20__ г.':'__.__.20__';const [y,m,d]=s.split('-');return long?`«${d}» ${MONTHS[+m-1]} ${y} г.`:`${d}.${m}.${y}`}
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),3200)}
+const tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initData ? Telegram.WebApp : null;
+if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+function newAct(type,trade){
+  const T=TRADES[trade]; const p=profile;
+  const nums=acts.filter(a=>a.type===type).map(a=>parseInt(a.num)||0);
+  return {id:'a'+Date.now().toString(36),type,trade,created:Date.now(),updated:Date.now(),
+    num:String((nums.length?Math.max(...nums):0)+1),city:p.city||'',date:today(),
+    object:'',address:'',customer:p.customer||'',contractor:p.contractor||'',subcontractor:'',
+    custRep:p.custRep||'',custRepPos:p.custRepPos||'Представитель технического надзора заказчика',
+    contrRep:p.contrRep||'',contrRepPos:p.contrRepPos||'Производитель работ (прораб)',
+    others:'',project:'',start:today(),end:today(),materials:'',
+    docs:[],works:[],hidden:'',remarks:'',decision:'ok',fixDate:'',next:T.next,norms:T.norms,copies:'2',photos:[]};
+}
+
+/* ===== Voice input (Web Speech API). Falls back to keyboard microphone. ===== */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec=null, recBtn=null;
+function micBtn(id){return `<button type="button" class="mic" data-mic="${id}" aria-label="Сказать голосом"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>`}
+function startMic(btn){
+  const el=document.getElementById(btn.dataset.mic); if(!el)return;
+  if(rec){rec.stop();return}
+  if(!SR){toast('Нажмите значок микрофона на клавиатуре телефона');el.focus();return}
+  try{
+    rec=new SR(); rec.lang='ru-RU'; rec.interimResults=false; rec.continuous=false;
+    recBtn=btn; btn.classList.add('on');
+    rec.onresult=e=>{let t='';for(const r of e.results)t+=r[0].transcript;
+      t=t.trim(); if(!t)return;
+      if(el.tagName==='TEXTAREA'&&el.value.trim())el.value=el.value.replace(/\s*$/,'')+(/[.!?]$/.test(el.value.trim())?' ':'. ')+t.charAt(0).toUpperCase()+t.slice(1);
+      else el.value=(el.value&&el.type!=='number'?el.value+' ':'')+t;
+      el.dispatchEvent(new Event('input',{bubbles:true}))};
+    rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed')toast('Нет доступа к микрофону. Нажмите микрофон на клавиатуре');else if(e.error==='no-speech')toast('Не расслышал, попробуйте ещё раз')};
+    rec.onend=()=>{btn.classList.remove('on');rec=null};
+    rec.start();
+  }catch(e){btn.classList.remove('on');rec=null;toast('Нажмите значок микрофона на клавиатуре телефона');el.focus()}
+}
+
+/* ===== Views ===== */
+function header(title,sub,back){
+  return `<div class="bar"><div class="row">${back?`<button class="back" data-go="${back}" aria-label="Назад"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>`:`<div class="logo"><svg width="24" height="24" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2" fill="none" stroke="#2a1200" stroke-width="2.2"/><path d="M9 3h6v3H9z" fill="#2a1200"/><path d="m8.5 13 2.5 2.5 4.5-5" fill="none" stroke="#2a1200" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`}<div><h1>${esc(title)}</h1>${sub?`<p>${esc(sub)}</p>`:''}</div></div></div>`;
+}
+
+function renderHome(){
+  const list = acts.slice().sort((a,b)=>b.updated-a.updated);
+  return header('Прораб Pro','Акты приёмки работ по СНиП')+`<div class="wrap">
+  ${window.KASB_HUB?`<a href="${window.KASB_HUB}" class="hint" style="text-decoration:none">‹ Все профессии Kasb Pro</a>`:''}
+  <h2>Какой акт нужен?</h2>
+  <div class="seg" role="group">${Object.entries(TYPES).map(([k,t])=>`<button data-type="${k}" aria-pressed="${pick.type===k}">${t.short}</button>`).join('')}</div>
+  <p class="hint">${pick.type==='priemka'?'Сдача готовых работ заказчику: что сделано, объёмы, замечания, решение комиссии.':'Работы, которые потом закроют (кабель в штробе, арматура, гидроизоляция). Без этого акта следующие работы начинать нельзя.'}</p>
+  <h2>Вид работ</h2>
+  <div class="grid">${Object.entries(TRADES).map(([k,t])=>`<button class="tile" data-trade="${k}"><svg width="24" height="24" viewBox="0 0 24 24">${ICONS[k]}</svg><b>${t.short}</b><span>${t.desc}</span></button>`).join('')}</div>
+  <h2>Мои акты</h2>
+  ${list.length?`<div class="list">${list.map(a=>`<div class="item"><div class="t" data-open="${a.id}"><b>${a.type==='skrytye'?'Скрытые':'Приёмка'} № ${esc(a.num)} · ${esc(TRADES[a.trade].short)}</b><span>${esc(a.object||'Объект не указан')} · ${fdate(a.date)}</span></div><div class="acts"><button class="ibtn" data-copy="${a.id}" aria-label="Сделать копию" title="Копия для нового акта"><svg width="18" height="18" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" fill="none" stroke="currentColor" stroke-width="2"/></svg></button><button class="ibtn" data-del="${a.id}" aria-label="Удалить"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2"/></svg></button></div></div>`).join('')}</div>`:`<div class="empty">Здесь появятся ваши акты. Они хранятся на этом телефоне.</div>`}
+  <p class="hint">Формы составлены по типовым образцам (СНиП, РД-11-02-2006), принятым в Узбекистане и странах СНГ. Нормативы в акте можно поменять, например на ШНК.</p>
+  </div>`;
+}
+
+function field(id,label,opt={}){
+  const v=cur[id]==null?'':cur[id];
+  const ph=opt.ph?` placeholder="${esc(opt.ph)}"`:'';
+  const ctl = opt.area?`<textarea id="${id}" data-k="${id}"${ph}>${esc(v)}</textarea>`
+    : `<input id="${id}" data-k="${id}" type="${opt.type||'text'}" value="${esc(v)}"${ph}${opt.mode?` inputmode="${opt.mode}"`:''}>`;
+  return `<label class="f">${label}<div class="inp">${ctl}${opt.type==='date'||opt.nomic?'':micBtn(id)}</div></label>`;
+}
+
+function renderForm(){
+  const T=TRADES[cur.trade], hid=cur.type==='skrytye';
+  let n=0; const sec=(t)=>`<h3><i>${++n}</i>${t}</h3>`;
+  return header(TYPES[cur.type].short+' № '+cur.num, T.name,'home')+`<div class="wrap">
+  <div class="card">${sec('Акт и объект')}
+    <div class="two">${field('num','Номер акта',{nomic:true,mode:'numeric'})}${field('date','Дата',{type:'date'})}</div>
+    ${field('city','Город',{ph:'Ташкент'})}
+    ${field('object','Объект',{area:true,ph:'Жилой дом, 9 этажей. Квартира 45'})}
+    ${field('address','Адрес объекта',{ph:'г. Ташкент, Чиланзарский р-н, ...'})}
+  </div>
+  <div class="card">${sec('Стороны и комиссия')}
+    ${field('customer','Заказчик (организация или ФИО)',{ph:'ООО «...»'})}
+    ${field('contractor',hid?'Кто строит (генподрядчик)':'Подрядчик (кто сдаёт работы)',{ph:'ООО «...»'})}
+    ${hid?field('subcontractor','Кто выполнил работы, если субподрядчик',{ph:'необязательно'}):''}
+    ${field('custRep','Представитель заказчика, ФИО',{ph:'Иванов И.И.'})}
+    ${field('custRepPos','Его должность')}
+    ${field('contrRep','Представитель подрядчика, ФИО',{ph:'Ваше ФИО'})}
+    ${field('contrRepPos','Его должность')}
+    ${field('others','Другие члены комиссии (необязательно)',{area:true,ph:'Авторский надзор: ГИП Петров П.П.'})}
+  </div>
+  <div class="card">${sec(hid?'Какие скрытые работы':'Какие работы выполнены')}
+    ${hid?`${T.hidden.length?`<p class="hint">Нажмите, чтобы добавить:</p><div class="chips">${T.hidden.map((h,i)=>`<button class="chip" data-hid="${i}">+ ${esc(h)}</button>`).join('')}</div>`:''}
+      ${field('hidden','Описание работ',{area:true,ph:'Прокладка кабеля ВВГнг 3×2,5 в штробах, кв. 45, комнаты 1–3'})}`:''}
+    <p class="hint">${hid?'Объёмы (необязательно):':'Нажмите типовую работу или добавьте свою:'}</p>
+    ${T.works.length?`<div class="chips">${T.works.map((w,i)=>`<button class="chip" data-work="${i}">+ ${esc(w[0])}</button>`).join('')}</div>`:''}
+    <div class="worklist" id="works">${cur.works.map((w,i)=>workRow(w,i)).join('')}</div>
+    <button class="btn sec small" data-addwork>+ Добавить строку</button>
+  </div>
+  <div class="card">${sec('Сроки, проект, материалы')}
+    <div class="two">${field('start','Начало работ',{type:'date'})}${field('end','Окончание',{type:'date'})}</div>
+    ${field('project','Проект / чертежи (шифр)',{ph:'Шифр 12-2026-ЭОМ, листы 1–5'})}
+    ${field('materials','Применённые материалы',{area:true,ph:'Кабель ВВГнг-LS 3×2,5, сертификат № ...'})}
+  </div>
+  <div class="card">${sec('Документы')}
+    <p class="hint">Что предъявлено комиссии:</p>
+    <div class="chips">${T.docs.map((d,i)=>`<button class="chip${cur.docs.includes(d)?' sel':''}" data-doc="${i}">${cur.docs.includes(d)?'✓ ':''}${esc(d)}</button>`).join('')}</div>
+    ${field('docsExtra','Другие документы',{ph:'необязательно'})}
+  </div>
+  <div class="card">${sec(hid?'Решение':'Замечания и решение')}
+    ${hid?field('next','Разрешается выполнять',{ph:'оштукатуривание стен'}):`
+    <div class="seg" role="group">
+      <button data-dec="ok" aria-pressed="${cur.decision==='ok'}">Принять</button>
+      <button data-dec="fix" aria-pressed="${cur.decision==='fix'}">С замечаниями</button>
+      <button data-dec="no" aria-pressed="${cur.decision==='no'}">Не принять</button></div>
+    ${cur.decision==='fix'?field('fixDate','Устранить замечания до',{type:'date'}):''}`}
+    ${field('remarks',hid?'Дополнительные сведения':'Замечания (если нет, оставьте пустым)',{area:true,ph:hid?'необязательно':'Скол плитки в санузле, 2 шт.'})}
+    ${field('norms','Работы выполнены по нормам',{area:true})}
+    ${field('copies','Количество экземпляров',{nomic:true,mode:'numeric'})}
+  </div>
+  <div class="card">${sec('Фотофиксация')}
+    <p class="hint">Фото попадут в приложение к акту (в PDF).</p>
+    <div class="photos" id="photos">${cur.photos.map((p,i)=>`<div class="ph"><img src="${p.src}" alt=""><button class="x" data-delph="${i}" aria-label="Удалить фото">×</button><input data-cap="${i}" value="${esc(p.cap)}" placeholder="Подпись к фото"></div>`).join('')}
+      <button class="addph" data-addph><svg width="28" height="28" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>Добавить фото</button></div>
+  </div>
+  </div>
+  <div class="dock"><div class="in"><button class="btn main" data-go="preview">Готово, показать акт ›</button></div></div>`;
+}
+function workRow(w,i){
+  return `<div class="work"><div class="name"><div class="inp" style="flex:1"><input id="w${i}" data-w="${i}" data-f="n" value="${esc(w.n)}" placeholder="Наименование работы">${micBtn('w'+i)}</div></div>
+  <select data-w="${i}" data-f="u" class="plain" style="background:var(--soft);border:1.5px solid var(--line);border-radius:9px;padding:9px 4px;font-size:15px;color:var(--fg)">${UNITS.concat(UNITS.includes(w.u)?[]:[w.u]).map(u=>`<option${u===w.u?' selected':''}>${esc(u)}</option>`).join('')}</select>
+  <input data-w="${i}" data-f="q" value="${esc(w.q)}" inputmode="decimal" placeholder="Кол-во">
+  <span style="font-size:12px;color:var(--muted);align-self:center">${i+1}</span>
+  <button class="x del" data-delw="${i}" aria-label="Удалить строку">×</button></div>`;
+}
+
+function renderPreview(){
+  return header('Готовый акт',TYPES[cur.type].short+' № '+cur.num,'form')+`<div class="wrap">
+  ${tg?`<div class="note">В Telegram файлы иногда не скачиваются. Если PDF не открылся, нажмите «Открыть в браузере» — акт перенесётся туда (без фото).<div style="margin-top:8px"><button class="btn sec small" data-browser>Открыть в браузере</button></div></div>`:''}
+  <div class="paper-wrap"><div class="paper">${toHTML(actBlocks(cur),true)}</div></div>
+  <p class="hint">Проверьте текст. Чтобы исправить, нажмите «Назад». Подписи ставятся от руки после печати.</p>
+  </div>
+  <div class="dock"><div class="in"><button class="btn main" data-pdf>PDF</button><button class="btn sec" data-word>Word</button>${navigator.share?`<button class="btn sec" data-share aria-label="Отправить"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5M5 14v6h14v-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>`:''}</div></div>`;
+}
+
+/* ===== Act content model: one list of blocks, rendered to HTML (preview/Word) and to PDF ===== */
+function or_(v,ph){v=(v||'').trim();return v||ph}
+const LINE='________________________';
+function actBlocks(a){
+  const T=TRADES[a.trade], hid=a.type==='skrytye', B=[];
+  const docs=a.docs.slice(); if((a.docsExtra||'').trim())docs.push(a.docsExtra.trim());
+  const works=a.works.filter(w=>(w.n||'').trim());
+  B.push({t:'h',text:'АКТ № '+or_(a.num,'___')});
+  B.push({t:'h',text:hid?'освидетельствования скрытых работ':'приёмки выполненных работ'});
+  B.push({t:'c',text:'('+T.name.toLowerCase()+')'});
+  B.push({t:'row',l:'г. '+or_(a.city,'__________'),r:fdate(a.date,true)});
+  B.push({t:'p',runs:[['Объект: ',1],[or_(a.object,LINE)]]});
+  if((a.address||'').trim())B.push({t:'p',runs:[['Адрес: ',1],[a.address.trim()]]});
+  B.push({t:'p',runs:[['Заказчик: ',1],[or_(a.customer,LINE)]]});
+  B.push({t:'p',runs:[[hid?'Лицо, осуществляющее строительство: ':'Подрядчик: ',1],[or_(a.contractor,LINE)]]});
+  if(hid&&(a.subcontractor||'').trim())B.push({t:'p',runs:[['Лицо, выполнившее работы: ',1],[a.subcontractor.trim()]]});
+  B.push({t:'p',runs:[['Комиссия в составе:',1]]});
+  const mem=[[or_(a.custRepPos,'Представитель заказчика'),or_(a.custRep,LINE)],[or_(a.contrRepPos,'Представитель подрядчика'),or_(a.contrRep,LINE)]];
+  mem.forEach(m=>B.push({t:'p',runs:[['— '+m[0]+': '],[m[1]]]}));
+  (a.others||'').split('\n').map(s=>s.trim()).filter(Boolean).forEach(s=>B.push({t:'p',runs:[['— '+s]]}));
+  B.push({t:'p',runs:[['произвела осмотр работ, выполненных '+or_(hid&&(a.subcontractor||'').trim()?a.subcontractor:a.contractor,'подрядчиком')+', и составила настоящий акт о нижеследующем:']]});
+  let k=0; const num=()=>(++k)+'. ';
+  const table=()=>works.length?{t:'table',head:['№','Наименование работ','Ед. изм.','Кол-во'],w:[22,'*',50,55],rows:works.map((w,i)=>[String(i+1),w.n.trim(),w.u,(w.q||'').trim()])}:null;
+  if(hid){
+    B.push({t:'p',runs:[[num()+'К освидетельствованию предъявлены следующие работы: ',1],[or_(a.hidden,works.length?'':LINE)]]});
+    const tb=table(); if(tb)B.push(tb);
+    B.push({t:'p',runs:[[num()+'Работы выполнены по проектной документации: ',1],[or_(a.project,LINE)]]});
+    B.push({t:'p',runs:[[num()+'При выполнении работ применены: ',1],[or_(a.materials,LINE)]]});
+    B.push({t:'p',runs:[[num()+'Предъявлены документы, подтверждающие соответствие работ: ',1],[docs.length?docs.join('; ')+'.':LINE]]});
+    B.push({t:'p',runs:[[num()+'Даты: ',1],['начала работ — '+fdate(a.start)+', окончания работ — '+fdate(a.end)+'.']]});
+    B.push({t:'p',runs:[[num()+'Работы выполнены в соответствии с: ',1],[[a.project?'проектной документацией':'',or_(a.norms,'')].filter(Boolean).join(', ')+'.']]});
+    B.push({t:'p',runs:[[num()+'Разрешается производство последующих работ: ',1],[or_(a.next,LINE)]]});
+    if((a.remarks||'').trim())B.push({t:'p',runs:[['Дополнительные сведения: ',1],[a.remarks.trim()]]});
+  }else{
+    B.push({t:'p',runs:[[num()+'К приёмке предъявлены следующие работы:',1]]});
+    B.push(table()||{t:'p',runs:[[LINE+LINE]]});
+    B.push({t:'p',runs:[[num()+'Работы выполнены по проекту (чертежам): ',1],[or_(a.project,'—')]]});
+    B.push({t:'p',runs:[[num()+'Сроки выполнения работ: ',1],['начало — '+fdate(a.start)+', окончание — '+fdate(a.end)+'.']]});
+    B.push({t:'p',runs:[[num()+'Применённые материалы: ',1],[or_(a.materials,'—')]]});
+    B.push({t:'p',runs:[[num()+'Предъявлены документы: ',1],[docs.length?docs.join('; ')+'.':'—']]});
+    B.push({t:'p',runs:[[num()+'Замечания: ',1],[or_(a.remarks,'замечаний нет.')]]});
+    const dec={ok:'Работы выполнены в соответствии с проектом и требованиями '+or_(a.norms,'СНиП')+' и ПРИНИМАЮТСЯ.',
+      fix:'Работы принимаются при условии устранения замечаний, указанных в п. '+k+', в срок до '+fdate(a.fixDate)+'.',
+      no:'Работы НЕ ПРИНИМАЮТСЯ до устранения замечаний, указанных в п. '+k+'. После устранения работы предъявляются повторно.'}[a.decision];
+    B.push({t:'p',runs:[['Решение комиссии: ',1],[dec]]});
+  }
+  B.push({t:'p',runs:[['Акт составлен в '+or_(a.copies,'2')+' экземплярах.'+(a.photos.length?' Приложение: фотофиксация, '+a.photos.length+' фото.':'')]]});
+  B.push({t:'sign',title:hid?'Подписи членов комиссии:':'',rows:hid?
+    [[or_(a.custRepPos,'Представитель заказчика'),a.custRep],[or_(a.contrRepPos,'Представитель подрядчика'),a.contrRep]]:
+    [['Сдал: '+or_(a.contrRepPos,'представитель подрядчика'),a.contrRep],['Принял: '+or_(a.custRepPos,'представитель заказчика'),a.custRep]]});
+  if((a.others||'').trim())B.push({t:'sign',rows:a.others.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>[s,''])});
+  if(a.photos.length)B.push({t:'photos',items:a.photos});
+  return B;
+}
+function sigName(n){return '__________ / '+((n||'').trim()||'______________')+' /'}
+
+function toHTML(B,withPhotos){
+  return B.map(b=>{
+    if(b.t==='h')return `<h4>${esc(b.text)}</h4>`;
+    if(b.t==='c')return `<p class="c" style="text-align:center">${esc(b.text)}</p>`;
+    if(b.t==='row')return `<div class="rw"><span>${esc(b.l)}</span><span>${esc(b.r)}</span></div>`;
+    if(b.t==='p')return `<p>${b.runs.map(r=>r[1]?`<b>${esc(r[0])}</b>`:esc(r[0]).replace(/\n/g,'<br>')).join('')}</p>`;
+    if(b.t==='table')return `<table><tr>${b.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr>${b.rows.map(r=>`<tr>${r.map((c,i)=>`<td${i!==1?' style="text-align:center"':''}>${esc(c)}</td>`).join('')}</tr>`).join('')}</table>`;
+    if(b.t==='sign')return (b.title?`<p><b>${esc(b.title)}</b></p>`:'')+`<div class="sg">${b.rows.map(r=>`<span>${esc(r[0])}</span><span>${esc(sigName(r[1]))}</span>`).join('')}</div>`;
+    if(b.t==='photos')return withPhotos?`<p style="margin-top:18px;text-align:center"><b>Приложение. Фотофиксация</b></p><div class="phs">${b.items.map((p,i)=>`<figure style="margin:0"><img src="${p.src}" alt=""><div>Фото ${i+1}${p.cap?'. '+esc(p.cap):''}</div></figure>`).join('')}</div>`:'';
+    return '';
+  }).join('');
+}
+
+/* ===== PDF (pdfmake with bundled Roboto: Cyrillic works) — loaded only when needed ===== */
+function loadScript(src){return new Promise((ok,bad)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=bad;document.head.appendChild(s)})}
+let pdfReady=null;
+function ensurePdf(){if(window.pdfMake&&pdfMake.vfs)return Promise.resolve();
+  pdfReady=pdfReady||loadScript('lib/pdfmake.min.js').then(()=>loadScript('lib/vfs_fonts.js'));
+  return pdfReady.catch(e=>{pdfReady=null;throw e})}
+function pdfDef(B){
+  const content=[];
+  B.forEach(b=>{
+    if(b.t==='h')content.push({text:b.text,bold:true,alignment:'center',fontSize:13});
+    else if(b.t==='c')content.push({text:b.text,alignment:'center',margin:[0,2,0,0]});
+    else if(b.t==='row')content.push({columns:[{text:b.l},{text:b.r,alignment:'right'}],margin:[0,12,0,10]});
+    else if(b.t==='p')content.push({text:b.runs.map(r=>({text:r[0],bold:!!r[1]})),margin:[0,0,0,5],alignment:'justify'});
+    else if(b.t==='table')content.push({table:{headerRows:1,widths:b.w,body:[b.head.map(h=>({text:h,bold:true,alignment:'center',fillColor:'#eeeeee'}))].concat(b.rows.map(r=>r.map((c,i)=>({text:c,alignment:i===1?'left':'center'}))))},fontSize:10,margin:[0,2,0,8]});
+    else if(b.t==='sign'){if(b.title)content.push({text:b.title,bold:true,margin:[0,8,0,2]});
+      b.rows.forEach(r=>content.push({columns:[{text:r[0],width:'*'},{text:sigName(r[1]),width:'auto'}],margin:[0,10,0,0]}))}
+    else if(b.t==='photos'){
+      content.push({text:'Приложение к акту. Фотофиксация',bold:true,alignment:'center',pageBreak:'before',margin:[0,0,0,10]});
+      const cells=b.items.map((p,i)=>({stack:[{image:p.src,fit:[240,180],alignment:'center'},{text:'Фото '+(i+1)+(p.cap?'. '+p.cap:''),fontSize:9,alignment:'center',margin:[0,3,0,10]}]}));
+      const rows=[];for(let i=0;i<cells.length;i+=2)rows.push([cells[i],cells[i+1]||{text:''}]);
+      content.push({table:{widths:['*','*'],body:rows,dontBreakRows:true},layout:'noBorders'});
+    }
+  });
+  return {pageSize:'A4',pageMargins:[56,40,40,40],defaultStyle:{font:'Roboto',fontSize:11,lineHeight:1.15},content,
+    footer:(p,n)=>n>1?{text:'стр. '+p+' из '+n,alignment:'right',fontSize:8,color:'#777',margin:[0,10,40,0]}:null,
+    info:{title:docTitle(cur)}};
+}
+function fileName(a){return (a.type==='skrytye'?'Akt-skrytyh-rabot':'Akt-priemki')+'-'+String(a.num||'').replace(/[^\w.-]/g,'')+'_'+fdate(a.date)}
+function docTitle(a){return (a.type==='skrytye'?'Акт скрытых работ':'Акт приёмки')+' № '+(a.num||'')+' '+fdate(a.date)}
+function makePdfBlob(){return ensurePdf().then(()=>new Promise(ok=>pdfMake.createPdf(pdfDef(actBlocks(cur))).getBlob(ok)))}
+function download(blob,name){const u=URL.createObjectURL(blob);const l=document.createElement('a');l.href=u;l.download=name;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}
+function wordBlob(){
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(docTitle(cur))}</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->
+<style>@page{size:21cm 29.7cm;margin:2cm 1.5cm 2cm 2.5cm}body{font-family:"Times New Roman";font-size:12pt}h4{text-align:center;margin:0;font-size:13pt}p{margin:0 0 5pt;text-align:justify}.rw{margin:10pt 0}table{border-collapse:collapse;width:100%}td,th{border:1px solid #000;padding:3pt 5pt;font-size:11pt}th{background:#eee}.sg td{border:0;padding:8pt 0 0}</style></head><body>${
+    toHTML(actBlocks(cur),false).replace(/<div class="rw"><span>(.*?)<\/span><span>(.*?)<\/span><\/div>/,'<table class="sg" style="margin:10pt 0"><tr><td style="border:0">$1</td><td style="border:0;text-align:right">$2</td></tr></table>')
+      .replace(/<div class="sg">(.*?)<\/div>/g,(m,inner)=>'<table class="sg">'+inner.replace(/<span>(.*?)<\/span><span>(.*?)<\/span>/g,'<tr><td>$1</td><td style="text-align:right">$2</td></tr>')+'</table>')
+  }${cur.photos.length?'<p><i>Фотофиксация приложена к PDF-версии акта.</i></p>':''}</body></html>`;
+  return new Blob(['﻿',html],{type:'application/msword'});
+}
+
+/* ===== Photos: compress to ~1280px JPEG so the act stays light ===== */
+function addPhotos(files){
+  [...files].forEach(f=>{
+    const r=new FileReader();
+    r.onload=()=>{const img=new Image();img.onload=()=>{
+      const m=1280,s=Math.min(1,m/Math.max(img.width,img.height));const c=document.createElement('canvas');
+      c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      cur.photos.push({src:c.toDataURL('image/jpeg',.72),cap:''});autosave();draw(true)};img.src=r.result};
+    r.readAsDataURL(f);
+  });
+}
+
+/* ===== Transfer act to browser from Telegram (text only, via URL hash) ===== */
+function b64(s){return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function unb64(s){s=s.replace(/-/g,'+').replace(/_/g,'/');return decodeURIComponent(escape(atob(s)))}
+function importFromHash(){
+  const m=location.hash.match(/^#d=(.+)$/); if(!m)return;
+  try{const a=JSON.parse(unb64(m[1]));if(a&&a.id&&TRADES[a.trade]){a.photos=a.photos||[];const i=acts.findIndex(x=>x.id===a.id);if(i<0)acts.unshift(a);else acts[i]=a;saveActs();cur=a;view='preview'}}catch(e){}
+  try{history.replaceState(null,'',location.pathname)}catch(e){}
+}
+
+/* ===== Render + events ===== */
+function draw(keepScroll){
+  const y=window.scrollY;
+  $('#app').innerHTML = view==='home'?renderHome():view==='form'?renderForm():renderPreview();
+  window.scrollTo(0,keepScroll?y:0);
+  if(tg){try{view==='home'?tg.BackButton.hide():tg.BackButton.show()}catch(e){}}
+}
+function go(v){ if(rec)rec.stop(); if(v!=='home'&&!cur)v='home'; view=v; if(v==='home')cur=null; draw(); }
+if(tg){try{tg.BackButton.onClick(()=>go(view==='preview'?'form':'home'))}catch(e){}}
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-open]'); if(!t)return;
+  const d=t.dataset;
+  if(d.mic){startMic(t);return}
+  if(d.go){go(d.go);return}
+  if(d.type){pick.type=d.type;draw(true);return}
+  if(d.trade){cur=newAct(pick.type,d.trade);acts.unshift(cur);saveActs();go('form');return}
+  if(d.open){cur=acts.find(a=>a.id===d.open);if(cur){cur.works=cur.works||[];cur.photos=cur.photos||[];go('preview')}return}
+  if(d.copy){const s=acts.find(a=>a.id===d.copy);if(!s)return;const n=newAct(s.type,s.trade);
+    ['city','object','address','customer','contractor','subcontractor','custRep','custRepPos','contrRep','contrRepPos','others','project','norms','copies'].forEach(k=>n[k]=s[k]);
+    cur=n;acts.unshift(n);saveActs();toast('Новый акт № '+n.num+' на тот же объект');go('form');return}
+  if(d.del){const a=acts.find(x=>x.id===d.del);if(!a)return;
+    if(t.dataset.confirm!=='1'){t.dataset.confirm='1';t.style.background='var(--bad)';t.style.color='#fff';toast('Нажмите ещё раз, чтобы удалить акт № '+a.num);setTimeout(()=>{t.dataset.confirm='';t.style.background='';t.style.color=''},3000);return}
+    acts=acts.filter(x=>x.id!==d.del);saveActs();draw(true);return}
+  if(!cur)return;
+  if(d.work!=null){const w=TRADES[cur.trade].works[+d.work];cur.works.push({n:w[0],u:w[1],q:''});autosave();draw(true);
+    setTimeout(()=>{const q=document.querySelector(`input[data-w="${cur.works.length-1}"][data-f="q"]`);if(q){q.focus();q.scrollIntoView({block:'center'})}},30);return}
+  if(d.addwork!=null){cur.works.push({n:'',u:'м²',q:''});autosave();draw(true);setTimeout(()=>{const el=$('#w'+(cur.works.length-1));if(el)el.focus()},30);return}
+  if(d.delw!=null){cur.works.splice(+d.delw,1);autosave();draw(true);return}
+  if(d.hid!=null){const h=TRADES[cur.trade].hidden[+d.hid];cur.hidden=(cur.hidden||'').trim()?cur.hidden.trim().replace(/[.;]?$/,'; ')+h.charAt(0).toLowerCase()+h.slice(1):h;autosave();draw(true);return}
+  if(d.doc!=null){const doc=TRADES[cur.trade].docs[+d.doc];const i=cur.docs.indexOf(doc);i<0?cur.docs.push(doc):cur.docs.splice(i,1);autosave();draw(true);return}
+  if(d.dec){cur.decision=d.dec;autosave();draw(true);return}
+  if(d.addph!=null){$('#phfile').click();return}
+  if(d.delph!=null){cur.photos.splice(+d.delph,1);autosave();draw(true);return}
+  if(d.pdf!=null){t.disabled=true;t.textContent='Готовлю…';
+    makePdfBlob().then(b=>{download(b,fileName(cur)+'.pdf');toast('PDF сохранён в «Загрузки»')}).catch(()=>toast('Не удалось сделать PDF. Проверьте интернет')).finally(()=>{t.disabled=false;t.textContent='PDF'});return}
+  if(d.word!=null){download(wordBlob(),fileName(cur)+'.doc');toast('Файл Word сохранён в «Загрузки»');return}
+  if(d.share!=null){t.disabled=true;
+    makePdfBlob().then(b=>{const f=new File([b],fileName(cur)+'.pdf',{type:'application/pdf'});
+      if(navigator.canShare&&navigator.canShare({files:[f]}))return navigator.share({files:[f],title:docTitle(cur)});
+      download(b,f.name)}).catch(err=>{if(err&&err.name!=='AbortError')toast('Не удалось отправить')}).finally(()=>t.disabled=false);return}
+  if(d.browser!=null){const a=Object.assign({},cur,{photos:[]});const url=location.origin+location.pathname+'#d='+b64(JSON.stringify(a));
+    try{tg.openLink(url)}catch(e){location.href=url}return}
+});
+document.addEventListener('input',e=>{
+  const el=e.target; if(!cur)return;
+  if(el.dataset.k){cur[el.dataset.k]=el.value;autosave();return}
+  if(el.dataset.w!=null){cur.works[+el.dataset.w][el.dataset.f]=el.value;autosave();return}
+  if(el.dataset.cap!=null){cur.photos[+el.dataset.cap].cap=el.value;autosave();return}
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='phfile'){addPhotos(e.target.files);e.target.value='';return}
+  const el=e.target; if(cur&&el.dataset.w!=null){cur.works[+el.dataset.w][el.dataset.f]=el.value;autosave()}
+  if(cur&&el.dataset.k&&el.type==='date'){cur[el.dataset.k]=el.value;autosave()}
+});
+
+importFromHash();
+window.addEventListener("hashchange",()=>{if(/^#d=/.test(location.hash)){importFromHash();draw()}});
+draw();
+</script>
+<script src="../tg.js" defer></script>
+</body>
+</html>
