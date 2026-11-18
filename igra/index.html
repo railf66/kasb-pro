@@ -786,50 +786,157 @@ function setStance(n) {
 }
 let wi = 0, zoom = false; const ammo = W.map(w => w.mag); let cd = 0, reloadT = 0, recoil = 0, flashT = 0, swapT = 0;
 
+// ---------- first-person weapons: bevelled metal / wood / polymer parts, env reflections, gloved hands ----------
+const GUN = (() => {
+  // small reflection map only for the weapons (cheap: built once)
+  let envMap = null;
+  try {
+    const pm = new THREE.PMREMGenerator(renderer), es = new THREE.Scene();
+    const sky = new THREE.Mesh(new THREE.SphereGeometry(10, 16, 8), new THREE.MeshBasicMaterial({ side: THREE.BackSide, vertexColors: true }));
+    const pos = sky.geometry.attributes.position, cols = [];
+    for (let i = 0; i < pos.count; i++) { const y = pos.getY(i) / 10, k = y > 0 ? .35 + y * .5 : .12 + (y + 1) * .1; cols.push(k * .85, k * .9, k); }
+    sky.geometry.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); es.add(sky);
+    const lamp = (x, y, z, w, h, c) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); es.add(m); };
+    lamp(0, 8, -3, 6, 2, 0xffffff); lamp(-7, 3, 4, 3, 3, 0xffd8a8); lamp(6, 2, 5, 2, 4, 0x9fc4ff);
+    envMap = pm.fromScene(es, .03).texture; pm.dispose();
+  } catch (e) {}
+  const std = (color, metal, rough, extra = {}) => new THREE.MeshStandardMaterial(Object.assign({ color, metalness: metal, roughness: rough, envMap, envMapIntensity: 1.5 }, extra));
+  const woodTex = tex((g, s) => {
+    g.fillStyle = '#6b4024'; g.fillRect(0, 0, s, s);
+    for (let i = 0; i < 70; i++) { g.strokeStyle = `rgba(${30 + Math.random() * 40},${15 + Math.random() * 20},5,${.25 + Math.random() * .35})`; g.lineWidth = 1 + Math.random() * 2.5; const y = Math.random() * s; g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= s; x += 16) g.lineTo(x, y + Math.sin(x * .05 + i) * 3); g.stroke(); }
+  }, 128, 2, 1);
+  const gripTex = tex((g, s) => { g.fillStyle = '#1d1f22'; g.fillRect(0, 0, s, s); g.fillStyle = '#34383d'; for (let y = 0; y < s; y += 6) for (let x = (y / 6 % 2) * 3; x < s; x += 6) g.fillRect(x, y, 2, 2); }, 64, 3, 3);
+  const M = {
+    steel: std(0x34383e, .85, .38), dark: std(0x1c1f23, .7, .5), blued: std(0x232a33, .9, .3), bright: std(0x9aa3ad, .95, .22),
+    wood: std(0xffffff, 0, .6, { map: woodTex }), poly: std(0x2a2c2f, 0, .75), grip: std(0xffffff, 0, .85, { map: gripTex }),
+    olive: std(0x4f5a36, .1, .7), tan: std(0x8a7650, .05, .7), brass: std(0xc9a227, .9, .3), red: std(0xb3261e, .3, .5),
+    glass: std(0x0d2436, .3, .05, { emissive: 0x061624, emissiveIntensity: .5 }), glove: std(0x23262a, 0, .9), sleeve: std(0x3b4636, 0, .95),
+    hole: new THREE.MeshBasicMaterial({ color: 0x050505 }),
+  };
+  return { M };
+})();
 function gunModel(kind) {
-  const g = new THREE.Group(), rifle = kind === 'rifle';
-  const metal = new THREE.MeshLambertMaterial({ color: 0x4a525e }), acc = new THREE.MeshLambertMaterial({ color: 0x3a8fb5 });
-  const olive = new THREE.MeshLambertMaterial({ color: 0x55603a }), gold = new THREE.MeshLambertMaterial({ color: 0xc9a227 });
-  const add = (w, h, d, x, y, z, m) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); g.add(b); return b; };
-  const tube = (r, l, x, y, z, m) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(r, r, l, 12), m); c.rotation.x = Math.PI / 2; c.position.set(x, y, z); g.add(c); return c; };
-  let fz = -.22;
-  if (kind === 'sniper') {
-    add(.07, .09, .62, 0, 0, -.08, metal); tube(.018, .5, 0, .015, -.62, metal); tube(.035, .26, 0, .1, -.06, acc);
-    add(.06, .12, .22, 0, -.02, .32, metal); add(.05, .13, .06, 0, -.1, .06, metal); fz = -.88;
+  const g = new THREE.Group(), M = GUN.M;
+  // side profile [forward, y] extruded sideways with rounded (bevelled) edges; forward = -z
+  const prof = (pts, th, m, x = 0, bev = .006) => {
+    const sh = new THREE.Shape(); sh.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) sh.lineTo(pts[i][0], pts[i][1]);
+    const b = Math.min(bev, th * .3);
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: Math.max(.002, th - b * 2), bevelEnabled: true, bevelThickness: b, bevelSize: b, bevelSegments: 2, curveSegments: 4 });
+    geo.rotateY(Math.PI / 2); geo.translate(-(th - b * 2) / 2, 0, 0);
+    const mesh = new THREE.Mesh(geo, m); mesh.position.x = x; g.add(mesh); return mesh;
+  };
+  const cyl = (r, len, fwd, y, m, x = 0, seg = 16, r2 = r) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(r, r2, len, seg), m); c.rotation.x = Math.PI / 2; c.position.set(x, y, -fwd); g.add(c); return c; };
+  const box = (w, h, d, fwd, y, m, x = 0) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, -fwd); g.add(b); return b; };
+  const ring = (r, tube, fwd, y, m, arc = Math.PI * 2) => { const t = new THREE.Mesh(new THREE.TorusGeometry(r, tube, 6, 16, arc), m); t.rotation.y = Math.PI / 2; t.position.set(0, y, -fwd); g.add(t); return t; };
+  const hands = (gripF, gripY, foreF, foreY) => {
+    // right glove on the pistol grip + sleeve going back to the camera, left glove under the fore-end
+    const cap = (r, l, m) => new THREE.Mesh(new THREE.CapsuleGeometry(r, l, 3, 8), m);
+    const rh = cap(.032, .05, M.glove); rh.position.set(.012, gripY - .02, -gripF + .01); rh.rotation.x = .35; g.add(rh);
+    const rf = cap(.017, .06, M.glove); rf.position.set(-.028, gripY - .005, -gripF - .02); rf.rotation.set(.35, 0, Math.PI / 2 * .15); g.add(rf);
+    const limb = (a, b, r, m) => { const d = b.clone().sub(a), L = d.length(); const c = cap(r, Math.max(.01, L - r * 2), m); c.position.copy(a).addScaledVector(d, .5); c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); g.add(c); return c; };
+    const wr = new THREE.Vector3(.02, gripY - .06, -gripF + .03);
+    limb(wr, new THREE.Vector3(.2, gripY - .32, -gripF + .5), .045, M.sleeve);
+    if (foreF != null) {
+      const lh = cap(.03, .05, M.glove); lh.position.set(-.01, foreY - .035, -foreF); lh.rotation.set(0, 0, 1.45); g.add(lh);
+      limb(new THREE.Vector3(-.03, foreY - .05, -foreF + .02), new THREE.Vector3(-.34, foreY - .42, -foreF + .55), .042, M.sleeve);
+    }
+  };
+  let fz = -.7;
+  if (kind === 'rifle') {
+    // receiver with dust cover, wooden handguard, curved magazine, wooden stock
+    prof([[-.12, -.045], [.28, -.045], [.28, .03], [.2, .05], [-.06, .05], [-.12, .035]], .066, M.steel);
+    prof([[-.1, .04], [.2, .04], [.26, .028], [-.1, .028]], .072, M.blued);
+    prof([[.28, -.042], [.52, -.035], [.53, .015], [.28, .02]], .074, M.wood, 0, .012);
+    prof([[.3, .03], [.5, .03], [.5, .058], [.32, .062]], .05, M.wood, 0, .01);
+    cyl(.012, .32, .62, .004, M.blued); cyl(.013, .26, .42, .048, M.steel);
+    box(.03, .045, .03, .72, .02, M.steel); box(.006, .03, .006, .72, .055, M.dark); box(.026, .02, .03, .29, .068, M.steel);
+    cyl(.018, .07, .8, .004, M.dark); [.79, .815].forEach(f => box(.038, .006, .01, f, .012, M.hole));
+    prof([[.14, -.045], [.2, -.045], [.24, -.16], [.25, -.24], [.19, -.255], [.17, -.17], [.09, -.05]], .05, M.dark, 0, .008);
+    [-.09, -.13, -.17, -.21].forEach((y, i) => box(.052, .004, .01, .155 + i * .022 + y * -.2 * 0, y, M.steel));
+    prof([[0, -.045], [.055, -.045], [.03, -.17], [-.025, -.165]], .05, M.grip, 0, .01);
+    ring(.035, .005, .08, -.06, M.steel, Math.PI); box(.006, .03, .01, .085, -.06, M.bright);
+    prof([[-.12, .035], [-.12, -.045], [-.36, -.1], [-.38, -.1], [-.38, .03], [-.3, .028]], .056, M.wood, 0, .012);
+    prof([[-.37, -.1], [-.39, -.1], [-.39, .03], [-.37, .03]], .06, M.poly, 0, .005);
+    cyl(.008, .05, .2, .03, M.bright, .045).rotation.set(0, 0, Math.PI / 2); box(.004, .012, .05, .1, .01, M.bright, .036);
+    hands(.01, -.08, .42, -.04); fz = -.84;
+  } else if (kind === 'pistol') {
+    prof([[-.06, 0], [.17, 0], [.175, .05], [-.055, .05]], .05, M.steel, 0, .006);
+    for (let i = 0; i < 6; i++) box(.052, .03, .004, -.045 + i * .01, .028, M.dark);
+    prof([[-.04, -.035], [.16, -.035], [.16, .002], [-.04, .002]], .046, M.poly);
+    prof([[-.035, -.035], [.03, -.035], [.0, -.16], [-.06, -.15]], .048, M.grip, 0, .01);
+    ring(.03, .005, .05, -.04, M.poly, Math.PI); box(.006, .026, .008, .055, -.045, M.bright);
+    cyl(.009, .01, .177, .03, M.hole); box(.008, .01, .012, .16, .058, M.dark); box(.026, .01, .012, -.045, .058, M.dark);
+    box(.003, .012, .03, .03, .03, M.bright, .026);
+    hands(-.02, -.07, null); fz = -.19;
+  } else if (kind === 'sniper') {
+    prof([[-.08, -.035], [.32, -.035], [.32, .03], [-.08, .03]], .06, M.blued);
+    prof([[.32, -.035], [.62, -.02], [.62, .02], [.32, .03]], .066, M.olive, 0, .012);
+    cyl(.011, .55, .88, .002, M.blued); cyl(.016, .08, 1.12, .002, M.dark);
+    [.7, .74, .78].forEach(f => cyl(.0125, .006, f, .002, M.steel));
+    cyl(.022, .3, .14, .085, M.dark); cyl(.034, .09, .32, .085, M.dark, 0, 16, .024); cyl(.03, .06, -.03, .085, M.dark, 0, 16, .022);
+    cyl(.026, .004, .366, .085, M.glass); cyl(.02, .004, -.061, .085, M.glass);
+    box(.02, .03, .02, .15, .12, M.dark); cyl(.012, .02, .15, .085, M.dark, .03).rotation.set(0, 0, Math.PI / 2);
+    [.04, .24].forEach(f => box(.03, .05, .02, f, .05, M.dark));
+    cyl(.006, .06, .05, .02, M.bright, .05).rotation.set(0, 0, Math.PI / 2); const ball = new THREE.Mesh(new THREE.SphereGeometry(.012, 10, 8), M.bright); ball.position.set(.085, .02, -.05); g.add(ball);
+    prof([[.1, -.035], [.15, -.035], [.17, -.1], [.12, -.1]], .04, M.dark);
+    prof([[0, -.035], [.05, -.035], [.03, -.15], [-.025, -.145]], .05, M.grip, 0, .01);
+    ring(.03, .005, .06, -.045, M.steel, Math.PI);
+    prof([[-.08, .03], [-.08, -.035], [-.2, -.08], [-.36, -.11], [-.38, -.11], [-.38, .035], [-.2, .05], [-.12, .045]], .056, M.olive, 0, .012);
+    prof([[-.14, -.045], [-.22, -.07], [-.22, -.02], [-.14, -.01]], .06, M.hole, 0, .004);
+    [[-.02, .5], [.02, .5]].forEach(([x]) => { const l = cyl(.006, .26, .62, -.03, M.steel, x); l.position.z = -.75; });
+    hands(.0, -.075, .5, -.03); fz = -1.17;
   } else if (kind === 'gl') {
-    tube(.09, .2, 0, 0, -.02, acc); tube(.06, .42, 0, .02, -.3, metal); add(.05, .13, .06, 0, -.12, .06, metal); add(.06, .09, .2, 0, -.01, .24, metal); fz = -.52;
+    cyl(.072, .15, .06, 0, M.olive, 0, 18);
+    for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; const h = cyl(.018, .152, .06, Math.sin(a) * .045, M.hole, Math.cos(a) * .045, 10); }
+    cyl(.04, .015, .14, 0, M.dark); cyl(.04, .3, .3, .012, M.steel, 0, 18); cyl(.034, .02, .46, .012, M.dark);
+    [.2, .28, .36].forEach(f => cyl(.043, .012, f, .012, M.dark, 0, 18));
+    cyl(.014, .1, .15, .005, M.hole).position.z = -.455;
+    box(.02, .05, .03, .15, .065, M.dark); box(.004, .04, .02, .15, .1, M.bright);
+    prof([[-.02, -.06], [.03, -.06], [.01, -.18], [-.04, -.17]], .05, M.grip, 0, .01);
+    prof([[.3, -.03], [.34, -.03], [.34, -.14], [.3, -.14]], .04, M.grip, 0, .008);
+    prof([[-.03, -.04], [.0, -.07], [-.02, -.08]], .02, M.dark);
+    [-.02, .02].forEach(x => { const r = cyl(.006, .3, -.16, .0, M.steel, x); }); box(.06, .08, .015, -.31, -.02, M.poly);
+    hands(-.0, -.11, .32, -.08); fz = -.47;
   } else if (kind === 'rpg') {
-    tube(.075, .95, 0, .06, -.15, olive); tube(.085, .08, 0, .06, -.6, metal); tube(.085, .08, 0, .06, .3, metal);
-    const head = new THREE.Mesh(new THREE.ConeGeometry(.07, .22, 10), gold); head.rotation.x = -Math.PI / 2; head.position.set(0, .06, -.74); g.add(head);
-    add(.05, .13, .06, 0, -.06, -.02, metal); add(.04, .07, .08, .08, .12, -.2, acc); fz = -.86;
+    cyl(.052, 1.0, .1, .06, M.olive, 0, 20);
+    [-.35, .55].forEach(f => cyl(.058, .05, f, .06, M.dark, 0, 20)); [.0, .2].forEach(f => cyl(.056, .1, f, .06, M.wood, 0, 20));
+    const lp = [[0, 0], [.03, 0], [.06, .05], [.07, .12], [.05, .22], [.0, .28]].map(([x, y]) => new THREE.Vector2(x, y));
+    const head = new THREE.Mesh(new THREE.LatheGeometry(lp, 18), M.tan); head.rotation.x = -Math.PI / 2; head.position.set(0, .06, -.6); g.add(head);
+    const tip = new THREE.Mesh(new THREE.SphereGeometry(.012, 8, 6), M.brass); tip.position.set(0, .06, -.885); g.add(tip);
+    prof([[-.02, .01], [.04, .01], [.02, -.11], [-.03, -.1]], .05, M.grip, 0, .01);
+    prof([[.18, .01], [.22, .01], [.22, -.09], [.18, -.09]], .045, M.grip, 0, .008);
+    box(.04, .05, .1, .1, .135, M.dark, -.045); cyl(.014, .02, .155, .135, M.glass, -.045); box(.02, .02, .03, .05, .11, M.dark, -.045);
+    box(.012, .03, .012, .15, .02, M.bright);
+    hands(.0, -.05, .2, -.05); fz = -.88;
   } else if (kind === 'bow') {
-    const wood = new THREE.MeshLambertMaterial({ color: 0x3b2a1c }), cam = new THREE.MeshLambertMaterial({ color: 0x8d949e });
-    const bow = new THREE.Group(); bow.position.set(-.1, .06, -.42); bow.rotation.z = .28; bow.scale.setScalar(.6); g.add(bow);
-    const grip = new THREE.Mesh(new THREE.BoxGeometry(.07, .2, .07), wood); bow.add(grip);
+    const bow = new THREE.Group(); bow.position.set(-.1, .06, -.42); bow.rotation.set(0, -.55, .28); bow.scale.setScalar(.6); g.add(bow);
+    const riserS = new THREE.Shape(); [[-.03, -.16], [.03, -.16], [.05, -.05], [.03, .05], [.035, .16], [-.035, .16], [-.02, .05], [-.04, -.05]].forEach(([a, b], i) => i ? riserS.lineTo(a, b) : riserS.moveTo(a, b));
+    const rg = new THREE.ExtrudeGeometry(riserS, { depth: .05, bevelEnabled: true, bevelThickness: .008, bevelSize: .008, bevelSegments: 2 }); rg.rotateY(Math.PI / 2); rg.translate(-.025, 0, 0);
+    const riser = new THREE.Mesh(rg, M.steel); bow.add(riser);
+    const grip = new THREE.Mesh(new THREE.CapsuleGeometry(.03, .08, 3, 8), M.grip); grip.position.z = .02; bow.add(grip);
     [1, -1].forEach(s => {
-      const limb = new THREE.Mesh(new THREE.BoxGeometry(.06, .3, .035), olive); limb.position.set(0, s * .24, .05); limb.rotation.x = s * .38; bow.add(limb);
-      const wheel = new THREE.Mesh(new THREE.CylinderGeometry(.03, .03, .02, 10), cam); wheel.rotation.z = Math.PI / 2; wheel.position.set(0, s * .38, .1); bow.add(wheel);
+      const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(0, s * .15, .0), new THREE.Vector3(0, s * .3, .02), new THREE.Vector3(0, s * .38, .1));
+      const limb = new THREE.Mesh(new THREE.TubeGeometry(curve, 8, .018, 6), M.dark); limb.scale.x = 1.8; bow.add(limb);
+      const wheel = new THREE.Mesh(new THREE.CylinderGeometry(.034, .034, .022, 16), M.bright); wheel.rotation.z = Math.PI / 2; wheel.position.set(0, s * .38, .1); bow.add(wheel);
     });
+    const stab = new THREE.Mesh(new THREE.CylinderGeometry(.01, .012, .25, 10), M.dark); stab.rotation.x = Math.PI / 2; stab.position.set(0, -.06, -.14); bow.add(stab);
+    const sight = new THREE.Mesh(new THREE.TorusGeometry(.025, .004, 6, 14), M.red); sight.position.set(.05, .06, -.01); bow.add(sight);
     const sgeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, .38, .12), new THREE.Vector3(0, 0, .12), new THREE.Vector3(0, -.38, .12)]);
     const str = new THREE.Line(sgeo, new THREE.LineBasicMaterial({ color: 0xdddddd })); bow.add(str);
     const arrow = new THREE.Group(); bow.add(arrow);
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(.006, .006, .62, 6), new THREE.MeshLambertMaterial({ color: 0xd8c9a8 })); shaft.rotation.x = Math.PI / 2; shaft.position.z = -.19; arrow.add(shaft);
-    const tip = new THREE.Mesh(new THREE.ConeGeometry(.016, .05, 6), cam); tip.rotation.x = -Math.PI / 2; tip.position.z = -.52; arrow.add(tip);
-    const fl = new THREE.Mesh(new THREE.BoxGeometry(.002, .03, .06), acc); fl.position.z = .08; arrow.add(fl);
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(.006, .006, .62, 6), std2(0x2a2a2a)); shaft.rotation.x = Math.PI / 2; shaft.position.z = -.19; arrow.add(shaft);
+    const tipA = new THREE.Mesh(new THREE.ConeGeometry(.016, .05, 6), M.bright); tipA.rotation.x = -Math.PI / 2; tipA.position.z = -.52; arrow.add(tipA);
+    [0, 1, 2].forEach(i => { const fl = new THREE.Mesh(new THREE.BoxGeometry(.002, .028, .06), M.red); fl.position.z = .08; fl.rotation.z = i * Math.PI * 2 / 3; arrow.add(fl); });
     g.userData.bowStr = sgeo; g.userData.arrow = arrow; fz = -.75;
-  } else if (rifle) {
-    add(.08, .1, .5, 0, 0, -.1, metal); add(.04, .04, .3, 0, .02, -.48, metal); add(.07, .14, .07, 0, -.1, .02, metal);
-    add(.06, .12, .06, 0, -.09, -.18, acc); add(.07, .09, .18, 0, -.01, .22, metal); add(.03, .04, .14, 0, .07, -.05, acc);
-  } else {
-    add(.06, .08, .24, 0, 0, -.06, metal); add(.05, .13, .06, 0, -.09, .03, metal); add(.03, .03, .05, 0, .05, -.15, acc);
   }
   const flash = new THREE.Mesh(new THREE.CircleGeometry(.1, 5), new THREE.MeshBasicMaterial({ color: 0xffc860, transparent: true, opacity: .85, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false }));
-  if (rifle) fz = -.66;
-  flash.position.set(0, .02, fz); flash.visible = false; g.add(flash);
+  flash.position.set(0, kind === 'rpg' ? .06 : kind === 'sniper' || kind === 'rifle' || kind === 'gl' ? .005 : .03, fz); flash.visible = false; g.add(flash);
   g.userData.flash = flash; g.userData.muzzle = flash;
+  if (kind !== 'bow') { g.scale.setScalar(kind === 'pistol' ? 1.05 : .9); g.position.z = kind === 'rpg' ? -.12 : -.06; }
   g.traverse(o => { o.renderOrder = 10; if (o.material) o.material.depthTest = true; });
   return g;
 }
+function std2(c) { return new THREE.MeshStandardMaterial({ color: c, metalness: .3, roughness: .5 }); }
 const guns = W.map(w => gunModel(w.id));
 const gunHold = new THREE.Group(); gunHold.scale.setScalar(.7); camera.add(gunHold);
 guns.forEach(g => { gunHold.add(g); g.visible = false; }); guns[0].visible = true;
