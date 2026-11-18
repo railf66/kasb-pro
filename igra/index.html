@@ -139,6 +139,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
   <div id="hpnum">100</div>
   <div id="hpbar"><div id="hpfill"></div></div>
   <div id="ammo">30<small> / ∞</small></div>
+  <div id="gearHud" style="font-size:11px;opacity:.8;margin-top:2px"></div>
   <div id="wname">Автомат «Шквал»</div>
 </div>
 <div id="cross" class="hud"><i></i><i></i><i></i><i></i></div>
@@ -180,7 +181,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
     <div class="diff" id="diff"><button data-d="easy">Лёгкий</button><button data-d="normal">Средний</button><button data-d="hard">Сложный</button></div>
     <p class="dnote" id="dnote"></p>
     <button class="btn" id="play">ИГРАТЬ</button>
-    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn2" id="shopBtn">🛒 МАГАЗИН ОРУЖИЯ</button><button class="btn2" id="setBtn">⚙️ НАСТРОЙКИ</button></div>
+    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn2" id="shopBtn">🛒 МАГАЗИН: ОРУЖИЕ И БРОНЯ</button><button class="btn2" id="setBtn">⚙️ НАСТРОЙКИ</button></div>
     <p class="help" id="bank"></p>
     <button class="btn2 snd" style="margin-top:8px">🔊 Звук вкл</button>
     <p class="help" id="helpText"></p>
@@ -234,7 +235,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 
 <div id="shop" class="screen hidden">
   <div class="card">
-    <div class="logo" style="font-size:28px">МАГАЗИН ОРУЖИЯ</div>
+    <div class="logo" style="font-size:28px">МАГАЗИН</div>
     <p class="sub" id="shopCoins" style="margin:10px 0"></p>
     <div id="shopList"></div>
     <button class="btn" id="shopBack" style="margin-top:14px">НАЗАД</button>
@@ -750,6 +751,20 @@ const ADMIN_HASH = 'bc6889014237efa1930dd7840a58fe12f13f81ba217dc77fa0dee0bf8ee4
 let bank = 0, owned = ['rifle', 'pistol'], admin = false, roundCoins = 0;
 try { bank = +localStorage.getItem('sd_coins') || 0; const o = JSON.parse(localStorage.getItem('sd_owned') || 'null'); if (Array.isArray(o)) owned = [...new Set(['rifle', 'pistol', ...o])]; admin = localStorage.getItem('sd_admin') === '1'; } catch (e) {}
 const has = id => admin || owned.includes(id);
+const GEAR = [
+  { id: 'helmet', name: 'Каска «Купол»', price: 250, desc: 'Защищает голову: выстрел в голову наносит в 2 раза меньше урона. От ботов: −15% урона.' },
+  { id: 'vest', name: 'Бронежилет «Щит»', price: 400, desc: 'Защищает тело: −40% урона от пуль и стрел, −25% от взрывов.' },
+];
+const gearBits = () => (has('vest') ? 1 : 0) + (has('helmet') ? 2 : 0);
+// damage multiplier for someone with gear bits g: head shot or body; boom = explosion; bot = bots (no aimed head shots)
+function gearMul(g, head, boom, bot) {
+  let k = 1;
+  if (boom) { if (g & 1) k *= .75; return k; }
+  if (head) { if (g & 2) k *= .5; return k; }
+  if (g & 1) k *= .6;
+  if (bot && (g & 2)) k *= .85;
+  return k;
+}
 function saveWallet() { try { localStorage.setItem('sd_coins', bank); localStorage.setItem('sd_owned', JSON.stringify(owned)); } catch (e) {} }
 const COIN = { easy: 10, normal: 15, hard: 25 }, ROUND_BONUS = { easy: 20, normal: 40, hard: 70 };
 const P = { pos: new THREE.Vector3(0, 0, 31), yaw: 0, pitch: 0, hp: 100, alive: true, kills: 0, deaths: 0, shots: 0, hits: 0, respT: 0, moving: false, bob: 0, stance: 0, eyeH: 1.6 };
@@ -854,6 +869,9 @@ function buildFigure(g, kind, M) {
   if (kind === 'soldier' || kind === 'remote') {
     const vest = add(box(.46, .42, .3), M.dark, 0, 1.3, .02); vest.scale.z = 1.05;
     [-.12, 0, .12].forEach(x => add(box(.1, .12, .06), M.body, x, 1.2, .2)); // pouches
+    if (kind === 'remote') { // armour plates, shown only when the player owns the vest
+      o.armor = [add(box(.5, .46, .08), M.armor, 0, 1.33, .19), add(box(.5, .46, .08), M.armor, 0, 1.33, -.16), add(box(.2, .08, .26), M.armor, -.3, 1.6, 0), add(box(.2, .08, .26), M.armor, .3, 1.6, 0)];
+    }
   } else {
     add(cyl(.07, .05), M.visor, 0, 1.38, .19).rotation.x = Math.PI / 2; // chest core light
     add(box(.5, .14, .32), M.dark, 0, 1.06, 0); // belly plate
@@ -868,7 +886,8 @@ function buildFigure(g, kind, M) {
     [-.2, .2].forEach(x => add(cyl(.06, .04), M.dark, x, 1.84, 0).rotation.z = Math.PI / 2); // ear bolts
   } else {
     o.head = add(sph(.2), M.skin || M.dark, 0, 1.84, 0); o.head.scale.set(1, 1.08, 1.05);
-    const helm = add(sph(.225), M.body, 0, 1.9, -.01); helm.scale.set(1.05, .8, 1.1);
+    const helm = o.helm = add(sph(.225), M.helm || M.body, 0, 1.9, -.01); helm.scale.set(1.05, .8, 1.1);
+    if (kind === 'remote') { o.brim = add(box(.36, .03, .14), M.helm || M.body, 0, 1.86, .2); }
     add(box(.32, .1, .05), M.visor, 0, 1.84, .19); // goggles
   }
   // shoulders + arms holding the gun in front
@@ -1084,6 +1103,7 @@ let centerT = 0;
 function center(t, dur = 1.5) { $('center').textContent = t; centerT = dur; }
 function hurt(d, bot) {
   if (!P.alive || state !== 'play') return;
+  d *= gearMul(gearBits(), false, bot === 'self' || bot === 'boom', true);
   if (mode === 'online') { netHit(myId, d); if (bot && bot.p) showDir(bot.p); return; }
   P.hp -= d; sfx('hurt', .5); vibrate(35); shake(.12); if (bot && bot.p) showDir(bot.p);
   $('dmg').style.transition = 'none'; $('dmg').style.opacity = .85; requestAnimationFrame(() => { $('dmg').style.transition = 'opacity .5s'; $('dmg').style.opacity = 0; });
@@ -1159,6 +1179,7 @@ function endRound() {
 }
 function hud() {
   $('hpnum').textContent = Math.ceil(P.hp); $('hpfill').style.width = (P.hp / HPMAX() * 100) + '%'; $('hpfill').classList.toggle('low', P.hp < HPMAX() * .35);
+  $('gearHud').textContent = (has('vest') ? '🦺 ' : '') + (has('helmet') ? '⛑️' : '');
   $('ammo').innerHTML = ammo[wi] + '<small> / ∞</small>'; $('wname').textContent = W[wi].name;
   $('dLabel').textContent = mode === 'online' ? 'Гибели' : 'Ржавые';
   $('kills').textContent = P.kills; $('rcoins').textContent = roundCoins; $('deaths').textContent = P.deaths;
@@ -1240,13 +1261,13 @@ function explode(p, w, enemy, ghost) {
   for (let k = 0; k < 8; k++) spark(p.clone().add(new THREE.Vector3(rand(-1, 1), rand(0, 1.2), rand(-1, 1))), 0xffb04a);
   const dist = Math.hypot(p.x - P.pos.x, p.z - P.pos.z);
   sfx('boom', clamp(1.2 - dist / 40, .2, 1.1), panTo(p)); shake(clamp(1 - dist / 25, 0, 1) * .5);
-  if (enemy) { const dp = Math.hypot(p.x - P.pos.x, (p.y - 1) * .7, p.z - P.pos.z); if (dp < r && P.alive && w.proj.dmg) hurt(w.proj.dmg * (D.dmg[1] / 11) * (1 - dp / r * .5), boss); return; }
+  if (enemy) { const dp = Math.hypot(p.x - P.pos.x, (p.y - 1) * .7, p.z - P.pos.z); if (dp < r && P.alive && w.proj.dmg) hurt(w.proj.dmg * (D.dmg[1] / 11) * (1 - dp / r * .5) * gearMul(gearBits(), false, true) / gearMul(gearBits(), false, false, true), boss); return; }
   if (ghost) return;
   let any = false;
   if (mode === 'online') for (const q of remotes.values()) {
     if (!q.alive) continue;
     const d = Math.hypot(p.x - q.p.x, (p.y - 1) * .7, p.z - q.p.z);
-    if (d < r) { any = true; netHit(q.id, w.proj.dmg * PVP[W.indexOf(w)] * (1 - d / r * .6)); }
+    if (d < r) { any = true; netHit(q.id, w.proj.dmg * PVP[W.indexOf(w)] * (1 - d / r * .6) * gearMul(q.gear, false, true)); }
   }
   for (const b of bots) {
     if (!b.active || !b.alive) continue;
@@ -1308,7 +1329,7 @@ function updateArrows(dt) {
       o.m.position.copy(h.point).addScaledVector(seg, -.25); o.stuck = 4;
       const bot = h.object.userData.bot, rem = h.object.userData.remote, head = !!h.object.userData.head;
       if (!o.ghost && rem) {
-        P.hits++; spark(h.point, 0xff5a3d); netHit(rem.id, o.dmg * (head ? 2 : 1) * PVP[W.findIndex(w => w.bow)], head);
+        P.hits++; spark(h.point, 0xff5a3d); netHit(rem.id, o.dmg * (head ? 2 : 1) * PVP[W.findIndex(w => w.bow)] * gearMul(rem.gear, head), head);
         $('cross').className = 'hud ' + (head ? 'head' : 'hit'); clearTimeout(hitTO); hitTO = setTimeout(() => $('cross').className = 'hud', 150); sfx('hit', 1);
         o.stuck = .05;
       } else if (!o.ghost && bot) {
@@ -1372,7 +1393,7 @@ function shoot() {
     const bot = h.object.userData.bot, rem = h.object.userData.remote;
     if (rem) {
       const head = !!h.object.userData.head;
-      P.hits++; spark(h.point, 0xff5a3d); netHit(rem.id, w.dmg * (head ? 2 : 1) * PVP[wi], head);
+      P.hits++; spark(h.point, 0xff5a3d); netHit(rem.id, w.dmg * (head ? 2 : 1) * PVP[wi] * gearMul(rem.gear, head), head);
       $('cross').className = 'hud ' + (head ? 'head' : 'hit'); clearTimeout(hitTO); hitTO = setTimeout(() => $('cross').className = 'hud', 120); sfx('hit', 1);
     } else if (bot) {
       const head = !!h.object.userData.head;
@@ -1391,7 +1412,7 @@ function shoot() {
 const NET_URL = new URLSearchParams(location.search).get('server') || 'wss://45-130-148-137.sslip.io/';
 const PVP = [.7, .7, .6, .55, .5, .65]; // damage scale against people, per weapon
 const remotes = new Map(), remoteMeshes = [];
-const remMat = { body: new THREE.MeshLambertMaterial({ color: 0x4a6fa5 }), dark: new THREE.MeshLambertMaterial({ color: 0x23272e }), visor: new THREE.MeshBasicMaterial({ color: 0xff3b6b }), skin: new THREE.MeshLambertMaterial({ color: 0x8a6a55 }) };
+const remMat = { body: new THREE.MeshLambertMaterial({ color: 0x4a6fa5 }), dark: new THREE.MeshLambertMaterial({ color: 0x23272e }), visor: new THREE.MeshBasicMaterial({ color: 0xff3b6b }), skin: new THREE.MeshLambertMaterial({ color: 0x8a6a55 }), armor: new THREE.MeshLambertMaterial({ color: 0x4f5a3a }), helm: new THREE.MeshLambertMaterial({ color: 0x5a6446 }) };
 let ws = null, myId = 0, netLeft = 0, netEnd = 0, netBrk = false, netSendT = 0, netScores = [], myNick = '';
 try { myNick = localStorage.getItem('sd_nick') || ''; } catch (e) {}
 if (!myNick) myNick = 'Игрок' + (100 + Math.random() * 900 | 0);
@@ -1413,7 +1434,13 @@ class Remote {
     this.head.userData.head = true;
     const sh = new THREE.Mesh(new THREE.CircleGeometry(.5, 16), shadowMat); sh.rotation.x = -Math.PI / 2; sh.position.y = .03; g.add(sh);
     this.tag = nameTag(this.name); g.add(this.tag);
+    this.setGear(0);
     g.visible = false; scene.add(g);
+  }
+  setGear(g) {
+    this.gear = g;
+    this.armor.forEach(m => m.visible = !!(g & 1));
+    this.helm.visible = this.brim.visible = !!(g & 2);
   }
   rename(n) { if (n === this.name) return; this.name = n; this.g.remove(this.tag); this.tag.material.map.dispose(); this.tag = nameTag(n); this.g.add(this.tag); }
   update(dt) {
@@ -1503,7 +1530,7 @@ function onNet(m) {
     case 'st':
       for (const a of m.p) {
         if (a[0] === myId) continue;
-        const r = addRemote(a[0]); r.t.set(a[1], 0, a[3]); r.st = Math.max(0, Math.min(2, Math.round(a[2]) || 0)); r.ty = a[4]; r.w = a[6]; r.mv = a[8];
+        const r = addRemote(a[0]); r.t.set(a[1], 0, a[3]); r.st = Math.max(0, Math.min(2, Math.round(a[2]) || 0)); { const g = Math.max(0, Math.min(3, Math.round(((a[2] || 0) - r.st) * 10))); if (g !== r.gear) r.setGear(g); } r.ty = a[4]; r.w = a[6]; r.mv = a[8];
         if (r.alive && !a[7]) deathFx(r); if (!r.alive && a[7]) r.fresh = true; r.alive = !!a[7];
       }
       if (remotes.size && drones.some(b => b.active)) netPractice();
@@ -1565,7 +1592,7 @@ function netTick(dt) {
   if (!ws || ws.readyState !== 1 || !myId) return;
   if (!netBrk) netLeft = Math.max(0, netEnd - Date.now());
   netSendT -= dt;
-  if (netSendT <= 0) { netSendT = .08; net({ t: 's', x: Math.round(P.pos.x * 100) / 100, y: P.alive ? P.stance : 0, z: Math.round(P.pos.z * 100) / 100, yaw: Math.round(P.yaw * 100) / 100, p: Math.round(P.pitch * 100) / 100, w: wi, mv: P.moving ? 1 : 0 }); }
+  if (netSendT <= 0) { netSendT = .08; net({ t: 's', x: Math.round(P.pos.x * 100) / 100, y: (P.alive ? P.stance : 0) + gearBits() / 10, z: Math.round(P.pos.z * 100) / 100, yaw: Math.round(P.yaw * 100) / 100, p: Math.round(P.pitch * 100) / 100, w: wi, mv: P.moving ? 1 : 0 }); }
 }
 function toMenu(note) {
   if (ws) { const s = ws; ws = null; try { s.close(); } catch (e) {} }
@@ -1639,6 +1666,14 @@ function renderShop() {
   $('shopCoins').innerHTML = admin ? '👑 Режим владельца: всё оружие уже ваше' : 'В кошельке: <span class="gold">' + bank + ' 🪙</span><br><small>Монеты дают за каждого сбитого дрона и за конец раунда. На сложном уровне больше.</small>';
   $('shopList').innerHTML = '';
   W.filter(w => w.price).forEach(w => {
+    const it = document.createElement('div'); it.className = 'item';
+    it.innerHTML = '<div><b>' + w.name + '</b><small>' + w.desc + '</small></div>';
+    if (has(w.id)) { const s = document.createElement('span'); s.className = 'own'; s.textContent = '✓ Есть'; it.appendChild(s); }
+    else { const b = document.createElement('button'); b.textContent = w.price + ' 🪙'; b.disabled = bank < w.price; b.onclick = () => { if (bank < w.price) return; bank -= w.price; owned.push(w.id); saveWallet(); audioInit(); sfx('kill', 1); renderShop(); updateMenu(); }; it.appendChild(b); }
+    $('shopList').appendChild(it);
+  });
+  const h = document.createElement('p'); h.className = 'sub'; h.style.margin = '14px 0 6px'; h.innerHTML = '<b>Защита</b> — работает всегда, во всех режимах и онлайн'; $('shopList').appendChild(h);
+  GEAR.forEach(w => {
     const it = document.createElement('div'); it.className = 'item';
     it.innerHTML = '<div><b>' + w.name + '</b><small>' + w.desc + '</small></div>';
     if (has(w.id)) { const s = document.createElement('span'); s.className = 'own'; s.textContent = '✓ Есть'; it.appendChild(s); }
