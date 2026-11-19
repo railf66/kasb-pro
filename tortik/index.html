@@ -17,6 +17,8 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
 .bar{display:flex;align-items:center;gap:8px}
 .pill{background:var(--card);border-radius:999px;padding:6px 12px;font-weight:900;font-size:16px;box-shadow:0 2px 0 var(--line);display:flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
 .pill.low{color:#e2365b}
+.pill{white-space:nowrap}
+@media (max-width:430px){.bar{gap:5px}.pill{font-size:14px;padding:5px 9px;gap:4px}#recBtn,.lang{padding:5px 8px}}
 .sp{flex:1}
 #hearts{letter-spacing:2px;color:var(--pink)}
 .lang{border:0;background:var(--card);border-radius:999px;padding:6px 10px;font:800 13px Nunito,sans-serif;color:var(--ink);box-shadow:0 2px 0 var(--line);cursor:pointer}
@@ -96,6 +98,12 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
 #days button.lock{opacity:.5}
 #dayNote{font-size:13px;color:var(--muted);font-weight:800;margin:4px 0 10px}
 #hero{width:150px;height:150px;margin:0 auto 6px;display:block}
+.shopH{font-weight:900;font-size:14px;color:var(--muted);text-align:left;margin:12px 4px 0}
+#nextBuy{font-size:13px;color:#c27a00;font-weight:800;margin:4px 0 0}
+#recBtn{border:0;background:var(--card);border-radius:999px;padding:6px 10px;font:900 13px Nunito,sans-serif;color:#e2365b;box-shadow:0 2px 0 var(--line);cursor:pointer}
+#recBtn.on{background:#e2365b;color:#fff;animation:recb 1s infinite}
+@keyframes recb{50%{opacity:.6}}
+#recVid{width:auto;max-width:100%;max-height:42vh;border-radius:14px;background:#000;display:block;margin:8px auto}
 .muted{color:var(--muted);font-size:13px}
 </style>
 </head>
@@ -106,6 +114,7 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
     <div class="pill" id="coins">🪙 0</div>
     <div class="pill" id="hearts">♥♥♥</div>
     <div class="sp"></div>
+    <button id="recBtn">⏺</button>
     <button class="lang" id="langBtn">UZ</button>
   </div>
   <div id="customer">
@@ -135,6 +144,7 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
     <button class="btn big" id="play" data-t="play"></button>
     <button class="btn2" id="shopBtn" data-t="shop"></button>
     <p id="bank"></p>
+    <p id="nextBuy"></p>
     <p class="muted" id="mBest"></p>
   </div>
 </div>
@@ -150,7 +160,19 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
     <p id="oBank" style="font-weight:900;color:#c27a00"></p>
     <p id="oBest"></p>
     <button class="btn big" id="again" data-t="again"></button>
+    <button class="btn2" id="overShop" data-t="shop"></button>
     <button class="btn2" id="toMenu" data-t="menuB"></button>
+  </div>
+</div>
+<div id="recBox" class="screen hidden" style="z-index:20">
+  <div class="panel">
+    <div class="title" style="font-size:26px" data-t="recReady"></div>
+    <video id="recVid" playsinline controls></video>
+    <p class="muted" id="recInfo" style="margin:4px 0"></p>
+    <button class="btn big" id="recShare" data-t="recShare"></button>
+    <button class="btn2" id="recSave" data-t="recSave"></button>
+    <p class="muted" data-t="recHelp" style="margin:10px 0 0"></p>
+    <button class="btn2" id="recClose" data-t="recClose"></button>
   </div>
 </div>
 
@@ -178,7 +200,9 @@ const T = {
     dn: ['Простые заказы, клиенты терпеливые.', 'Появляются двухъярусные торты.', 'Два украшения сразу, все кремы.', 'Клиенты торопятся!', 'Шеф-кондитер: всё сложно и быстро.'],
     coinsL: 'монет', servedL: 'тортов', perfectL: 'идеальных', over: 'Студия закрыта!', timeup: 'Время вышло!', best: 'Рекорд: ', newBest: '🏆 Новый рекорд!',
     perfect: 'Идеально!', good: 'Почти!', bad: 'Не то…', left: 'Ушла…', order: 'Заказ',
-    shop: '🛍 Магазин украшений', shopT: 'Магазин', back: 'Назад', menuB: 'В меню', bank: 'В копилке: ', toBank: ' монет в копилку. Всего: ', fast: '⚡ быстро', tip: '💝 чаевые', streak: '🔥 серия', own: '✓ Есть', newIn: 'Новые украшения появятся и в заказах клиентов.', combo: '🔥 Серия ' },
+    shop: '🛍 Магазин украшений', shopT: 'Магазин', back: 'Назад', menuB: 'В меню', bank: 'В копилке: ', toBank: ' монет в копилку. Всего: ', fast: '⚡ быстро', tip: '💝 чаевые', streak: '🔥 серия', own: '✓ Есть', newIn: 'Новые украшения появятся и в заказах клиентов.', combo: '🔥 Серия ',
+    gShape: 'Новые формы', gCream: 'Кремы', gTop: 'Украшения', gStand: 'Подставки для торта (только для красоты)', pick: 'Выбрать', picked: '✓ Стоит', need: 'Накопите на «', needE: '»: ещё ',
+    recReady: 'Видео готово!', recShare: '📤 Поделиться (YouTube, Telegram)', recSave: '💾 Сохранить', recClose: 'Продолжить', recHelp: 'Видео вертикальное — как раз для YouTube Shorts. Ссылка на игру уже на видео: kasbpro.uz/tort', recNo: 'Этот браузер не умеет записывать видео. Откройте игру в Chrome.', recPlay: 'Запись начнётся в игре: откройте студию и нажмите ⏺' },
   uz: { shape: 'Shakl', tiers: 'Qavat', cream: 'Krem', top: 'Bezak', clear: 'Tozalash', serve: 'Tortni berish', play: 'Studiyani ochish', again: 'Yana o‘ynash',
     title: 'Tortik studiyasi', sub: 'Qandolatxonada 5 kun',
     intro: 'Mijoz rasmidagidek tort yig‘ing va «Tortni berish» tugmasini bosing. Keyingi kunni ochish uchun kunlik tanga maqsadiga yeting!',
@@ -186,29 +210,41 @@ const T = {
     dn: ['Oddiy buyurtmalar, mijozlar sabrli.', 'Ikki qavatli tortlar paydo bo‘ladi.', 'Bir vaqtda ikki bezak, barcha kremlar.', 'Mijozlar shoshilmoqda!', 'Bosh qandolatchi: hammasi qiyin va tez.'],
     coinsL: 'tanga', servedL: 'tort', perfectL: 'a’lo', over: 'Studiya yopildi!', timeup: 'Vaqt tugadi!', best: 'Rekord: ', newBest: '🏆 Yangi rekord!',
     perfect: 'A’lo!', good: 'Deyarli!', bad: 'Bu emas…', left: 'Ketib qoldi…', order: 'Buyurtma',
-    shop: '🛍 Bezaklar do‘koni', shopT: 'Do‘kon', back: 'Orqaga', menuB: 'Menyuga', bank: 'Cho‘chqachada: ', toBank: ' tanga cho‘chqachaga. Jami: ', fast: '⚡ tez', tip: '💝 choychaqa', streak: '🔥 seriya', own: '✓ Bor', newIn: 'Yangi bezaklar mijozlar buyurtmalarida ham chiqadi.', combo: '🔥 Seriya ' }
+    shop: '🛍 Bezaklar do‘koni', shopT: 'Do‘kon', back: 'Orqaga', menuB: 'Menyuga', bank: 'Cho‘chqachada: ', toBank: ' tanga cho‘chqachaga. Jami: ', fast: '⚡ tez', tip: '💝 choychaqa', streak: '🔥 seriya', own: '✓ Bor', newIn: 'Yangi bezaklar mijozlar buyurtmalarida ham chiqadi.', combo: '🔥 Seriya ',
+    gShape: 'Yangi shakllar', gCream: 'Kremlar', gTop: 'Bezaklar', gStand: 'Tort taglari (faqat chiroy uchun)', pick: 'Tanlash', picked: '✓ Turibdi', need: '«', needE: '» uchun yana kerak: ',
+    recReady: 'Video tayyor!', recShare: '📤 Ulashish (YouTube, Telegram)', recSave: '💾 Saqlash', recClose: 'Davom etish', recHelp: 'Video vertikal — YouTube Shorts uchun aynan mos. O‘yin havolasi videoda bor: kasbpro.uz/tort', recNo: 'Bu brauzer video yozolmaydi. O‘yinni Chrome’da oching.', recPlay: 'Yozuv o‘yin ichida boshlanadi: studiyani oching va ⏺ ni bosing' }
 };
-const SHAPES = ['round', 'square', 'heart'];
-const CREAMS = { pink: '#f9a8c6', choco: '#8a5434', vanilla: '#fbe6b0', mint: '#a6e6cc', berry: '#b48ae0', caramel: '#e8a25a' };
-const TOPS = ['straw', 'candle', 'sprinkle', 'cherry', 'macaron', 'star', 'chocobar'];
-const SHOP = [{ g: 'cream', v: 'caramel', price: 150 }, { g: 'top', v: 'macaron', price: 200 }, { g: 'top', v: 'star', price: 300 }, { g: 'top', v: 'chocobar', price: 450 }];
-const ITEMN = { ru: { caramel: 'Карамельный крем', macaron: 'Макаруны', star: 'Золотые звёздочки', chocobar: 'Шоколадные плитки' }, uz: { caramel: 'Karamelli krem', macaron: 'Makarunlar', star: 'Oltin yulduzchalar', chocobar: 'Shokolad bo‘laklari' } };
+const SHAPES = ['round', 'square', 'heart', 'starsh', 'bloom'];
+const CREAMS = { pink: '#f9a8c6', choco: '#8a5434', vanilla: '#fbe6b0', mint: '#a6e6cc', berry: '#b48ae0', caramel: '#e8a25a', lemon: '#fff08a', sky: '#a9d8ff' };
+const TOPS = ['straw', 'candle', 'sprinkle', 'cherry', 'macaron', 'star', 'chocobar', 'blueb', 'hearts', 'flower', 'butterfly', 'crown'];
+const STANDS = { glass: null, mintstand: ['#d8f5e8', '#ffffff', '#b5e6cf', '#9fd9bf'], goldstand: ['#f7d774', '#fff4c4', '#e0b23c', '#c99a26'] };
+const SHOP = [
+  { g: 'shape', v: 'starsh', price: 500 }, { g: 'shape', v: 'bloom', price: 700 },
+  { g: 'cream', v: 'caramel', price: 150 }, { g: 'cream', v: 'lemon', price: 200 }, { g: 'cream', v: 'sky', price: 250 },
+  { g: 'top', v: 'macaron', price: 200 }, { g: 'top', v: 'blueb', price: 220 }, { g: 'top', v: 'hearts', price: 250 }, { g: 'top', v: 'star', price: 300 }, { g: 'top', v: 'flower', price: 350 }, { g: 'top', v: 'butterfly', price: 400 }, { g: 'top', v: 'chocobar', price: 450 }, { g: 'top', v: 'crown', price: 600 },
+  { g: 'stand', v: 'mintstand', price: 250 }, { g: 'stand', v: 'goldstand', price: 400 }];
+const ITEMN = { ru: { caramel: 'Карамельный крем', macaron: 'Макаруны', star: 'Золотые звёздочки', chocobar: 'Шоколадные плитки', lemon: 'Лимонный крем', sky: 'Голубой крем', blueb: 'Голубика', hearts: 'Сахарные сердечки', flower: 'Сахарные цветы', butterfly: 'Бабочки', crown: 'Золотая корона', starsh: 'Торт-звезда', bloom: 'Торт-цветок', mintstand: 'Мятная подставка', goldstand: 'Золотая подставка' },
+  uz: { caramel: 'Karamelli krem', macaron: 'Makarunlar', star: 'Oltin yulduzchalar', chocobar: 'Shokolad bo‘laklari', lemon: 'Limonli krem', sky: 'Havorang krem', blueb: 'Ko‘k mevalar', hearts: 'Shakar yurakchalar', flower: 'Shakar gullar', butterfly: 'Kapalaklar', crown: 'Oltin toj', starsh: 'Yulduz tort', bloom: 'Gul tort', mintstand: 'Yalpiz tag', goldstand: 'Oltin tag' } };
+const SHOPG = ['shape', 'cream', 'top', 'stand'];
 let bank = 0, owned = [];
 try { bank = +localStorage.getItem('kp_tortik_bank') || 0; owned = JSON.parse(localStorage.getItem('kp_tortik_owned') || '[]'); } catch (e) {}
 function saveBank() { try { localStorage.setItem('kp_tortik_bank', bank); localStorage.setItem('kp_tortik_owned', JSON.stringify(owned)); } catch (e) {} }
-const BASE_CREAMS = ['pink', 'choco', 'vanilla', 'mint', 'berry'], BASE_TOPS = ['straw', 'candle', 'sprinkle', 'cherry'];
+const BASE_CREAMS = ['pink', 'choco', 'vanilla', 'mint', 'berry'], BASE_TOPS = ['straw', 'candle', 'sprinkle', 'cherry'], BASE_SHAPES = ['round', 'square', 'heart'];
+let stand = 'glass'; try { stand = localStorage.getItem('kp_tortik_stand') || 'glass'; } catch (e) {}
 const ADMIN_HASH = 'ca0ece14dcd3eff1b9d6789bf0a2c2009abcff64d43df1342d0c1f444ee19960';
 let admin = false; try { admin = localStorage.getItem('kp_tortik_admin') === '1'; } catch (e) {}
 const has = v => admin || owned.includes(v);
 const creamsOpen = () => Object.keys(CREAMS).filter(k => BASE_CREAMS.includes(k) || has(k));
 const topsOpen = () => TOPS.filter(k => BASE_TOPS.includes(k) || has(k));
+const shapesOpen = () => SHAPES.filter(k => BASE_SHAPES.includes(k) || has(k));
+const standNow = () => (stand !== 'glass' && has(stand)) ? stand : 'glass';
 const W = {
-  ru: { shape: { round: 'круглый торт', square: 'квадратный торт', heart: 'торт-сердечко' }, two: 'двухъярусный ',
-        cream: { pink: 'розовым', choco: 'шоколадным', vanilla: 'ванильным', mint: 'мятным', berry: 'черничным', caramel: 'карамельным' },
-        top: { straw: 'клубникой', candle: 'свечками', sprinkle: 'посыпкой', cherry: 'вишней', macaron: 'макарунами', star: 'звёздочками', chocobar: 'шоколадом' } },
-  uz: { shape: { round: 'dumaloq tort', square: 'kvadrat tort', heart: 'yurak shaklidagi tort' }, two: 'ikki qavatli ',
-        cream: { pink: 'pushti', choco: 'shokoladli', vanilla: 'vanilli', mint: 'yalpizli', berry: 'qorag‘atli', caramel: 'karamelli' },
-        top: { straw: 'qulupnay', candle: 'shamlar', sprinkle: 'rangli sepma', cherry: 'olcha', macaron: 'makarunlar', star: 'yulduzchalar', chocobar: 'shokolad' } }
+  ru: { shape: { round: 'круглый торт', square: 'квадратный торт', heart: 'торт-сердечко', starsh: 'торт-звезду', bloom: 'торт-цветок' }, two: 'двухъярусный ',
+        cream: { pink: 'розовым', choco: 'шоколадным', vanilla: 'ванильным', mint: 'мятным', berry: 'черничным', caramel: 'карамельным', lemon: 'лимонным', sky: 'голубым' },
+        top: { straw: 'клубникой', candle: 'свечками', sprinkle: 'посыпкой', cherry: 'вишней', macaron: 'макарунами', star: 'звёздочками', chocobar: 'шоколадом', blueb: 'голубикой', hearts: 'сердечками', flower: 'цветами', butterfly: 'бабочками', crown: 'короной' } },
+  uz: { shape: { round: 'dumaloq tort', square: 'kvadrat tort', heart: 'yurak shaklidagi tort', starsh: 'yulduz shaklidagi tort', bloom: 'gul shaklidagi tort' }, two: 'ikki qavatli ',
+        cream: { pink: 'pushti', choco: 'shokoladli', vanilla: 'vanilli', mint: 'yalpizli', berry: 'qorag‘atli', caramel: 'karamelli', lemon: 'limonli', sky: 'havorang' },
+        top: { straw: 'qulupnay', candle: 'shamlar', sprinkle: 'rangli sepma', cherry: 'olcha', macaron: 'makarunlar', star: 'yulduzchalar', chocobar: 'shokolad', blueb: 'ko‘k mevalar', hearts: 'yurakchalar', flower: 'gullar', butterfly: 'kapalaklar', crown: 'toj' } }
 };
 const NAMES = ['Малика', 'Дилноза', 'Сабина', 'Камила', 'Нигора', 'Лола', 'Мадина', 'Шахзода', 'Зарина', 'Севара', 'Амир', 'Тимур'];
 const NAMES_UZ = ['Malika', 'Dilnoza', 'Sabina', 'Kamila', 'Nigora', 'Lola', 'Madina', 'Shahzoda', 'Zarina', 'Sevara', 'Amir', 'Temur'];
@@ -219,9 +255,15 @@ function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); f
 function shade(hex, f) { const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = n >> 8 & 255, b = n & 255; r = Math.round(r * f); g = Math.round(g * f); b = Math.round(b * f); return `rgb(${Math.min(255, r)},${Math.min(255, g)},${Math.min(255, b)})`; }
 function heartPt(tt, s) { const x = 16 * Math.pow(Math.sin(tt), 3), y = 13 * Math.cos(tt) - 5 * Math.cos(2 * tt) - 2 * Math.cos(3 * tt) - Math.cos(4 * tt); return [x / 17 * s, -(y + 2.5) / 17 * s]; }
 let YS = 1;
+// star: 5 rounded points; bloom: 6 round petals (radius as a function of the angle, 1 = full size)
+const POLAR = {
+  starsh: a => { const k = ((a + Math.PI / 2) / (Math.PI * 2 / 5)) % 1, f = Math.abs(k - .5) * 2; return .62 + .4 * Math.pow(f, 1.6); },
+  bloom: a => .8 + .2 * Math.abs(Math.cos(3 * (a + Math.PI / 2)))
+};
 function shapePath(shape, cx, cy, s) {
   if (shape === 'round') return `M${cx - s},${cy} a${s},${s * .82 * YS} 0 1,0 ${2 * s},0 a${s},${s * .82 * YS} 0 1,0 ${-2 * s},0Z`;
   if (shape === 'square') { const r = s * .18, w = s * .92, h = s * .78 * YS; return `M${cx - w + r},${cy - h} H${cx + w - r} Q${cx + w},${cy - h} ${cx + w},${cy - h + r} V${cy + h - r} Q${cx + w},${cy + h} ${cx + w - r},${cy + h} H${cx - w + r} Q${cx - w},${cy + h} ${cx - w},${cy + h - r} V${cy - h + r} Q${cx - w},${cy - h} ${cx - w + r},${cy - h}Z`; }
+  if (POLAR[shape]) { let d = ''; for (let i = 0; i <= 80; i++) { const a = i / 80 * Math.PI * 2 - Math.PI / 2, r = POLAR[shape](a) * s; d += (i ? 'L' : 'M') + (cx + Math.cos(a) * r).toFixed(1) + ',' + (cy + Math.sin(a) * r * .82 * YS).toFixed(1); } return d + 'Z'; }
   let d = ''; for (let i = 0; i <= 60; i++) { const [x, y] = heartPt(i / 60 * Math.PI * 2, s); d += (i ? 'L' : 'M') + (cx + x).toFixed(1) + ',' + (cy + y * .85 * YS).toFixed(1); } return d + 'Z';
 }
 function ringPts(shape, cx, cy, s, n) {
@@ -230,6 +272,7 @@ function ringPts(shape, cx, cy, s, n) {
     const a = k / n * Math.PI * 2 + .3;
     if (shape === 'round') pts.push([cx + Math.cos(a) * s * .68, cy + Math.sin(a) * s * .56 * YS]);
     else if (shape === 'square') { const c = Math.cos(a), si = Math.sin(a), m = Math.max(Math.abs(c), Math.abs(si)); pts.push([cx + c / m * s * .66, cy + si / m * s * .54 * YS]); }
+    else if (POLAR[shape]) { const r = (shape === 'starsh' ? .5 : .62) * s; pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r * .82 * YS]); }
     else { const [x, y] = heartPt(k / n * Math.PI * 2, s * .62); pts.push([cx + x, cy + (y * .85 - s * .04) * YS]); }
   }
   return pts;
@@ -265,6 +308,29 @@ function drawTopping(g, kind, x, y, sc = 1, i = 0) {
     el('rect', { x: x + .4 * sc, y: y - 8 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
     el('rect', { x: x - 4 * sc, y: y - 2.6 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
     el('rect', { x: x + .4 * sc, y: y - 2.6 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
+  } else if (kind === 'blueb') {
+    [[-3.2, 1.5], [3.2, 1.5], [0, -2.5]].forEach(([a, b]) => { el('circle', { cx: x + a * sc, cy: y + b * sc, r: 3.4 * sc, fill: '#3f4fa8' }, g); el('circle', { cx: x + a * sc - 1 * sc, cy: y + b * sc - 1 * sc, r: 1 * sc, fill: 'rgba(200,215,255,.7)' }, g); el('path', { d: `M${x + a * sc - 1 * sc},${y + b * sc + 2.6 * sc} l1,-1 l1,1`, stroke: '#232c66', 'stroke-width': .6 * sc, fill: 'none' }, g); });
+  } else if (kind === 'hearts') {
+    const cols = ['#ff5c8a', '#ff9fc0', '#e8336b'], c = cols[i % 3];
+    el('path', { d: `M${x},${y + 5 * sc} C${x - 9 * sc},${y - 1 * sc} ${x - 5 * sc},${y - 9 * sc} ${x},${y - 4 * sc} C${x + 5 * sc},${y - 9 * sc} ${x + 9 * sc},${y - 1 * sc} ${x},${y + 5 * sc}Z`, fill: c, stroke: shade(c, .75), 'stroke-width': .7 * sc }, g);
+    el('ellipse', { cx: x - 2.6 * sc, cy: y - 3 * sc, rx: 1.3 * sc, ry: .9 * sc, fill: 'rgba(255,255,255,.7)' }, g);
+  } else if (kind === 'flower') {
+    const cols = ['#ffffff', '#ffc2d6', '#d9c8ff'], c = cols[i % 3];
+    for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2 - Math.PI / 2; el('circle', { cx: x + Math.cos(a) * 3.6 * sc, cy: y - 1 * sc + Math.sin(a) * 3.6 * sc, r: 3 * sc, fill: c, stroke: shade(c === '#ffffff' ? '#eedde5' : c, .85), 'stroke-width': .5 * sc }, g); }
+    el('circle', { cx: x, cy: y - 1 * sc, r: 2.2 * sc, fill: '#ffc93a' }, g);
+  } else if (kind === 'butterfly') {
+    const cols = ['#7cc7ff', '#ff8fb8', '#b9a2ff', '#ffd25e'], c = cols[i % 4];
+    el('ellipse', { cx: x - 4 * sc, cy: y - 4 * sc, rx: 4.2 * sc, ry: 3.4 * sc, fill: c, transform: `rotate(-25 ${x - 4 * sc} ${y - 4 * sc})` }, g);
+    el('ellipse', { cx: x + 4 * sc, cy: y - 4 * sc, rx: 4.2 * sc, ry: 3.4 * sc, fill: c, transform: `rotate(25 ${x + 4 * sc} ${y - 4 * sc})` }, g);
+    el('ellipse', { cx: x - 3 * sc, cy: y + 1.5 * sc, rx: 2.8 * sc, ry: 2.2 * sc, fill: shade(c, .85) }, g);
+    el('ellipse', { cx: x + 3 * sc, cy: y + 1.5 * sc, rx: 2.8 * sc, ry: 2.2 * sc, fill: shade(c, .85) }, g);
+    el('circle', { cx: x - 4 * sc, cy: y - 4.5 * sc, r: 1.1 * sc, fill: 'rgba(255,255,255,.75)' }, g); el('circle', { cx: x + 4 * sc, cy: y - 4.5 * sc, r: 1.1 * sc, fill: 'rgba(255,255,255,.75)' }, g);
+    el('rect', { x: x - .9 * sc, y: y - 7 * sc, width: 1.8 * sc, height: 10 * sc, rx: .9 * sc, fill: '#4a2a3a' }, g);
+  } else if (kind === 'crown') {
+    el('path', { d: `M${x - 8 * sc},${y + 3 * sc} L${x - 9 * sc},${y - 7 * sc} L${x - 4 * sc},${y - 2 * sc} L${x},${y - 10 * sc} L${x + 4 * sc},${y - 2 * sc} L${x + 9 * sc},${y - 7 * sc} L${x + 8 * sc},${y + 3 * sc}Z`, fill: '#ffcf3a', stroke: '#d08f00', 'stroke-width': .9 * sc, 'stroke-linejoin': 'round' }, g);
+    el('rect', { x: x - 8 * sc, y: y + 1 * sc, width: 16 * sc, height: 3 * sc, rx: 1 * sc, fill: '#f0b400' }, g);
+    el('circle', { cx: x, cy: y - 2 * sc, r: 1.6 * sc, fill: '#ff4f7b' }, g); el('circle', { cx: x - 5 * sc, cy: y, r: 1.1 * sc, fill: '#59c3ff' }, g); el('circle', { cx: x + 5 * sc, cy: y, r: 1.1 * sc, fill: '#59c3ff' }, g);
+    [[-9, -7], [0, -10], [9, -7]].forEach(([a, b]) => el('circle', { cx: x + a * sc, cy: y + b * sc, r: 1.3 * sc, fill: '#fff3b0' }, g));
   } else if (kind === 'sprinkle') {
     const cols = ['#ff5c8a', '#4fc3f7', '#ffd54f', '#81c784', '#ba68c8'];
     for (let j = 0; j < 5; j++) { const a = (i * 5 + j) * 2.4, r = 6 * sc; const px = x + Math.cos(a) * r * (j % 3) / 2, py = y + Math.sin(a) * r * (j % 3) / 2; el('rect', { x: px - 2.5 * sc, y: py - .9 * sc, width: 5 * sc, height: 1.8 * sc, rx: .9 * sc, fill: cols[(i + j) % 5], transform: `rotate(${(i * 47 + j * 73) % 180} ${px} ${py})` }, g); }
@@ -281,9 +347,10 @@ function drawCake(svg, c, opts = {}) {
   const defs = el('defs', {}, svg), g = el('g', {}, svg);
   // cake stand: soft shadow, glass plate with shine, short stem
   el('ellipse', { cx: 100, cy: 186, rx: 70, ry: 9, fill: 'rgba(120,60,80,.18)' }, g);
-  el('path', { d: 'M86,150 L80,182 Q100,188 120,182 L114,150Z', fill: grad(defs, 'linearGradient', [[0, '#e9d7e0'], [.45, '#ffffff'], [1, '#d7c1cc']]) }, g);
-  el('ellipse', { cx: 100, cy: 150, rx: 94, ry: 30, fill: '#e3cbd6' }, g);
-  el('ellipse', { cx: 100, cy: 145, rx: 94, ry: 30, fill: grad(defs, 'radialGradient', [[0, '#ffffff'], [.75, '#fbf1f5'], [1, '#ead6df']], { cx: .4, cy: .35, r: .7 }) }, g);
+  const SC = STANDS[opts.stand || 'glass'] || ['#ead6df', '#ffffff', '#fbf1f5', '#e3cbd6'];
+  el('path', { d: 'M86,150 L80,182 Q100,188 120,182 L114,150Z', fill: grad(defs, 'linearGradient', [[0, shade(SC[0], .97)], [.45, SC[1]], [1, shade(SC[0], .9)]]) }, g);
+  el('ellipse', { cx: 100, cy: 150, rx: 94, ry: 30, fill: SC[3] }, g);
+  el('ellipse', { cx: 100, cy: 145, rx: 94, ry: 30, fill: grad(defs, 'radialGradient', [[0, SC[1]], [.75, SC[2]], [1, SC[0]]], { cx: .4, cy: .35, r: .7 }) }, g);
   el('ellipse', { cx: 70, cy: 136, rx: 30, ry: 6, fill: 'rgba(255,255,255,.8)' }, g);
   if (!c.shape) { if (opts.hint) { const tx = el('text', { x: 100, y: 150, 'text-anchor': 'middle', 'font-size': 13, 'font-weight': 800, fill: '#c99aae', 'font-family': 'Nunito,sans-serif' }, g); tx.textContent = opts.hint; } return; }
   const col = CREAMS[c.cream] || '#fff4e6';
@@ -303,8 +370,10 @@ function drawCake(svg, c, opts = {}) {
     ringPts(c.shape, 100, cy, s * 1.38, 16).forEach(([x, y], k) => { if (y > cy + 2) { const h = 6 + (k * 7) % 9; el('path', { d: `M${x - 4},${y - 1} q0,${h} 4,${h} q4,0 4,${-h}Z`, fill: shade(col, 1.02) }, g); el('ellipse', { cx: x - 1.4, cy: y + h * .45, rx: .9, ry: 2, fill: 'rgba(255,255,255,.45)' }, g); } });
     if (li === layers.length - 1 && c.tops && c.tops.length) {
       const n = c.tops.length === 1 ? 6 : 8, pts = ringPts(c.shape, 100, cy, s, n);
-      pts.sort((a, b) => a[1] - b[1]).forEach(([x, y], i) => drawTopping(g, c.tops[i % c.tops.length], x, y, s < 60 ? .9 : 1.1, i));
-      if (c.tops.length === 1 && c.tops[0] !== 'candle') drawTopping(g, c.tops[0], 100, cy, s < 60 ? .9 : 1.15, 9);
+      const ring = c.tops.filter(k => k !== 'crown');
+      if (ring.length) pts.sort((a, b) => a[1] - b[1]).forEach(([x, y], i) => drawTopping(g, ring[i % ring.length], x, y, s < 60 ? .9 : 1.1, i));
+      if (c.tops.includes('crown')) drawTopping(g, 'crown', 100, cy - 2, s < 60 ? 1.6 : 2, 0);
+      else if (c.tops.length === 1 && c.tops[0] !== 'candle') drawTopping(g, c.tops[0], 100, cy, s < 60 ? .9 : 1.15, 9);
     }
   });
   YS = 1;
@@ -314,7 +383,8 @@ function icon(kind, val) {
   if (kind === 'shape') { el('path', { d: shapePath(val, 20, 21, 15), fill: '#ffc9dc', stroke: '#e86a96', 'stroke-width': 2 }, s); }
   else if (kind === 'tiers') { if (val === 2) { el('rect', { x: 6, y: 22, width: 28, height: 12, rx: 3, fill: '#ffc9dc', stroke: '#e86a96', 'stroke-width': 2 }, s); el('rect', { x: 12, y: 10, width: 16, height: 12, rx: 3, fill: '#ffe0eb', stroke: '#e86a96', 'stroke-width': 2 }, s); } else el('rect', { x: 6, y: 18, width: 28, height: 14, rx: 3, fill: '#ffc9dc', stroke: '#e86a96', 'stroke-width': 2 }, s); }
   else if (kind === 'cream') { el('circle', { cx: 20, cy: 20, r: 14, fill: CREAMS[val], stroke: shade(CREAMS[val], .75), 'stroke-width': 2 }, s); el('circle', { cx: 15, cy: 15, r: 4, fill: 'rgba(255,255,255,.45)' }, s); }
-  else drawTopping(s, val, 20, val === 'candle' ? 33 : 22, val === 'candle' ? 1.2 : 1.7, 1);
+  else if (kind === 'stand') { const c = STANDS[val]; el('path', { d: 'M17,24 L15,35 Q20,37 25,35 L23,24Z', fill: c[2] }, s); el('ellipse', { cx: 20, cy: 24, rx: 17, ry: 6, fill: c[3] }, s); el('ellipse', { cx: 20, cy: 22.5, rx: 17, ry: 6, fill: c[0] }, s); el('ellipse', { cx: 14, cy: 21, rx: 6, ry: 1.6, fill: 'rgba(255,255,255,.8)' }, s); }
+  else drawTopping(s, val, 20, val === 'candle' ? 33 : 22, val === 'candle' ? 1.2 : val === 'crown' ? 1.4 : 1.7, 1);
   return s;
 }
 function drawFace(svg, who, mood) {
@@ -352,7 +422,7 @@ const pick = a => a[Math.random() * a.length | 0];
 
 function newOrder() {
   const D = DAYS[day], cr = creamsOpen(), tp = topsOpen();
-  const o = { shape: pick(SHAPES), cream: pick(D.noBerry ? cr.filter(k => k !== 'berry') : cr), tiers: Math.random() < D.tiers ? 2 : 1, tops: [pick(tp)] };
+  const o = { shape: pick(shapesOpen()), cream: pick(D.noBerry ? cr.filter(k => k !== 'berry') : cr), tiers: Math.random() < D.tiers ? 2 : 1, tops: [pick(tp)] };
   if (Math.random() < D.two) { let t2; do t2 = pick(tp); while (t2 === o.tops[0]); o.tops.push(t2); }
   order = o;
   const i = Math.random() * NAMES.length | 0;
@@ -367,7 +437,7 @@ function phrase(o) {
   const w = W[lang];
   const tops = o.tops.map(x => w.top[x]);
   if (lang === 'ru') {
-    const shape = o.shape === 'heart' ? (o.tiers === 2 ? 'двухъярусный торт-сердечко' : 'торт-сердечко') : (o.tiers === 2 ? w.two : '') + w.shape[o.shape];
+    const shape = o.shape === 'heart' ? (o.tiers === 2 ? 'двухъярусный торт-сердечко' : 'торт-сердечко') : o.shape === 'starsh' ? (o.tiers === 2 ? 'двухъярусный торт-звезду' : 'торт-звезду') : (o.tiers === 2 ? w.two : '') + w.shape[o.shape];
     return `Хочу ${shape} с ${w.cream[o.cream]} кремом и ${tops.join(' и ')}!`;
   }
   return `Menga ${o.tiers === 2 ? w.two : ''}${w.shape[o.shape]}, ${w.cream[o.cream]} krem va ${tops.join(', ')} bilan, iltimos!`;
@@ -389,12 +459,14 @@ function render() {
     $('say').innerHTML = '<small>' + nm + ' · ' + t('order') + ' №' + (served + 1) + '</small>' + phrase(order);
     drawCake($('want'), order);
   }
-  drawCake($('cake'), cur, { hint: lang === 'ru' ? 'Выберите форму ↓' : 'Shaklni tanlang ↓' });
+  drawCake($('cake'), cur, { hint: lang === 'ru' ? 'Выберите форму ↓' : 'Shaklni tanlang ↓', stand: standNow() });
+  const nx = SHOP.filter(it => !has(it.v)).sort((a, b) => a.price - b.price)[0];
+  $('nextBuy').textContent = nx ? (bank >= nx.price ? '🛍 ' + ITEMN[lang][nx.v] + ' — ' + (lang === 'ru' ? 'уже можно купить!' : 'sotib olsa bo‘ladi!') : t('need') + ITEMN[lang][nx.v] + t('needE') + (nx.price - bank) + ' 🪙') : '';
   buildOpts();
   hud();
 }
 function buildOpts() {
-  const groups = { shape: SHAPES, tiers: [1, 2], cream: creamsOpen(), top: topsOpen() };
+  const groups = { shape: shapesOpen(), tiers: [1, 2], cream: creamsOpen(), top: topsOpen() };
   for (const g in groups) {
     const box = $('o-' + g); box.innerHTML = '';
     groups[g].forEach(v => {
@@ -412,7 +484,7 @@ function choose(g, v) {
   if (g === 'top') { const i = cur.tops.indexOf(v); if (i >= 0) cur.tops.splice(i, 1); else { cur.tops.push(v); if (cur.tops.length > 2) cur.tops.shift(); } }
   else cur[g] = v;
   if (!cur.shape && g !== 'shape') cur.shape = 'round';
-  drawCake($('cake'), cur); buildOpts();
+  drawCake($('cake'), cur, { stand: standNow() }); buildOpts();
 }
 function hud() {
   const s = Math.max(0, Math.ceil(time));
@@ -421,7 +493,7 @@ function hud() {
   $('hearts').textContent = '♥'.repeat(hearts) + '♡'.repeat(3 - hearts);
   const p = patience / patienceMax; const bar = $('patience').firstElementChild; bar.style.width = (p * 100) + '%'; bar.classList.toggle('low', p < .35);
 }
-function floatText(txt, color, extra) { const f = $('float'); f.textContent = txt; if (extra) { const sm = document.createElement('small'); sm.textContent = extra; f.appendChild(sm); } f.style.color = color; f.classList.remove('show'); void f.offsetWidth; f.classList.add('show'); }
+function floatText(txt, color, extra) { recFx.float = { txt, color, extra: extra || '', t0: performance.now() }; const f = $('float'); f.textContent = txt; if (extra) { const sm = document.createElement('small'); sm.textContent = extra; f.appendChild(sm); } f.style.color = color; f.classList.remove('show'); void f.offsetWidth; f.classList.add('show'); }
 function serve(timeout) {
   if (state !== 'play' || busy) return;
   busy = true;
@@ -473,12 +545,12 @@ function end(timeUp) {
 }
 
 // ---------- sound ----------
-let AC = null;
-function audio() { try { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); } catch (e) {} }
-function tone(freqs, step) { if (!AC) return; freqs.forEach((f, i) => { const o = AC.createOscillator(), g = AC.createGain(), t0 = AC.currentTime + i * step; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(.12, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + step * 1.8); o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + step * 2); }); }
+let AC = null, OUT = null;
+function audio() { try { if (!AC) { AC = new (window.AudioContext || window.webkitAudioContext)(); OUT = AC.createGain(); OUT.connect(AC.destination); } if (AC.state === 'suspended') AC.resume(); } catch (e) {} }
+function tone(freqs, step) { if (!AC) return; freqs.forEach((f, i) => { const o = AC.createOscillator(), g = AC.createGain(), t0 = AC.currentTime + i * step; o.type = 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(.12, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + step * 1.8); o.connect(g).connect(OUT); o.start(t0); o.stop(t0 + step * 2); }); }
 function click(f) { tone([f], .04); }
-function coinSound(n) { if (!AC) return; for (let i = 0; i < n; i++) { const o = AC.createOscillator(), g = AC.createGain(), t0 = AC.currentTime + .25 + i * .07; o.type = 'square'; o.frequency.setValueAtTime(1320, t0); o.frequency.setValueAtTime(1760, t0 + .03); g.gain.setValueAtTime(.04, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + .12); o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + .13); } }
-function confetti() {
+function coinSound(n) { if (!AC) return; for (let i = 0; i < n; i++) { const o = AC.createOscillator(), g = AC.createGain(), t0 = AC.currentTime + .25 + i * .07; o.type = 'square'; o.frequency.setValueAtTime(1320, t0); o.frequency.setValueAtTime(1760, t0 + .03); g.gain.setValueAtTime(.04, t0); g.gain.exponentialRampToValueAtTime(.001, t0 + .12); o.connect(g).connect(OUT); o.start(t0); o.stop(t0 + .13); } }
+function confetti() { recConfetti();
   const r = $('cake').getBoundingClientRect(), cols = ['#ff6f9f', '#ffd25e', '#7cc7ff', '#9be38c', '#b9a2ff'];
   for (let i = 0; i < 26; i++) { const d = document.createElement('div'); d.className = 'conf'; d.style.left = (r.left + r.width / 2) + 'px'; d.style.top = (r.top + r.height * .4) + 'px'; d.style.background = cols[i % 5];
     d.style.setProperty('--dx', (Math.random() * 260 - 130) + 'px'); d.style.setProperty('--dy', (Math.random() * 200 - 40) + 'px'); d.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg'); d.style.animationDelay = (Math.random() * .1) + 's';
@@ -491,20 +563,27 @@ function drawBunting() {
 }
 function renderShop() {
   $('shopBank').innerHTML = t('bank') + bank + ' 🪙<br><small style="color:#9a7486;font-weight:700">' + t('newIn') + '</small>'; const L = $('shopList'); L.innerHTML = '';
-  SHOP.forEach(it => {
+  SHOPG.forEach(gr => {
+   const h = document.createElement('div'); h.className = 'shopH'; h.textContent = t({ shape: 'gShape', cream: 'gCream', top: 'gTop', stand: 'gStand' }[gr]); L.appendChild(h);
+   SHOP.filter(it => it.g === gr).forEach(it => {
     const row = document.createElement('div'); row.className = 'shopItem'; row.appendChild(icon(it.g, it.v));
     const d = document.createElement('div'); d.textContent = ITEMN[lang][it.v]; row.appendChild(d);
-    if (has(it.v)) { const o = document.createElement('span'); o.className = 'own'; o.textContent = t('own'); row.appendChild(o); }
-    else { const btn = document.createElement('button'); btn.textContent = it.price + ' 🪙'; btn.disabled = bank < it.price; btn.onclick = () => { if (bank < it.price) return; bank -= it.price; owned.push(it.v); saveBank(); audio(); tone([660, 880, 1320], .08); coinSound(4); renderShop(); }; row.appendChild(btn); }
+    if (has(it.v) && it.g === 'stand') {
+      const on = standNow() === it.v, btn = document.createElement('button'); btn.textContent = on ? t('picked') : t('pick'); if (on) btn.style.background = '#c9f0dc';
+      btn.onclick = () => { stand = on ? 'glass' : it.v; try { localStorage.setItem('kp_tortik_stand', stand); } catch (e) {} click(660); renderShop(); }; row.appendChild(btn);
+    }
+    else if (has(it.v)) { const o = document.createElement('span'); o.className = 'own'; o.textContent = t('own'); row.appendChild(o); }
+    else { const btn = document.createElement('button'); btn.textContent = it.price + ' 🪙'; btn.disabled = bank < it.price; btn.onclick = () => { if (bank < it.price) return; bank -= it.price; owned.push(it.v); if (it.g === 'stand') { stand = it.v; try { localStorage.setItem('kp_tortik_stand', stand); } catch (e) {} } saveBank(); audio(); tone([660, 880, 1320], .08); coinSound(4); renderShop(); }; row.appendChild(btn); }
     L.appendChild(row);
+   });
   });
 }
 
 // ---------- loop ----------
-let last = performance.now();
+let last = performance.now(), recPaused = false;
 function loop(now) {
   const dt = Math.min(.1, (now - last) / 1000); last = now;
-  if (state === 'play') {
+  if (state === 'play' && !recPaused) {
     time -= dt;
     if (!busy) { patience -= dt; if (patience <= 0) { patience = 0; serve(true); } }
     if (time <= 0) { time = 0; hud(); end(true); }
@@ -516,8 +595,10 @@ function loop(now) {
 $('serve').onclick = () => serve(false);
 $('clear').onclick = () => { if (state !== 'play' || busy) return; cur = { shape: null, cream: null, tiers: 1, tops: [] }; render(); };
 $('play').onclick = start; $('again').onclick = start;
-$('shopBtn').onclick = () => { audio(); renderShop(); $('menu').classList.add('hidden'); $('shop').classList.remove('hidden'); };
-$('shopBack').onclick = () => { $('shop').classList.add('hidden'); $('menu').classList.remove('hidden'); render(); };
+$('shopBtn').onclick = () => { audio(); shopFrom = 'menu'; renderShop(); $('menu').classList.add('hidden'); $('shop').classList.remove('hidden'); };
+let shopFrom = 'menu';
+$('shopBack').onclick = () => { $('shop').classList.add('hidden'); $(shopFrom).classList.remove('hidden'); render(); };
+$('overShop').onclick = () => { audio(); shopFrom = 'over'; renderShop(); $('over').classList.add('hidden'); $('shop').classList.remove('hidden'); };
 $('toMenu').onclick = () => { $('over').classList.add('hidden'); $('menu').classList.remove('hidden'); state = 'menu'; render(); };
 drawBunting();
 $('langBtn').onclick = () => { lang = lang === 'ru' ? 'uz' : 'ru'; try { localStorage.setItem('ep_lang', lang); } catch (e) {} render(); };
@@ -533,8 +614,148 @@ requestAnimationFrame(loop);
     history.replaceState(null, '', location.pathname); render();
   } catch (e) {}
 })();
+// ---------- video recording (vertical 9:16 for YouTube Shorts) ----------
+const REC_MAX = 60, RW = 720, RH = 1280, REC_LINK = 'kasbpro.uz/tort';
+const rec = { on: false, t0: 0, mr: null, chunks: [], cv: null, cx: null, dest: null, blob: null, url: '', ext: 'webm', overT: 0, timer: 0 };
+const recFx = { float: null, conf: [] };
+const recImg = {};
+function recSupported() { return !!(window.MediaRecorder && HTMLCanvasElement.prototype.captureStream); }
+function recMime() {
+  const list = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+  for (const m of list) { try { if (MediaRecorder.isTypeSupported(m)) return m; } catch (e) {} }
+  return '';
+}
+// SVG on the page -> picture for the canvas (re-made only when the SVG changes)
+function svgPic(id) {
+  const svg = $(id); if (!svg) return null;
+  const html = svg.innerHTML, o = recImg[id] || (recImg[id] = { html: null, img: null });
+  if (o.html !== html) {
+    o.html = html;
+    const c = svg.cloneNode(true); c.setAttribute('xmlns', NS); c.setAttribute('width', 600); c.setAttribute('height', id === 'face' ? 600 : 600);
+    const im = new Image(); im.onload = () => { if (o.html === html) o.img = im; };
+    im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(c));
+  }
+  return o.img;
+}
+function recConfetti() { const cols = ['#ff6f9f', '#ffd25e', '#7cc7ff', '#9be38c', '#b9a2ff'], n = performance.now(); for (let i = 0; i < 60; i++) recFx.conf.push({ x: RW / 2, y: 760, vx: (Math.random() - .5) * 900, vy: -300 - Math.random() * 700, r: Math.random() * 6, c: cols[i % 5], t0: n }); }
+function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function wrap(c, text, x, y, maxW, lh, maxLines) {
+  const words = text.split(' '); let line = '', n = 0;
+  for (const w of words) { const tst = line ? line + ' ' + w : w; if (c.measureText(tst).width > maxW && line) { c.fillText(line, x, y + n * lh); n++; line = w; if (n >= maxLines) return; } else line = tst; }
+  if (line) c.fillText(line, x, y + n * lh);
+}
+const FONT = 'Nunito,system-ui,sans-serif';
+function recCompose() {
+  const c = rec.cx, now = performance.now();
+  // background: pink with soft stripes
+  c.fillStyle = '#fde7ef'; c.fillRect(0, 0, RW, RH);
+  c.save(); c.globalAlpha = .35; c.fillStyle = '#fff'; c.translate(RW / 2, RH / 2); c.rotate(Math.PI / 4); for (let x = -1100; x < 1100; x += 62) c.fillRect(x, -1100, 31, 2200); c.restore();
+  // title
+  c.textAlign = 'center'; c.fillStyle = '#ff6f9f'; c.font = '900 74px ' + FONT; c.fillText(lang === 'uz' ? 'Tortik studiyasi' : 'Тортик-студия', RW / 2, 104);
+  // status row
+  const sec = Math.max(0, Math.ceil(time));
+  const pills = [['⏱ ' + (sec / 60 | 0) + ':' + String(sec % 60).padStart(2, '0'), sec <= 15 ? '#e2365b' : '#4a2a3a'], ['🪙 ' + coins + ' / ' + DAYS[day].goal, '#c27a00'], ['♥'.repeat(Math.max(0, hearts)) + '♡'.repeat(3 - Math.max(0, hearts)), '#ff6f9f']];
+  c.font = '900 34px ' + FONT; let px = 40;
+  const pw = pills.map(p => c.measureText(p[0]).width + 40), gap = (RW - 80 - pw.reduce((a, b) => a + b, 0)) / 2;
+  pills.forEach((p, i) => { c.fillStyle = '#fff'; rr(c, px, 136, pw[i], 58, 29); c.fill(); c.fillStyle = p[1]; c.textAlign = 'center'; c.fillText(p[0], px + pw[i] / 2, 177); px += pw[i] + gap; });
+  c.textAlign = 'center'; c.fillStyle = '#9a7486'; c.font = '800 28px ' + FONT; c.fillText(t('day') + (day + 1) + ' / 5', RW / 2, 236);
+  // customer + order bubble
+  const face = svgPic('face'), want = svgPic('want');
+  if (face) c.drawImage(face, 30, 262, 150, 150);
+  c.fillStyle = '#fff'; rr(c, 196, 258, RW - 226, 170, 28); c.fill();
+  c.beginPath(); c.moveTo(198, 310); c.lineTo(180, 326); c.lineTo(198, 340); c.fill();
+  if (want) c.drawImage(want, RW - 30 - 150, 268, 150, 150);
+  c.textAlign = 'left'; c.fillStyle = '#4a2a3a'; c.font = '800 27px ' + FONT;
+  if (order) wrap(c, phrase(order), 216, 304, RW - 226 - 190, 34, 4);
+  // patience bar
+  const pf = Math.max(0, Math.min(1, patience / patienceMax));
+  c.fillStyle = '#f6d5e1'; rr(c, 196, 442, RW - 226, 14, 7); c.fill();
+  c.fillStyle = pf < .35 ? '#ff6f6f' : '#7fd8b5'; rr(c, 196, 442, Math.max(14, (RW - 226) * pf), 14, 7); c.fill();
+  // stage with the cake
+  const sy = 482, sh = 590;
+  c.save(); rr(c, 24, sy, RW - 48, sh, 40); c.clip();
+  const gr = c.createLinearGradient(0, sy, 0, sy + sh); gr.addColorStop(0, '#ffe9f1'); gr.addColorStop(.74, '#ffd9e7'); gr.addColorStop(.74, '#e9a97a'); gr.addColorStop(1, '#c97f50'); c.fillStyle = gr; c.fillRect(24, sy, RW - 48, sh);
+  const bc = ['#ff8fb8', '#ffd25e', '#7cc7ff', '#9be38c', '#b9a2ff']; for (let i = 0; i < 12; i++) { const x = 24 + 28 + i * 56, y = sy + 6 + Math.sin(i / 11 * Math.PI) * 18; c.fillStyle = bc[i % 5]; c.beginPath(); c.moveTo(x - 22, y); c.lineTo(x + 22, y); c.lineTo(x, y + 38); c.fill(); }
+  const cake = svgPic('cake'); if (cake) c.drawImage(cake, 60, sy + 20, RW - 120, RW - 120);
+  c.restore();
+  // "Perfect! +45" floating text
+  const f = recFx.float;
+  if (f) { const k = (now - f.t0) / 1000; if (k < 1.1) { c.globalAlpha = k < .2 ? k / .2 : Math.max(0, 1 - (k - .4) / .7); c.textAlign = 'center'; c.lineWidth = 10; c.strokeStyle = '#fff'; c.font = '900 64px ' + FONT; const y = sy + 260 - k * 120; c.strokeText(f.txt, RW / 2, y); c.fillStyle = f.color; c.fillText(f.txt, RW / 2, y); if (f.extra) { c.font = '900 32px ' + FONT; f.extra.split('\n').forEach((l, i) => { c.strokeText(l, RW / 2, y + 46 + i * 38); c.fillStyle = '#c27a00'; c.fillText(l, RW / 2, y + 46 + i * 38); }); } c.globalAlpha = 1; } else recFx.float = null; }
+  // confetti
+  recFx.conf = recFx.conf.filter(p => { const k = (now - p.t0) / 1000; if (k > 1.6) return false; c.fillStyle = p.c; c.save(); c.translate(p.x + p.vx * k, p.y + p.vy * k + 900 * k * k); c.rotate(p.r + k * 8); c.fillRect(-8, -12, 16, 24); c.restore(); return true; });
+  // result card when the day is over
+  if (state === 'over') {
+    c.fillStyle = 'rgba(253,231,239,.9)'; c.fillRect(0, 0, RW, RH);
+    c.fillStyle = '#fff'; rr(c, 60, 360, RW - 120, 520, 44); c.fill();
+    c.textAlign = 'center'; c.fillStyle = '#ff6f9f'; c.font = '900 56px ' + FONT; wrap(c, $('oTitle').textContent, RW / 2, 460, RW - 180, 62, 2);
+    c.fillStyle = '#4a2a3a'; c.font = '900 96px ' + FONT; c.fillText('🪙 ' + $('rC').textContent, RW / 2, 650);
+    c.font = '800 34px ' + FONT; c.fillStyle = '#9a7486'; c.fillText('🎂 ' + $('rS').textContent + ' · ⭐ ' + $('rP').textContent + ' ' + t('perfectL'), RW / 2, 730);
+    c.fillStyle = '#c27a00'; c.font = '900 32px ' + FONT; c.fillText($('oBest').textContent, RW / 2, 810);
+  }
+  // link plate
+  c.fillStyle = '#ff6f9f'; rr(c, 60, RH - 170, RW - 120, 104, 52); c.fill();
+  c.fillStyle = '#fff'; c.textAlign = 'center'; c.font = '900 44px ' + FONT; c.fillText('▶ ' + (lang === 'uz' ? 'O‘yna: ' : 'Играй: ') + REC_LINK, RW / 2, RH - 103);
+  c.fillStyle = '#9a7486'; c.font = '800 26px ' + FONT; c.fillText(lang === 'uz' ? 'Bepul · telefonda · Kasb Pro' : 'Бесплатно · на телефоне · Kasb Pro', RW / 2, RH - 30);
+  if ((now / 500 | 0) % 2) { c.fillStyle = '#e2365b'; c.beginPath(); c.arc(36, 36, 11, 0, 7); c.fill(); }
+}
+function recStart() {
+  if (rec.on) return;
+  if (!recSupported()) { floatText(t('recNo'), '#e2365b'); return; }
+  if (state !== 'play') { $('dayNote').textContent = t('recPlay'); return; }
+  audio();
+  if (!rec.cv) { rec.cv = document.createElement('canvas'); rec.cv.width = RW; rec.cv.height = RH; rec.cx = rec.cv.getContext('2d'); }
+  ['face', 'want', 'cake'].forEach(svgPic); recCompose();
+  const stream = rec.cv.captureStream(30);
+  try { if (AC && OUT) { if (!rec.dest) { rec.dest = AC.createMediaStreamDestination(); OUT.connect(rec.dest); } rec.dest.stream.getAudioTracks().forEach(tr => stream.addTrack(tr)); } } catch (e) {}
+  const mime = recMime(); rec.ext = mime.includes('mp4') ? 'mp4' : 'webm';
+  try { rec.mr = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 2.2e6 } : { videoBitsPerSecond: 2.2e6 }); }
+  catch (e) { try { rec.mr = new MediaRecorder(stream); rec.ext = 'webm'; } catch (e2) { return; } }
+  rec.chunks = []; rec.t0 = performance.now(); rec.on = true; rec.overT = 0;
+  rec.mr.ondataavailable = e => { if (e.data && e.data.size) rec.chunks.push(e.data); };
+  rec.mr.onstop = recDone;
+  rec.mr.start(1000);
+  rec.timer = setInterval(recTick, 1000 / 30);
+  $('recBtn').classList.add('on');
+}
+function recStop() {
+  if (!rec.on) return; rec.on = false; clearInterval(rec.timer);
+  $('recBtn').classList.remove('on'); $('recBtn').textContent = '⏺';
+  try { rec.mr.stop(); } catch (e) { recDone(); }
+}
+function recTick() {
+  if (!rec.on) return;
+  recCompose();
+  const s = (performance.now() - rec.t0) / 1000;
+  $('recBtn').textContent = '■' + (s / 60 | 0) + ':' + String(s % 60 | 0).padStart(2, '0');
+  if (state === 'over') { if (!rec.overT) rec.overT = performance.now(); if (performance.now() - rec.overT > 3500) recStop(); } // keep the result card for 3.5 s
+  else if (state !== 'play') recStop();
+  if (s >= REC_MAX) recStop();
+}
+function recDone() {
+  const type = rec.ext === 'mp4' ? 'video/mp4' : 'video/webm';
+  rec.blob = new Blob(rec.chunks, { type }); rec.chunks = [];
+  if (!rec.blob.size) return;
+  if (rec.url) URL.revokeObjectURL(rec.url);
+  rec.url = URL.createObjectURL(rec.blob);
+  if (state === 'play') { recPaused = true; }
+  const v = $('recVid'); v.src = rec.url;
+  $('recInfo').textContent = Math.round((performance.now() - rec.t0) / 1000) + (lang === 'uz' ? ' soniya · ' : ' сек · ') + (rec.blob.size / 1048576).toFixed(1) + (lang === 'uz' ? ' MB' : ' МБ');
+  const f = recFile(); $('recShare').style.display = f && navigator.canShare && navigator.canShare({ files: [f] }) ? '' : 'none';
+  $('recBox').classList.remove('hidden');
+}
+let recF = null;
+function recFile() {
+  if (!rec.blob) return null;
+  if (!recF || recF._b !== rec.blob) { try { recF = new File([rec.blob], 'tortik-studiya-' + Date.now() + '.' + rec.ext, { type: rec.blob.type }); recF._b = rec.blob; } catch (e) { recF = null; } }
+  return recF;
+}
+$('recBtn').onclick = () => { audio(); rec.on ? recStop() : recStart(); };
+$('recSave').onclick = () => { const a = document.createElement('a'); a.href = rec.url; a.download = (recFile() || {}).name || 'tortik-studiya.' + rec.ext; document.body.appendChild(a); a.click(); a.remove(); };
+$('recShare').onclick = async () => { const f = recFile(); if (!f) return; try { await navigator.share({ files: [f], title: lang === 'uz' ? 'Tortik studiyasi' : 'Тортик-студия', text: (lang === 'uz' ? 'Bepul o‘yna: ' : 'Играй бесплатно: ') + 'https://' + REC_LINK }); } catch (e) {} };
+$('recClose').onclick = () => { $('recBox').classList.add('hidden'); $('recVid').pause(); recPaused = false; last = performance.now(); };
+
 window.__bank = v => { bank = v; saveBank(); render(); };
-window.__tort = { endNow: () => end(true), get order() { return order; }, get cur() { return cur; }, start, serve, choose, get coins() { return coins; } };
+window.__tort = { recStart, recStop, get rec() { return rec; }, endNow: () => end(true), get order() { return order; }, get cur() { return cur; }, start, serve, choose, get coins() { return coins; } };
 })();
 </script>
 </body>
