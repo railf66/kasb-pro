@@ -182,7 +182,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="menu" class="screen">
   <div class="card">
     <div class="logo">СТАЛЬНОЙ<br>ДВОР<span>3 ЭТАПА · БОССЫ · МАГАЗИН</span></div>
-    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 19.11 · r3</div>
+    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 19.11 · r4</div>
     <p class="sub">Ржавые роботы захватили склад, город и завод. Пройдите три этапа и победите босса в конце каждого.<br>Или выберите «Схватку»: 3 минуты боя на счёт.</p>
     <div class="diff" id="modeSel"><button data-m="campaign">Кампания</button><button data-m="skirmish">Схватка</button><button data-m="online">🌐 Онлайн</button></div>
     <div id="netBox" class="hidden"><label class="help" style="display:block;margin:4px 0">Ваше имя в игре</label><input id="nick" maxlength="16" autocomplete="off"></div>
@@ -277,7 +277,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 
 <script>
 // auto-update: phones and Telegram keep old copies of the page; compare the build mark with the server copy and reload once
-window.GAME_BUILD = '2026-11-19-r3';
+window.GAME_BUILD = '2026-11-19-r4';
 // visit counter: where the player came from (?from=yt on the Shorts link, else by referrer); "u=1" = first open today on this device
 (function () {
   try {
@@ -1990,7 +1990,28 @@ $('shopBack').onclick = () => { $('shop').classList.add('hidden'); $('menu').cla
 })();
 updateMenu();
 $('toMenu').onclick = () => { state = 'menu'; if (curMap !== STAGES[stage].map) buildMap(STAGES[stage].map); $('over').classList.add('hidden'); $('menu').classList.remove('hidden'); updateMenu(); };
-$('play').onclick = () => { if (window.sdHit) sdHit('play'); startRound(); }; $('again').onclick = () => { if (window.sdHit) sdHit('play'); startRound(); };
+$('play').onclick = () => { if (window.sdHit) sdHit('play'); startRound(); };
+// first visit from the YouTube Shorts link: skip the menu and start campaign stage 1 at once;
+// later visits show the menu as usual (the pause button still leads to the menu)
+(function autoStartFromShorts() {
+  try {
+    if (window.SD_SRC !== 'yt' || new URLSearchParams(location.search).get('server')) return;
+    const fresh = !localStorage.getItem('sd_auto') && !localStorage.getItem('sd_coins');
+    if (!fresh && !sessionStorage.getItem('sd_auto_s')) return; // same tab reload (e.g. auto-update) still starts the game
+    localStorage.setItem('sd_auto', '1'); sessionStorage.setItem('sd_auto_s', '1');
+    mode = 'campaign'; stage = 0;
+    setTimeout(() => {
+      if (window.sdHit) sdHit('play'); startRound();
+      // sound, full screen and landscape need the player's first touch
+      const once = () => {
+        removeEventListener('pointerdown', once, true); removeEventListener('keydown', once, true);
+        audioInit();
+        if (isTouch) { try { document.documentElement.requestFullscreen?.().catch(() => {}); screen.orientation?.lock?.('landscape').catch(() => {}); } catch (e) {} }
+      };
+      addEventListener('pointerdown', once, true); addEventListener('keydown', once, true);
+    }, 400);
+  } catch (e) {}
+})(); $('again').onclick = () => { if (window.sdHit) sdHit('play'); startRound(); };
 
 const tl = $('touch');
 function btn(id, down, up) {
