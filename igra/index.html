@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#0b0f14">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Стальной двор</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -179,6 +182,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="menu" class="screen">
   <div class="card">
     <div class="logo">СТАЛЬНОЙ<br>ДВОР<span>3 ЭТАПА · БОССЫ · МАГАЗИН</span></div>
+    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 19.11 · новые руки</div>
     <p class="sub">Ржавые роботы захватили склад, город и завод. Пройдите три этапа и победите босса в конце каждого.<br>Или выберите «Схватку»: 3 минуты боя на счёт.</p>
     <div class="diff" id="modeSel"><button data-m="campaign">Кампания</button><button data-m="skirmish">Схватка</button><button data-m="online">🌐 Онлайн</button></div>
     <div id="netBox" class="hidden"><label class="help" style="display:block;margin:4px 0">Ваше имя в игре</label><input id="nick" maxlength="16" autocomplete="off"></div>
@@ -271,6 +275,19 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
   </div>
 </div>
 
+<script>
+// auto-update: phones and Telegram keep old copies of the page; compare the build mark with the server copy and reload once
+window.GAME_BUILD = '2026-11-19-r2';
+(function () {
+  try {
+    fetch(location.pathname + '?nocache=' + Date.now(), { cache: 'no-store' }).then(r => r.text()).then(t => {
+      const m = t.match(/GAME_BUILD = '([^']+)'/); if (!m || m[1] === window.GAME_BUILD) return;
+      const k = 'sd_upd_' + m[1]; if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1');
+      location.replace(location.pathname + '?v=' + encodeURIComponent(m[1]) + location.hash);
+    }).catch(() => {});
+  } catch (e) {}
+})();
+</script>
 <script type="module">
 import * as THREE from './three.module.min.js';
 
@@ -843,13 +860,13 @@ function gunModel(kind) {
     const Y = V(o.axis).normalize(), X = V(o.palm).negate(); X.addScaledVector(Y, -X.dot(Y)).normalize();
     let Z = new THREE.Vector3().crossVectors(X, Y); if (o.mirror) Z.negate();
     const h = new THREE.Group(); h.matrixAutoUpdate = false;
-    h.matrix.makeBasis(X.clone().multiplyScalar(1.15), Y.clone().multiplyScalar(1.15), Z.clone().multiplyScalar(1.15)).setPosition(V(o.p)); g.add(h);
-    const r = o.r, Rr = r + .012, fr = .0095;
+    h.matrix.makeBasis(X.clone().multiplyScalar(1.35), Y.clone().multiplyScalar(1.35), Z.clone().multiplyScalar(1.35)).setPosition(V(o.p)); g.add(h);
+    const r = o.r, Rr = r + .014, fr = .0122;
     const at = (th, y, rad = Rr) => new THREE.Vector3(Math.cos(th) * rad, y, Math.sin(th) * rad);
     // palm / back of the hand
-    const palm = new THREE.Mesh(capGeo(.026, .045), M.glove); palm.scale.set(.75, 1, 1.05); palm.position.set(-Rr - .012, 0, .012); h.add(palm);
+    const palm = new THREE.Mesh(capGeo(.031, .05), M.glove); palm.scale.set(.8, 1, 1.1); palm.position.set(-Rr - .012, 0, .012); h.add(palm);
     // fingers: index..little finger, 3 phalanges each, curled over the part
-    const fy = [.03, .01, -.01, -.029], fl = [1, 1.04, .97, .82];
+    const fy = [.034, .0115, -.011, -.032], fl = [1, 1.04, .97, .84];
     fy.forEach((y, k) => {
       const a0 = 2.55, span = 2.3 * fl[k], th = [a0, a0 - span * .4, a0 - span * .75, a0 - span];
       const pts = th.map(t => at(t, y)); pts[0] = new THREE.Vector3(-Rr - .004, y, .03);
@@ -858,20 +875,21 @@ function gunModel(kind) {
     });
     // thumb from the base of the palm round the other side, on top of the fingers
     const t0 = new THREE.Vector3(-Rr - .01, .025, -.022), t1 = at(-2.4, .05, Rr + .002), t2 = at(-1.55, .055, Rr), t3 = at(-.95, .052, Rr);
-    seg(h, t0, t1, .012, M.glove); seg(h, t1, t2, .0115, M.glove); seg(h, t2, t3, .0105, M.gloveTip);
+    seg(h, t0, t1, .0155, M.glove); seg(h, t1, t2, .014, M.glove); seg(h, t2, t3, .0128, M.gloveTip);
     // wrist + cuff (in hand space), then the sleeve in gun space towards the elbow
-    const w0 = new THREE.Vector3(-Rr - .03, -.035, .0), w1 = new THREE.Vector3(-Rr - .07, -.075, -.005);
-    seg(h, w0, w1, .024, M.glove);
+    const w0 = new THREE.Vector3(-Rr - .028, -.03, .004), w1 = new THREE.Vector3(-Rr - .05, -.058, .0);
+    seg(h, w0, w1, .028, M.glove);
     // h.matrix already set
-    const wW = w1.clone().applyMatrix4(h.matrix), cuffEnd = w1.clone().add(new THREE.Vector3(-.035, -.035, 0)).applyMatrix4(h.matrix);
+    const wW = w1.clone().applyMatrix4(h.matrix), cuffEnd = w1.clone().add(new THREE.Vector3(-.022, -.03, 0)).applyMatrix4(h.matrix);
     const el = V(o.elbow);
-    seg(g, wW, cuffEnd, .031, M.cuff);
+    seg(g, wW, cuffEnd, .036, M.cuff);
     const d = el.clone().sub(cuffEnd), L = d.length();
-    const sl = new THREE.Mesh(new THREE.CylinderGeometry(.034, .058, L, 14, 1, true), M.sleeve);
-    sl.position.copy(cuffEnd).addScaledVector(d, .5); sl.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), d.clone().normalize()); g.add(sl);
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(.034, .006, 6, 16), M.sleeve); rim.position.copy(cuffEnd); rim.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), d.clone().normalize()); g.add(rim);
+    // forearm-shaped sleeve: thin at the wrist, muscle bulge, then towards the elbow (lathe profile, not a tube)
+    const prf = [[.036, 0], [.042, .06], [.055, .22], [.066, .5], [.07, .75], [.068, 1]].map(([rr, t]) => new THREE.Vector2(rr * 1.2, t * L));
+    const sl = new THREE.Mesh(new THREE.LatheGeometry(prf, 16), M.sleeve);
+    sl.position.copy(cuffEnd); sl.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize()); g.add(sl);
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(.043, .007, 6, 16), M.sleeveDark); rim.position.copy(cuffEnd); rim.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), d.clone().normalize()); g.add(rim);
     // folds on the sleeve
-    [.22, .45].forEach(k => { const f2 = new THREE.Mesh(new THREE.TorusGeometry(.036 + k * .024, .005, 5, 16), M.sleeveDark); f2.position.copy(cuffEnd).addScaledVector(d, k); f2.quaternion.copy(rim.quaternion); g.add(f2); });
   };
   let fz = -.7;
   if (kind === 'rifle') {
@@ -891,7 +909,7 @@ function gunModel(kind) {
     prof([[-.37, -.1], [-.39, -.1], [-.39, .03], [-.37, .03]], .06, M.poly, 0, .005);
     cyl(.008, .05, .2, .03, M.bright, .045).rotation.set(0, 0, Math.PI / 2); box(.004, .012, .05, .1, .01, M.bright, .036);
     arm({ p: [0, -.105, -.015], axis: [0, .98, -.2], palm: [.35, 0, 1], r: .026, elbow: [.24, -.46, .52] });
-    arm({ p: [0, -.01, -.4], axis: [0, 0, -1], palm: [-1, -.45, 0], r: .04, elbow: [-.6, -.3, .1], mirror: true }); fz = -.84;
+    arm({ p: [0, -.01, -.4], axis: [0, 0, -1], palm: [-1, -.45, 0], r: .04, elbow: [-.32, -.62, -.08], mirror: true }); fz = -.84;
   } else if (kind === 'pistol') {
     prof([[-.06, 0], [.17, 0], [.175, .05], [-.055, .05]], .05, M.steel, 0, .006);
     for (let i = 0; i < 6; i++) box(.052, .03, .004, -.045 + i * .01, .028, M.dark);
@@ -918,7 +936,7 @@ function gunModel(kind) {
     prof([[-.14, -.045], [-.22, -.07], [-.22, -.02], [-.14, -.01]], .06, M.hole, 0, .004);
     [[-.02, .5], [.02, .5]].forEach(([x]) => { const l = cyl(.006, .26, .62, -.03, M.steel, x); l.position.z = -.75; });
     arm({ p: [0, -.088, -.014], axis: [0, .98, -.2], palm: [.35, 0, 1], r: .025, elbow: [.24, -.46, .52] });
-    arm({ p: [0, -.004, -.48], axis: [0, 0, -1], palm: [-1, -.45, 0], r: .036, elbow: [-.6, -.3, .08], mirror: true }); fz = -1.17;
+    arm({ p: [0, -.004, -.48], axis: [0, 0, -1], palm: [-1, -.45, 0], r: .036, elbow: [-.32, -.62, -.14], mirror: true }); fz = -1.17;
   } else if (kind === 'gl') {
     cyl(.072, .15, .06, 0, M.olive, 0, 18);
     for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; const h = cyl(.018, .152, .06, Math.sin(a) * .045, M.hole, Math.cos(a) * .045, 10); }
@@ -931,7 +949,7 @@ function gunModel(kind) {
     prof([[-.03, -.04], [.0, -.07], [-.02, -.08]], .02, M.dark);
     [-.02, .02].forEach(x => { const r = cyl(.006, .3, -.16, .0, M.steel, x); }); box(.06, .08, .015, -.31, -.02, M.poly);
     arm({ p: [0, -.115, .005], axis: [0, .97, -.24], palm: [.35, 0, 1], r: .026, elbow: [.24, -.48, .5] });
-    arm({ p: [0, -.085, -.32], axis: [0, 1, 0], palm: [-1, 0, .45], r: .022, elbow: [-.6, -.42, .05], mirror: true }); fz = -.47;
+    arm({ p: [0, -.085, -.32], axis: [0, 1, 0], palm: [-1, 0, .45], r: .022, elbow: [-.32, -.66, -.02], mirror: true }); fz = -.47;
   } else if (kind === 'rpg') {
     cyl(.052, 1.0, .1, .06, M.olive, 0, 20);
     [-.35, .55].forEach(f => cyl(.058, .05, f, .06, M.dark, 0, 20)); [.0, .2].forEach(f => cyl(.056, .1, f, .06, M.wood, 0, 20));
@@ -943,7 +961,7 @@ function gunModel(kind) {
     box(.04, .05, .1, .1, .135, M.dark, -.045); cyl(.014, .02, .155, .135, M.glass, -.045); box(.02, .02, .03, .05, .11, M.dark, -.045);
     box(.012, .03, .012, .15, .02, M.bright);
     arm({ p: [0, -.05, -.0025], axis: [0, .97, -.24], palm: [.35, 0, 1], r: .025, elbow: [.24, -.44, .5] });
-    arm({ p: [0, -.045, -.2], axis: [0, 1, 0], palm: [-1, 0, .45], r: .022, elbow: [-.6, -.4, .0], mirror: true }); fz = -.88;
+    arm({ p: [0, -.045, -.2], axis: [0, 1, 0], palm: [-1, 0, .45], r: .022, elbow: [-.32, -.64, .04], mirror: true }); fz = -.88;
   } else if (kind === 'bow') {
     const bow = new THREE.Group(); bow.position.set(-.1, .06, -.42); bow.rotation.set(0, -.55, .28); bow.scale.setScalar(.6); g.add(bow);
     const riserS = new THREE.Shape(); [[-.03, -.16], [.03, -.16], [.05, -.05], [.03, .05], [.035, .16], [-.035, .16], [-.02, .05], [-.04, -.05]].forEach(([a, b], i) => i ? riserS.lineTo(a, b) : riserS.moveTo(a, b));
@@ -965,7 +983,7 @@ function gunModel(kind) {
     [0, 1, 2].forEach(i => { const fl = new THREE.Mesh(new THREE.BoxGeometry(.002, .028, .06), M.red); fl.position.z = .08; fl.rotation.z = i * Math.PI * 2 / 3; arrow.add(fl); });
     bow.updateMatrix();
     const bp = new THREE.Vector3(0, 0, .02).applyMatrix4(bow.matrix), ba = new THREE.Vector3(0, 1, 0).transformDirection(bow.matrix), bpl = new THREE.Vector3(0, 0, 1).transformDirection(bow.matrix);
-    arm({ p: bp.toArray(), axis: ba.toArray(), palm: bpl.toArray(), r: .02, elbow: [-.62, -.32, .12], mirror: true });
+    arm({ p: bp.toArray(), axis: ba.toArray(), palm: bpl.toArray(), r: .02, elbow: [-.4, -.6, .1], mirror: true });
     g.userData.bowStr = sgeo; g.userData.arrow = arrow; fz = -.75;
   }
   const flash = new THREE.Mesh(new THREE.CircleGeometry(.1, 5), new THREE.MeshBasicMaterial({ color: 0xffc860, transparent: true, opacity: .85, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false }));
