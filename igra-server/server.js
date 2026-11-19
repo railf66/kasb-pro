@@ -42,7 +42,7 @@ function broadcast(room, obj, except) {
 // stored in /var/tmp (writable for the service user, survives restarts and reboots)
 const fs = require('fs');
 const STATS_FILE = process.env.STATS_FILE || '/var/tmp/sd-game-stats.json';
-const STATS_KEY_SHA = '051710fa3c89e34cefab999ac8934ff93bc092b9a7218aa15b64973571889044';
+const STATS_KEY_SHA = '2e20b1773f9bcd536af494a2c2cd699f329c671af1c34726819a075ae7679e42';
 const SRC_NAMES = { yt: 'YouTube', tg: 'Telegram', ig: 'Instagram', tt: 'TikTok', fb: 'Facebook', kp: 'kasbpro.uz', web: 'Другие сайты', direct: 'Прямой заход' };
 let stats = { days: {} }, statsDirty = false;
 try { stats = JSON.parse(fs.readFileSync(STATS_FILE, 'utf8')); if (!stats.days) stats.days = {}; } catch (e) {}
