@@ -38,8 +38,68 @@ function broadcast(room, obj, except) {
   for (const p of room.players.values()) if (p !== except && !p.sock.destroyed) { try { p.sock.write(f); } catch (e) {} }
 }
 
+// ---------- visit counter: /hit from the game page, /stats for the owner ----------
+// stored in /var/tmp (writable for the service user, survives restarts and reboots)
+const fs = require('fs');
+const STATS_FILE = process.env.STATS_FILE || '/var/tmp/sd-game-stats.json';
+const STATS_KEY_SHA = '051710fa3c89e34cefab999ac8934ff93bc092b9a7218aa15b64973571889044';
+const SRC_NAMES = { yt: 'YouTube', tg: 'Telegram', ig: 'Instagram', tt: 'TikTok', fb: 'Facebook', kp: 'kasbpro.uz', web: 'Другие сайты', direct: 'Прямой заход' };
+let stats = { days: {} }, statsDirty = false;
+try { stats = JSON.parse(fs.readFileSync(STATS_FILE, 'utf8')); if (!stats.days) stats.days = {}; } catch (e) {}
+function saveStats() { if (!statsDirty) return; statsDirty = false; try { fs.writeFileSync(STATS_FILE + '.tmp', JSON.stringify(stats)); fs.renameSync(STATS_FILE + '.tmp', STATS_FILE); } catch (e) {} }
+setInterval(saveStats, 20000);
+process.on('SIGTERM', () => { saveStats(); process.exit(0); });
+const dayKey = (t = Date.now()) => new Date(t + 5 * 3600e3).toISOString().slice(0, 10); // Tashkent date
+const ipHits = new Map();
+setInterval(() => ipHits.clear(), 60000);
+function countHit(q, ip) {
+  const c = (ipHits.get(ip) || 0) + 1; ipHits.set(ip, c); if (c > 20) return; // flood guard per IP per minute
+  const e = q.get('e') === 'play' ? 'play' : 'open';
+  let src = String(q.get('src') || 'direct').toLowerCase().replace(/[^a-z]/g, '').slice(0, 8); if (!SRC_NAMES[src]) src = 'web';
+  const uniq = q.get('u') === '1';
+  const d = stats.days[dayKey()] || (stats.days[dayKey()] = { open: 0, uniq: 0, play: 0, src: {} });
+  const s = d.src[src] || (d.src[src] = { open: 0, uniq: 0, play: 0 });
+  d[e]++; s[e]++; if (uniq && e === 'open') { d.uniq++; s.uniq++; }
+  const keys = Object.keys(stats.days).sort(); while (keys.length > 120) delete stats.days[keys.shift()];
+  statsDirty = true;
+}
+function statsPage(online) {
+  const esc = v => String(v).replace(/[<>&]/g, '');
+  const days = Object.keys(stats.days).sort().reverse().slice(0, 30);
+  const tot = { open: 0, uniq: 0, play: 0 }, totSrc = {};
+  for (const k of Object.keys(stats.days)) { const d = stats.days[k]; tot.open += d.open; tot.uniq += d.uniq; tot.play += d.play; for (const s in d.src) { const t = totSrc[s] || (totSrc[s] = { open: 0, uniq: 0, play: 0 }); t.open += d.src[s].open; t.uniq += d.src[s].uniq; t.play += d.src[s].play; } }
+  const today = stats.days[dayKey()] || { open: 0, uniq: 0, play: 0, src: {} };
+  const yt = (d) => (d.src && d.src.yt) ? d.src.yt.uniq : 0;
+  const srcRows = (src) => Object.keys(src).sort((a, b) => src[b].uniq - src[a].uniq).map(s => `<tr><td>${esc(SRC_NAMES[s] || s)}</td><td>${src[s].uniq}</td><td>${src[s].open}</td><td>${src[s].play}</td></tr>`).join('') || '<tr><td colspan=4>пока нет</td></tr>';
+  const dayRows = days.map(k => { const d = stats.days[k]; return `<tr><td>${k.slice(8)}.${k.slice(5, 7)}</td><td>${d.uniq}</td><td>${d.open}</td><td>${d.play}</td><td>${yt(d)}</td></tr>`; }).join('') || '<tr><td colspan=5>пока нет</td></tr>';
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Стальной двор: статистика</title>
+<style>body{font:15px system-ui,sans-serif;margin:0;padding:14px;background:#0b0f14;color:#e8edf2}h1{font-size:19px;margin:0 0 10px}h2{font-size:16px;margin:20px 0 6px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.c{background:#18202a;border-radius:12px;padding:10px}.c b{display:block;font-size:26px}.c span{font-size:12px;opacity:.7}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:6px 4px;border-bottom:1px solid #253040;text-align:right}td:first-child,th:first-child{text-align:left}th{font-size:12px;opacity:.7;font-weight:600}
+p{font-size:12px;opacity:.6}</style></head><body>
+<h1>Стальной двор · статистика</h1>
+<div class="cards"><div class="c"><b>${today.uniq}</b><span>человек сегодня</span></div><div class="c"><b>${yt(today)}</b><span>из них с YouTube</span></div>
+<div class="c"><b>${today.play}</b><span>начали играть сегодня</span></div><div class="c"><b>${online}</b><span>сейчас в онлайн-режиме</span></div></div>
+<h2>Сегодня по источникам</h2><table><tr><th>Откуда</th><th>Людей</th><th>Заходов</th><th>Игр</th></tr>${srcRows(today.src)}</table>
+<h2>По дням</h2><table><tr><th>День</th><th>Людей</th><th>Заходов</th><th>Игр</th><th>YouTube</th></tr>${dayRows}</table>
+<h2>За всё время</h2><table><tr><th>Откуда</th><th>Людей</th><th>Заходов</th><th>Игр</th></tr>${srcRows(totSrc)}<tr><td><b>Всего</b></td><td><b>${tot.uniq}</b></td><td><b>${tot.open}</b></td><td><b>${tot.play}</b></td></tr></table>
+<p>«Людей» — сколько разных телефонов/компьютеров открыли игру за день. «Заходов» — сколько раз открывали. «Игр» — сколько раз нажали «Играть». Время ташкентское. Обновите страницу, чтобы увидеть свежие цифры.</p>
+</body></html>`;
+}
+
 const server = http.createServer((req, res) => {
   let n = 0; for (const r of rooms.values()) n += r.players.size;
+  const u = new URL(req.url, 'http://x');
+  if (u.pathname === '/hit') {
+    const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+    countHit(u.searchParams, ip);
+    res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' }); res.end(); return;
+  }
+  if (u.pathname === '/stats') {
+    const k = crypto.createHash('sha256').update(String(u.searchParams.get('k') || '')).digest('hex');
+    if (k !== STATS_KEY_SHA) { res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('Нет доступа\n'); return; }
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(statsPage(n)); return;
+  }
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
   res.end('Стальной двор: сервер работает. Игроков онлайн: ' + n + '\n');
 });

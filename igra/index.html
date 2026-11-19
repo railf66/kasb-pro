@@ -182,7 +182,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="menu" class="screen">
   <div class="card">
     <div class="logo">СТАЛЬНОЙ<br>ДВОР<span>3 ЭТАПА · БОССЫ · МАГАЗИН</span></div>
-    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 19.11 · новые руки</div>
+    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 19.11 · r3</div>
     <p class="sub">Ржавые роботы захватили склад, город и завод. Пройдите три этапа и победите босса в конце каждого.<br>Или выберите «Схватку»: 3 минуты боя на счёт.</p>
     <div class="diff" id="modeSel"><button data-m="campaign">Кампания</button><button data-m="skirmish">Схватка</button><button data-m="online">🌐 Онлайн</button></div>
     <div id="netBox" class="hidden"><label class="help" style="display:block;margin:4px 0">Ваше имя в игре</label><input id="nick" maxlength="16" autocomplete="off"></div>
@@ -260,7 +260,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
       <button class="btn2" id="recShare">📤 ПОДЕЛИТЬСЯ (YouTube, Telegram)</button>
       <button class="btn2" id="recSave">💾 СОХРАНИТЬ</button>
     </div>
-    <p class="help">Видео вертикальное, как раз для YouTube Shorts. В описании оставьте ссылку: kasbpro.uz/igra</p>
+    <p class="help">Видео вертикальное, как раз для YouTube Shorts. В описании оставьте ссылку: kasbpro.uz/play</p>
     <button class="btn" id="recClose" style="margin-top:10px">ПРОДОЛЖИТЬ ИГРУ</button>
   </div>
 </div>
@@ -277,7 +277,25 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 
 <script>
 // auto-update: phones and Telegram keep old copies of the page; compare the build mark with the server copy and reload once
-window.GAME_BUILD = '2026-11-19-r2';
+window.GAME_BUILD = '2026-11-19-r3';
+// visit counter: where the player came from (?from=yt on the Shorts link, else by referrer); "u=1" = first open today on this device
+(function () {
+  try {
+    const q = new URLSearchParams(location.search); let src = (q.get('from') || '').toLowerCase();
+    if (!src) {
+      let h = ''; try { h = new URL(document.referrer).hostname; } catch (e) {}
+      src = !h || h === location.hostname ? 'direct' : /youtu/.test(h) ? 'yt' : /t\.me|telegram/.test(h) ? 'tg' : /instagram/.test(h) ? 'ig' : /tiktok/.test(h) ? 'tt' : /facebook|fb\./.test(h) ? 'fb' : /kasbpro/.test(h) ? 'kp' : 'web';
+      if (src === 'direct' && /Telegram/i.test(navigator.userAgent + (window.TelegramWebviewProxy ? 'Telegram' : ''))) src = 'tg';
+    }
+    if (q.get('v') && !q.get('from')) { const prev = sessionStorage.getItem('sd_src'); if (prev) src = prev; } // auto-update reload keeps the source
+    sessionStorage.setItem('sd_src', src); window.SD_SRC = src;
+    const today = new Date(Date.now() + 5 * 3600e3).toISOString().slice(0, 10); let u = 0;
+    try { if (localStorage.getItem('sd_seen') !== today) { localStorage.setItem('sd_seen', today); u = 1; } } catch (e) {}
+    const base = q.get('server') ? q.get('server').replace(/^ws/, 'http') : 'https://45-130-148-137.sslip.io/';
+    window.sdHit = (e) => { try { fetch(base.replace(/\/?$/, '/') + 'hit?e=' + e + '&src=' + src + (e === 'open' ? '&u=' + u : ''), { mode: 'no-cors', keepalive: true }).catch(() => {}); } catch (err) {} };
+    if (!sessionStorage.getItem('sd_hit')) { sessionStorage.setItem('sd_hit', '1'); window.sdHit('open'); }
+  } catch (e) {}
+})();
 (function () {
   try {
     fetch(location.pathname + '?nocache=' + Date.now(), { cache: 'no-store' }).then(r => r.text()).then(t => {
@@ -1972,7 +1990,7 @@ $('shopBack').onclick = () => { $('shop').classList.add('hidden'); $('menu').cla
 })();
 updateMenu();
 $('toMenu').onclick = () => { state = 'menu'; if (curMap !== STAGES[stage].map) buildMap(STAGES[stage].map); $('over').classList.add('hidden'); $('menu').classList.remove('hidden'); updateMenu(); };
-$('play').onclick = startRound; $('again').onclick = startRound;
+$('play').onclick = () => { if (window.sdHit) sdHit('play'); startRound(); }; $('again').onclick = () => { if (window.sdHit) sdHit('play'); startRound(); };
 
 const tl = $('touch');
 function btn(id, down, up) {
@@ -2075,7 +2093,7 @@ function recFile() {
   return recF;
 }
 $('recSave').onclick = () => { const a = document.createElement('a'); a.href = rec.url; a.download = (recFile() || {}).name || 'stalnoy-dvor.' + rec.ext; document.body.appendChild(a); a.click(); a.remove(); };
-$('recShare').onclick = async () => { const f = recFile(); if (!f) return; try { await navigator.share({ files: [f], title: 'Стальной двор', text: 'Играй бесплатно: https://kasbpro.uz/igra/' }); } catch (e) {} };
+$('recShare').onclick = async () => { const f = recFile(); if (!f) return; try { await navigator.share({ files: [f], title: 'Стальной двор', text: 'Играй бесплатно: https://kasbpro.uz/play' }); } catch (e) {} };
 $('recClose').onclick = () => { $('recBox').classList.add('hidden'); $('pause').classList.add('hidden'); $('recVid').pause(); if (state === 'play') { paused = false; if (!isTouch) lockPointer(); clock.getDelta(); } };
 $('recBtn').onclick = () => { if (rec.on) { recStop(); return; } $('pause').classList.add('hidden'); paused = false; if (!isTouch) lockPointer(); clock.getDelta(); recStart(); };
 btn('bRec', () => recToggle());
@@ -2093,7 +2111,7 @@ function recCompose() {
   c.strokeStyle = '#fff'; c.lineWidth = 3; const mx = RW / 2, my = gy + RW / 2;
   c.beginPath(); c.moveTo(mx - 18, my); c.lineTo(mx - 7, my); c.moveTo(mx + 7, my); c.lineTo(mx + 18, my); c.moveTo(mx, my - 18); c.lineTo(mx, my - 7); c.moveTo(mx, my + 7); c.lineTo(mx, my + 18); c.stroke();
   // watermark on the picture
-  c.font = 'bold 26px system-ui,sans-serif'; c.textAlign = 'right'; c.fillStyle = 'rgba(255,255,255,.55)'; c.fillText('kasbpro.uz/igra', RW - 18, gy + RW - 18);
+  c.font = 'bold 26px system-ui,sans-serif'; c.textAlign = 'right'; c.fillStyle = 'rgba(255,255,255,.55)'; c.fillText('kasbpro.uz/play', RW - 18, gy + RW - 18);
   // top: logo + mode
   c.textAlign = 'center'; c.fillStyle = '#ff8a3d'; c.font = '900 76px system-ui,sans-serif'; c.fillText('СТАЛЬНОЙ ДВОР', RW / 2, 130);
   c.fillStyle = '#c9d3dd'; c.font = '600 32px system-ui,sans-serif';
@@ -2109,7 +2127,7 @@ function recCompose() {
   c.fillStyle = '#c9d3dd'; c.font = '600 28px system-ui,sans-serif'; c.textAlign = 'center'; c.fillText(W[wi].name + (P.stance ? ' · ' + STANCE_NAME[P.stance] : ''), RW / 2, y2 + 82);
   // call to action
   c.fillStyle = '#ff8a3d'; rr(70, RH - 128, RW - 140, 86, 43); c.fill();
-  c.fillStyle = '#111'; c.font = '900 40px system-ui,sans-serif'; c.fillText('▶ Играй: kasbpro.uz/igra', RW / 2, RH - 71);
+  c.fillStyle = '#111'; c.font = '900 40px system-ui,sans-serif'; c.fillText('▶ Играй: kasbpro.uz/play', RW / 2, RH - 71);
   // red dot
   if (rec.on && (performance.now() / 500 | 0) % 2) { c.fillStyle = '#ff3b3b'; c.beginPath(); c.arc(40, 40, 12, 0, 7); c.fill(); }
 }
