@@ -805,12 +805,17 @@ const GUN = (() => {
     g.fillStyle = '#6b4024'; g.fillRect(0, 0, s, s);
     for (let i = 0; i < 70; i++) { g.strokeStyle = `rgba(${30 + Math.random() * 40},${15 + Math.random() * 20},5,${.25 + Math.random() * .35})`; g.lineWidth = 1 + Math.random() * 2.5; const y = Math.random() * s; g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= s; x += 16) g.lineTo(x, y + Math.sin(x * .05 + i) * 3); g.stroke(); }
   }, 128, 2, 1);
+  const camoTex = tex((g, s) => {
+    g.fillStyle = '#4a5636'; g.fillRect(0, 0, s, s);
+    const cs = ['#3a4229', '#5f6a45', '#2f3523', '#6b6448'];
+    for (let i = 0; i < 46; i++) { g.fillStyle = cs[i % 4]; g.beginPath(); const x = Math.random() * s, y = Math.random() * s, r = 6 + Math.random() * 14; g.ellipse(x, y, r, r * (.5 + Math.random() * .6), Math.random() * 3, 0, 7); g.fill(); }
+  }, 128, 2, 2);
   const gripTex = tex((g, s) => { g.fillStyle = '#1d1f22'; g.fillRect(0, 0, s, s); g.fillStyle = '#34383d'; for (let y = 0; y < s; y += 6) for (let x = (y / 6 % 2) * 3; x < s; x += 6) g.fillRect(x, y, 2, 2); }, 64, 3, 3);
   const M = {
     steel: std(0x34383e, .85, .38), dark: std(0x1c1f23, .7, .5), blued: std(0x232a33, .9, .3), bright: std(0x9aa3ad, .95, .22),
     wood: std(0xffffff, 0, .6, { map: woodTex }), poly: std(0x2a2c2f, 0, .75), grip: std(0xffffff, 0, .85, { map: gripTex }),
     olive: std(0x4f5a36, .1, .7), tan: std(0x8a7650, .05, .7), brass: std(0xc9a227, .9, .3), red: std(0xb3261e, .3, .5),
-    glass: std(0x0d2436, .3, .05, { emissive: 0x061624, emissiveIntensity: .5 }), glove: std(0x23262a, 0, .9), sleeve: std(0x3b4636, 0, .95),
+    glass: std(0x0d2436, .3, .05, { emissive: 0x061624, emissiveIntensity: .5 }), glove: std(0x6e5a3e, .02, .8), gloveTip: std(0x846d4c, .02, .75), cuff: std(0x2a2d24, 0, .85), sleeve: std(0xffffff, 0, .95, { map: camoTex, side: THREE.DoubleSide }), sleeveDark: std(0x2e3628, 0, .95),
     hole: new THREE.MeshBasicMaterial({ color: 0x050505 }),
   };
   return { M };
@@ -828,18 +833,45 @@ function gunModel(kind) {
   const cyl = (r, len, fwd, y, m, x = 0, seg = 16, r2 = r) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(r, r2, len, seg), m); c.rotation.x = Math.PI / 2; c.position.set(x, y, -fwd); g.add(c); return c; };
   const box = (w, h, d, fwd, y, m, x = 0) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, -fwd); g.add(b); return b; };
   const ring = (r, tube, fwd, y, m, arc = Math.PI * 2) => { const t = new THREE.Mesh(new THREE.TorusGeometry(r, tube, 6, 16, arc), m); t.rotation.y = Math.PI / 2; t.position.set(0, y, -fwd); g.add(t); return t; };
-  const hands = (gripF, gripY, foreF, foreY) => {
-    // right glove on the pistol grip + sleeve going back to the camera, left glove under the fore-end
-    const cap = (r, l, m) => new THREE.Mesh(new THREE.CapsuleGeometry(r, l, 3, 8), m);
-    const rh = cap(.032, .05, M.glove); rh.position.set(.012, gripY - .02, -gripF + .01); rh.rotation.x = .35; g.add(rh);
-    const rf = cap(.017, .06, M.glove); rf.position.set(-.028, gripY - .005, -gripF - .02); rf.rotation.set(.35, 0, Math.PI / 2 * .15); g.add(rf);
-    const limb = (a, b, r, m) => { const d = b.clone().sub(a), L = d.length(); const c = cap(r, Math.max(.01, L - r * 2), m); c.position.copy(a).addScaledVector(d, .5); c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); g.add(c); return c; };
-    const wr = new THREE.Vector3(.02, gripY - .06, -gripF + .03);
-    limb(wr, new THREE.Vector3(.2, gripY - .32, -gripF + .5), .045, M.sleeve);
-    if (foreF != null) {
-      const lh = cap(.03, .05, M.glove); lh.position.set(-.01, foreY - .035, -foreF); lh.rotation.set(0, 0, 1.45); g.add(lh);
-      limb(new THREE.Vector3(-.03, foreY - .05, -foreF + .02), new THREE.Vector3(-.34, foreY - .42, -foreF + .55), .042, M.sleeve);
-    }
+  // ---- hands: glove with palm, 4 bent fingers and thumb wrapped round the part, cuff, tapered sleeve going off-screen ----
+  // spec: p = centre of the gripped part, axis = its direction, palm = side of the part where the palm lies,
+  // r = part radius, elbow = where the arm leaves the screen, mirror = left hand
+  const V = (a) => new THREE.Vector3(a[0], a[1], a[2]);
+  const capG = {}; const capGeo = (r, l) => capG[r + '_' + l] || (capG[r + '_' + l] = new THREE.CapsuleGeometry(r, l, 3, 8));
+  const seg = (parent, a, b, r, m) => { const d = b.clone().sub(a), L = d.length(); const c = new THREE.Mesh(capGeo(r, Math.max(.001, L)), m); c.position.copy(a).addScaledVector(d, .5); c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); parent.add(c); return c; };
+  const arm = (o) => {
+    const Y = V(o.axis).normalize(), X = V(o.palm).negate(); X.addScaledVector(Y, -X.dot(Y)).normalize();
+    let Z = new THREE.Vector3().crossVectors(X, Y); if (o.mirror) Z.negate();
+    const h = new THREE.Group(); h.matrixAutoUpdate = false;
+    h.matrix.makeBasis(X.clone().multiplyScalar(1.15), Y.clone().multiplyScalar(1.15), Z.clone().multiplyScalar(1.15)).setPosition(V(o.p)); g.add(h);
+    const r = o.r, Rr = r + .012, fr = .0095;
+    const at = (th, y, rad = Rr) => new THREE.Vector3(Math.cos(th) * rad, y, Math.sin(th) * rad);
+    // palm / back of the hand
+    const palm = new THREE.Mesh(capGeo(.026, .045), M.glove); palm.scale.set(.75, 1, 1.05); palm.position.set(-Rr - .012, 0, .012); h.add(palm);
+    // fingers: index..little finger, 3 phalanges each, curled over the part
+    const fy = [.03, .01, -.01, -.029], fl = [1, 1.04, .97, .82];
+    fy.forEach((y, k) => {
+      const a0 = 2.55, span = 2.3 * fl[k], th = [a0, a0 - span * .4, a0 - span * .75, a0 - span];
+      const pts = th.map(t => at(t, y)); pts[0] = new THREE.Vector3(-Rr - .004, y, .03);
+      for (let q = 0; q < 3; q++) seg(h, pts[q], pts[q + 1], fr * (1 - q * .1), q === 2 ? M.gloveTip : M.glove);
+      const kn = new THREE.Mesh(capGeo(fr * 1.15, .001), M.glove); kn.position.copy(pts[0]); h.add(kn);
+    });
+    // thumb from the base of the palm round the other side, on top of the fingers
+    const t0 = new THREE.Vector3(-Rr - .01, .025, -.022), t1 = at(-2.4, .05, Rr + .002), t2 = at(-1.55, .055, Rr), t3 = at(-.95, .052, Rr);
+    seg(h, t0, t1, .012, M.glove); seg(h, t1, t2, .0115, M.glove); seg(h, t2, t3, .0105, M.gloveTip);
+    // wrist + cuff (in hand space), then the sleeve in gun space towards the elbow
+    const w0 = new THREE.Vector3(-Rr - .03, -.035, .0), w1 = new THREE.Vector3(-Rr - .07, -.075, -.005);
+    seg(h, w0, w1, .024, M.glove);
+    // h.matrix already set
+    const wW = w1.clone().applyMatrix4(h.matrix), cuffEnd = w1.clone().add(new THREE.Vector3(-.035, -.035, 0)).applyMatrix4(h.matrix);
+    const el = V(o.elbow);
+    seg(g, wW, cuffEnd, .031, M.cuff);
+    const d = el.clone().sub(cuffEnd), L = d.length();
+    const sl = new THREE.Mesh(new THREE.CylinderGeometry(.034, .058, L, 14, 1, true), M.sleeve);
+    sl.position.copy(cuffEnd).addScaledVector(d, .5); sl.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), d.clone().normalize()); g.add(sl);
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(.034, .006, 6, 16), M.sleeve); rim.position.copy(cuffEnd); rim.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), d.clone().normalize()); g.add(rim);
+    // folds on the sleeve
+    [.22, .45].forEach(k => { const f2 = new THREE.Mesh(new THREE.TorusGeometry(.036 + k * .024, .005, 5, 16), M.sleeveDark); f2.position.copy(cuffEnd).addScaledVector(d, k); f2.quaternion.copy(rim.quaternion); g.add(f2); });
   };
   let fz = -.7;
   if (kind === 'rifle') {
@@ -858,7 +890,8 @@ function gunModel(kind) {
     prof([[-.12, .035], [-.12, -.045], [-.36, -.1], [-.38, -.1], [-.38, .03], [-.3, .028]], .056, M.wood, 0, .012);
     prof([[-.37, -.1], [-.39, -.1], [-.39, .03], [-.37, .03]], .06, M.poly, 0, .005);
     cyl(.008, .05, .2, .03, M.bright, .045).rotation.set(0, 0, Math.PI / 2); box(.004, .012, .05, .1, .01, M.bright, .036);
-    hands(.01, -.08, .42, -.04); fz = -.84;
+    arm({ p: [0, -.105, -.015], axis: [0, .98, -.2], palm: [.35, 0, 1], r: .026, elbow: [.24, -.46, .52] });
+    arm({ p: [0, -.01, -.4], axis: [0, 0, -1], palm: [-1, -.45, 0], r: .04, elbow: [-.6, -.3, .1], mirror: true }); fz = -.84;
   } else if (kind === 'pistol') {
     prof([[-.06, 0], [.17, 0], [.175, .05], [-.055, .05]], .05, M.steel, 0, .006);
     for (let i = 0; i < 6; i++) box(.052, .03, .004, -.045 + i * .01, .028, M.dark);
@@ -867,7 +900,7 @@ function gunModel(kind) {
     ring(.03, .005, .05, -.04, M.poly, Math.PI); box(.006, .026, .008, .055, -.045, M.bright);
     cyl(.009, .01, .177, .03, M.hole); box(.008, .01, .012, .16, .058, M.dark); box(.026, .01, .012, -.045, .058, M.dark);
     box(.003, .012, .03, .03, .03, M.bright, .026);
-    hands(-.02, -.07, null); fz = -.19;
+    arm({ p: [0, -.092, .015], axis: [0, .97, -.24], palm: [.35, 0, 1], r: .025, elbow: [.24, -.46, .5] }); fz = -.19;
   } else if (kind === 'sniper') {
     prof([[-.08, -.035], [.32, -.035], [.32, .03], [-.08, .03]], .06, M.blued);
     prof([[.32, -.035], [.62, -.02], [.62, .02], [.32, .03]], .066, M.olive, 0, .012);
@@ -884,7 +917,8 @@ function gunModel(kind) {
     prof([[-.08, .03], [-.08, -.035], [-.2, -.08], [-.36, -.11], [-.38, -.11], [-.38, .035], [-.2, .05], [-.12, .045]], .056, M.olive, 0, .012);
     prof([[-.14, -.045], [-.22, -.07], [-.22, -.02], [-.14, -.01]], .06, M.hole, 0, .004);
     [[-.02, .5], [.02, .5]].forEach(([x]) => { const l = cyl(.006, .26, .62, -.03, M.steel, x); l.position.z = -.75; });
-    hands(.0, -.075, .5, -.03); fz = -1.17;
+    arm({ p: [0, -.088, -.014], axis: [0, .98, -.2], palm: [.35, 0, 1], r: .025, elbow: [.24, -.46, .52] });
+    arm({ p: [0, -.004, -.48], axis: [0, 0, -1], palm: [-1, -.45, 0], r: .036, elbow: [-.6, -.3, .08], mirror: true }); fz = -1.17;
   } else if (kind === 'gl') {
     cyl(.072, .15, .06, 0, M.olive, 0, 18);
     for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; const h = cyl(.018, .152, .06, Math.sin(a) * .045, M.hole, Math.cos(a) * .045, 10); }
@@ -896,7 +930,8 @@ function gunModel(kind) {
     prof([[.3, -.03], [.34, -.03], [.34, -.14], [.3, -.14]], .04, M.grip, 0, .008);
     prof([[-.03, -.04], [.0, -.07], [-.02, -.08]], .02, M.dark);
     [-.02, .02].forEach(x => { const r = cyl(.006, .3, -.16, .0, M.steel, x); }); box(.06, .08, .015, -.31, -.02, M.poly);
-    hands(-.0, -.11, .32, -.08); fz = -.47;
+    arm({ p: [0, -.115, .005], axis: [0, .97, -.24], palm: [.35, 0, 1], r: .026, elbow: [.24, -.48, .5] });
+    arm({ p: [0, -.085, -.32], axis: [0, 1, 0], palm: [-1, 0, .45], r: .022, elbow: [-.6, -.42, .05], mirror: true }); fz = -.47;
   } else if (kind === 'rpg') {
     cyl(.052, 1.0, .1, .06, M.olive, 0, 20);
     [-.35, .55].forEach(f => cyl(.058, .05, f, .06, M.dark, 0, 20)); [.0, .2].forEach(f => cyl(.056, .1, f, .06, M.wood, 0, 20));
@@ -907,7 +942,8 @@ function gunModel(kind) {
     prof([[.18, .01], [.22, .01], [.22, -.09], [.18, -.09]], .045, M.grip, 0, .008);
     box(.04, .05, .1, .1, .135, M.dark, -.045); cyl(.014, .02, .155, .135, M.glass, -.045); box(.02, .02, .03, .05, .11, M.dark, -.045);
     box(.012, .03, .012, .15, .02, M.bright);
-    hands(.0, -.05, .2, -.05); fz = -.88;
+    arm({ p: [0, -.05, -.0025], axis: [0, .97, -.24], palm: [.35, 0, 1], r: .025, elbow: [.24, -.44, .5] });
+    arm({ p: [0, -.045, -.2], axis: [0, 1, 0], palm: [-1, 0, .45], r: .022, elbow: [-.6, -.4, .0], mirror: true }); fz = -.88;
   } else if (kind === 'bow') {
     const bow = new THREE.Group(); bow.position.set(-.1, .06, -.42); bow.rotation.set(0, -.55, .28); bow.scale.setScalar(.6); g.add(bow);
     const riserS = new THREE.Shape(); [[-.03, -.16], [.03, -.16], [.05, -.05], [.03, .05], [.035, .16], [-.035, .16], [-.02, .05], [-.04, -.05]].forEach(([a, b], i) => i ? riserS.lineTo(a, b) : riserS.moveTo(a, b));
@@ -927,6 +963,9 @@ function gunModel(kind) {
     const shaft = new THREE.Mesh(new THREE.CylinderGeometry(.006, .006, .62, 6), std2(0x2a2a2a)); shaft.rotation.x = Math.PI / 2; shaft.position.z = -.19; arrow.add(shaft);
     const tipA = new THREE.Mesh(new THREE.ConeGeometry(.016, .05, 6), M.bright); tipA.rotation.x = -Math.PI / 2; tipA.position.z = -.52; arrow.add(tipA);
     [0, 1, 2].forEach(i => { const fl = new THREE.Mesh(new THREE.BoxGeometry(.002, .028, .06), M.red); fl.position.z = .08; fl.rotation.z = i * Math.PI * 2 / 3; arrow.add(fl); });
+    bow.updateMatrix();
+    const bp = new THREE.Vector3(0, 0, .02).applyMatrix4(bow.matrix), ba = new THREE.Vector3(0, 1, 0).transformDirection(bow.matrix), bpl = new THREE.Vector3(0, 0, 1).transformDirection(bow.matrix);
+    arm({ p: bp.toArray(), axis: ba.toArray(), palm: bpl.toArray(), r: .02, elbow: [-.62, -.32, .12], mirror: true });
     g.userData.bowStr = sgeo; g.userData.arrow = arrow; fz = -.75;
   }
   const flash = new THREE.Mesh(new THREE.CircleGeometry(.1, 5), new THREE.MeshBasicMaterial({ color: 0xffc860, transparent: true, opacity: .85, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false }));
@@ -2152,7 +2191,7 @@ function frame() {
   recTick(dt);
 }
 hud(); frame();
-window.__game = { P, bots, remotes, addRemote, arrows, bodies, mines, get state() { return state; }, startRound, get myId() { return myId; } }; window.__onKill = onKill; window.__shoot = () => shoot(); window.__assist = () => assistDir();
+window.__game = { P, bots, remotes, addRemote, arrows, bodies, mines, gunHold, get state() { return state; }, startRound, get myId() { return myId; } }; window.__onKill = onKill; window.__shoot = () => shoot(); window.__assist = () => assistDir();
 </script>
 </body>
 </html>
