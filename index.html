@@ -73,6 +73,7 @@ a.card:focus-visible,.lang button:focus-visible,.bot:focus-visible{outline:3px s
 .soon .ico{background:var(--bg)}
 .soon{opacity:.75}
 .tag{align-self:flex-start;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--bg);color:var(--muted)}
+.fb{display:flex;width:100%;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:12px;border:2px solid var(--accent);background:transparent;color:var(--fg);font:inherit;font-weight:700;cursor:pointer}.fb::before{content:'💬'}
 .bot{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-weight:700;text-decoration:none}
 .note{font-size:13px;color:var(--muted);text-align:center;margin:0}
 </style>
@@ -101,6 +102,7 @@ a.card:focus-visible,.lang button:focus-visible,.bot:focus-visible{outline:3px s
   <a class="card" href="modeler/"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="3" fill="none" stroke="var(--fg)" stroke-width="2"/><circle cx="18" cy="18" r="3" fill="none" stroke="var(--fg)" stroke-width="2"/><path d="M8 16 17 3M16 16 7 3" stroke="var(--fg)" stroke-width="2" stroke-linecap="round"/></svg></div><b data-t="mo">Модельер</b><p data-t="mod">13 уроков: мерки, ткани, швейная машина, швы, чертёж юбки, раскрой, примерка, перевод вытачки, юбка-солнце, дизайн одежды, своё ателье. Калькуляторы размера и расхода ткани.</p><span class="go" data-t="open">Открыть ›</span></a>
  </div>
  <a class="bot" href="https://t.me/kasbpro_uz_bot?start=site" data-t="bot">Открыть в Telegram</a>
+ <button type="button" class="fb" data-kp-fb data-t="fb">Написать пожелание</button>
  <p class="note" data-t="note">Kasb Pro — от новичка до мастера. Уроки не заменяют обучение и допуск к работе.</p>
 </main>
 <script>
@@ -111,7 +113,7 @@ const T={ru:{h1:'Бесплатные уроки по рабочим профе�
  mo:'Модельер',mod:'13 уроков: мерки, ткани, швейная машина, швы, чертёж юбки, раскрой, примерка, перевод вытачки, юбка-солнце, дизайн одежды, своё ателье. Калькуляторы размера и расхода ткани.',
  pr:'Прораб: акты приёмки',prd:'Акт приёмки выполненных работ и акт скрытых работ по СНиП за 5 минут: электрика, отделка, монтаж, сантехника, кровля, бетон. Голосом, с фото, в PDF и Word.',
  pv:'Повар',pvd:'13 уроков: санитария, ножи и нарезка, тепловая обработка, мясо, плов в казане, тесто для лагмана, мантов и самсы, техкарта, себестоимость. Калькуляторы плова и цены блюда.',
- bot:'Открыть в Telegram',note:'Kasb Pro — от новичка до мастера. Уроки не заменяют обучение и допуск к работе.'},
+ bot:'Открыть в Telegram',fb:'Написать пожелание',note:'Kasb Pro — от новичка до мастера. Уроки не заменяют обучение и допуск к работе.'},
 uz:{h1:'Ishchi kasblar bo\'yicha bepul darslar',lead:'Sxemalar, bosqichma-bosqich ko\'rsatmalar, testlar va kalkulyatorlar. Telefondan qulay vaqtda o\'rganing.',f1:'O\'zbek va rus tillari',f2:'Telegramda ishlaydi',f3:'Bepul',choose:'Kasbni tanlang',
  el:'Elektrik',eld:'13 ta dars: rozetka, avtomat va UZO, shit, uch faza, dvigatellar. Kabel kalkulyatori.',open:'Ochish ›',
  pl:'Santexnik',pld:'13 ta dars: smesitel, tiqilish, unitaz, kanalizatsiya, quvur payvandlash, boyler, issiq pol. Qiyalik va qizish kalkulyatorlari.',md:'Hamshira',mdd:'13 ta dars: qo\'l gigiyenasi, bosim va puls, yotoq yaralari, ovqatlantirish, reanimatsiya, qon ketishi, kuyish. YO\'R metronomi.',op:'Optika montajchisi',opd:'13 ta dars: kabel turlari, tolani payvandlash, konnektorlar, muftalar, GPON tarmog\'i, reflektometr, uzilishni ta\'mirlash. Yo\'qotishlar byudjeti kalkulyatori.',sv:'Payvandchi',svd:'13 ta dars: elektrod va tok, yoyni yoqish, chok turlari, nuqsonlar, yarimavtomat, quvurlar, yupqa metall, argon. Tok va elektrod sarfi kalkulyatori.',ho:'Konditsioner va muzlatgich ustasi',hod:'13 ta dars: sovutish sikli, freonlar, split-tizim o\'rnatish, valsovka, vakuum, to\'ldirish, diagnostika, muzlatgich ta\'miri. Quvvat kalkulyatori.',av:'Avtoelektrik / diagnost',avd:'13 ta dars: multimetr, akkumulyator, rele, starter, generator, tok oqishi, OBD-II va xato kodlari, datchiklar, CAN-shina. Sim va saqlagich kalkulyatori.',vn:'Videokuzatuv o\'rnatuvchisi',vnd:'13 ta dars: analog va IP, obyektivlar, RJ45 siqish, PoE, kamera montaji, registrator va disk, IP-manzillar, telefondan ko\'rish, nosozliklar. Arxiv va PoE kalkulyatorlari.',sl:'Slabotochnik (past kuchlanish)',sld:'13 ta dars: kabellar va yotqizish, RJ45 rozetka va patch-panel, videodomofon, qo\'riqlash va yong\'in signalizatsiyasi, SKUD, quvvat va AKB. Kabel, AKB va kuchlanish yo\'qotilishi kalkulyatorlari.',soon:'Tez kunda',
@@ -119,7 +121,7 @@ uz:{h1:'Ishchi kasblar bo\'yicha bepul darslar',lead:'Sxemalar, bosqichma-bosqic
  mo:'Modelyer',mod:'13 ta dars: o\'lchov, matolar, tikuv mashinasi, choklar, yubka chizmasi, bichish, kiyib ko\'rish, vitachkani ko\'chirish, quyosh yubka, kiyim dizayni, o\'z atelyeing. Razmer va mato sarfi kalkulyatorlari.',
  pr:'Prorab: qabul dalolatnomalari',prd:'Bajarilgan ishlarni qabul qilish va yashirin ishlar dalolatnomasi (SNiP) 5 daqiqada: elektr, pardozlash, montaj, santexnika, tom, beton. Ovoz bilan, rasm bilan, PDF va Word. Hujjat rus tilida.',
  pv:'Oshpaz',pvd:'13 ta dars: sanitariya, pichoq va to\'g\'rash, issiqlik ishlovi, go\'sht, qozonda osh, lag\'mon, manti va somsa xamiri, texnologik karta, tannarx. Osh va taom narxi kalkulyatorlari.',
- bot:'Telegramda ochish',note:'Kasb Pro — yangi boshlovchidan ustagacha. Darslar o\'qish va ishga ruxsatni almashtirmaydi.'}};
+ bot:'Telegramda ochish',fb:'Taklif yozish',note:'Kasb Pro — yangi boshlovchidan ustagacha. Darslar o\'qish va ishga ruxsatni almashtirmaydi.'}};
 const PAGE='ru',HREF={uz:'uz/'};let lang=PAGE;
 try{const v=JSON.parse(localStorage.getItem('ep_lang')||'null');if(v==='uz'&&!/[?&]lang=ru/.test(location.search)){location.replace(HREF.uz)}}catch(e){}
 function render(){document.documentElement.lang=lang;document.querySelectorAll('[data-t]').forEach(e=>e.textContent=T[lang][e.dataset.t]);document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===lang))}
@@ -128,5 +130,6 @@ const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand
 if(/[?&]lang=ru/.test(location.search)){try{localStorage.setItem('ep_lang',JSON.stringify('ru'))}catch(e){}}
 render();
 </script>
+<script src="feedback.js" defer></script>
 </body>
 </html>
