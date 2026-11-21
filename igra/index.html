@@ -182,7 +182,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="menu" class="screen">
   <div class="card">
     <div class="logo">СТАЛЬНОЙ<br>ДВОР<span>3 ЭТАПА · БОССЫ · МАГАЗИН</span></div>
-    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 21.11 · r6</div>
+    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 21.11 · r7</div>
     <p class="sub">Ржавые роботы захватили склад, город и завод. Пройдите три этапа и победите босса в конце каждого.<br>Или выберите «Схватку»: 3 минуты боя на счёт.</p>
     <div class="diff" id="modeSel"><button data-m="campaign">Кампания</button><button data-m="skirmish">Схватка</button><button data-m="online">🌐 Онлайн</button></div>
     <div id="netBox" class="hidden"><label class="help" style="display:block;margin:4px 0">Ваше имя в игре</label><input id="nick" maxlength="16" autocomplete="off"></div>
@@ -277,7 +277,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 
 <script>
 // auto-update: phones and Telegram keep old copies of the page; compare the build mark with the server copy and reload once
-window.GAME_BUILD = '2026-11-21-r6';
+window.GAME_BUILD = '2026-11-21-r7';
 // visit counter: where the player came from (?from=yt on the Shorts link, else by referrer); "u=1" = first open today on this device
 (function () {
   try {
@@ -291,8 +291,17 @@ window.GAME_BUILD = '2026-11-21-r6';
     sessionStorage.setItem('sd_src', src); window.SD_SRC = src;
     const today = new Date(Date.now() + 5 * 3600e3).toISOString().slice(0, 10); let u = 0;
     try { if (localStorage.getItem('sd_seen') !== today) { localStorage.setItem('sd_seen', today); u = 1; } } catch (e) {}
+    let me = false; // owner's own devices: opened once with ?me=1, never counted as players
+    try { if (q.get('me') === '1') localStorage.setItem('sd_me', '1'); else if (q.get('me') === '0') localStorage.removeItem('sd_me'); me = localStorage.getItem('sd_me') === '1'; } catch (e) {}
+    if (q.get('me')) {
+      try { const cu = new URL(location.href); cu.searchParams.delete('me'); history.replaceState(null, '', cu.pathname + cu.search + cu.hash); } catch (e) {}
+      const showMe = () => { const b = document.createElement('div'); b.textContent = me ? '✅ Готово! Это устройство теперь ваше: ваши заходы больше не попадают в статистику.' : 'Отметка снята: это устройство снова считается в статистике.';
+        b.style.cssText = 'position:fixed;left:12px;right:12px;top:12px;z-index:99999;background:#14532d;color:#fff;font:600 15px system-ui,sans-serif;padding:14px;border-radius:12px;text-align:center;box-shadow:0 4px 20px #0008';
+        b.onclick = () => b.remove(); document.body.appendChild(b); setTimeout(() => b.remove(), 7000); };
+      document.body ? showMe() : addEventListener('DOMContentLoaded', showMe);
+    }
     const base = q.get('server') ? q.get('server').replace(/^ws/, 'http') : 'https://45-130-148-137.sslip.io/';
-    window.sdHit = (e) => { try { fetch(base.replace(/\/?$/, '/') + 'hit?e=' + e + '&src=' + src + (e === 'open' ? '&u=' + u : ''), { mode: 'no-cors', keepalive: true }).catch(() => {}); } catch (err) {} };
+    window.sdHit = (e) => { try { fetch(base.replace(/\/?$/, '/') + 'hit?e=' + e + '&src=' + src + (e === 'open' ? '&u=' + u : '') + (me ? '&me=1' : ''), { mode: 'no-cors', keepalive: true }).catch(() => {}); } catch (err) {} };
     if (!sessionStorage.getItem('sd_hit')) { sessionStorage.setItem('sd_hit', '1'); window.sdHit('open'); }
   } catch (e) {}
 })();
