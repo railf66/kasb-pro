@@ -58,6 +58,10 @@ function countHit(q, ip) {
   let src = String(q.get('src') || 'direct').toLowerCase().replace(/[^a-z]/g, '').slice(0, 8); if (!SRC_NAMES[src]) src = 'web';
   const uniq = q.get('u') === '1';
   const d = stats.days[dayKey()] || (stats.days[dayKey()] = { open: 0, uniq: 0, play: 0, src: {} });
+  if (q.get('me') === '1') { // owner's own phone/computer: kept apart, not in the main numbers
+    const m = d.me || (d.me = { open: 0, uniq: 0, play: 0 }); m[e]++; if (uniq && e === 'open') m.uniq++;
+    statsDirty = true; return;
+  }
   const s = d.src[src] || (d.src[src] = { open: 0, uniq: 0, play: 0 });
   d[e]++; s[e]++; if (uniq && e === 'open') { d.uniq++; s.uniq++; }
   const keys = Object.keys(stats.days).sort(); while (keys.length > 120) delete stats.days[keys.shift()];
@@ -76,14 +80,15 @@ function statsPage(online) {
 <style>body{font:15px system-ui,sans-serif;margin:0;padding:14px;background:#0b0f14;color:#e8edf2}h1{font-size:19px;margin:0 0 10px}h2{font-size:16px;margin:20px 0 6px}
 .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.c{background:#18202a;border-radius:12px;padding:10px}.c b{display:block;font-size:26px}.c span{font-size:12px;opacity:.7}
 table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:6px 4px;border-bottom:1px solid #253040;text-align:right}td:first-child,th:first-child{text-align:left}th{font-size:12px;opacity:.7;font-weight:600}
-p{font-size:12px;opacity:.6}</style></head><body>
+p{font-size:12px;opacity:.6}.me{margin-top:10px;background:#12301f;border-radius:12px;padding:10px;font-size:14px;line-height:1.5}.me a{display:inline-block;margin-top:8px;background:#22c55e;color:#04120a;font-weight:700;text-decoration:none;padding:8px 12px;border-radius:10px}</style></head><body>
 <h1>Стальной двор · статистика</h1>
 <div class="cards"><div class="c"><b>${today.uniq}</b><span>человек сегодня</span></div><div class="c"><b>${yt(today)}</b><span>из них с YouTube</span></div>
 <div class="c"><b>${today.play}</b><span>начали играть сегодня</span></div><div class="c"><b>${online}</b><span>сейчас в онлайн-режиме</span></div></div>
+<div class="me">${today.me ? `Ваши заходы сегодня: <b>${today.me.open}</b>, игр: <b>${today.me.play}</b>. Они <u>не входят</u> в цифры выше.` : 'Ваших заходов сегодня нет (или ваш телефон ещё не отмечен).'}<br><a href="https://kasbpro.uz/igra/?me=1">Это мой телефон — не считать меня</a></div>
 <h2>Сегодня по источникам</h2><table><tr><th>Откуда</th><th>Людей</th><th>Заходов</th><th>Игр</th></tr>${srcRows(today.src)}</table>
 <h2>По дням</h2><table><tr><th>День</th><th>Людей</th><th>Заходов</th><th>Игр</th><th>YouTube</th></tr>${dayRows}</table>
 <h2>За всё время</h2><table><tr><th>Откуда</th><th>Людей</th><th>Заходов</th><th>Игр</th></tr>${srcRows(totSrc)}<tr><td><b>Всего</b></td><td><b>${tot.uniq}</b></td><td><b>${tot.open}</b></td><td><b>${tot.play}</b></td></tr></table>
-<p>«Людей» — сколько разных телефонов/компьютеров открыли игру за день. «Заходов» — сколько раз открывали. «Игр» — сколько раз нажали «Играть». Время ташкентское. Обновите страницу, чтобы увидеть свежие цифры.</p>
+<p>«Людей» — сколько разных телефонов/компьютеров открыли игру за день. «Заходов» — сколько раз открывали. «Игр» — сколько раз нажали «Играть». Ваши собственные заходы (с отмеченных телефонов и компьютеров) сюда не входят, они показаны отдельно в зелёной плашке. Заходы до 21.11 разделить нельзя. Время ташкентское. Обновите страницу, чтобы увидеть свежие цифры.</p>
 </body></html>`;
 }
 
