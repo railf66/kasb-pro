@@ -606,6 +606,19 @@ $('langBtn').onclick = () => { lang = lang === 'ru' ? 'uz' : 'ru'; try { localSt
 drawCake($('hero'), { shape: 'heart', tiers: 2, cream: 'pink', tops: ['straw', 'candle'] });
 render();
 requestAnimationFrame(loop);
+// link under YouTube Shorts (kasbpro.uz/tort -> ?from=yt): skip the menu and open the studio at once;
+// from the site the menu shows as usual (after a round, "В меню" still leads there)
+(function autoStartFromShorts() {
+  try {
+    if (new URLSearchParams(location.search).get('from') !== 'yt') return;
+    setTimeout(() => {
+      if (state === 'menu') start();
+      // sound needs the player's first touch
+      const once = () => { removeEventListener('pointerdown', once, true); removeEventListener('keydown', once, true); audio(); };
+      addEventListener('pointerdown', once, true); addEventListener('keydown', once, true);
+    }, 300);
+  } catch (e) {}
+})();
 (async () => {
   try {
     const q = new URLSearchParams(location.search).get('admin'); if (q === null) return;
