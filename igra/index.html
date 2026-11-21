@@ -182,7 +182,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="menu" class="screen">
   <div class="card">
     <div class="logo">СТАЛЬНОЙ<br>ДВОР<span>3 ЭТАПА · БОССЫ · МАГАЗИН</span></div>
-    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 21.11 · r5</div>
+    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 21.11 · r6</div>
     <p class="sub">Ржавые роботы захватили склад, город и завод. Пройдите три этапа и победите босса в конце каждого.<br>Или выберите «Схватку»: 3 минуты боя на счёт.</p>
     <div class="diff" id="modeSel"><button data-m="campaign">Кампания</button><button data-m="skirmish">Схватка</button><button data-m="online">🌐 Онлайн</button></div>
     <div id="netBox" class="hidden"><label class="help" style="display:block;margin:4px 0">Ваше имя в игре</label><input id="nick" maxlength="16" autocomplete="off"></div>
@@ -277,7 +277,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 
 <script>
 // auto-update: phones and Telegram keep old copies of the page; compare the build mark with the server copy and reload once
-window.GAME_BUILD = '2026-11-21-r5';
+window.GAME_BUILD = '2026-11-21-r6';
 // visit counter: where the player came from (?from=yt on the Shorts link, else by referrer); "u=1" = first open today on this device
 (function () {
   try {
@@ -1440,8 +1440,9 @@ function updateProjs(dt) {
     if (b.kind === 'fire') { const e = 1 - (1 - Math.min(1, k * 1.6)) ** 3; b.m.scale.setScalar(.3 + e * b.r * .85); b.m.material.opacity = Math.max(0, .95 * (1 - k * k)); }
     else if (b.kind === 'core') { b.m.scale.setScalar(.2 + k * b.r * .45); b.m.material.opacity = Math.max(0, 1 - k * 1.4); }
     else if (b.kind === 'smoke') { b.m.position.y += dt * .9; b.m.scale.setScalar(b.r * (.35 + .55 * Math.sqrt(k))); b.m.material.opacity = Math.max(0, .45 * (1 - k)); }
+    else if (b.kind === 'column') { const e = Math.min(1, k * 2.5); b.m.scale.set(1 + k * 1.5, .3 + e * b.r * 1.2, 1 + k * 1.5); b.m.position.y = b.m.scale.y / 2; b.m.material.opacity = Math.max(0, .75 * (1 - k)); }
     else if (b.kind === 'ring') { b.m.scale.setScalar(.3 + k * b.r * 1.5); b.m.material.opacity = Math.max(0, .7 * (1 - k)); }
-    if (k >= 1) { scene.remove(b.m); b.m.material.dispose(); booms.splice(i, 1); }
+    if (k >= 1) { scene.remove(b.m); b.m.material.dispose(); if (b.kind === 'column') b.m.geometry.dispose(); booms.splice(i, 1); }
   }
   boomLight.intensity = Math.max(0, boomLight.intensity - dt * 260);
   updateScars(dt);
@@ -1449,7 +1450,7 @@ function updateProjs(dt) {
 const boomGeo = new THREE.SphereGeometry(1, 16, 12);
 function explode(p, w, enemy, ghost) {
   const r = w.proj.radius;
-  blastFx(p, r);
+  blastFx(p, r, w === MINE);
   const dist = Math.hypot(p.x - P.pos.x, p.z - P.pos.z);
   sfx('boom', clamp(1.2 - dist / 40, .2, 1.1), panTo(p)); shake(clamp(1 - dist / 28, 0, 1) * .7);
   if (enemy) { const dp = Math.hypot(p.x - P.pos.x, (p.y - 1) * .7, p.z - P.pos.z); if (dp < r && P.alive && w.proj.dmg) hurt(w.proj.dmg * (D.dmg[1] / 11) * (1 - dp / r * .5) * gearMul(gearBits(), false, true) / gearMul(gearBits(), false, false, true), boss); return; }
@@ -1500,8 +1501,9 @@ const smokeMat = new THREE.MeshLambertMaterial({ color: 0x2a2724, transparent: t
 const scars = [], SCAR_MAX = 12, WALLSCAR_MAX = 16, SCAR_LIFE = 75;
 function decalMat(t, o = 1) { return new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: o, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }); }
 function lowFx() { return SET.q === 'low' || autoPR < .9; }
-function blastFx(p, r) {
+function blastFx(p, r, mine) {
   const lo = lowFx();
+  if (mine) mineFx(p, r, lo);
   const fire = new THREE.Mesh(boomGeo, new THREE.MeshBasicMaterial({ color: 0xff7a2a, transparent: true, opacity: .95, blending: THREE.AdditiveBlending, depthWrite: false }));
   fire.position.copy(p); scene.add(fire); booms.push({ m: fire, t: 0, r, life: .55, kind: 'fire' });
   const core = new THREE.Mesh(boomGeo, new THREE.MeshBasicMaterial({ color: 0xfff1b8, transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthWrite: false }));
@@ -1514,7 +1516,7 @@ function blastFx(p, r) {
   if (onGround) {
     const ring = new THREE.Mesh(rimGeo, new THREE.MeshBasicMaterial({ color: 0xffd9a0, transparent: true, opacity: .7, blending: THREE.AdditiveBlending, depthWrite: false }));
     ring.rotation.x = -Math.PI / 2; ring.position.set(p.x, .12, p.z); ring.scale.setScalar(.3); scene.add(ring); booms.push({ m: ring, t: 0, r, life: .4, kind: 'ring' });
-    crater(p, r);
+    crater(p, mine ? r * 1.25 : r);
   }
   boomLight.position.copy(p).y += 1.2; boomLight.distance = r * 5; boomLight.intensity = 260;
   for (let k = 0; k < (lo ? 8 : 16); k++) spark(p.clone().add(new THREE.Vector3(rand(-1.4, 1.4), rand(0, 1.8), rand(-1.4, 1.4))), k % 3 ? 0xffb04a : 0xfff0c0);
@@ -1525,6 +1527,25 @@ function blastFx(p, r) {
     debris.push({ m, v: new THREE.Vector3(Math.cos(a) * sp, rand(4, 10), Math.sin(a) * sp), r: new THREE.Vector3(rand(-9, 9), rand(-9, 9), rand(-9, 9)), t: rand(1.6, 2.6) });
   }
   wallHits(p, r, lo);
+}
+const dustMat = new THREE.MeshLambertMaterial({ color: 0x6b5a46, transparent: true, opacity: .6, depthWrite: false });
+const dirtMat = new THREE.MeshLambertMaterial({ color: 0x3b2f24 });
+// landmine: a fountain of earth straight up + a brown dust cloud that hangs and spreads
+function mineFx(p, r, lo) {
+  for (let k = 0; k < (lo ? 10 : 22); k++) {
+    const m = new THREE.Mesh(rubbleGeo, k % 3 ? dirtMat : rubbleMat); m.scale.setScalar(rand(.8, 2.4)); m.position.set(p.x + rand(-.3, .3), .15, p.z + rand(-.3, .3)); scene.add(m);
+    const a = rand(0, 6.28), sp = rand(.5, 3.5);
+    debris.push({ m, v: new THREE.Vector3(Math.cos(a) * sp, rand(7, 14), Math.sin(a) * sp), r: new THREE.Vector3(rand(-9, 9), rand(-9, 9), rand(-9, 9)), t: rand(2.2, 3.2) });
+  }
+  for (let k = 0; k < (lo ? 3 : 6); k++) {
+    const d = new THREE.Mesh(boomGeo, dustMat.clone()); const a = rand(0, 6.28), dd = rand(0, 1.5);
+    d.position.set(p.x + Math.cos(a) * dd, rand(.3, 2.2) + k * .35, p.z + Math.sin(a) * dd); scene.add(d);
+    booms.push({ m: d, t: -k * .06, r: r * rand(.4, .6), life: rand(2.4, 3.4), kind: 'smoke' });
+  }
+  // tall column of dirt right after the blast
+  const col = new THREE.Mesh(new THREE.CylinderGeometry(.5, 1.1, 1, 10, 1, true), dustMat.clone()); col.position.set(p.x, 0, p.z); scene.add(col);
+  booms.push({ m: col, t: 0, r, life: .9, kind: 'column' });
+  shake(.25);
 }
 function crater(p, r) {
   const g = new THREE.Group(), s = r * .3;
