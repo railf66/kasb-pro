@@ -182,7 +182,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="menu" class="screen">
   <div class="card">
     <div class="logo">СТАЛЬНОЙ<br>ДВОР<span>3 ЭТАПА · БОССЫ · МАГАЗИН</span></div>
-    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 19.11 · r4</div>
+    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 21.11 · r5</div>
     <p class="sub">Ржавые роботы захватили склад, город и завод. Пройдите три этапа и победите босса в конце каждого.<br>Или выберите «Схватку»: 3 минуты боя на счёт.</p>
     <div class="diff" id="modeSel"><button data-m="campaign">Кампания</button><button data-m="skirmish">Схватка</button><button data-m="online">🌐 Онлайн</button></div>
     <div id="netBox" class="hidden"><label class="help" style="display:block;margin:4px 0">Ваше имя в игре</label><input id="nick" maxlength="16" autocomplete="off"></div>
@@ -277,7 +277,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 
 <script>
 // auto-update: phones and Telegram keep old copies of the page; compare the build mark with the server copy and reload once
-window.GAME_BUILD = '2026-11-19-r4';
+window.GAME_BUILD = '2026-11-21-r5';
 // visit counter: where the player came from (?from=yt on the Shorts link, else by referrer); "u=1" = first open today on this device
 (function () {
   try {
@@ -591,7 +591,7 @@ function placePacks(list) {
 function buildMap(id) {
   const mp = MAPS[id]; curMap = id;
   for (const c of [...mapGroup.children]) { mapGroup.remove(c); if (c.geometry) c.geometry.dispose(); }
-  boxes.length = 0; solids.length = 0; waypoints.length = 0; if (window.__bodiesReady) { clearBodies(); clearMines(); }
+  boxes.length = 0; solids.length = 0; waypoints.length = 0; if (window.__bodiesReady) { clearBodies(); clearMines(); clearScars(); }
   scene.fog.color.setHex(mp.fog); scene.background.setHex(mp.fog); ground.material = M[mp.ground];
   addBox(0, -H - .5, H * 2 + 2, 1, 5, 'wall'); addBox(0, H + .5, H * 2 + 2, 1, 5, 'wall');
   addBox(-H - .5, 0, 1, H * 2 + 2, 5, 'wall'); addBox(H + .5, 0, 1, H * 2 + 2, 5, 'wall');
@@ -783,8 +783,8 @@ const W = [
   { id: 'rifle', name: 'Автомат «Шквал»', dmg: 24, rate: .1, mag: 30, reload: 1.6, spread: .014, snd: 'rifle', kick: .012, price: 0 },
   { id: 'pistol', name: 'Пистолет «Искра»', dmg: 50, rate: .3, mag: 12, reload: 1.0, spread: .004, snd: 'pistol', kick: .03, price: 0 },
   { id: 'sniper', name: 'Снайперка «Игла»', dmg: 160, rate: 1.1, mag: 5, reload: 2.2, spread: .0004, hip: .03, snd: 'sniper', kick: .06, price: 300, zoom: true, desc: 'Сбивает дрона одним выстрелом. Есть оптический прицел.' },
-  { id: 'gl', name: 'Гранатомёт «Гром»', rate: .8, mag: 6, reload: 2.4, snd: 'gl', kick: .05, price: 500, proj: { speed: 22, grav: 12, radius: 4.5, dmg: 130 }, desc: 'Гранаты летят дугой и взрываются. Достаёт за укрытием.' },
-  { id: 'rpg', name: 'Базука «Таран»', rate: 1.2, mag: 1, reload: 2.0, snd: 'rpg', kick: .08, price: 800, proj: { speed: 34, grav: 0, radius: 5.5, dmg: 220 }, desc: 'Ракета летит прямо. Самый мощный взрыв.' },
+  { id: 'gl', name: 'Гранатомёт «Гром»', rate: .8, mag: 6, reload: 2.4, snd: 'gl', kick: .05, price: 500, proj: { speed: 22, grav: 12, radius: 5.2, dmg: 130 }, desc: 'Гранаты летят дугой и взрываются. Достаёт за укрытием.' },
+  { id: 'rpg', name: 'Базука «Таран»', rate: 1.2, mag: 1, reload: 2.0, snd: 'rpg', kick: .08, price: 800, proj: { speed: 34, grav: 0, radius: 6.5, dmg: 240 }, desc: 'Ракета летит прямо. Самый мощный взрыв.' },
   { id: 'bow', name: 'Охотничий лук «Сокол»', dmg: 35, dmgMax: 120, rate: .45, mag: 12, reload: 1.6, spread: .002, snd: 'bow', kick: .01, price: 400, bow: true, desc: 'Тихий выстрел. Держите кнопку — тетива натягивается сильнее, стрела летит дальше и бьёт больнее. Стрела летит дугой — цельтесь чуть выше.' },
 ];
 const ADMIN_HASH = 'bc6889014237efa1930dd7840a58fe12f13f81ba217dc77fa0dee0bf8ee466a7';
@@ -1436,21 +1436,22 @@ function updateProjs(dt) {
     }
   }
   for (let i = booms.length - 1; i >= 0; i--) {
-    const b = booms[i]; b.t += dt; const k = b.t / .45;
-    b.m.scale.setScalar(.3 + k * b.r * .7); b.m.material.opacity = Math.max(0, .9 * (1 - k));
+    const b = booms[i]; b.t += dt; const k = b.t / b.life;
+    if (b.kind === 'fire') { const e = 1 - (1 - Math.min(1, k * 1.6)) ** 3; b.m.scale.setScalar(.3 + e * b.r * .85); b.m.material.opacity = Math.max(0, .95 * (1 - k * k)); }
+    else if (b.kind === 'core') { b.m.scale.setScalar(.2 + k * b.r * .45); b.m.material.opacity = Math.max(0, 1 - k * 1.4); }
+    else if (b.kind === 'smoke') { b.m.position.y += dt * .9; b.m.scale.setScalar(b.r * (.35 + .55 * Math.sqrt(k))); b.m.material.opacity = Math.max(0, .45 * (1 - k)); }
+    else if (b.kind === 'ring') { b.m.scale.setScalar(.3 + k * b.r * 1.5); b.m.material.opacity = Math.max(0, .7 * (1 - k)); }
     if (k >= 1) { scene.remove(b.m); b.m.material.dispose(); booms.splice(i, 1); }
   }
-  boomLight.intensity = Math.max(0, boomLight.intensity - dt * 400);
+  boomLight.intensity = Math.max(0, boomLight.intensity - dt * 260);
+  updateScars(dt);
 }
 const boomGeo = new THREE.SphereGeometry(1, 16, 12);
 function explode(p, w, enemy, ghost) {
   const r = w.proj.radius;
-  const m = new THREE.Mesh(boomGeo, new THREE.MeshBasicMaterial({ color: 0xff8a3d, transparent: true, opacity: .9, blending: THREE.AdditiveBlending, depthWrite: false }));
-  m.position.copy(p); scene.add(m); booms.push({ m, t: 0, r });
-  boomLight.position.copy(p).y += 1; boomLight.intensity = 140;
-  for (let k = 0; k < 8; k++) spark(p.clone().add(new THREE.Vector3(rand(-1, 1), rand(0, 1.2), rand(-1, 1))), 0xffb04a);
+  blastFx(p, r);
   const dist = Math.hypot(p.x - P.pos.x, p.z - P.pos.z);
-  sfx('boom', clamp(1.2 - dist / 40, .2, 1.1), panTo(p)); shake(clamp(1 - dist / 25, 0, 1) * .5);
+  sfx('boom', clamp(1.2 - dist / 40, .2, 1.1), panTo(p)); shake(clamp(1 - dist / 28, 0, 1) * .7);
   if (enemy) { const dp = Math.hypot(p.x - P.pos.x, (p.y - 1) * .7, p.z - P.pos.z); if (dp < r && P.alive && w.proj.dmg) hurt(w.proj.dmg * (D.dmg[1] / 11) * (1 - dp / r * .5) * gearMul(gearBits(), false, true) / gearMul(gearBits(), false, false, true), boss); return; }
   if (ghost) return;
   let any = false;
@@ -1469,6 +1470,128 @@ function explode(p, w, enemy, ghost) {
   if (dp < r && P.alive) hurt(w.proj.dmg * (mode === 'online' ? .25 : .35) * (1 - dp / r), 'self');
 }
 
+
+// ---------- bigger blast: fireball + smoke + shock ring, craters on the ground, plaster chunks and scorch on walls ----------
+const scorchTex = tex((g, s) => {
+  const c = s / 2, gr = g.createRadialGradient(c, c, 0, c, c, c);
+  gr.addColorStop(0, 'rgba(8,6,5,1)'); gr.addColorStop(.45, 'rgba(18,14,11,.95)'); gr.addColorStop(.75, 'rgba(30,24,20,.55)'); gr.addColorStop(1, 'rgba(30,24,20,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, s, s);
+  for (let i = 0; i < 18; i++) { // dark streaks outwards
+    const a = Math.random() * 6.28, l = c * (.6 + Math.random() * .4); g.strokeStyle = 'rgba(10,8,6,.5)'; g.lineWidth = 2 + Math.random() * 5;
+    g.beginPath(); g.moveTo(c + Math.cos(a) * c * .3, c + Math.sin(a) * c * .3); g.lineTo(c + Math.cos(a) * l, c + Math.sin(a) * l); g.stroke();
+  }
+  for (let i = 0; i < 60; i++) { g.fillStyle = `rgba(${90 + Math.random() * 60 | 0},${70 + Math.random() * 40 | 0},50,${Math.random() * .5})`; const a = Math.random() * 6.28, d = Math.random() * c * .9; g.fillRect(c + Math.cos(a) * d, c + Math.sin(a) * d, 2, 2); }
+}, 128);
+const pitTex = tex((g, s) => { // wall chip: broken plaster with exposed lighter core and cracks
+  const c = s / 2; g.fillStyle = 'rgba(0,0,0,0)'; g.fillRect(0, 0, s, s);
+  g.fillStyle = '#b9ab95'; g.beginPath();
+  for (let i = 0; i < 14; i++) { const a = i / 14 * 6.28, d = c * (.42 + Math.random() * .22); i ? g.lineTo(c + Math.cos(a) * d, c + Math.sin(a) * d) : g.moveTo(c + Math.cos(a) * d, c + Math.sin(a) * d); }
+  g.closePath(); g.fill();
+  g.fillStyle = '#8a7c68'; g.beginPath(); g.arc(c, c, c * .25, 0, 6.28); g.fill();
+  g.fillStyle = '#5a4f42'; g.beginPath(); g.arc(c, c, c * .13, 0, 6.28); g.fill();
+  g.strokeStyle = 'rgba(25,20,16,.85)'; g.lineWidth = 2;
+  for (let i = 0; i < 7; i++) { let a = Math.random() * 6.28, x = c + Math.cos(a) * c * .4, y = c + Math.sin(a) * c * .4; g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 3; k++) { a += Math.random() - .5; x += Math.cos(a) * c * .16; y += Math.sin(a) * c * .16; g.lineTo(x, y); } g.stroke(); }
+}, 128);
+const scarGeo = new THREE.PlaneGeometry(1, 1), rimGeo = new THREE.TorusGeometry(1, .16, 5, 18), pitGeo = new THREE.CircleGeometry(1, 18);
+const rimMat = new THREE.MeshLambertMaterial({ color: 0x241d18 }), pitMat = new THREE.MeshBasicMaterial({ color: 0x050403 });
+const rubbleGeo = new THREE.DodecahedronGeometry(.1, 0), rubbleMat = new THREE.MeshLambertMaterial({ color: 0x4a4038 });
+const plasterMat = new THREE.MeshLambertMaterial({ color: 0xc9bca6 });
+const smokeMat = new THREE.MeshLambertMaterial({ color: 0x2a2724, transparent: true, opacity: .45, depthWrite: false });
+const scars = [], SCAR_MAX = 12, WALLSCAR_MAX = 16, SCAR_LIFE = 75;
+function decalMat(t, o = 1) { return new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: o, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }); }
+function lowFx() { return SET.q === 'low' || autoPR < .9; }
+function blastFx(p, r) {
+  const lo = lowFx();
+  const fire = new THREE.Mesh(boomGeo, new THREE.MeshBasicMaterial({ color: 0xff7a2a, transparent: true, opacity: .95, blending: THREE.AdditiveBlending, depthWrite: false }));
+  fire.position.copy(p); scene.add(fire); booms.push({ m: fire, t: 0, r, life: .55, kind: 'fire' });
+  const core = new THREE.Mesh(boomGeo, new THREE.MeshBasicMaterial({ color: 0xfff1b8, transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthWrite: false }));
+  core.position.copy(p); scene.add(core); booms.push({ m: core, t: 0, r, life: .22, kind: 'core' });
+  for (let k = 0; k < (lo ? 2 : 4); k++) {
+    const sm = new THREE.Mesh(boomGeo, smokeMat.clone()); sm.position.copy(p).add(new THREE.Vector3(rand(-.8, .8), rand(.2, 1), rand(-.8, .8)));
+    scene.add(sm); booms.push({ m: sm, t: -k * .08, r: r * rand(.45, .6), life: rand(1.6, 2.3), kind: 'smoke' });
+  }
+  const onGround = p.y < 1.4;
+  if (onGround) {
+    const ring = new THREE.Mesh(rimGeo, new THREE.MeshBasicMaterial({ color: 0xffd9a0, transparent: true, opacity: .7, blending: THREE.AdditiveBlending, depthWrite: false }));
+    ring.rotation.x = -Math.PI / 2; ring.position.set(p.x, .12, p.z); ring.scale.setScalar(.3); scene.add(ring); booms.push({ m: ring, t: 0, r, life: .4, kind: 'ring' });
+    crater(p, r);
+  }
+  boomLight.position.copy(p).y += 1.2; boomLight.distance = r * 5; boomLight.intensity = 260;
+  for (let k = 0; k < (lo ? 8 : 16); k++) spark(p.clone().add(new THREE.Vector3(rand(-1.4, 1.4), rand(0, 1.8), rand(-1.4, 1.4))), k % 3 ? 0xffb04a : 0xfff0c0);
+  // dirt / sparks flying up
+  for (let k = 0; k < (lo ? 5 : 10); k++) {
+    const m = new THREE.Mesh(rubbleGeo, rubbleMat); m.scale.setScalar(rand(.7, 1.8)); m.position.copy(p).y = Math.max(p.y, .15); scene.add(m);
+    const a = rand(0, 6.28), sp = rand(3, 8);
+    debris.push({ m, v: new THREE.Vector3(Math.cos(a) * sp, rand(4, 10), Math.sin(a) * sp), r: new THREE.Vector3(rand(-9, 9), rand(-9, 9), rand(-9, 9)), t: rand(1.6, 2.6) });
+  }
+  wallHits(p, r, lo);
+}
+function crater(p, r) {
+  const g = new THREE.Group(), s = r * .3;
+  g.position.set(p.x, 0, p.z); g.rotation.y = rand(0, 6.28);
+  const scorch = new THREE.Mesh(scarGeo, decalMat(scorchTex)); scorch.rotation.x = -Math.PI / 2; scorch.position.y = .02; scorch.scale.setScalar(s * 3.2); g.add(scorch);
+  const pit = new THREE.Mesh(pitGeo, pitMat); pit.rotation.x = -Math.PI / 2; pit.position.y = .03; pit.scale.setScalar(s * .62); g.add(pit);
+  const rim = new THREE.Mesh(rimGeo, rimMat); rim.rotation.x = -Math.PI / 2; rim.position.y = .0; rim.scale.set(s * .72, s * .72, s * .45); g.add(rim);
+  for (let k = 0; k < 7; k++) { const a = rand(0, 6.28), d = s * rand(.9, 1.7); const c = new THREE.Mesh(rubbleGeo, rubbleMat); c.position.set(Math.cos(a) * d, .05, Math.sin(a) * d); c.rotation.set(rand(0, 3), rand(0, 3), 0); c.scale.setScalar(rand(.6, 1.6)); g.add(c); }
+  scene.add(g); scars.push({ g, t: SCAR_LIFE, wall: false, fade: scorch.material });
+  trimScars(false, SCAR_MAX);
+}
+const _bb = new THREE.Vector3(), _bl = new THREE.Vector3(), _bn = new THREE.Vector3();
+function wallHits(p, r, lo) {
+  let done = 0;
+  for (const s of solids) {
+    if (done >= 3) break;
+    const gp = s.geometry && s.geometry.parameters; if (!gp) continue;
+    s.updateMatrixWorld(); _bl.copy(p); s.worldToLocal(_bl);
+    let nx = 0, nz = 0;
+    if (gp.width !== undefined) { // box: closest point on surface
+      const hx = gp.width / 2, hy = gp.height / 2, hz = gp.depth / 2;
+      _bb.set(clamp(_bl.x, -hx, hx), clamp(_bl.y, -hy, hy), clamp(_bl.z, -hz, hz));
+      if (_bb.distanceToSquared(_bl) < 1e-6) { // rocket hit right on the surface: use the nearest side face
+        const fx = hx - Math.abs(_bl.x), fz = hz - Math.abs(_bl.z), fy = hy - _bl.y;
+        if (fy < fx && fy < fz) continue;
+        if (fx <= fz) { nx = Math.sign(_bl.x) || 1; _bb.x = nx * hx; } else { nz = Math.sign(_bl.z) || 1; _bb.z = nz * hz; }
+      } else {
+        const dx = Math.abs(_bl.x - _bb.x), dy = Math.abs(_bl.y - _bb.y), dz = Math.abs(_bl.z - _bb.z);
+        if (dy >= dx && dy >= dz) continue; // above/below a box: the crater on the ground is enough
+        if (dx >= dz) nx = Math.sign(_bl.x - _bb.x); else nz = Math.sign(_bl.z - _bb.z);
+      }
+    } else if (gp.radiusTop !== undefined) { // cylinder
+      const rr = gp.radiusTop, hy = gp.height / 2, l = Math.hypot(_bl.x, _bl.z); if (l < .01) continue;
+      nx = _bl.x / l; nz = _bl.z / l; _bb.set(nx * rr, clamp(_bl.y, -hy, hy), nz * rr);
+    } else continue;
+    const d = _bb.distanceTo(_bl); if (d > r * .75) continue;
+    s.localToWorld(_bb); _bn.set(nx, 0, nz).transformDirection(s.matrixWorld);
+    if (_bb.y < .25) _bb.y = .25;
+    done++;
+    const big = 1 - d / (r * .75);
+    // chunks of plaster/concrete break off the wall
+    const mat = s.material && s.material.map ? plasterMat : (s.material || plasterMat);
+    for (let k = 0; k < (lo ? 4 : 8); k++) {
+      const m = new THREE.Mesh(debGeo, k % 3 ? plasterMat : mat); m.scale.set(rand(.6, 1.8), rand(.4, 1.2), rand(.3, .9)).multiplyScalar(.6 + big * .8);
+      m.position.copy(_bb).add(new THREE.Vector3(rand(-.4, .4), rand(-.4, .4), rand(-.4, .4))).addScaledVector(_bn, .12); scene.add(m);
+      const v = _bn.clone().multiplyScalar(rand(3, 7)).add(new THREE.Vector3(rand(-2.5, 2.5), rand(1.5, 5), rand(-2.5, 2.5)));
+      debris.push({ m, v, r: new THREE.Vector3(rand(-10, 10), rand(-10, 10), rand(-10, 10)), t: rand(2.6, 3.6) });
+    }
+    for (let k = 0; k < 4; k++) spark(_bb.clone().addScaledVector(_bn, .2).add(new THREE.Vector3(rand(-.3, .3), rand(-.3, .3), rand(-.3, .3))), 0xd8cbb4);
+    // broken plaster spot + soot around it
+    const g = new THREE.Group(); g.position.copy(_bb).addScaledVector(_bn, .015); g.lookAt(_bb.clone().add(_bn)); g.rotateZ(rand(0, 6.28));
+    const soot = new THREE.Mesh(scarGeo, decalMat(scorchTex, .9)); soot.scale.setScalar(1.6 + big * 1.6); g.add(soot);
+    const pit = new THREE.Mesh(scarGeo, decalMat(pitTex)); pit.position.z = .006; pit.scale.setScalar(1 + big * 1.1); g.add(pit);
+    scene.add(g); scars.push({ g, t: SCAR_LIFE, wall: true, fade: soot.material, fade2: pit.material });
+    trimScars(true, WALLSCAR_MAX);
+  }
+}
+function dropScar(i) { const o = scars[i]; scene.remove(o.g); o.fade.dispose(); if (o.fade2) o.fade2.dispose(); scars.splice(i, 1); }
+function trimScars(wall, max) { let n = 0; for (const o of scars) if (o.wall === wall) n++; for (let i = 0; i < scars.length && n > max; i++) if (scars[i].wall === wall) { dropScar(i); i--; n--; } }
+function clearScars() { while (scars.length) dropScar(0); }
+function updateScars(dt) {
+  for (let i = scars.length - 1; i >= 0; i--) {
+    const o = scars[i]; o.t -= dt;
+    if (o.t < 4) { const a = Math.max(0, o.t / 4); o.fade.opacity = a; if (o.fade2) o.fade2.opacity = a; if (!o.wall) o.g.position.y = -(1 - a) * .2; }
+    if (o.t <= 0) dropScar(i);
+  }
+}
 
 // ---------- bodies that stay on the ground + hit marks (no gore: soot marks, robots lose metal parts) ----------
 const bodies = [], BODY_MAX = 10, BODY_LIFE = 90;
@@ -1527,7 +1650,7 @@ function updateBodies(dt) {
 }
 
 // ---------- remote mines ----------
-const MINE = { proj: { radius: 5, dmg: 170 } }, MINES_PER_LIFE = 3;
+const MINE = { proj: { radius: 5.5, dmg: 170 } }, MINES_PER_LIFE = 3;
 const mineGeo = new THREE.CylinderGeometry(.2, .24, .07, 14), mineMat = new THREE.MeshLambertMaterial({ color: 0x3d4630 });
 const mineLedGeo = new THREE.SphereGeometry(.035, 8, 6), mineLedMat = new THREE.MeshBasicMaterial({ color: 0xff2a2a });
 const mines = [], ghostMines = []; let minesLeft = MINES_PER_LIFE;
