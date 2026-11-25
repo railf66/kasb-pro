@@ -182,7 +182,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="menu" class="screen">
   <div class="card">
     <div class="logo">СТАЛЬНОЙ<br>ДВОР<span>3 ЭТАПА · БОССЫ · МАГАЗИН</span></div>
-    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 25.11 · r8</div>
+    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 25.11 · r9</div>
     <p class="sub">Ржавые роботы захватили склад, город и завод. Пройдите три этапа и победите босса в конце каждого.<br>Или выберите «Схватку»: 3 минуты боя на счёт.</p>
     <div class="diff" id="modeSel"><button data-m="campaign">Кампания</button><button data-m="skirmish">Схватка</button><button data-m="online">🌐 Онлайн</button></div>
     <div id="netBox" class="hidden"><label class="help" style="display:block;margin:4px 0">Ваше имя в игре</label><input id="nick" maxlength="16" autocomplete="off"></div>
@@ -277,7 +277,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 
 <script>
 // auto-update: phones and Telegram keep old copies of the page; compare the build mark with the server copy and reload once
-window.GAME_BUILD = '2026-11-25-r8';
+window.GAME_BUILD = '2026-11-25-r9';
 // visit counter: where the player came from (?from=yt on the Shorts link, else by referrer); "u=1" = first open today on this device
 (function () {
   try {
@@ -1126,7 +1126,7 @@ class Bot {
     this.scale = boss ? 2.3 : 1; g.scale.setScalar(this.scale); this.rad = boss ? 1.1 : .45;
     g.traverse(o => { if (o.isMesh) { o.userData.bot = this; botMeshes.push(o); } });
     this.head.userData.head = true;
-    const sh = new THREE.Mesh(new THREE.CircleGeometry(.55, 16), shadowMat); sh.rotation.x = -Math.PI / 2; sh.position.y = .03; g.add(sh);
+    const sh = this.shadow = new THREE.Mesh(new THREE.CircleGeometry(.55, 16), shadowMat); sh.rotation.x = -Math.PI / 2; sh.position.y = .03; g.add(sh);
     this.flashT = 0;
     this.active = false; this.alive = false; g.visible = false; this.p = new THREE.Vector3();
     scene.add(g);
@@ -1253,6 +1253,7 @@ class Bot {
   update(dt) {
     if (!this.active) return;
     if (!this.alive) {
+      this.shadow.visible = false; // the round shadow would tip up with the falling body and look like a toy soldier's stand
       this.deadT += dt; this.g.rotation.x = -Math.min(this.deadT * 4, Math.PI / 2); this.g.position.y = Math.min(this.deadT, .3) * this.scale;
       if (this.deadT > 3.5) { leaveBody(this); if (this.type === 'boss') { this.active = false; this.g.visible = false; } else this.spawn(); }
       return;
@@ -1272,6 +1273,7 @@ class Bot {
     this.legs[0].rotation.x = Math.sin(this.walk) * .5; this.legs[1].rotation.x = -Math.sin(this.walk) * .5;
     this.g.position.set(this.p.x, Math.abs(Math.sin(this.walk)) * .04, this.p.z);
     if (this.flashT > 0) { this.flashT -= dt; this.g.scale.setScalar(this.scale * (1 + Math.max(0, this.flashT) * .8)); }
+    this.shadow.visible = true;
     if (this.kick > 0) { this.kick = Math.max(0, this.kick - dt * 5); this.g.rotation.x = -this.kick * .22; this.g.rotation.z = Math.sin(this.kick * 9) * this.kick * .06; } else if (this.g.rotation.x || this.g.rotation.z) { this.g.rotation.x = 0; this.g.rotation.z = 0; }
   }
   fire(dist) {
