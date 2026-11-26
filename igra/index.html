@@ -40,6 +40,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 #drawBar i{display:block;height:100%;width:0;background:#ffd23b}
 #drawBar.full i{background:#3ddc84}
 #cross.head i{background:#ffd23b}
+#adsDot{left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#ff3b3b;box-shadow:0 0 2px #000;opacity:0}
 #dmg{inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(220,20,20,.75) 100%);opacity:0;transition:opacity .25s}
 #board{top:calc(max(8px,env(safe-area-inset-top)) + 126px);left:max(8px,env(safe-area-inset-left));font-size:12px;background:rgba(10,14,20,.55);padding:5px 8px;border-radius:8px;min-width:110px;white-space:pre}
 #board .me{color:#5ec8ff;font-weight:700}
@@ -149,6 +150,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
   <div id="wname">Автомат «Шквал»</div>
 </div>
 <div id="cross" class="hud"><i></i><i></i><i></i><i></i></div>
+<div id="adsDot" class="hud"></div>
 <div id="drawBar" class="hud hidden"><i id="drawFill"></i></div>
 <div id="vig" class="hud"></div>
 <div id="dmg" class="hud"></div>
@@ -182,7 +184,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 <div id="menu" class="screen">
   <div class="card">
     <div class="logo">СТАЛЬНОЙ<br>ДВОР<span>3 ЭТАПА · БОССЫ · МАГАЗИН</span></div>
-    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 25.11 · r9</div>
+    <div id="verLbl" style="font-size:11px;opacity:.55;margin:-4px 0 6px">версия 26.11 · r10</div>
     <p class="sub">Ржавые роботы захватили склад, город и завод. Пройдите три этапа и победите босса в конце каждого.<br>Или выберите «Схватку»: 3 минуты боя на счёт.</p>
     <div class="diff" id="modeSel"><button data-m="campaign">Кампания</button><button data-m="skirmish">Схватка</button><button data-m="online">🌐 Онлайн</button></div>
     <div id="netBox" class="hidden"><label class="help" style="display:block;margin:4px 0">Ваше имя в игре</label><input id="nick" maxlength="16" autocomplete="off"></div>
@@ -277,7 +279,7 @@ canvas#gl{display:block;position:fixed;inset:0;width:100%;height:100%}
 
 <script>
 // auto-update: phones and Telegram keep old copies of the page; compare the build mark with the server copy and reload once
-window.GAME_BUILD = '2026-11-25-r9';
+window.GAME_BUILD = '2026-11-26-r10';
 // visit counter: where the player came from (?from=yt on the Shorts link, else by referrer); "u=1" = first open today on this device
 (function () {
   try {
@@ -830,7 +832,7 @@ function setStance(n) {
   if (p) { p.classList.toggle('act', n === 2); p.textContent = n === 2 ? 'ВСТАТЬ' : 'ЛЕЧЬ'; }
   const t = document.getElementById('stance'); if (t) { t.textContent = STANCE_NAME[n]; t.classList.toggle('on', n > 0); }
 }
-let wi = 0, zoom = false; const ammo = W.map(w => w.mag); let cd = 0, reloadT = 0, recoil = 0, flashT = 0, swapT = 0;
+let wi = 0, zoom = false, ads = false, adsT = 0, aimD = 20, aimT = 0; const ammo = W.map(w => w.mag); let cd = 0, reloadT = 0, recoil = 0, flashT = 0, swapT = 0;
 
 // ---------- first-person weapons: bevelled metal / wood / polymer parts, env reflections, gloved hands ----------
 const GUN = (() => {
@@ -1018,6 +1020,8 @@ function gunModel(kind) {
   const flash = new THREE.Mesh(new THREE.CircleGeometry(.1, 5), new THREE.MeshBasicMaterial({ color: 0xffc860, transparent: true, opacity: .85, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false }));
   flash.position.set(0, kind === 'rpg' ? .06 : kind === 'sniper' || kind === 'rifle' || kind === 'gl' ? .005 : .03, fz); flash.visible = false; g.add(flash);
   g.userData.flash = flash; g.userData.muzzle = flash;
+  // line of sight over the rear/front sights (gun-local): used to bring the sights to the screen centre when aiming
+  g.userData.sight = { rifle: [0, .074, -.46], pistol: [0, .063, -.56], gl: [0, .12, -.4], rpg: [-.045, .135, -.36] }[kind] || null;
   if (kind !== 'bow') { g.scale.setScalar(kind === 'pistol' ? 1.05 : .9); g.position.z = kind === 'rpg' ? -.12 : -.06; }
   g.traverse(o => { o.renderOrder = 10; if (o.material) o.material.depthTest = true; });
   return g;
@@ -1329,7 +1333,7 @@ function startRound() {
   if (mode === 'online') { netStart(); return; }
   audioInit();
   P.kills = P.deaths = P.shots = P.hits = 0; timeLeft = ROUND; roundCoins = 0; clearBodies(); clearMines();
-  setZoom(false); guns.forEach(g => g.visible = false); wi = 0; guns[0].visible = true; $('bZoom').classList.add('hidden');
+  setZoom(false); guns.forEach(g => g.visible = false); wi = 0; guns[0].visible = true; zoomBtn();
   stageKills = 0; bossPhase = false; stageT = 0; $('bossbar').classList.add('hidden');
   if (curMap !== STAGES[stage].map) buildMap(STAGES[stage].map);
   spawnPlayer(); activateBots();
@@ -1404,9 +1408,12 @@ function swap(to) {
   if (to === undefined) { const sl = W.map((w, i) => i).filter(i => has(W[i].id)); to = sl[(sl.indexOf(wi) + 1) % sl.length]; }
   if (to === wi || !W[to] || !has(W[to].id)) return;
   bowCancel(); guns[wi].visible = false; wi = to; guns[wi].visible = true; reloadT = 0; swapT = .25; cd = .2; setZoom(false);
-  $('bZoom').classList.toggle('hidden', !W[wi].zoom); hud();
+  zoomBtn(); hud();
 }
-function setZoom(z) { zoom = !!z && !!W[wi].zoom && P.alive; $('scope').classList.toggle('hidden', !zoom); $('bZoom').classList.toggle('on', zoom); }
+// sniper: optical scope; rifle, pistol, launchers: raise the gun and look along its sights
+const canAds = i => !W[i].zoom && !!guns[i].userData.sight;
+function setZoom(z) { z = !!z && P.alive; zoom = z && !!W[wi].zoom; ads = z && canAds(wi); $('scope').classList.toggle('hidden', !zoom); $('bZoom').classList.toggle('on', zoom || ads); }
+function zoomBtn() { $('bZoom').classList.toggle('hidden', !(W[wi].zoom || canAds(wi))); }
 function onKill(head, how) {
   if (mode === 'online') { sfx('kill', 1); feed('Учебный дрон сбит' + (head ? ' 🎯' : '')); return; }
   vibrate([15, 30, 15]);
@@ -1941,10 +1948,10 @@ function shoot() {
   const w = W[wi];
   if (ammo[wi] <= 0) { reload(); return; }
   ammo[wi]--; cd = w.rate; P.shots++;
-  recoil = Math.min(recoil + w.kick * 3, .15); P.pitch = clamp(P.pitch + w.kick * (zoom ? .3 : 1), -1.4, 1.4); flashT = .05;
+  recoil = Math.min(recoil + w.kick * 3, .15); P.pitch = clamp(P.pitch + w.kick * (zoom ? .3 : ads ? .6 : 1), -1.4, 1.4); flashT = .05;
   sfx(w.snd, .8);
   if (w.proj) { launch(w); if (ammo[wi] === 0) setTimeout(reload, 150); hud(); return; }
-  const sp = (w.hip && !zoom ? w.hip : w.spread) * (P.moving ? 1.8 : 1) * STANCE[P.stance].spr;
+  const sp = (w.hip && !zoom ? w.hip : w.spread) * (P.moving ? 1.8 : 1) * STANCE[P.stance].spr * (ads ? .45 : 1);
   const aim = SET.assist ? assistDir() : null;
   if (aim) { aim.x += rand(-sp, sp) * .5; aim.y += rand(-sp, sp) * .5; aim.z += rand(-sp, sp) * .5; ray.set(camera.position, aim.normalize()); }
   else ray.setFromCamera(new THREE.Vector2(rand(-sp, sp), rand(-sp, sp)), camera);
@@ -2054,7 +2061,7 @@ function netBegin(m) {
   D = DIFF.easy; myId = m.id; netLeft = m.left; netEnd = Date.now() + m.left; netBrk = !!m.brk; clearRemotes();
   for (const q of m.players) addRemote(q.id, esc(q.n));
   P.kills = P.deaths = P.shots = P.hits = 0; roundCoins = 0;
-  setZoom(false); guns.forEach(g => g.visible = false); wi = 0; guns[0].visible = true; $('bZoom').classList.add('hidden');
+  setZoom(false); guns.forEach(g => g.visible = false); wi = 0; guns[0].visible = true; zoomBtn();
   stageKills = 0; bossPhase = false; stageT = 0; $('bossbar').classList.add('hidden');
   if (curMap !== m.map) buildMap(m.map);
   for (const b of bots) { b.active = false; b.alive = false; b.g.visible = false; }
@@ -2188,7 +2195,7 @@ addEventListener('keyup', e => keys[e.code] = false);
 addEventListener('wheel', e => { if (state === 'play') swap(); }, { passive: true });
 renderer.domElement.addEventListener('mousedown', e => { if (state !== 'play' || isTouch) return; if (!document.pointerLockElement) { lockPointer(); return; } if (e.button === 0) mouseDown = true; if (e.button === 2) setZoom(true); });
 addEventListener('mouseup', e => { if (e.button === 2) setZoom(false); else mouseDown = false; });
-addEventListener('mousemove', e => { if (document.pointerLockElement && state === 'play' && !paused) { const ks = (zoom ? .35 : 1) * SET.sens; P.yaw -= e.movementX * .0022 * ks; P.pitch = clamp(P.pitch - e.movementY * .0022 * ks, -1.4, 1.4); } });
+addEventListener('mousemove', e => { if (document.pointerLockElement && state === 'play' && !paused) { const ks = (zoom ? .35 : ads ? .7 : 1) * SET.sens; P.yaw -= e.movementX * .0022 * ks; P.pitch = clamp(P.pitch - e.movementY * .0022 * ks, -1.4, 1.4); } });
 document.addEventListener('pointerlockchange', () => { if (!document.pointerLockElement && state === 'play' && !isTouch) { paused = true; mouseDown = false; $('pause').classList.remove('hidden'); } });
 document.querySelectorAll('.snd').forEach(b => b.onclick = () => { audioInit(); setMute(!muted); });
 setMute(muted);
@@ -2303,7 +2310,7 @@ btn('bBoom', () => blowMines());
 btn('bPause', () => pauseGame());
 btn('bSnd', () => { setMute(!muted); $('bSnd').textContent = muted ? '🔇' : '🔊'; });
 $('bSnd').textContent = muted ? '🔇' : '🔊';
-btn('bZoom', () => setZoom(!zoom));
+btn('bZoom', () => setZoom(!(zoom || ads)));
 tl.addEventListener('touchstart', e => {
   e.preventDefault(); audioInit();
   for (const t of e.changedTouches) {
@@ -2319,7 +2326,7 @@ addEventListener('touchmove', e => {
       if (d > m) { dx = dx / d * m; dy = dy / d * m; }
       joy.x = dx / m; joy.y = dy / m; $('joyKnob').style.transform = `translate(${dx}px,${dy}px)`;
     } else if (t.identifier === look.id) {
-      const ks = (zoom ? .35 : 1) * SET.sens; P.yaw -= (t.clientX - look.x) * .0055 * ks; P.pitch = clamp(P.pitch - (t.clientY - look.y) * .0055 * ks, -1.4, 1.4);
+      const ks = (zoom ? .35 : ads ? .7 : 1) * SET.sens; P.yaw -= (t.clientX - look.x) * .0055 * ks; P.pitch = clamp(P.pitch - (t.clientY - look.y) * .0055 * ks, -1.4, 1.4);
       look.x = t.clientX; look.y = t.clientY;
     }
   }
@@ -2472,7 +2479,7 @@ function frame() {
       const ml = Math.hypot(mx, mz); if (ml > 1) { mx /= ml; mz /= ml; }
       let sprint = keys.ShiftLeft || keys.ShiftRight || (P.stance === 0 && Math.hypot(joy.x, joy.y) > .95);
       if (sprint && P.stance && (keys.ShiftLeft || keys.ShiftRight)) setStance(0);
-      const sp = (sprint && !P.stance && !drawing ? 7.5 : 5.5) * STANCE[P.stance].sp * (drawing ? .6 : 1);
+      const sp = (sprint && !P.stance && !drawing ? 7.5 : 5.5) * STANCE[P.stance].sp * (drawing ? .6 : 1) * (ads ? .65 : 1);
       const s = Math.sin(P.yaw), c = Math.cos(P.yaw);
       P.pos.x += (mx * c + mz * s) * sp * dt; P.pos.z += (-mx * s + mz * c) * sp * dt;
       collide(P.pos, .4);
@@ -2490,7 +2497,7 @@ function frame() {
     } else {
       P.respT -= dt; bowCancel();
       if (P.respT <= 0) { spawnPlayer(); center('', 0); hud(); }
-      if (zoom) setZoom(false);
+      if (zoom || ads) setZoom(false);
     }
     for (const b of bots) b.update(dt);
     if (centerT > 0) { centerT -= dt; if (centerT <= 0) $('center').textContent = ''; }
@@ -2510,12 +2517,27 @@ function frame() {
   if (shakeA > .001) { camera.position.x += rand(-1, 1) * shakeA * .3; camera.position.y += rand(-1, 1) * shakeA * .3; camera.rotation.z += rand(-1, 1) * shakeA * .05; shakeA *= Math.pow(.004, dt); }
   updateWeather(dt); updateDebris(dt);
   gunHold.visible = state === 'play' && P.alive && !zoom;
-  gunHold.position.set(.17 + (P.moving ? Math.cos(P.bob * .5) * .01 : 0), -.2 + bobY * .3 - (reloadT > 0 ? .12 : 0) - swapT * .4, -.42 + recoil);
-  gunHold.rotation.set(recoil * 2 + (reloadT > 0 ? .5 : 0), 0, 0);
+  // the barrel points at what the crosshair is on: measure the distance to it a few times a second
+  aimT -= dt; if (aimT <= 0 && state === 'play') {
+    aimT = .1; ray.setFromCamera(new THREE.Vector2(0, 0), camera); ray.far = 60;
+    const ah = ray.intersectObjects([...solids, ...botMeshes, ...remoteMeshes, ground], false).find(x => !(x.object.userData.bot && !x.object.userData.bot.alive));
+    aimD += ((ah ? clamp(ah.distance, 2.5, 60) : 60) - aimD) * .5;
+  }
+  adsT += ((ads && reloadT <= 0 ? 1 : 0) - adsT) * Math.min(1, dt * 12);
+  const sg = guns[wi].userData.sight, gs = .7 * guns[wi].scale.x, hipX = .17, hipY = -.2, hipZ = -.42;
+  const ax = sg ? -sg[0] * gs : hipX, ay = sg ? -sg[1] * gs : hipY, k = adsT, bk = 1 - k * .8;
+  const gx = hipX + (ax - hipX) * k + (P.moving ? Math.cos(P.bob * .5) * .01 * bk : 0);
+  const gy = hipY + (ay - hipY) * k + bobY * .3 * bk - (reloadT > 0 ? .12 : 0) - swapT * .4;
+  const gz = hipZ + ((sg ? sg[2] : hipZ) - hipZ) * k + recoil * (1 - k * .5);
+  gunHold.position.set(gx, gy, gz);
+  // from the hip the gun is turned a little so its barrel line meets the crosshair at aimD
+  const dz = Math.max(1, aimD + gz);
+  gunHold.rotation.set(recoil * (2 - k) + (reloadT > 0 ? .5 : 0) + Math.atan(-gy / dz) * (1 - k), Math.atan(gx / dz) * (1 - k), 0);
+  $('cross').style.opacity = (1 - adsT).toFixed(2); $('adsDot').style.opacity = (adsT > .6 ? adsT : 0).toFixed(2);
   flashT -= dt; const g = guns[wi].userData.flash; g.visible = flashT > 0; if (g.visible) g.rotation.z = Math.random() * 3;
   flashLight.intensity = flashT > 0 ? 6 : 0;
   updateFx(dt); updateProjs(dt); updateArrows(dt); updateBodies(dt); updateMines();
-  const fov = zoom ? 24 : 75 - (drawing ? 12 * drawT / BOW_FULL : 0); if (Math.abs(camera.fov - fov) > .1) { camera.fov += (fov - camera.fov) * Math.min(1, dt * 14); camera.updateProjectionMatrix(); }
+  const fov = zoom ? 24 : 75 - (drawing ? 12 * drawT / BOW_FULL : 0) - adsT * 13; if (Math.abs(camera.fov - fov) > .1) { camera.fov += (fov - camera.fov) * Math.min(1, dt * 14); camera.updateProjectionMatrix(); }
   mmT -= dt; if (mmT <= 0) { drawMap(); mmT = .1; }
   renderer.render(scene, camera);
   recTick(dt);
