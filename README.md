@@ -7,7 +7,8 @@
 Прогресс уроков хранится в браузере ученика (ключи вида `vn_*`, `hp_*`), язык общий для всех приложений (`ep_lang`).
 
 - `index.html` — главная страница с профессиями
-- `elektrik/` — приложение для электриков (собирается из репозитория railf66/elektrik-pro: `python3 build.py`, затем копия `index.html` с `window.KASB_HUB="../"`)
+- `elektrik/` — приложение для электриков, уроки разложены по разрядам 2–6 (ЕТКС), экзамен и значок за каждый разряд, свидетельство. Исходники: папка проекта elektrik-app (`src/lessons.js`, `src/lessons2.js`, `src/app.js`), `python3 build.py` → `deploy-index.html`, копировать в `elektrik/index.html`.
+- `certificate.js` — общее неофициальное свидетельство Kasb Pro (canvas → PNG): `KasbCert.open({prefix, lang, prof, grade, topics, sources, url, start})`. Имя хранится в `<prefix>_certname`.
 - `elektrik/igra/` — игра «Собери щиток» (RU/UZ, 2 минуты, 3 жизни): подбор автоматов, УЗО, кабеля и подключение проводов. Один файл `index.html`, копия в папке проекта elektrik-game. Кнопка «Поделиться» ведёт в бот `t.me/kasbpro_uz_bot?start=igra`. Ссылка на игру есть на главном экране Электрик Pro.
 - `santehnik/` — приложение для сантехников (исходники: папка проекта santehnik-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`)
 - `medsestra/` — приложение для медсестёр и медбратьев (исходники: папка проекта medsestra-app, `python3 build.py`, затем копия `site-index.html` с `window.KASB_HUB="../"`). Только уход, первая помощь и санитария, без лекарств и доз.
