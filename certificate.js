@@ -10,15 +10,19 @@ const T={
   topics:'Изученные темы и сданные тесты',src:'Курс составлен по официальным источникам',
   note:'Неофициальный документ. Это экспресс-подготовка, а не профессиональное обучение. Официальный разряд присваивает учебный центр или квалификационная комиссия предприятия.',
   date:'Дата',num:'№',ask:'Как написать ваше имя на свидетельстве?',ph:'Имя и фамилия',make:'Сделать свидетельство',
-  save:'Скачать',share:'Поделиться',close:'Закрыть',edit:'Изменить имя',hold:'Чтобы сохранить на телефоне, нажмите на картинку и подержите.',
+  save:'Скачать',share:'Поделиться',close:'Закрыть',edit:'Изменить имя',hold:'Чтобы сохранить на телефоне, нажмите на картинку и подержите.',holdTg:'Нажмите «Получить в чат»: бот Kasb Pro пришлёт свидетельство картинкой, там его легко сохранить в галерею или переслать.',toChat:'📩 Получить в чат',sending:'Отправляем…',sent:'Готово! Свидетельство отправлено в чат с ботом Kasb Pro. Если через минуту не пришло, нажмите ещё раз.',sendErr:'Не получилось отправить. Проверьте интернет и попробуйте ещё раз.',goChat:'Перейти в чат',cap:'🎓 Ваше свидетельство Kasb Pro. Чтобы сохранить: откройте картинку, нажмите ⋮ и «Сохранить в галерею».',
   shareText:(g,p)=>`Я прошёл(ла) подготовку к ${g}-му разряду по профессии «${p}» в Kasb Pro. Попробуй тоже:`},
  uz:{title:'GUVOHNOMA',sub:'qisqartirilgan kursni o\'tganlik haqida',conf:'Ushbu guvohnoma tasdiqlaydiki,',
   did:(g,p)=>`«${p}» kasbi bo'yicha ${g}-razryadga tayyorlov qisqartirilgan kursini o'tdi`,
   topics:'O\'rganilgan mavzular va topshirilgan testlar',src:'Kurs rasmiy manbalar asosida tuzilgan',
   note:'Norasmiy hujjat. Bu tezkor tayyorgarlik, kasbiy ta\'lim emas. Rasmiy razryadni o\'quv markazi yoki korxonaning malaka komissiyasi beradi.',
   date:'Sana',num:'№',ask:'Guvohnomaga ismingizni qanday yozaylik?',ph:'Ism va familiya',make:'Guvohnoma yaratish',
-  save:'Yuklab olish',share:'Ulashish',close:'Yopish',edit:'Ismni o\'zgartirish',hold:'Telefonga saqlash uchun rasmni bosib turing.',
+  save:'Yuklab olish',share:'Ulashish',close:'Yopish',edit:'Ismni o\'zgartirish',hold:'Telefonga saqlash uchun rasmni bosib turing.',holdTg:'«Chatga olish» tugmasini bosing: Kasb Pro boti guvohnomani rasm qilib yuboradi, uni galereyaga saqlash yoki ulashish oson.',toChat:'📩 Chatga olish',sending:'Yuborilmoqda…',sent:'Tayyor! Guvohnoma Kasb Pro boti bilan chatga yuborildi. Bir daqiqada kelmasa, yana bosing.',sendErr:'Yuborib bo\'lmadi. Internetni tekshirib, qayta urinib ko\'ring.',goChat:'Chatga o\'tish',cap:'🎓 Kasb Pro guvohnomangiz. Saqlash uchun: rasmni oching, ⋮ ni bosing va «Galereyaga saqlash».',
   shareText:(g,p)=>`Men Kasb Pro'da «${p}» kasbi bo'yicha ${g}-razryadga tayyorgarlikdan o'tdim. Sen ham sinab ko'r:`}};
+const HOOK='https://hook.eu1.make.com/qq4jdjrub4hyaylndyr5i1kpive8otlj'; // Make 8848306: sends the picture to the user via @kasbpro_uz_bot
+function tgAuth(){const tg=window.Telegram&&window.Telegram.WebApp;const u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;if(!u||!tg.initData)return null;
+  const p=new URLSearchParams(tg.initData);const hash=p.get('hash');if(!hash)return null;p.delete('hash');const keys=[...p.keys()].sort();
+  return {chat:String(u.id),hash,dcs:keys.map(k=>k+'='+p.get(k)).join('\n')}}
 const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function hash(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36).toUpperCase().slice(0,6).padStart(6,'0')}
@@ -81,8 +85,14 @@ function open(o){
     box.querySelector('#kc-go').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};box.querySelector('#kc-x').onclick=close}
   function show(name){
     const c=draw(o,name);const url=c.toDataURL('image/png');const lang=o.lang==='uz'?'uz':'ru';const prof=o.prof[lang]||o.prof.ru;
-    box.innerHTML=`<img src="${url}" alt="${esc(L.title)}"><p class="kc-hint">${L.hold}</p><a class="kc-btn" id="kc-dl" href="${url}" download="kasbpro-${o.prefix||'kp'}-${o.grade}.png">${L.save}</a><button class="kc-btn" id="kc-sh" type="button">${L.share}</button><button class="kc-btn g" id="kc-ed" type="button">${L.edit}</button><button class="kc-btn g" id="kc-x" type="button">${L.close}</button>`;
+    const auth=tgAuth();
+    box.innerHTML=`<img src="${url}" alt="${esc(L.title)}"><p class="kc-hint" id="kc-hint">${auth?L.holdTg:L.hold}</p>${auth?`<button class="kc-btn" id="kc-chat" type="button">${L.toChat}</button>`:`<a class="kc-btn" id="kc-dl" href="${url}" download="kasbpro-${o.prefix||'kp'}-${o.grade}.png">${L.save}</a>`}<button class="kc-btn" id="kc-sh" type="button">${L.share}</button><button class="kc-btn g" id="kc-ed" type="button">${L.edit}</button><button class="kc-btn g" id="kc-x" type="button">${L.close}</button>`;
     box.querySelector('#kc-x').onclick=close;box.querySelector('#kc-ed').onclick=ask;
+    const cb=box.querySelector('#kc-chat');if(cb)cb.onclick=()=>{const h=box.querySelector('#kc-hint');cb.disabled=true;cb.textContent=L.sending;
+      const img=c.toDataURL('image/jpeg',0.88).split(',')[1];
+      fetch(HOOK,{method:'POST',mode:'no-cors',body:new URLSearchParams({chat:auth.chat,dcs:auth.dcs,hash:auth.hash,img,caption:L.cap})})
+       .then(()=>{h.textContent=L.sent;cb.disabled=false;cb.textContent=L.goChat;cb.onclick=()=>{try{window.Telegram.WebApp.close()}catch(e){close()}}})
+       .catch(()=>{h.textContent=L.sendErr;cb.disabled=false;cb.textContent=L.toChat})};
     box.querySelector('#kc-sh').onclick=async()=>{
       const text=o.shareText?(o.shareText[lang]||o.shareText.ru):L.shareText(o.grade,prof);const link='https://t.me/kasbpro_uz_bot?start='+(o.start||'site');
       try{const blob=await new Promise(r=>c.toBlob(r,'image/png'));const file=new File([blob],'kasbpro.png',{type:'image/png'});
