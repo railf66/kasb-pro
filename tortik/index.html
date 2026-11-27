@@ -37,9 +37,10 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
 #patience i.low{background:linear-gradient(90deg,#ff6f6f,var(--gold))}
 /* stage */
 #stage{flex:1;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;border-radius:22px;overflow:hidden;
- background:linear-gradient(180deg,transparent 72%,#e9a97a 72%,#d68d5c 74%,#c97f50 100%),
- repeating-linear-gradient(90deg,rgba(255,255,255,.0) 0 26px,rgba(255,255,255,.45) 26px 28px),
- linear-gradient(180deg,#ffe9f1,#ffd9e7 72%);box-shadow:inset 0 -6px 0 rgba(0,0,0,.06),0 3px 0 var(--line)}
+ background:radial-gradient(ellipse 60% 42% at 50% 56%,rgba(255,255,255,.95),rgba(255,255,255,0) 100%),
+ linear-gradient(180deg,transparent 72%,#f0a874 72%,#d9864f 74.5%,#a85a2c 100%),
+ repeating-linear-gradient(90deg,rgba(255,255,255,0) 0 26px,rgba(255,255,255,.5) 26px 28px),
+ linear-gradient(180deg,#ffd3e4,#ffbcd5 72%);box-shadow:inset 0 -6px 0 rgba(0,0,0,.06),0 3px 0 var(--line)}
 #bunting{position:absolute;left:0;top:0;width:100%;height:34px;pointer-events:none}
 #shelf{position:absolute;left:10px;top:40px;display:flex;gap:6px;font-size:20px;opacity:.85;pointer-events:none}
 #shelf2{position:absolute;right:10px;top:40px;display:flex;gap:6px;font-size:20px;opacity:.85;pointer-events:none}
@@ -69,10 +70,10 @@ body{background:radial-gradient(circle at 20% 10%,#fff 0,transparent 40%),repeat
 .row b{width:56px;font-size:12px;color:var(--muted);font-weight:800;flex:none;line-height:1.1}
 .opts{display:flex;gap:6px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
 .opts::-webkit-scrollbar{display:none}
-.opt{flex:none;border:2px solid var(--line);background:var(--bg2);border-radius:14px;width:47px;height:50px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s}
+.opt{flex:none;border:2px solid var(--line);background:linear-gradient(180deg,#fff,#ffeef4);box-shadow:0 2px 0 var(--line);border-radius:14px;width:47px;height:50px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s}
 .opt:active{transform:scale(.92)}
-.opt.on{border-color:var(--pink);background:#ffe3ee;box-shadow:0 0 0 2px #ffd0e0}
-.opt svg{width:38px;height:38px}
+.opt.on{border-color:var(--pink);background:linear-gradient(180deg,#fff0f6,#ffd3e4);box-shadow:0 0 0 3px #ffc2da,0 2px 0 #f08cb2}
+.opt svg{width:40px;height:40px;filter:drop-shadow(0 1px 1px rgba(90,30,50,.25))}
 .acts{display:flex;gap:8px}
 .btn{border:0;border-radius:16px;font:900 18px Nunito,sans-serif;padding:13px;cursor:pointer}
 #serve{flex:1;background:linear-gradient(180deg,#ff8db2,var(--pink));color:#fff;box-shadow:0 4px 0 #d94f7f}
@@ -215,7 +216,7 @@ const T = {
     recReady: 'Video tayyor!', recShare: '📤 Ulashish (YouTube, Telegram)', recSave: '💾 Saqlash', recClose: 'Davom etish', recHelp: 'Video vertikal — YouTube Shorts uchun aynan mos. O‘yin havolasi videoda bor: kasbpro.uz/tort', recNo: 'Bu brauzer video yozolmaydi. O‘yinni Chrome’da oching.', recPlay: 'Yozuv o‘yin ichida boshlanadi: studiyani oching va ⏺ ni bosing' }
 };
 const SHAPES = ['round', 'square', 'heart', 'starsh', 'bloom'];
-const CREAMS = { pink: '#f9a8c6', choco: '#8a5434', vanilla: '#fbe6b0', mint: '#a6e6cc', berry: '#b48ae0', caramel: '#e8a25a', lemon: '#fff08a', sky: '#a9d8ff' };
+const CREAMS = { pink: '#ff8dbb', choco: '#7d4428', vanilla: '#ffe29a', mint: '#6fdcb2', berry: '#a978ea', caramel: '#f29b45', lemon: '#ffe84f', sky: '#82c6ff' };
 const TOPS = ['straw', 'candle', 'sprinkle', 'cherry', 'macaron', 'star', 'chocobar', 'blueb', 'hearts', 'flower', 'butterfly', 'crown'];
 const STANDS = { glass: null, mintstand: ['#d8f5e8', '#ffffff', '#b5e6cf', '#9fd9bf'], goldstand: ['#f7d774', '#fff4c4', '#e0b23c', '#c99a26'] };
 const SHOP = [
@@ -252,9 +253,16 @@ const t = k => T[lang][k];
 
 // ---------- drawing ----------
 function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; }
-function shade(hex, f) { const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = n >> 8 & 255, b = n & 255; r = Math.round(r * f); g = Math.round(g * f); b = Math.round(b * f); return `rgb(${Math.min(255, r)},${Math.min(255, g)},${Math.min(255, b)})`; }
+function rgbOf(c) { if (c[0] === '#') { const n = parseInt(c.slice(1), 16); return [n >> 16, n >> 8 & 255, n & 255]; } return c.match(/\d+/g).slice(0, 3).map(Number); }
+function shade(hex, f) { let [r, g, b] = rgbOf(hex); r = Math.round(r * f); g = Math.round(g * f); b = Math.round(b * f); return `rgb(${Math.min(255, r)},${Math.min(255, g)},${Math.min(255, b)})`; }
 function heartPt(tt, s) { const x = 16 * Math.pow(Math.sin(tt), 3), y = 13 * Math.cos(tt) - 5 * Math.cos(2 * tt) - 2 * Math.cos(3 * tt) - Math.cos(4 * tt); return [x / 17 * s, -(y + 2.5) / 17 * s]; }
 let YS = 1;
+function mix(hex, a) { const [r, g, b] = rgbOf(hex), f = v => Math.round(v + (255 - v) * a); return `rgb(${f(r)},${f(g)},${f(b)})`; }
+function defsOf(g) { const r = g.ownerSVGElement || g; let d = r.querySelector('defs'); if (!d) { d = document.createElementNS(NS, 'defs'); r.insertBefore(d, r.firstChild); } return d; }
+// glossy ball / glossy bar gradients (3D look)
+function ball(g, c) { return grad(defsOf(g), 'radialGradient', [[0, mix(c, .8)], [.28, mix(c, .25)], [.7, c], [1, shade(c, .62)]], { cx: .34, cy: .3, r: .78 }); }
+function bar(g, c, horiz) { return grad(defsOf(g), 'linearGradient', [[0, shade(c, .72)], [.35, mix(c, .45)], [.55, c], [1, shade(c, .6)]], horiz ? { x1: 0, y1: 0, x2: 0, y2: 1 } : {}); }
+function drop(g, x, y, rx, ry) { el('ellipse', { cx: x, cy: y, rx, ry, fill: 'rgba(90,30,50,.25)' }, g); }
 // star: 5 rounded points; bloom: 6 round petals (radius as a function of the angle, 1 = full size)
 const POLAR = {
   starsh: a => { const k = ((a + Math.PI / 2) / (Math.PI * 2 / 5)) % 1, f = Math.abs(k - .5) * 2; return .62 + .4 * Math.pow(f, 1.6); },
@@ -278,62 +286,75 @@ function ringPts(shape, cx, cy, s, n) {
   return pts;
 }
 function drawTopping(g, kind, x, y, sc = 1, i = 0) {
+  const W = 'rgba(255,255,255,.85)';
   if (kind === 'straw') {
-    el('path', { d: `M${x},${y + 7 * sc} C${x - 8 * sc},${y} ${x - 6 * sc},${y - 7 * sc} ${x},${y - 6 * sc} C${x + 6 * sc},${y - 7 * sc} ${x + 8 * sc},${y} ${x},${y + 7 * sc}Z`, fill: '#ef3b5a', stroke: '#b81e3c', 'stroke-width': .8 * sc }, g);
-    el('path', { d: `M${x - 4 * sc},${y - 6 * sc} L${x},${y - 3 * sc} L${x + 4 * sc},${y - 6 * sc} L${x},${y - 8 * sc}Z`, fill: '#4cb85a' }, g);
-    [[-2, -1], [2, 0], [0, 3]].forEach(([a, b]) => el('circle', { cx: x + a * sc, cy: y + b * sc, r: .8 * sc, fill: '#ffe08a' }, g));
-    el('ellipse', { cx: x - 2.5 * sc, cy: y - 2 * sc, rx: 1.4 * sc, ry: 2.4 * sc, fill: 'rgba(255,255,255,.45)' }, g);
+    drop(g, x + 1 * sc, y + 7 * sc, 6 * sc, 2 * sc);
+    el('path', { d: `M${x},${y + 7.5 * sc} C${x - 8.5 * sc},${y} ${x - 6.5 * sc},${y - 7.5 * sc} ${x},${y - 6.5 * sc} C${x + 6.5 * sc},${y - 7.5 * sc} ${x + 8.5 * sc},${y} ${x},${y + 7.5 * sc}Z`, fill: ball(g, '#f2304f'), stroke: '#a3142f', 'stroke-width': .7 * sc }, g);
+    [[-2.6, -2], [2.4, -1.4], [0, 1.2], [-2.2, 2.8], [2.2, 3], [0, 5]].forEach(([a, b]) => el('ellipse', { cx: x + a * sc, cy: y + b * sc, rx: .6 * sc, ry: .9 * sc, fill: '#ffe27a' }, g));
+    el('path', { d: `M${x - 5 * sc},${y - 6 * sc} L${x - 1.5 * sc},${y - 4 * sc} L${x},${y - 7 * sc} L${x + 1.5 * sc},${y - 4 * sc} L${x + 5 * sc},${y - 6 * sc} L${x + 1 * sc},${y - 9 * sc} L${x - 1 * sc},${y - 9 * sc}Z`, fill: bar(g, '#3fb04e', 1), stroke: '#23772f', 'stroke-width': .4 * sc }, g);
+    el('ellipse', { cx: x - 3 * sc, cy: y - 2.5 * sc, rx: 1.3 * sc, ry: 2.6 * sc, fill: W, transform: `rotate(20 ${x - 3 * sc} ${y - 2.5 * sc})` }, g);
   } else if (kind === 'cherry') {
-    el('path', { d: `M${x},${y - 3 * sc} q${3 * sc},${-7 * sc} ${7 * sc},${-9 * sc}`, stroke: '#5b7b2a', 'stroke-width': 1.4 * sc, fill: 'none' }, g);
-    el('circle', { cx: x, cy: y, r: 5 * sc, fill: '#b0102e' }, g); el('circle', { cx: x - 1.6 * sc, cy: y - 1.6 * sc, r: 1.4 * sc, fill: '#ff8fa3' }, g);
+    drop(g, x + 1 * sc, y + 4.6 * sc, 5.5 * sc, 1.8 * sc);
+    el('path', { d: `M${x},${y - 3.5 * sc} q${3 * sc},${-7 * sc} ${7.5 * sc},${-9.5 * sc}`, stroke: '#4f7a1e', 'stroke-width': 1.6 * sc, fill: 'none', 'stroke-linecap': 'round' }, g);
+    el('circle', { cx: x, cy: y, r: 5.4 * sc, fill: ball(g, '#d8123c') }, g);
+    el('ellipse', { cx: x - 2 * sc, cy: y - 2.2 * sc, rx: 1.6 * sc, ry: 1.1 * sc, fill: W, transform: `rotate(-30 ${x - 2 * sc} ${y - 2.2 * sc})` }, g);
   } else if (kind === 'candle') {
-    const cols = ['#7cc7ff', '#ffd25e', '#ff8fb8', '#9be38c'];
-    el('rect', { x: x - 2.4 * sc, y: y - 14 * sc, width: 4.8 * sc, height: 14 * sc, rx: 1.2 * sc, fill: cols[i % 4], stroke: 'rgba(0,0,0,.15)', 'stroke-width': .6 }, g);
-    el('path', { d: `M${x},${y - 22 * sc} q${3.5 * sc},${4 * sc} 0,${7 * sc} q${-3.5 * sc},${-3 * sc} 0,${-7 * sc}Z`, fill: '#ffb21e' }, g);
-    el('circle', { cx: x, cy: y - 17 * sc, r: 1.3 * sc, fill: '#fff6c2' }, g);
+    const cols = ['#4fb4ff', '#ffc21e', '#ff6fa6', '#5fd36e'], c = cols[i % 4];
+    drop(g, x, y + 1 * sc, 4 * sc, 1.4 * sc);
+    el('rect', { x: x - 2.6 * sc, y: y - 14 * sc, width: 5.2 * sc, height: 14 * sc, rx: 1.3 * sc, fill: bar(g, c) }, g);
+    for (let k = 0; k < 3; k++) el('path', { d: `M${x - 2.6 * sc},${y - (3 + k * 4.4) * sc} l${5.2 * sc},${-2.2 * sc}`, stroke: 'rgba(255,255,255,.75)', 'stroke-width': 1.1 * sc }, g);
+    el('circle', { cx: x, cy: y - 18 * sc, r: 6 * sc, fill: grad(defsOf(g), 'radialGradient', [[0, '#fff3a0', .9], [1, '#ffcf40', 0]]) }, g);
+    el('path', { d: `M${x},${y - 23 * sc} q${3.8 * sc},${4.5 * sc} 0,${7.5 * sc} q${-3.8 * sc},${-3 * sc} 0,${-7.5 * sc}Z`, fill: grad(defsOf(g), 'linearGradient', [[0, '#ff7a00'], [.6, '#ffc21e'], [1, '#fff6c2']], { x1: 0, y1: 0, x2: 0, y2: 1 }) }, g);
+    el('circle', { cx: x, cy: y - 17.5 * sc, r: 1.3 * sc, fill: '#fffbe6' }, g);
   } else if (kind === 'macaron') {
-    const cols = ['#ffb3cb', '#b9e4c9', '#cdb8f0', '#ffe08a'], c = cols[i % 4];
-    el('ellipse', { cx: x, cy: y + 2.5 * sc, rx: 6.5 * sc, ry: 3 * sc, fill: shade(c, .85) }, g);
-    el('rect', { x: x - 6 * sc, y: y - .5 * sc, width: 12 * sc, height: 2.6 * sc, fill: '#fff8ef' }, g);
-    el('ellipse', { cx: x, cy: y - 1 * sc, rx: 6.5 * sc, ry: 3.2 * sc, fill: c }, g);
-    el('ellipse', { cx: x - 2 * sc, cy: y - 2 * sc, rx: 2.2 * sc, ry: 1 * sc, fill: 'rgba(255,255,255,.6)' }, g);
+    const cols = ['#ff9cc0', '#8fe0b0', '#c2a4f5', '#ffd75e'], c = cols[i % 4];
+    drop(g, x + .5 * sc, y + 5 * sc, 7 * sc, 1.8 * sc);
+    el('ellipse', { cx: x, cy: y + 2.6 * sc, rx: 6.8 * sc, ry: 3.1 * sc, fill: ball(g, shade(c, .9)) }, g);
+    el('rect', { x: x - 6.2 * sc, y: y - .4 * sc, width: 12.4 * sc, height: 2.6 * sc, rx: 1.2 * sc, fill: '#fffaf0', stroke: 'rgba(200,170,150,.5)', 'stroke-width': .4 * sc }, g);
+    el('ellipse', { cx: x, cy: y - 1 * sc, rx: 6.8 * sc, ry: 3.4 * sc, fill: ball(g, c) }, g);
+    el('ellipse', { cx: x - 2.2 * sc, cy: y - 2.2 * sc, rx: 2.4 * sc, ry: .9 * sc, fill: W }, g);
   } else if (kind === 'star') {
-    let d = ''; for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, r = (k % 2 ? 2.8 : 6.5) * sc; d += (k ? 'L' : 'M') + (x + Math.cos(a) * r).toFixed(1) + ',' + (y - 2 * sc + Math.sin(a) * r).toFixed(1); }
-    el('path', { d: d + 'Z', fill: '#ffcf3a', stroke: '#e09a00', 'stroke-width': .8 * sc, 'stroke-linejoin': 'round' }, g);
-    el('circle', { cx: x - 1.5 * sc, cy: y - 3.5 * sc, r: 1.2 * sc, fill: '#fff6c2' }, g);
+    drop(g, x + .5 * sc, y + 4.6 * sc, 5.5 * sc, 1.6 * sc);
+    let d = ''; for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, r = (k % 2 ? 3 : 7) * sc; d += (k ? 'L' : 'M') + (x + Math.cos(a) * r).toFixed(1) + ',' + (y - 2 * sc + Math.sin(a) * r).toFixed(1); }
+    el('path', { d: d + 'Z', fill: grad(defsOf(g), 'linearGradient', [[0, '#fff3a6'], [.45, '#ffd02e'], [1, '#e08a00']], { x1: 0, y1: 0, x2: 1, y2: 1 }), stroke: '#c07800', 'stroke-width': .7 * sc, 'stroke-linejoin': 'round' }, g);
+    el('circle', { cx: x - 1.6 * sc, cy: y - 4 * sc, r: 1.3 * sc, fill: '#fffbe0' }, g);
   } else if (kind === 'chocobar') {
-    const tf = `rotate(${(i * 37) % 50 - 25} ${x} ${y})`;
-    el('rect', { x: x - 5 * sc, y: y - 9 * sc, width: 10 * sc, height: 12 * sc, rx: 1.2 * sc, fill: '#4a2614', transform: tf }, g);
-    el('rect', { x: x - 4 * sc, y: y - 8 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
-    el('rect', { x: x + .4 * sc, y: y - 8 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
-    el('rect', { x: x - 4 * sc, y: y - 2.6 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
-    el('rect', { x: x + .4 * sc, y: y - 2.6 * sc, width: 3.6 * sc, height: 4.6 * sc, rx: .6 * sc, fill: '#6b3a20', transform: tf }, g);
+    drop(g, x + 1 * sc, y + 4 * sc, 6 * sc, 1.8 * sc);
+    const tf = `rotate(${(i * 37) % 50 - 25} ${x} ${y})`, cg = el('g', { transform: tf }, g);
+    el('rect', { x: x - 5.2 * sc, y: y - 9.2 * sc, width: 10.4 * sc, height: 12.4 * sc, rx: 1.3 * sc, fill: '#3a1c0d' }, cg);
+    [[-4.2, -8.2], [.4, -8.2], [-4.2, -2.8], [.4, -2.8]].forEach(([a, b]) => { el('rect', { x: x + a * sc, y: y + b * sc, width: 3.8 * sc, height: 4.8 * sc, rx: .7 * sc, fill: bar(g, '#7a4424') }, cg); el('rect', { x: x + (a + .5) * sc, y: y + (b + .4) * sc, width: 1 * sc, height: 3.6 * sc, rx: .5 * sc, fill: 'rgba(255,220,190,.35)' }, cg); });
   } else if (kind === 'blueb') {
-    [[-3.2, 1.5], [3.2, 1.5], [0, -2.5]].forEach(([a, b]) => { el('circle', { cx: x + a * sc, cy: y + b * sc, r: 3.4 * sc, fill: '#3f4fa8' }, g); el('circle', { cx: x + a * sc - 1 * sc, cy: y + b * sc - 1 * sc, r: 1 * sc, fill: 'rgba(200,215,255,.7)' }, g); el('path', { d: `M${x + a * sc - 1 * sc},${y + b * sc + 2.6 * sc} l1,-1 l1,1`, stroke: '#232c66', 'stroke-width': .6 * sc, fill: 'none' }, g); });
+    drop(g, x + .5 * sc, y + 5 * sc, 7 * sc, 1.8 * sc);
+    [[-3.3, 1.6], [3.3, 1.6], [0, -2.6]].forEach(([a, b]) => { const cx = x + a * sc, cy = y + b * sc; el('circle', { cx, cy, r: 3.6 * sc, fill: ball(g, '#4357c8') }, g); el('ellipse', { cx: cx - 1.2 * sc, cy: cy - 1.3 * sc, rx: 1.1 * sc, ry: .7 * sc, fill: 'rgba(230,238,255,.85)' }, g); el('path', { d: `M${cx - 1 * sc},${cy + 2.6 * sc} l${1 * sc},${-1 * sc} l${1 * sc},${1 * sc}`, stroke: '#1d2566', 'stroke-width': .6 * sc, fill: 'none' }, g); });
   } else if (kind === 'hearts') {
-    const cols = ['#ff5c8a', '#ff9fc0', '#e8336b'], c = cols[i % 3];
-    el('path', { d: `M${x},${y + 5 * sc} C${x - 9 * sc},${y - 1 * sc} ${x - 5 * sc},${y - 9 * sc} ${x},${y - 4 * sc} C${x + 5 * sc},${y - 9 * sc} ${x + 9 * sc},${y - 1 * sc} ${x},${y + 5 * sc}Z`, fill: c, stroke: shade(c, .75), 'stroke-width': .7 * sc }, g);
-    el('ellipse', { cx: x - 2.6 * sc, cy: y - 3 * sc, rx: 1.3 * sc, ry: .9 * sc, fill: 'rgba(255,255,255,.7)' }, g);
+    const cols = ['#ff3d7a', '#ff86b4', '#e61e5e'], c = cols[i % 3];
+    drop(g, x + .5 * sc, y + 5.5 * sc, 5.5 * sc, 1.6 * sc);
+    el('path', { d: `M${x},${y + 5.5 * sc} C${x - 9.5 * sc},${y - 1 * sc} ${x - 5.5 * sc},${y - 9.5 * sc} ${x},${y - 4.2 * sc} C${x + 5.5 * sc},${y - 9.5 * sc} ${x + 9.5 * sc},${y - 1 * sc} ${x},${y + 5.5 * sc}Z`, fill: ball(g, c), stroke: shade(c, .7), 'stroke-width': .6 * sc }, g);
+    el('ellipse', { cx: x - 3 * sc, cy: y - 3.2 * sc, rx: 1.5 * sc, ry: 1 * sc, fill: W, transform: `rotate(-35 ${x - 3 * sc} ${y - 3.2 * sc})` }, g);
   } else if (kind === 'flower') {
-    const cols = ['#ffffff', '#ffc2d6', '#d9c8ff'], c = cols[i % 3];
-    for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2 - Math.PI / 2; el('circle', { cx: x + Math.cos(a) * 3.6 * sc, cy: y - 1 * sc + Math.sin(a) * 3.6 * sc, r: 3 * sc, fill: c, stroke: shade(c === '#ffffff' ? '#eedde5' : c, .85), 'stroke-width': .5 * sc }, g); }
-    el('circle', { cx: x, cy: y - 1 * sc, r: 2.2 * sc, fill: '#ffc93a' }, g);
+    const cols = ['#ffffff', '#ffadc9', '#cdb6ff'], c = cols[i % 3];
+    drop(g, x + .5 * sc, y + 5 * sc, 6.5 * sc, 1.8 * sc);
+    for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2 - Math.PI / 2; el('circle', { cx: x + Math.cos(a) * 3.8 * sc, cy: y - 1 * sc + Math.sin(a) * 3.8 * sc, r: 3.1 * sc, fill: ball(g, c === '#ffffff' ? '#fff0f5' : c), stroke: shade(c === '#ffffff' ? '#eecfdc' : c, .8), 'stroke-width': .4 * sc }, g); }
+    el('circle', { cx: x, cy: y - 1 * sc, r: 2.3 * sc, fill: ball(g, '#ffbf1f') }, g);
   } else if (kind === 'butterfly') {
-    const cols = ['#7cc7ff', '#ff8fb8', '#b9a2ff', '#ffd25e'], c = cols[i % 4];
-    el('ellipse', { cx: x - 4 * sc, cy: y - 4 * sc, rx: 4.2 * sc, ry: 3.4 * sc, fill: c, transform: `rotate(-25 ${x - 4 * sc} ${y - 4 * sc})` }, g);
-    el('ellipse', { cx: x + 4 * sc, cy: y - 4 * sc, rx: 4.2 * sc, ry: 3.4 * sc, fill: c, transform: `rotate(25 ${x + 4 * sc} ${y - 4 * sc})` }, g);
-    el('ellipse', { cx: x - 3 * sc, cy: y + 1.5 * sc, rx: 2.8 * sc, ry: 2.2 * sc, fill: shade(c, .85) }, g);
-    el('ellipse', { cx: x + 3 * sc, cy: y + 1.5 * sc, rx: 2.8 * sc, ry: 2.2 * sc, fill: shade(c, .85) }, g);
-    el('circle', { cx: x - 4 * sc, cy: y - 4.5 * sc, r: 1.1 * sc, fill: 'rgba(255,255,255,.75)' }, g); el('circle', { cx: x + 4 * sc, cy: y - 4.5 * sc, r: 1.1 * sc, fill: 'rgba(255,255,255,.75)' }, g);
-    el('rect', { x: x - .9 * sc, y: y - 7 * sc, width: 1.8 * sc, height: 10 * sc, rx: .9 * sc, fill: '#4a2a3a' }, g);
+    const cols = ['#4fb4ff', '#ff6fa6', '#a585ff', '#ffc21e'], c = cols[i % 4];
+    drop(g, x, y + 5 * sc, 6 * sc, 1.6 * sc);
+    el('ellipse', { cx: x - 4.2 * sc, cy: y - 4 * sc, rx: 4.4 * sc, ry: 3.6 * sc, fill: ball(g, c), stroke: shade(c, .6), 'stroke-width': .4 * sc, transform: `rotate(-25 ${x - 4.2 * sc} ${y - 4 * sc})` }, g);
+    el('ellipse', { cx: x + 4.2 * sc, cy: y - 4 * sc, rx: 4.4 * sc, ry: 3.6 * sc, fill: ball(g, c), stroke: shade(c, .6), 'stroke-width': .4 * sc, transform: `rotate(25 ${x + 4.2 * sc} ${y - 4 * sc})` }, g);
+    el('ellipse', { cx: x - 3 * sc, cy: y + 1.6 * sc, rx: 2.9 * sc, ry: 2.3 * sc, fill: ball(g, shade(c, .85)) }, g);
+    el('ellipse', { cx: x + 3 * sc, cy: y + 1.6 * sc, rx: 2.9 * sc, ry: 2.3 * sc, fill: ball(g, shade(c, .85)) }, g);
+    el('circle', { cx: x - 4.4 * sc, cy: y - 4.6 * sc, r: 1.2 * sc, fill: W }, g); el('circle', { cx: x + 4.4 * sc, cy: y - 4.6 * sc, r: 1.2 * sc, fill: W }, g);
+    el('rect', { x: x - .9 * sc, y: y - 7 * sc, width: 1.8 * sc, height: 10 * sc, rx: .9 * sc, fill: '#3b2230' }, g);
   } else if (kind === 'crown') {
-    el('path', { d: `M${x - 8 * sc},${y + 3 * sc} L${x - 9 * sc},${y - 7 * sc} L${x - 4 * sc},${y - 2 * sc} L${x},${y - 10 * sc} L${x + 4 * sc},${y - 2 * sc} L${x + 9 * sc},${y - 7 * sc} L${x + 8 * sc},${y + 3 * sc}Z`, fill: '#ffcf3a', stroke: '#d08f00', 'stroke-width': .9 * sc, 'stroke-linejoin': 'round' }, g);
-    el('rect', { x: x - 8 * sc, y: y + 1 * sc, width: 16 * sc, height: 3 * sc, rx: 1 * sc, fill: '#f0b400' }, g);
-    el('circle', { cx: x, cy: y - 2 * sc, r: 1.6 * sc, fill: '#ff4f7b' }, g); el('circle', { cx: x - 5 * sc, cy: y, r: 1.1 * sc, fill: '#59c3ff' }, g); el('circle', { cx: x + 5 * sc, cy: y, r: 1.1 * sc, fill: '#59c3ff' }, g);
-    [[-9, -7], [0, -10], [9, -7]].forEach(([a, b]) => el('circle', { cx: x + a * sc, cy: y + b * sc, r: 1.3 * sc, fill: '#fff3b0' }, g));
+    drop(g, x, y + 5 * sc, 9 * sc, 2 * sc);
+    const gold = grad(defsOf(g), 'linearGradient', [[0, '#fff2a0'], [.4, '#ffd02e'], [.75, '#f0a800'], [1, '#c98400']], { x1: 0, y1: 0, x2: 1, y2: 1 });
+    el('path', { d: `M${x - 8 * sc},${y + 3 * sc} L${x - 9 * sc},${y - 7 * sc} L${x - 4 * sc},${y - 2 * sc} L${x},${y - 10 * sc} L${x + 4 * sc},${y - 2 * sc} L${x + 9 * sc},${y - 7 * sc} L${x + 8 * sc},${y + 3 * sc}Z`, fill: gold, stroke: '#b57600', 'stroke-width': .8 * sc, 'stroke-linejoin': 'round' }, g);
+    el('rect', { x: x - 8.4 * sc, y: y + 1 * sc, width: 16.8 * sc, height: 3.2 * sc, rx: 1.2 * sc, fill: bar(g, '#f0b000', 1) }, g);
+    el('circle', { cx: x, cy: y - 2 * sc, r: 1.8 * sc, fill: ball(g, '#ff2f6d') }, g); el('circle', { cx: x - 5 * sc, cy: y, r: 1.2 * sc, fill: ball(g, '#2fb2ff') }, g); el('circle', { cx: x + 5 * sc, cy: y, r: 1.2 * sc, fill: ball(g, '#2fb2ff') }, g);
+    [[-9, -7], [0, -10], [9, -7]].forEach(([a, b]) => el('circle', { cx: x + a * sc, cy: y + b * sc, r: 1.4 * sc, fill: ball(g, '#ffe16a') }, g));
   } else if (kind === 'sprinkle') {
-    const cols = ['#ff5c8a', '#4fc3f7', '#ffd54f', '#81c784', '#ba68c8'];
-    for (let j = 0; j < 5; j++) { const a = (i * 5 + j) * 2.4, r = 6 * sc; const px = x + Math.cos(a) * r * (j % 3) / 2, py = y + Math.sin(a) * r * (j % 3) / 2; el('rect', { x: px - 2.5 * sc, y: py - .9 * sc, width: 5 * sc, height: 1.8 * sc, rx: .9 * sc, fill: cols[(i + j) % 5], transform: `rotate(${(i * 47 + j * 73) % 180} ${px} ${py})` }, g); }
+    const cols = ['#ff3d7a', '#1fb0ff', '#ffc21e', '#4fcf5f', '#b45cff'];
+    for (let j = 0; j < 5; j++) { const a = (i * 5 + j) * 2.4, r = 6 * sc; const px = x + Math.cos(a) * r * (j % 3) / 2, py = y + Math.sin(a) * r * (j % 3) / 2, tf = `rotate(${(i * 47 + j * 73) % 180} ${px} ${py})`, c = cols[(i + j) % 5]; el('rect', { x: px - 2.6 * sc, y: py - 1 * sc, width: 5.2 * sc, height: 2 * sc, rx: 1 * sc, fill: c, transform: tf }, g); el('rect', { x: px - 1.8 * sc, y: py - .7 * sc, width: 3 * sc, height: .6 * sc, rx: .3 * sc, fill: 'rgba(255,255,255,.6)', transform: tf }, g); }
   }
 }
 let gid = 0;
@@ -356,22 +377,27 @@ function drawCake(svg, c, opts = {}) {
   const col = CREAMS[c.cream] || '#fff4e6';
   YS = .62;
   const layers = c.tiers === 2 ? [[110, 72], [76, 46]] : [[98, 72]];
-  const sideFill = grad(defs, 'linearGradient', [[0, shade(col, .62)], [.3, shade(col, .92)], [.42, shade(col, 1.06)], [.7, shade(col, .82)], [1, shade(col, .58)]]);
-  const topFill = grad(defs, 'radialGradient', [[0, shade(col, 1.12)], [.7, col], [1, shade(col, .9)]], { cx: .38, cy: .3, r: .8 });
+  const sideFill = grad(defs, 'linearGradient', [[0, shade(col, .5)], [.14, shade(col, .78)], [.32, mix(col, .42)], [.46, col], [.78, shade(col, .74)], [1, shade(col, .48)]]);
+  const fillBand = grad(defs, 'linearGradient', [[0, shade(col, .7)], [.32, mix(col, .78)], [.5, mix(col, .6)], [1, shade(col, .72)]]);
+  const topFill = grad(defs, 'radialGradient', [[0, mix(col, .62)], [.35, mix(col, .22)], [.8, col], [1, shade(col, .84)]], { cx: .38, cy: .28, r: .85 });
   layers.forEach(([cy, s], li) => {
     const side = li ? 24 : 30;
-    for (let k = side; k > 0; k -= 2) el('path', { d: shapePath(c.shape, 100, cy + k, s), fill: sideFill }, g);
-    // filling stripe seen on the side
-    el('path', { d: shapePath(c.shape, 100, cy + side * .55, s), fill: 'none', stroke: 'rgba(255,255,255,.35)', 'stroke-width': 2.2, 'stroke-dasharray': `0 ${s * 1.6} ${s * 3.2} 999` }, g);
+    // soft shadow of the tier on what is below it
+    el('path', { d: shapePath(c.shape, 101, cy + side + 4, s * 1.04), fill: 'rgba(90,30,50,.22)' }, g);
+    // side wall: stacked slices, with a light cream filling band in the middle
+    for (let k = side; k > 0; k -= 1) el('path', { d: shapePath(c.shape, 100, cy + k, s), fill: k > side * .44 && k < side * .58 ? fillBand : sideFill }, g);
     // piped cream beads along the bottom edge (front half)
-    ringPts(c.shape, 100, cy + side, s * 1.42, 22).forEach(([x, y]) => { if (y > cy + side - 2) { el('circle', { cx: x, cy: y + 1, r: 3.8, fill: shade(col, 1.08) }, g); el('circle', { cx: x - 1.2, cy: y - .3, r: 1.2, fill: 'rgba(255,255,255,.55)' }, g); } });
-    el('path', { d: shapePath(c.shape, 100, cy, s), fill: topFill, stroke: shade(col, .85), 'stroke-width': 1.2 }, g);
+    const beadFill = ball(g, mix(col, .15));
+    ringPts(c.shape, 100, cy + side, s * 1.42, 22).forEach(([x, y]) => { if (y > cy + side - 2) { el('circle', { cx: x, cy: y + 1, r: 4, fill: beadFill }, g); } });
+    el('path', { d: shapePath(c.shape, 100, cy, s), fill: topFill, stroke: shade(col, .78), 'stroke-width': 1.3 }, g);
+    // glossy highlight on the top surface
+    el('path', { d: shapePath(c.shape, 94, cy - 3, s * .62), fill: grad(defs, 'radialGradient', [[0, '#fff', .55], [1, '#fff', 0]], { cx: .4, cy: .4, r: .6 }) }, g);
     // drips on the front edge
-    ringPts(c.shape, 100, cy, s * 1.38, 16).forEach(([x, y], k) => { if (y > cy + 2) { const h = 6 + (k * 7) % 9; el('path', { d: `M${x - 4},${y - 1} q0,${h} 4,${h} q4,0 4,${-h}Z`, fill: shade(col, 1.02) }, g); el('ellipse', { cx: x - 1.4, cy: y + h * .45, rx: .9, ry: 2, fill: 'rgba(255,255,255,.45)' }, g); } });
+    ringPts(c.shape, 100, cy, s * 1.38, 16).forEach(([x, y], k) => { if (y > cy + 2) { const h = 6 + (k * 7) % 9; el('path', { d: `M${x - 4},${y - 1} q0,${h} 4,${h} q4,0 4,${-h}Z`, fill: mix(col, .1), stroke: shade(col, .8), 'stroke-width': .5 }, g); el('ellipse', { cx: x - 1.4, cy: y + h * .45, rx: .9, ry: 2, fill: 'rgba(255,255,255,.7)' }, g); } });
     if (li === layers.length - 1 && c.tops && c.tops.length) {
       const n = c.tops.length === 1 ? 6 : 8, pts = ringPts(c.shape, 100, cy, s, n);
       const ring = c.tops.filter(k => k !== 'crown');
-      if (ring.length) pts.sort((a, b) => a[1] - b[1]).forEach(([x, y], i) => drawTopping(g, ring[i % ring.length], x, y, s < 60 ? .9 : 1.1, i));
+      if (ring.length) pts.sort((a, b) => a[1] - b[1]).forEach(([x, y], i) => drawTopping(g, ring[i % ring.length], x, y, s < 60 ? 1 : 1.2, i));
       if (c.tops.includes('crown')) drawTopping(g, 'crown', 100, cy - 2, s < 60 ? 1.6 : 2, 0);
       else if (c.tops.length === 1 && c.tops[0] !== 'candle') drawTopping(g, c.tops[0], 100, cy, s < 60 ? .9 : 1.15, 9);
     }
@@ -380,9 +406,9 @@ function drawCake(svg, c, opts = {}) {
 }
 function icon(kind, val) {
   const s = document.createElementNS(NS, 'svg'); s.setAttribute('viewBox', '0 0 40 40');
-  if (kind === 'shape') { el('path', { d: shapePath(val, 20, 21, 15), fill: '#ffc9dc', stroke: '#e86a96', 'stroke-width': 2 }, s); }
-  else if (kind === 'tiers') { if (val === 2) { el('rect', { x: 6, y: 22, width: 28, height: 12, rx: 3, fill: '#ffc9dc', stroke: '#e86a96', 'stroke-width': 2 }, s); el('rect', { x: 12, y: 10, width: 16, height: 12, rx: 3, fill: '#ffe0eb', stroke: '#e86a96', 'stroke-width': 2 }, s); } else el('rect', { x: 6, y: 18, width: 28, height: 14, rx: 3, fill: '#ffc9dc', stroke: '#e86a96', 'stroke-width': 2 }, s); }
-  else if (kind === 'cream') { el('circle', { cx: 20, cy: 20, r: 14, fill: CREAMS[val], stroke: shade(CREAMS[val], .75), 'stroke-width': 2 }, s); el('circle', { cx: 15, cy: 15, r: 4, fill: 'rgba(255,255,255,.45)' }, s); }
+  if (kind === 'shape') { el('path', { d: shapePath(val, 20, 23, 15), fill: '#e04f86' }, s); el('path', { d: shapePath(val, 20, 21, 15), fill: ball(s, '#ff8dbb'), stroke: '#d9437c', 'stroke-width': 1.6 }, s); }
+  else if (kind === 'tiers') { const f = bar(s, '#ff8dbb'); if (val === 2) { el('rect', { x: 6, y: 22, width: 28, height: 12, rx: 3, fill: f, stroke: '#d9437c', 'stroke-width': 1.6 }, s); el('rect', { x: 12, y: 10, width: 16, height: 12, rx: 3, fill: bar(s, '#ffb3d0'), stroke: '#d9437c', 'stroke-width': 1.6 }, s); } else el('rect', { x: 6, y: 18, width: 28, height: 14, rx: 3, fill: f, stroke: '#d9437c', 'stroke-width': 1.6 }, s); }
+  else if (kind === 'cream') { el('ellipse', { cx: 21, cy: 34, rx: 11, ry: 2.5, fill: 'rgba(90,30,50,.2)' }, s); el('circle', { cx: 20, cy: 19, r: 14, fill: ball(s, CREAMS[val]), stroke: shade(CREAMS[val], .7), 'stroke-width': 1.2 }, s); el('ellipse', { cx: 14.5, cy: 13.5, rx: 3.6, ry: 2.4, fill: 'rgba(255,255,255,.8)', transform: 'rotate(-35 14.5 13.5)' }, s); }
   else if (kind === 'stand') { const c = STANDS[val]; el('path', { d: 'M17,24 L15,35 Q20,37 25,35 L23,24Z', fill: c[2] }, s); el('ellipse', { cx: 20, cy: 24, rx: 17, ry: 6, fill: c[3] }, s); el('ellipse', { cx: 20, cy: 22.5, rx: 17, ry: 6, fill: c[0] }, s); el('ellipse', { cx: 14, cy: 21, rx: 6, ry: 1.6, fill: 'rgba(255,255,255,.8)' }, s); }
   else drawTopping(s, val, 20, val === 'candle' ? 33 : 22, val === 'candle' ? 1.2 : val === 'crown' ? 1.4 : 1.7, 1);
   return s;
@@ -687,7 +713,8 @@ function recCompose() {
   // stage with the cake
   const sy = 482, sh = 590;
   c.save(); rr(c, 24, sy, RW - 48, sh, 40); c.clip();
-  const gr = c.createLinearGradient(0, sy, 0, sy + sh); gr.addColorStop(0, '#ffe9f1'); gr.addColorStop(.74, '#ffd9e7'); gr.addColorStop(.74, '#e9a97a'); gr.addColorStop(1, '#c97f50'); c.fillStyle = gr; c.fillRect(24, sy, RW - 48, sh);
+  const gr = c.createLinearGradient(0, sy, 0, sy + sh); gr.addColorStop(0, '#ffd3e4'); gr.addColorStop(.74, '#ffbcd5'); gr.addColorStop(.74, '#f0a874'); gr.addColorStop(1, '#a85a2c'); c.fillStyle = gr; c.fillRect(24, sy, RW - 48, sh);
+  { const sp = c.createRadialGradient(RW / 2, sy + sh * .56, 0, RW / 2, sy + sh * .56, sh * .5); sp.addColorStop(0, 'rgba(255,255,255,.9)'); sp.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = sp; c.fillRect(24, sy, RW - 48, sh); }
   const bc = ['#ff8fb8', '#ffd25e', '#7cc7ff', '#9be38c', '#b9a2ff']; for (let i = 0; i < 12; i++) { const x = 24 + 28 + i * 56, y = sy + 6 + Math.sin(i / 11 * Math.PI) * 18; c.fillStyle = bc[i % 5]; c.beginPath(); c.moveTo(x - 22, y); c.lineTo(x + 22, y); c.lineTo(x, y + 38); c.fill(); }
   const cake = svgPic('cake'); if (cake) c.drawImage(cake, 60, sy + 20, RW - 120, RW - 120);
   c.restore();
