@@ -7,6 +7,7 @@
 <script>window.KASB_HUB="../"</script>
 <script src="../tg.js" defer></script>
 <script src="../feedback.js" defer></script>
+<script src="../certificate.js" defer></script>
 <title>Уроки для монтажника оптики: сварка волокна, GPON — Оптик Pro</title>
 <meta name="description" content="Бесплатный курс монтажника ВОЛС: виды оптического кабеля, сварка волокна, коннекторы, муфты, сеть GPON, рефлектометр, ремонт обрыва. Калькулятор бюджета потерь. На русском и узбекском.">
 <link rel="canonical" href="https://kasbpro.uz/optik/">
@@ -144,6 +145,16 @@ td:first-child{font-weight:600;white-space:nowrap}
 .tip b{color:var(--fg)}
 .hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
 .hub:hover{opacity:1}
+</style>
+<style>
+.lvcard{display:flex;flex-direction:column;gap:10px}.lvrow{display:flex;align-items:center;gap:12px}.lvrow .s{display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.lvrow b{font-size:15px}
+.disc{margin:0;font-size:12.5px;color:var(--muted);line-height:1.4}
+.medal{flex:none}.level h2 .medal{margin-right:-2px}
+.exam{margin-top:10px}.exlock{margin:10px 0 0;font-size:13px;color:var(--muted);text-align:center}
+.exfrom{margin:0 0 -6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.bigmedal{display:flex;justify-content:center}
+.result .list{text-align:left;margin-top:8px}
+td:first-child{white-space:normal;min-width:6.5em}
 </style>
 </head>
 <body>
@@ -427,7 +438,48 @@ const LESSONS=[
   {a:1,ru:{q:"Почему расстояние OTDR не совпадает с землёй?",o:["Прибор сломан","Волокно длиннее кабеля, есть запасы в муфтах","Так не бывает"],e:"Ищите с запасом и сверяйте с метками кабеля."},uz:{q:"Nima uchun OTDR masofasi yer bilan mos kelmaydi?",o:["Asbob buzilgan","Tola kabeldan uzunroq, muftalarda zaxiralar bor","Bunday bo'lmaydi"],e:"Zaxira bilan qidiring va kabel belgilari bilan solishtiring."}}]}
 ];
 
-// UI for Оптик Pro. Needs LESSONS from lessons.js.
+// New lessons added 27 Nov 2026 to fill grades (разряды). lv is set by GCFG.order in grades-cfg.js.
+LESSONS.push(
+{id:'n1',lv:1,min:7,
+ t:{ru:"Прокладка оптического кабеля",uz:"Optik kabelni yotqizish"},s:{ru:"Подвес на опорах, канализация, ввод в дом",uz:"Tayanchlarga osish, kanalizatsiya, uyga kiritish"},
+ table:{head:{ru:["Правило","Почему"],uz:["Qoida","Nima uchun"]},rows:{
+  ru:[["Радиус изгиба не меньше 20 диаметров кабеля при монтаже","Резкий изгиб ломает волокно и даёт затухание"],["Тянуть только за силовой элемент или трос, не за оболочку","Иначе волокно растягивается и рвётся внутри"],["Не превышать допустимое растягивающее усилие из паспорта кабеля","Превышение — скрытые повреждения, которые всплывут позже"],["Оставлять запас 10–15 м у муфт и на вводе","Запас нужен для перемонтажа и ремонта"],["Маркировать бирками каждые 50–100 м и в колодцах","Чужой кабель не спутают и не срежут"]],
+  uz:[["Montajda egilish radiusi kabel diametrining 20 baravaridan kam emas","Keskin egilish tolani sindiradi va so'nishni oshiradi"],["Faqat kuch elementi yoki trosdan torting, qobiqdan emas","Aks holda tola cho'ziladi va ichida uziladi"],["Kabel pasportidagi ruxsat etilgan cho'zish kuchidan oshirmang","Oshirish — keyin chiqadigan yashirin shikastlar"],["Muftalar yonida va kirishda 10–15 m zaxira qoldiring","Zaxira qayta montaj va ta'mir uchun kerak"],["Har 50–100 m da va quduqlarda birka bilan belgilang","Begona kabel bilan adashtirmaydi va kesib qo'ymaydi"]]}},
+ steps:{ru:["Получите проект или схему трассы и разрешение владельца опор или канализации.","Проверьте барабан: марку кабеля, длину и целостность оболочки, измерьте волокна рефлектометром до прокладки.","На опорах ставьте зажимы и кронштейны по проекту, держите стрелу провеса, не перекручивайте кабель.","В канализации сначала прочистите канал и протяните заготовку, кабель тяните плавно, без рывков, с вертлюгом.","На вводе в дом заведите кабель в гофру или трубу, закрепите и оставьте запас в коробке.","После прокладки снова измерьте волокна и сравните с измерением до прокладки."],
+       uz:["Loyiha yoki trassa sxemasini va tayanchlar yoki kanalizatsiya egasining ruxsatini oling.","Barabanni tekshiring: kabel markasi, uzunligi va qobiq butunligi, yotqizishdan oldin tolalarni reflektometr bilan o'lchang.","Tayanchlarga loyiha bo'yicha qisqich va kronshteynlar qo'ying, osilish strelasini saqlang, kabelni buramang.","Kanalizatsiyada avval kanalni tozalang va tortqich o'tkazing, kabelni sekin, siltovsiz, vertlyug bilan torting.","Uyga kirishda kabelni gofra yoki quvurga kiriting, mahkamlang va qutida zaxira qoldiring.","Yotqizishdan keyin tolalarni yana o'lchang va yotqizishdan oldingi o'lchov bilan solishtiring."]},
+ tip:{ru:"Измерение до и после прокладки — ваша защита: если волокно было битым на барабане, это вина завода, а не монтажника.",uz:"Yotqizishdan oldin va keyin o'lchash — sizning himoyangiz: tola barabanda singan bo'lsa, bu zavod aybi, montajchiniki emas."},
+ quiz:[
+  {a:1,ru:{q:"За что тянут оптический кабель?",o:["За оболочку","За силовой элемент или трос","За волокна"],e:"Нагрузку держит силовой элемент."},uz:{q:"Optik kabel nimasidan tortiladi?",o:["Qobig'idan","Kuch elementi yoki trosidan","Tolalaridan"],e:"Yukni kuch elementi ko'taradi."}},
+  {a:2,ru:{q:"Зачем запас кабеля у муфты?",o:["Не нужен","Для красоты","Для перемонтажа и ремонта"],e:"Без запаса муфту не вынести на стол для сварки."},uz:{q:"Mufta yonida kabel zaxirasi nima uchun?",o:["Kerak emas","Chiroy uchun","Qayta montaj va ta'mir uchun"],e:"Zaxirasiz muftani payvandlash uchun stolga chiqarib bo'lmaydi."}},
+  {a:0,ru:{q:"Зачем мерить волокна до прокладки?",o:["Чтобы доказать, что брак был на барабане","Так быстрее","Не нужно"],e:"Сравнение до/после показывает, кто повредил."},uz:{q:"Tolalarni yotqizishdan oldin nima uchun o'lchanadi?",o:["Nuqson barabanda bo'lganini isbotlash uchun","Shunday tezroq","Kerak emas"],e:"Oldin/keyin solishtirish kim shikastlaganini ko'rsatadi."}},
+  {a:1,ru:{q:"Что делает слишком резкий изгиб?",o:["Ничего","Увеличивает затухание и может сломать волокно","Ускоряет сигнал"],e:"Соблюдайте минимальный радиус из паспорта."},uz:{q:"Juda keskin egilish nima qiladi?",o:["Hech narsa","So'nishni oshiradi va tolani sindirishi mumkin","Signalni tezlashtiradi"],e:"Pasportdagi minimal radiusga rioya qiling."}}]},
+
+{id:'n2',lv:3,min:6,nowarn:true,
+ t:{ru:"Исполнительная документация",uz:"Ijro hujjatlari"},s:{ru:"Паспорт трассы, протоколы, схемы сварок",uz:"Trassa pasporti, bayonnomalar, payvand sxemalari"},
+ table:{head:{ru:["Документ","Что в нём"],uz:["Hujjat","Unda nima bor"]},rows:{
+  ru:[["Схема трассы","Где идёт кабель, муфты, запасы, колодцы и опоры"],["Схема разварки (кросс-журнал)","Какое волокно с каким сварено в каждой муфте и на порту"],["Протокол OTDR","Рефлектограммы всех волокон с двух сторон, длина, потери"],["Протокол измерения мощности","Уровень сигнала у абонентов, бюджет потерь"],["Акт скрытых работ","Прокладка в грунте и канализации, которую потом не видно"]],
+  uz:[["Trassa sxemasi","Kabel, muftalar, zaxiralar, quduqlar va tayanchlar qayerda"],["Payvand sxemasi (kross jurnali)","Har bir mufta va portda qaysi tola qaysi bilan payvandlangan"],["OTDR bayonnomasi","Barcha tolalarning ikki tomondan reflektogrammalari, uzunlik, yo'qotishlar"],["Quvvatni o'lchash bayonnomasi","Abonentlardagi signal darajasi, yo'qotishlar byudjeti"],["Yashirin ishlar dalolatnomasi","Yer va kanalizatsiyada yotqizish, keyin ko'rinmaydigan"]]}},
+ steps:{ru:["Во время работы записывайте всё сразу: номера муфт, цвета модулей и волокон, длины запасов.","Ведите схему разварки по каждой муфте: модуль, цвет волокна, куда идёт, номер порта.","После монтажа снимите рефлектограммы всех волокон с двух сторон и сохраните файлы.","Измерьте мощность на портах абонентов и сравните с бюджетом потерь.","Сведите всё в паспорт трассы с фото муфт и кроссов, подпишите акты.","Сдайте копию заказчику и оставьте себе: при аварии по документам место находят за минуты."],
+       uz:["Ish paytida hammasini darhol yozing: mufta raqamlari, modul va tola ranglari, zaxira uzunliklari.","Har bir mufta bo'yicha payvand sxemasini yuriting: modul, tola rangi, qayerga boradi, port raqami.","Montajdan keyin barcha tolalarning ikki tomondan reflektogrammalarini oling va fayllarni saqlang.","Abonent portlarida quvvatni o'lchang va yo'qotishlar byudjeti bilan solishtiring.","Hammasini mufta va krosslar rasmlari bilan trassa pasportiga jamlang, dalolatnomalarni imzolang.","Nusxasini buyurtmachiga topshiring va o'zingizda qoldiring: avariyada hujjatlar bo'yicha joy daqiqalarda topiladi."]},
+ tip:{ru:"Монтажника высокого разряда отличает не только ровная сварка, но и документация, по которой любой коллега найдёт нужное волокно.",uz:"Yuqori razryadli montajchini nafaqat tekis payvand, balki har qanday hamkasb kerakli tolani topa oladigan hujjatlar ham ajratib turadi."},
+ quiz:[
+  {a:1,ru:{q:"Что записывают в схему разварки?",o:["Цену работ","Какое волокно с каким сварено и куда идёт","Погоду"],e:"Без неё ремонт муфты превращается в угадайку."},uz:{q:"Payvand sxemasiga nima yoziladi?",o:["Ish narxi","Qaysi tola qaysi bilan payvandlangan va qayerga boradi","Ob-havo"],e:"Usiz muftani ta'mirlash taxminga aylanadi."}},
+  {a:0,ru:{q:"С каких сторон снимают рефлектограммы при сдаче?",o:["С двух сторон","Только с одной","Не снимают"],e:"Потери на сварке точнее по среднему с двух сторон."},uz:{q:"Topshirishda reflektogrammalar qaysi tomondan olinadi?",o:["Ikki tomondan","Faqat bir tomondan","Olinmaydi"],e:"Payvanddagi yo'qotish ikki tomon o'rtachasi bo'yicha aniqroq."}},
+  {a:2,ru:{q:"Зачем акт скрытых работ?",o:["Не нужен","Для налоговой","Подтвердить работы, которые потом не видно"],e:"Кабель в грунте после засыпки не проверить глазами."},uz:{q:"Yashirin ishlar dalolatnomasi nima uchun?",o:["Kerak emas","Soliq uchun","Keyin ko'rinmaydigan ishlarni tasdiqlash uchun"],e:"Ko'milgandan keyin yerdagi kabelni ko'z bilan tekshirib bo'lmaydi."}},
+  {a:1,ru:{q:"Когда лучше записывать цвета и номера волокон?",o:["В конце недели","Сразу во время работы","По памяти через месяц"],e:"Память подводит, запись сразу — нет."},uz:{q:"Tola ranglari va raqamlarini qachon yozgan ma'qul?",o:["Hafta oxirida","Ish paytida darhol","Bir oydan keyin xotiradan"],e:"Xotira pand beradi, darhol yozish — yo'q."}}]}
+);
+
+// Grades (разряды) for Оптик Pro, ETKS-style: index 0 = 3-й разряд … 3 = 6-й разряд. Used by src/grades.js.
+const GCFG={
+ order:[['b1','b2','b3','b4'],['b5','n1','m1','m2'],['m3','m4','a1','a2'],['a3','a4','n2']],
+ nums:['3','4','5','6'],
+ prof:{ru:'Монтажник связи (оптика)',uz:'Aloqa montajchisi (optika)'},url:'kasbpro.uz/optik/',start:'optik',
+ tag:{ru:`Подготовка к разрядам с 3-го по 6-й · ${LESSONS.length} уроков со схемами`,uz:`3-razryaddan 6-razryadgacha tayyorgarlik · sxemali ${LESSONS.length} ta dars`},
+ sources:{
+  ru:['ЕТКС, выпуск 3, раздел «Монтаж сооружений связи»: «Монтажник связи — спайщик», «Монтажник связи — кабельщик», 3–6 разряды','Рекомендация ITU-T G.652 «Характеристики одномодового оптического волокна»','Рекомендация ITU-T G.984 (GPON)','ГОСТ Р МЭК 61300-3-35 / IEC 61300-3-35 — осмотр и чистота торцов коннекторов','Правила по охране труда при работах на линейных сооружениях связи'],
+  uz:['ETKS (YaTMS), 3-son, «Aloqa inshootlari montaji» bo\'limi: «Aloqa montajchisi — kavsharlovchi», «Aloqa montajchisi — kabelchi», 3–6 razryadlar','ITU-T G.652 tavsiyasi «Bir modali optik tola xususiyatlari»','ITU-T G.984 tavsiyasi (GPON)','IEC 61300-3-35 — konnektor uchlarini ko\'rish va tozaligi','Aloqa liniya inshootlarida ishlashda mehnat muhofazasi qoidalari']}};
+
+// UI (grades layer: src/grades.js). UI for Оптик Pro. Needs LESSONS from lessons.js.
 const PAYWALL=false; // true = intermediate and advanced levels need payment
 const UI={
 ru:{brand:'Оптик Pro',tag:'Монтаж оптики с нуля · 13 уроков со схемами',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
@@ -487,9 +539,10 @@ function home(){
   let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
   if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
   h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div><a class="game" href="igra/"><span class="gi">💡</span><span class="tx"><b>${lang==='uz'?'O\'yin «Liniyani yig\'»':'Игра «Собери линию»'}</b><span class="s">${lang==='uz'?'2 daqiqa: liniyani yig\', signal yetsin':'2 минуты: собери линию, чтобы хватило сигнала'}</span></span><span class="go">›</span></a>`;
-  [0,1,2].forEach(lv=>{
+  h+=gradeCard();
+  GRADE_NUM.forEach((num,lv)=>{
     const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
-    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    h+=`<section class="level"><h2>${gradeHead(lv)}${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}${gradeChip(lv)}</h2><div class="list">`;
     byLv(lv).forEach((x,i)=>{
       const open=isOpen(x),isDone=done.has(x.id);
       const cls=isDone?'done open':open?'open':'locked';
@@ -498,12 +551,13 @@ function home(){
       h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
       h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
     });
-    h+='</div></section>';
+    h+='</div>'+examBtn(lv)+'</section>';
   });
   h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
   app.innerHTML=h;
   document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
-  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+  bindGrades();
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);grades=new Set();store.set('grades',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
 }
 
 function lesson(){
@@ -542,11 +596,13 @@ function result(){
    <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
    <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
    ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass&&!nx&&gradeDone(x.lv)?`<button class="btn" id="toEx" type="button">${G().toExam}</button>`:''}
    ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
    <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
   $('#home').onclick=()=>go('home');
   const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
   const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+  const te=$('#toEx');if(te)te.onclick=()=>startExam(x.lv);
 }
 
 /* calculators: GPON loss budget and dB to percent */
@@ -582,8 +638,107 @@ function bindCommon(){
   document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
   document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
 }
-function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function render(){({home,lesson,quiz,result,exam,examRes})[S.screen]();bindCommon()}
 function go(s){S.screen=s;render();window.scrollTo(0,0)}
+// start-up moved to grades.js (shared grade layer)
+
+/* Kasb Pro — shared grade (разряд) layer for profession apps. Built into each app after app.js (see apply.py).
+   Needs GCFG from src/grades-cfg.js: {order:[[ids..],..], nums:['2',..], prof:{ru,uz}, url, start, sources:{ru,uz}, tag:{ru,uz},
+   labels?:{ru:[..],uz:[..]} (default «N-й разряд»), level?:true (levels instead of разряды, e.g. nurse), basis?:{ru,uz} (disclaimer)}.
+   Lessons of a grade must be passed in order; then an exam (2 random questions per lesson, pass 80 %) gives a medal;
+   passed grades open the unofficial Kasb Pro certificate (../certificate.js, window.KasbCert). Progress: <prefix>_done, <prefix>_grades. */
+const GRADE_NUM=GCFG.nums;
+{const byId=Object.fromEntries(LESSONS.map(x=>[x.id,x]));const re=[];GCFG.order.forEach((ids,g)=>ids.forEach(id=>{const x=byId[id];if(!x)throw new Error('no lesson '+id);x.lv=g;re.push(x)}));
+ if(re.length!==LESSONS.length)throw new Error('GCFG.order misses lessons');LESSONS.length=0;re.forEach(x=>LESSONS.push(x))}
+{const LV=!!GCFG.level;
+ UI.ru.lv=GCFG.labels?GCFG.labels.ru:GRADE_NUM.map(n=>`${n}-й разряд`);UI.uz.lv=GCFG.labels?GCFG.labels.uz:GRADE_NUM.map(n=>`${n}-razryad`);
+ UI.ru.lvl=(lv,n,m)=>`${lv} · урок ${n} · ~${m} мин`;UI.uz.lvl=(lv,n,m)=>`${lv} · ${n}-dars · ~${m} daq`;
+ UI.ru.tag=GCFG.tag.ru;UI.uz.tag=GCFG.tag.uz;
+ UI.ru.passLast=LV?'Вы прошли все уроки уровня. Теперь можно сдать экзамен.':'Вы прошли все уроки разряда. Теперь можно сдать экзамен.';
+ UI.uz.passLast=LV?'Siz darajaning barcha darslarini o\'tdingiz. Endi imtihon topshirish mumkin.':'Siz razryadning barcha darslarini o\'tdingiz. Endi imtihon topshirish mumkin.';}
+let grades=new Set(store.get('grades',[]));
+const gradeDone=g=>byLv(g).every(x=>done.has(x.id));
+const topGrade=()=>{let t=-1;grades.forEach(g=>{if(g>t&&g<GRADE_NUM.length)t=g});return t};
+const gname=(g,l)=>UI[l||lang].lv[g];
+const GX=GCFG.level?{
+ru:{mine:'Ваш уровень',none:'Пройдите уроки 1-го уровня и сдайте экзамен, чтобы получить первый значок.',
+ have:g=>`Пройден уровень «${gname(g,'ru')}»`,cert:'Моё свидетельство',
+ disc:(GCFG.basis&&GCFG.basis.ru)||'Это короткий курс по официальным источникам, а не диплом и не допуск к работе.',
+ exam:(g,k)=>`Экзамен уровня · ${k} вопросов`,exLock:'Экзамен откроется, когда пройдёте все уроки уровня',
+ exDone:'Экзамен сдан · пересдать',passedChip:'сдано',exT:g=>`Экзамен: ${gname(g,'ru')}`,exSub:(k,n)=>`Нужно ${k} верных из ${n}. Вопросы из всех уроков уровня.`,
+ exPass:g=>`Поздравляем! Вы прошли уровень «${gname(g,'ru')}».`,exFail:(k,n)=>`Нужно ${k} верных ответов из ${n}. Повторите уроки и попробуйте ещё раз.`,
+ reread:'Повторите эти уроки:',nextG:g=>`Перейти к уровню «${gname(g,'ru')}»`,toExam:'Сдать экзамен уровня',getCert:'Получить свидетельство'},
+uz:{mine:'Sizning darajangiz',none:'Birinchi nishonni olish uchun 1-daraja darslarini o\'ting va imtihon topshiring.',
+ have:g=>`«${gname(g,'uz')}» darajasi o\'tildi`,cert:'Mening guvohnomam',
+ disc:(GCFG.basis&&GCFG.basis.uz)||'Bu rasmiy manbalar bo\'yicha qisqa kurs, diplom ham, ishga ruxsat ham emas.',
+ exam:(g,k)=>`Daraja imtihoni · ${k} ta savol`,exLock:'Imtihon darajaning barcha darslari o\'tilgandan keyin ochiladi',
+ exDone:'Imtihon topshirildi · qayta topshirish',passedChip:'topshirildi',exT:g=>`Imtihon: ${gname(g,'uz')}`,exSub:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Savollar darajaning barcha darslaridan.`,
+ exPass:g=>`Tabriklaymiz! Siz «${gname(g,'uz')}» darajasidan o\'tdingiz.`,exFail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darslarni takrorlang va yana urinib ko\'ring.`,
+ reread:'Bu darslarni takrorlang:',nextG:g=>`«${gname(g,'uz')}» darajasiga o\'tish`,toExam:'Daraja imtihonini topshirish',getCert:'Guvohnoma olish'}}:{
+ru:{mine:'Ваш уровень',none:`Пройдите уроки ${GRADE_NUM[0]}-го разряда и сдайте экзамен, чтобы получить первый значок.`,
+ have:g=>`Подготовка к ${GRADE_NUM[g]}-му разряду пройдена`,cert:'Моё свидетельство',
+ disc:(GCFG.basis&&GCFG.basis.ru)||'Это экспресс-подготовка по справочнику ЕТКС, а не официальный разряд. Разряд присваивает учебный центр или комиссия на работе.',
+ exam:(g,k)=>`Экзамен: подготовка к ${GRADE_NUM[g]}-му разряду · ${k} вопросов`,exLock:'Экзамен откроется, когда пройдёте все уроки разряда',
+ exDone:'Экзамен сдан · пересдать',passedChip:'сдано',exT:g=>`Экзамен: ${GRADE_NUM[g]}-й разряд`,exSub:(k,n)=>`Нужно ${k} верных из ${n}. Вопросы из всех уроков разряда.`,
+ exPass:g=>`Поздравляем! Вы прошли подготовку к ${GRADE_NUM[g]}-му разряду.`,exFail:(k,n)=>`Нужно ${k} верных ответов из ${n}. Повторите уроки и попробуйте ещё раз.`,
+ reread:'Повторите эти уроки:',nextG:g=>`Перейти к ${GRADE_NUM[g]}-му разряду`,toExam:'Сдать экзамен разряда',getCert:'Получить свидетельство'},
+uz:{mine:'Sizning darajangiz',none:`Birinchi nishonni olish uchun ${GRADE_NUM[0]}-razryad darslarini o\'ting va imtihon topshiring.`,
+ have:g=>`${GRADE_NUM[g]}-razryadga tayyorgarlik o\'tildi`,cert:'Mening guvohnomam',
+ disc:(GCFG.basis&&GCFG.basis.uz)||'Bu ETKS ma\'lumotnomasi bo\'yicha tezkor tayyorgarlik, rasmiy razryad emas. Razryadni o\'quv markazi yoki ishxonadagi komissiya beradi.',
+ exam:(g,k)=>`Imtihon: ${GRADE_NUM[g]}-razryadga tayyorgarlik · ${k} ta savol`,exLock:'Imtihon razryadning barcha darslari o\'tilgandan keyin ochiladi',
+ exDone:'Imtihon topshirildi · qayta topshirish',passedChip:'topshirildi',exT:g=>`Imtihon: ${GRADE_NUM[g]}-razryad`,exSub:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Savollar razryadning barcha darslaridan.`,
+ exPass:g=>`Tabriklaymiz! Siz ${GRADE_NUM[g]}-razryadga tayyorgarlikdan o\'tdingiz.`,exFail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darslarni takrorlang va yana urinib ko\'ring.`,
+ reread:'Bu darslarni takrorlang:',nextG:g=>`${GRADE_NUM[g]}-razryadga o\'tish`,toExam:'Razryad imtihonini topshirish',getCert:'Guvohnoma olish'}};
+const G=()=>GX[lang];
+const medal=(n,sz=44)=>`<svg class="medal" width="${sz}" height="${sz}" viewBox="0 0 48 48" aria-hidden="true"><path d="M15 2h7l4 14h-7zM33 2h-7l-4 14h7z" fill="var(--accent)"/><circle cx="24" cy="30" r="16" fill="#c9a227"/><circle cx="24" cy="30" r="12.5" fill="var(--navy)"/><text x="24" y="35.5" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">${n}</text></svg>`;
+const examN=g=>byLv(g).length*2;
+function gradeCard(){const Gx=G();const t=topGrade();
+  return `<div class="card lvcard">${t>=0?`<div class="lvrow">${medal(GRADE_NUM[t],52)}<div><span class="s">${Gx.mine}</span><b>${Gx.have(t)}</b></div></div><button class="btn" id="cert" type="button">${Gx.cert}</button>`:`<div class="lvrow">${medal('?',52)}<div><span class="s">${Gx.mine}</span><b>${Gx.none}</b></div></div>`}<p class="disc">${Gx.disc}</p></div>`}
+function gradeHead(lv){return `${grades.has(lv)?medal(GRADE_NUM[lv],26):''}`}
+function gradeChip(lv){return grades.has(lv)?`<span class="chip free">✓ ${G().passedChip}</span>`:''}
+function examBtn(lv){if(isPaid(byLv(lv)[0]))return '';return gradeDone(lv)?`<button class="btn exam${grades.has(lv)?' ghost':''}" type="button" data-exam="${lv}">${grades.has(lv)?G().exDone:G().exam(lv,examN(lv))}</button>`:`<p class="exlock">🔒 ${G().exLock}</p>`}
+function bindGrades(){document.querySelectorAll('[data-exam]').forEach(b=>b.onclick=()=>startExam(+b.dataset.exam));const ce=$('#cert');if(ce)ce.onclick=openCert}
+function openCert(){const t=topGrade();if(t<0||!window.KasbCert)return;
+  const topics={ru:[],uz:[]};LESSONS.filter(x=>grades.has(x.lv)&&x.lv<=t).forEach(x=>{topics.ru.push(x.t.ru);topics.uz.push(x.t.uz)});
+  const o={prefix:pk('x').replace(/_x$/,''),lang,prof:GCFG.prof,grade:GRADE_NUM[t],topics,sources:GCFG.sources,url:GCFG.url,start:GCFG.start};
+  if(GCFG.level){o.unit={ru:'УРОВЕНЬ',uz:'DARAJA'};o.did={ru:`прошёл(ла) сокращённый курс «${GCFG.prof.ru}», уровень «${gname(t,'ru')}»`,uz:`«${GCFG.prof.uz}» qisqartirilgan kursini o'tdi, daraja: «${gname(t,'uz')}»`};
+    o.note={ru:'Неофициальный документ. Это короткий курс по уходу и первой помощи, а не медицинское образование и не допуск к работе медсестрой.',uz:'Norasmiy hujjat. Bu parvarish va birinchi yordam bo\'yicha qisqa kurs, tibbiy ta\'lim ham, hamshira bo\'lib ishlashga ruxsat ham emas.'};
+    o.shareText={ru:`Я прошёл(ла) курс «${GCFG.prof.ru}» (уровень «${gname(t,'ru')}») в Kasb Pro. Попробуй тоже:`,uz:`Men Kasb Pro'da «${GCFG.prof.uz}» kursini o'tdim («${gname(t,'uz')}» darajasi). Sen ham sinab ko'r:`}}
+  window.KasbCert.open(o)}
+
+/* grade exam: 2 random questions from every lesson of the grade, pass = 80% */
+const needEx=n=>Math.ceil(n*0.8);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function startExam(g){const qs=[];byLv(g).forEach(x=>shuf(x.quiz.map((_,i)=>i)).slice(0,2).forEach(i=>qs.push({l:x.id,i})));
+  S.ex={g,qs:shuf(qs),qi:0,score:0,picked:null,miss:new Set()};go('exam')}
+function exam(){
+  const L=U(),Gx=G();const E=S.ex;const it=E.qs[E.qi];const x=LESSONS.find(y=>y.id===it.l);const item=x.quiz[it.i];const Q=tr(item);const p=E.picked;const N=E.qs.length;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${Gx.exT(E.g)}</h1><p>${Gx.exSub(needEx(N),N)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(E.qi+1,N)}</span><span>${L.ok(E.score)}</span></div><div class="meter"><i style="width:${(E.qi+(p!==null?1:0))/N*100}%"></i></div></div>
+   <p class="exfrom">${tr(x.t)}</p><p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${E.qi<N-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('home');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{E.picked=+b.dataset.i;if(E.picked===item.a)E.score++;else E.miss.add(x.id);render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(E.qi<N-1){E.qi++;E.picked=null;go('exam')}else{if(E.score>=needEx(N)){grades.add(E.g);store.set('grades',[...grades])}go('examRes')}};
+}
+function examRes(){
+  const L=U(),Gx=G();const E=S.ex;const N=E.qs.length;const pass=E.score>=needEx(N);const num=GRADE_NUM[E.g];const ng=E.g+1<GRADE_NUM.length?E.g+1:null;
+  const miss=LESSONS.filter(x=>E.miss.has(x.id));
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${Gx.exT(E.g)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   ${pass?`<div class="bigmedal">${medal(num,96)}</div>`:''}<div class="score">${E.score} / ${N}</div><h3>${pass?Gx.exPass(E.g):L.failT}</h3>
+   ${pass?`<p class="expl">${Gx.disc}</p>`:`<p class="expl">${Gx.exFail(needEx(N),N)}</p>`}
+   ${miss.length?`<p class="expl"><b>${Gx.reread}</b></p><div class="list">${miss.map(x=>`<button class="item open" type="button" data-id="${x.id}"><span class="tx"><b>${tr(x.t)}</b></span><span class="go">›</span></button>`).join('')}</div>`:''}</div>
+   ${pass?`<button class="btn" id="cert" type="button">${Gx.getCert}</button>`:`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   ${pass&&ng!==null?`<button class="btn ghost" id="ng" type="button">${Gx.nextG(ng)}</button>`:''}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#retry');if(r)r.onclick=()=>startExam(E.g);
+  const c=$('#cert');if(c)c.onclick=openCert;
+  const g=$('#ng');if(g)g.onclick=()=>{S.id=byLv(ng)[0].id;go('lesson')};
+}
 document.documentElement.lang=lang;
 go('home');
 
