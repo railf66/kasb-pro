@@ -7,6 +7,7 @@
 <script>window.KASB_HUB="../"</script>
 <script src="../tg.js" defer></script>
 <script src="../feedback.js" defer></script>
+<script src="../certificate.js" defer></script>
 <title>Уроки для мастера по кондиционерам и холодильникам — Холод Pro</title>
 <meta name="description" content="Бесплатный курс холодильщика: холодильный цикл, фреоны, монтаж сплит-системы, вальцовка, вакуум, заправка, диагностика, ремонт холодильника. Калькулятор мощности кондиционера. На русском и узбекском.">
 <link rel="canonical" href="https://kasbpro.uz/holod/">
@@ -144,6 +145,16 @@ td:first-child{font-weight:600;white-space:nowrap}
 .tip b{color:var(--fg)}
 .hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
 .hub:hover{opacity:1}
+</style>
+<style>
+.lvcard{display:flex;flex-direction:column;gap:10px}.lvrow{display:flex;align-items:center;gap:12px}.lvrow .s{display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.lvrow b{font-size:15px}
+.disc{margin:0;font-size:12.5px;color:var(--muted);line-height:1.4}
+.medal{flex:none}.level h2 .medal{margin-right:-2px}
+.exam{margin-top:10px}.exlock{margin:10px 0 0;font-size:13px;color:var(--muted);text-align:center}
+.exfrom{margin:0 0 -6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.bigmedal{display:flex;justify-content:center}
+.result .list{text-align:left;margin-top:8px}
+td:first-child{white-space:normal;min-width:6.5em}
 </style>
 </head>
 <body>
@@ -408,7 +419,48 @@ const LESSONS=[
   {a:1,ru:{q:"Как заправлять холодильник R600a?",o:["По давлению на глаз","Строго по весу на весах","До инея на трубке"],e:"Фреона мало, ошибка в граммы уже важна."},uz:{q:"Muzlatgichni R600a bilan qanday to'ldirish kerak?",o:["Ko'z bilan bosim bo'yicha","Qat'iy tarozida og'irlik bo'yicha","Trubkada qirov paydo bo'lguncha"],e:"Freon kam, grammlik xato ham muhim."}}]}
 ];
 
-// UI for Холод Pro (Sovutish Pro). Needs LESSONS from lessons.js.
+// New lessons added 27 Nov 2026 to fill grades (разряды). lv is set by GCFG.order in grades-cfg.js.
+LESSONS.push(
+{id:'n1',lv:1,min:7,
+ t:{ru:"Пайка медных труб",uz:"Mis quvurlarni kavsharlash"},s:{ru:"Припой, флюс, продувка азотом",uz:"Kavshar, flyus, azot bilan puflash"},
+ table:{head:{ru:["Соединение","Чем паять"],uz:["Birikma","Nima bilan kavsharlanadi"]},rows:{
+  ru:[["Медь + медь","Медно-фосфорный припой (например, с 2–5 % серебра), флюс не нужен"],["Медь + латунь или сталь","Серебряный припой 15–40 % с флюсом"],["Капиллярная трубка, фильтр-осушитель","Аккуратно, мягким пламенем, не перегреть фильтр"],["Перед пайкой","Расширить трубу (раструб) на глубину 8–10 мм, зачистить"]],
+  uz:[["Mis + mis","Mis-fosforli kavshar (masalan, 2–5 % kumushli), flyus kerak emas"],["Mis + latun yoki po'lat","15–40 % kumushli kavshar flyus bilan"],["Kapillyar trubka, filtr-quritgich","Ehtiyotkorlik bilan, yumshoq alanga, filtrni qizdirib yubormang"],["Kavsharlashdan oldin","Quvurni 8–10 mm chuqurlikka kengaytiring (rastrub), tozalang"]]}},
+ steps:{ru:["Отрежьте трубу труборезом, снимите заусенцы риммером стружкой вниз.","Сделайте раструб расширителем и вставьте трубу на всю глубину.","Подключите азот с редуктором и пустите слабый поток через трубу: внутри не будет окалины.","Грейте соединение равномерно по кругу до вишнёвого цвета, припой подавайте с противоположной от пламени стороны.","Припой должен сам затянуться в зазор. Не грейте сам пруток.","Дайте остыть без воды, затем опрессуйте азотом и проверьте мыльным раствором."],
+       uz:["Quvurni quvur kesgich bilan kesing, qirindilarni rimmer bilan qirindi pastga tushadigan qilib olib tashlang.","Kengaytirgich bilan rastrub qiling va quvurni butun chuqurlikka kiriting.","Reduktorli azotni ulang va quvur orqali kuchsiz oqim yuboring: ichida kuyindi bo'lmaydi.","Birikmani aylana bo'ylab bir tekis olcha rangigacha qizdiring, kavsharni alangaga qarama-qarshi tomondan bering.","Kavshar o'zi oraliqqa tortilishi kerak. Sterjenning o'zini qizdirmang.","Suvsiz sovishini kuting, keyin azot bilan opressovka qiling va sovunli eritma bilan tekshiring."]},
+ tip:{ru:"Без азота внутри трубы образуется окалина. Она отслаивается, забивает капилляр и ТРВ и убивает компрессор через несколько месяцев.",uz:"Azotsiz quvur ichida kuyindi hosil bo'ladi. U ko'chib, kapillyar va TRVni to'sib qo'yadi va bir necha oydan keyin kompressorni o'ldiradi."},
+ quiz:[
+  {a:1,ru:{q:"Зачем пускать азот при пайке?",o:["Для охлаждения","Чтобы внутри не было окалины","Так быстрее"],e:"Окалина забивает капилляр и фильтр."},uz:{q:"Kavsharlashda azot nima uchun yuboriladi?",o:["Sovutish uchun","Ichida kuyindi bo'lmasligi uchun","Shunday tezroq"],e:"Kuyindi kapillyar va filtrni to'sib qo'yadi."}},
+  {a:0,ru:{q:"Чем паять медь с медью?",o:["Медно-фосфорным припоем без флюса","Оловом","Скотчем"],e:"Фосфор сам работает как флюс на меди."},uz:{q:"Misni mis bilan nima bilan kavsharlanadi?",o:["Flyussiz mis-fosforli kavshar bilan","Qalay bilan","Skotch bilan"],e:"Fosfor misda o'zi flyus vazifasini bajaradi."}},
+  {a:2,ru:{q:"Как правильно подавать припой?",o:["Греть сам пруток","Капать сверху на холодную трубу","С противоположной от пламени стороны, когда труба прогрета"],e:"Припой тянется в зазор к горячему месту."},uz:{q:"Kavsharni qanday to'g'ri berish kerak?",o:["Sterjenning o'zini qizdirish","Sovuq quvurga yuqoridan tomizish","Quvur qizigach, alangaga qarama-qarshi tomondan"],e:"Kavshar oraliqqa issiq joy tomon tortiladi."}},
+  {a:1,ru:{q:"Как проверить пайку после остывания?",o:["Никак","Опрессовкой азотом и мыльным раствором","Включить кондиционер и ждать"],e:"Пузыри покажут течь."},uz:{q:"Sovigandan keyin kavsharni qanday tekshirish mumkin?",o:["Hech qanday","Azot bilan opressovka va sovunli eritma bilan","Konditsionerni yoqib kutish"],e:"Pufakchalar oqishni ko'rsatadi."}}]},
+
+{id:'n2',lv:3,min:6,nowarn:true,
+ t:{ru:"Сервисное обслуживание по договору",uz:"Shartnoma bo'yicha servis xizmati"},s:{ru:"ТО по сезонам, журнал, учёт фреона",uz:"Mavsumiy TO, jurnal, freon hisobi"},
+ table:{head:{ru:["Что делать","Как часто"],uz:["Nima qilish kerak","Qanchalik tez-tez"]},rows:{
+  ru:[["Чистка фильтров внутреннего блока","Раз в 2–4 недели в сезон (может делать клиент)"],["Чистка теплообменников и дренажа","1–2 раза в год, перед сезоном"],["Проверка давления, токов, температуры на выходе","При каждом ТО, записать в журнал"],["Проверка крепления, изоляции, электрики","Раз в год"],["Учёт заправленного и снятого фреона","Каждый раз, по каждой системе"]],
+  uz:[["Ichki blok filtrlarini tozalash","Mavsumda 2–4 haftada bir (mijoz o'zi qilishi mumkin)"],["Issiqlik almashtirgichlar va drenajni tozalash","Yiliga 1–2 marta, mavsumdan oldin"],["Bosim, tok, chiqishdagi haroratni tekshirish","Har bir TOda, jurnalga yozish"],["Mahkamlash, izolyatsiya, elektrikani tekshirish","Yiliga bir marta"],["To'ldirilgan va olingan freon hisobi","Har safar, har bir tizim bo'yicha"]]}},
+ steps:{ru:["Составьте список оборудования клиента: модель, мощность, фреон, год установки, место.","Договоритесь о графике ТО: весной перед жарой и осенью перед отоплением.","На каждом ТО меряйте давление, ток компрессора и разницу температур воздуха на входе и выходе.","Записывайте всё в журнал: дату, показания, что сделано, сколько фреона добавлено или снято.","Фреон не выпускайте в атмосферу: собирайте станцией сбора в баллон.","Раз в год отправляйте клиенту короткий отчёт и советы, что скоро потребует замены."],
+       uz:["Mijoz uskunalari ro'yxatini tuzing: model, quvvat, freon, o'rnatilgan yil, joy.","TO jadvalini kelishing: bahorda issiqdan oldin va kuzda isitishdan oldin.","Har bir TOda bosim, kompressor toki va kirish hamda chiqishdagi havo harorati farqini o'lchang.","Hammasini jurnalga yozing: sana, ko'rsatkichlar, nima qilingan, qancha freon qo'shilgan yoki olingan.","Freonni atmosferaga chiqarmang: yig'ish stansiyasi bilan ballonga yig'ing.","Yiliga bir marta mijozga qisqa hisobot va tez orada nimani almashtirish kerakligi haqida maslahat yuboring."]},
+ tip:{ru:"Договор на обслуживание даёт стабильный доход круглый год, а не только летом. Журнал показывает клиенту, за что он платит.",uz:"Xizmat shartnomasi faqat yozda emas, butun yil barqaror daromad beradi. Jurnal mijozga nima uchun to'layotganini ko'rsatadi."},
+ quiz:[
+  {a:1,ru:{q:"Когда лучше делать ТО кондиционера?",o:["В самую жару","Перед сезоном: весной и осенью","Никогда"],e:"Перед сезоном меньше очередей и поломок."},uz:{q:"Konditsioner TOsini qachon qilgan ma'qul?",o:["Eng issiq paytda","Mavsumdan oldin: bahorda va kuzda","Hech qachon"],e:"Mavsumdan oldin navbat va buzilish kamroq."}},
+  {a:2,ru:{q:"Что делать со снятым фреоном?",o:["Выпустить на улице","Слить в канализацию","Собрать станцией в баллон"],e:"Выброс фреона вредит озоновому слою и климату."},uz:{q:"Olingan freon bilan nima qilinadi?",o:["Ko'chada chiqarib yuborish","Kanalizatsiyaga to'kish","Stansiya bilan ballonga yig'ish"],e:"Freon chiqarish ozon qatlami va iqlimga zarar."}},
+  {a:0,ru:{q:"Зачем вести журнал по каждой системе?",o:["Видно историю, утечки и что делали","Для красоты","Не нужно"],e:"Частые дозаправки сразу покажут утечку."},uz:{q:"Har bir tizim bo'yicha jurnal nima uchun yuritiladi?",o:["Tarix, oqishlar va nima qilingani ko'rinadi","Chiroy uchun","Kerak emas"],e:"Tez-tez to'ldirish darhol oqishni ko'rsatadi."}},
+  {a:1,ru:{q:"Что меряют на каждом ТО?",o:["Только цвет блока","Давление, ток и разницу температур","Вес пульта"],e:"Эти цифры показывают состояние системы."},uz:{q:"Har bir TOda nima o'lchanadi?",o:["Faqat blok rangi","Bosim, tok va haroratlar farqi","Pult og'irligi"],e:"Bu raqamlar tizim holatini ko'rsatadi."}}]}
+);
+
+// Grades (разряды) for Холод Pro, ETKS-style: index 0 = 2-й разряд … 3 = 5-й разряд. Used by src/grades.js.
+const GCFG={
+ order:[['b1','b2','b3','b4'],['b5','m1','m2','n1'],['m3','m4','a1','a3'],['a2','a4','n2']],
+ nums:['2','3','4','5'],
+ prof:{ru:'Мастер по холодильному оборудованию и кондиционерам',uz:'Sovutish uskunalari va konditsionerlar ustasi'},url:'kasbpro.uz/holod/',start:'holod',
+ tag:{ru:`Подготовка к разрядам со 2-го по 5-й · ${LESSONS.length} уроков со схемами`,uz:`2-razryaddan 5-razryadgacha tayyorgarlik · sxemali ${LESSONS.length} ta dars`},
+ sources:{
+  ru:['ЕТКС, выпуск 3: «Монтажник систем вентиляции, кондиционирования воздуха, пневмотранспорта и аспирации», 2–5 разряды','ЕТКС, выпуск 2: «Слесарь-ремонтник» (ремонт холодильного оборудования)','ГОСТ EN 378-1-2014 «Системы холодильные и тепловые насосы. Требования безопасности и охраны окружающей среды»','Монреальский протокол и Кигалийская поправка — обращение с фреонами','Инструкции производителей по монтажу сплит-систем'],
+  uz:['ETKS (YaTMS), 3-son: «Ventilyatsiya, havoni konditsionerlash, pnevmotransport va aspiratsiya tizimlari montajchisi», 2–5 razryadlar','ETKS (YaTMS), 2-son: «Chilangar-ta\'mirchi» (sovutish uskunalarini ta\'mirlash)','GOST EN 378-1-2014 «Sovutish tizimlari va issiqlik nasoslari. Xavfsizlik va atrof-muhitni muhofaza qilish talablari»','Monreal protokoli va Kigali tuzatishi — freonlar bilan ishlash','Split-tizimlarni o\'rnatish bo\'yicha ishlab chiqaruvchilar yo\'riqnomalari']}};
+
+// UI (grades layer: src/grades.js). UI for Холод Pro (Sovutish Pro). Needs LESSONS from lessons.js.
 const PAYWALL=false; // true = intermediate and advanced levels need payment
 const UI={
 ru:{brand:'Холод Pro',tag:'Кондиционеры и холодильники · 13 уроков',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
@@ -470,9 +522,10 @@ function home(){
   let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${bolt}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
   if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
   h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div><a class="game" href="igra/"><span class="gi">❄️</span><span class="tx"><b>${lang==='uz'?'O\'yin «Nosozlikni top»':'Игра «Найди неисправность»'}</b><span class="s">${lang==='uz'?'2 daqiqa: konditsioner va muzlatgich nosozligini top':'2 минуты: найди поломку кондиционера и холодильника'}</span></span><span class="go">›</span></a>`;
-  [0,1,2].forEach(lv=>{
+  h+=gradeCard();
+  GRADE_NUM.forEach((num,lv)=>{
     const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
-    h+=`<section class="level"><h2>${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><div class="list">`;
+    h+=`<section class="level"><h2>${gradeHead(lv)}${L.lv[lv]} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}${gradeChip(lv)}</h2><div class="list">`;
     byLv(lv).forEach((x,i)=>{
       const open=isOpen(x),isDone=done.has(x.id);
       const cls=isDone?'done open':open?'open':'locked';
@@ -481,12 +534,13 @@ function home(){
       h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
       h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
     });
-    h+='</div></section>';
+    h+='</div>'+examBtn(lv)+'</section>';
   });
   h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
   app.innerHTML=h;
   document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
-  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+  bindGrades();
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();store.set('done',[]);grades=new Set();store.set('grades',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
 }
 
 function lesson(){
@@ -525,11 +579,13 @@ function result(){
    <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
    <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
    ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${pass&&!nx&&gradeDone(x.lv)?`<button class="btn" id="toEx" type="button">${G().toExam}</button>`:''}
    ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
    <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
   $('#home').onclick=()=>go('home');
   const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
   const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+  const te=$('#toEx');if(te)te.onclick=()=>startExam(x.lv);
 }
 
 /* calculators: AC power by room and extra refrigerant charge for a long line */
@@ -570,8 +626,107 @@ function bindCommon(){
   document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
   document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
 }
-function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function render(){({home,lesson,quiz,result,exam,examRes})[S.screen]();bindCommon()}
 function go(s){S.screen=s;render();window.scrollTo(0,0)}
+// start-up moved to grades.js (shared grade layer)
+
+/* Kasb Pro — shared grade (разряд) layer for profession apps. Built into each app after app.js (see apply.py).
+   Needs GCFG from src/grades-cfg.js: {order:[[ids..],..], nums:['2',..], prof:{ru,uz}, url, start, sources:{ru,uz}, tag:{ru,uz},
+   labels?:{ru:[..],uz:[..]} (default «N-й разряд»), level?:true (levels instead of разряды, e.g. nurse), basis?:{ru,uz} (disclaimer)}.
+   Lessons of a grade must be passed in order; then an exam (2 random questions per lesson, pass 80 %) gives a medal;
+   passed grades open the unofficial Kasb Pro certificate (../certificate.js, window.KasbCert). Progress: <prefix>_done, <prefix>_grades. */
+const GRADE_NUM=GCFG.nums;
+{const byId=Object.fromEntries(LESSONS.map(x=>[x.id,x]));const re=[];GCFG.order.forEach((ids,g)=>ids.forEach(id=>{const x=byId[id];if(!x)throw new Error('no lesson '+id);x.lv=g;re.push(x)}));
+ if(re.length!==LESSONS.length)throw new Error('GCFG.order misses lessons');LESSONS.length=0;re.forEach(x=>LESSONS.push(x))}
+{const LV=!!GCFG.level;
+ UI.ru.lv=GCFG.labels?GCFG.labels.ru:GRADE_NUM.map(n=>`${n}-й разряд`);UI.uz.lv=GCFG.labels?GCFG.labels.uz:GRADE_NUM.map(n=>`${n}-razryad`);
+ UI.ru.lvl=(lv,n,m)=>`${lv} · урок ${n} · ~${m} мин`;UI.uz.lvl=(lv,n,m)=>`${lv} · ${n}-dars · ~${m} daq`;
+ UI.ru.tag=GCFG.tag.ru;UI.uz.tag=GCFG.tag.uz;
+ UI.ru.passLast=LV?'Вы прошли все уроки уровня. Теперь можно сдать экзамен.':'Вы прошли все уроки разряда. Теперь можно сдать экзамен.';
+ UI.uz.passLast=LV?'Siz darajaning barcha darslarini o\'tdingiz. Endi imtihon topshirish mumkin.':'Siz razryadning barcha darslarini o\'tdingiz. Endi imtihon topshirish mumkin.';}
+let grades=new Set(store.get('grades',[]));
+const gradeDone=g=>byLv(g).every(x=>done.has(x.id));
+const topGrade=()=>{let t=-1;grades.forEach(g=>{if(g>t&&g<GRADE_NUM.length)t=g});return t};
+const gname=(g,l)=>UI[l||lang].lv[g];
+const GX=GCFG.level?{
+ru:{mine:'Ваш уровень',none:'Пройдите уроки 1-го уровня и сдайте экзамен, чтобы получить первый значок.',
+ have:g=>`Пройден уровень «${gname(g,'ru')}»`,cert:'Моё свидетельство',
+ disc:(GCFG.basis&&GCFG.basis.ru)||'Это короткий курс по официальным источникам, а не диплом и не допуск к работе.',
+ exam:(g,k)=>`Экзамен уровня · ${k} вопросов`,exLock:'Экзамен откроется, когда пройдёте все уроки уровня',
+ exDone:'Экзамен сдан · пересдать',passedChip:'сдано',exT:g=>`Экзамен: ${gname(g,'ru')}`,exSub:(k,n)=>`Нужно ${k} верных из ${n}. Вопросы из всех уроков уровня.`,
+ exPass:g=>`Поздравляем! Вы прошли уровень «${gname(g,'ru')}».`,exFail:(k,n)=>`Нужно ${k} верных ответов из ${n}. Повторите уроки и попробуйте ещё раз.`,
+ reread:'Повторите эти уроки:',nextG:g=>`Перейти к уровню «${gname(g,'ru')}»`,toExam:'Сдать экзамен уровня',getCert:'Получить свидетельство'},
+uz:{mine:'Sizning darajangiz',none:'Birinchi nishonni olish uchun 1-daraja darslarini o\'ting va imtihon topshiring.',
+ have:g=>`«${gname(g,'uz')}» darajasi o\'tildi`,cert:'Mening guvohnomam',
+ disc:(GCFG.basis&&GCFG.basis.uz)||'Bu rasmiy manbalar bo\'yicha qisqa kurs, diplom ham, ishga ruxsat ham emas.',
+ exam:(g,k)=>`Daraja imtihoni · ${k} ta savol`,exLock:'Imtihon darajaning barcha darslari o\'tilgandan keyin ochiladi',
+ exDone:'Imtihon topshirildi · qayta topshirish',passedChip:'topshirildi',exT:g=>`Imtihon: ${gname(g,'uz')}`,exSub:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Savollar darajaning barcha darslaridan.`,
+ exPass:g=>`Tabriklaymiz! Siz «${gname(g,'uz')}» darajasidan o\'tdingiz.`,exFail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darslarni takrorlang va yana urinib ko\'ring.`,
+ reread:'Bu darslarni takrorlang:',nextG:g=>`«${gname(g,'uz')}» darajasiga o\'tish`,toExam:'Daraja imtihonini topshirish',getCert:'Guvohnoma olish'}}:{
+ru:{mine:'Ваш уровень',none:`Пройдите уроки ${GRADE_NUM[0]}-го разряда и сдайте экзамен, чтобы получить первый значок.`,
+ have:g=>`Подготовка к ${GRADE_NUM[g]}-му разряду пройдена`,cert:'Моё свидетельство',
+ disc:(GCFG.basis&&GCFG.basis.ru)||'Это экспресс-подготовка по справочнику ЕТКС, а не официальный разряд. Разряд присваивает учебный центр или комиссия на работе.',
+ exam:(g,k)=>`Экзамен: подготовка к ${GRADE_NUM[g]}-му разряду · ${k} вопросов`,exLock:'Экзамен откроется, когда пройдёте все уроки разряда',
+ exDone:'Экзамен сдан · пересдать',passedChip:'сдано',exT:g=>`Экзамен: ${GRADE_NUM[g]}-й разряд`,exSub:(k,n)=>`Нужно ${k} верных из ${n}. Вопросы из всех уроков разряда.`,
+ exPass:g=>`Поздравляем! Вы прошли подготовку к ${GRADE_NUM[g]}-му разряду.`,exFail:(k,n)=>`Нужно ${k} верных ответов из ${n}. Повторите уроки и попробуйте ещё раз.`,
+ reread:'Повторите эти уроки:',nextG:g=>`Перейти к ${GRADE_NUM[g]}-му разряду`,toExam:'Сдать экзамен разряда',getCert:'Получить свидетельство'},
+uz:{mine:'Sizning darajangiz',none:`Birinchi nishonni olish uchun ${GRADE_NUM[0]}-razryad darslarini o\'ting va imtihon topshiring.`,
+ have:g=>`${GRADE_NUM[g]}-razryadga tayyorgarlik o\'tildi`,cert:'Mening guvohnomam',
+ disc:(GCFG.basis&&GCFG.basis.uz)||'Bu ETKS ma\'lumotnomasi bo\'yicha tezkor tayyorgarlik, rasmiy razryad emas. Razryadni o\'quv markazi yoki ishxonadagi komissiya beradi.',
+ exam:(g,k)=>`Imtihon: ${GRADE_NUM[g]}-razryadga tayyorgarlik · ${k} ta savol`,exLock:'Imtihon razryadning barcha darslari o\'tilgandan keyin ochiladi',
+ exDone:'Imtihon topshirildi · qayta topshirish',passedChip:'topshirildi',exT:g=>`Imtihon: ${GRADE_NUM[g]}-razryad`,exSub:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Savollar razryadning barcha darslaridan.`,
+ exPass:g=>`Tabriklaymiz! Siz ${GRADE_NUM[g]}-razryadga tayyorgarlikdan o\'tdingiz.`,exFail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darslarni takrorlang va yana urinib ko\'ring.`,
+ reread:'Bu darslarni takrorlang:',nextG:g=>`${GRADE_NUM[g]}-razryadga o\'tish`,toExam:'Razryad imtihonini topshirish',getCert:'Guvohnoma olish'}};
+const G=()=>GX[lang];
+const medal=(n,sz=44)=>`<svg class="medal" width="${sz}" height="${sz}" viewBox="0 0 48 48" aria-hidden="true"><path d="M15 2h7l4 14h-7zM33 2h-7l-4 14h7z" fill="var(--accent)"/><circle cx="24" cy="30" r="16" fill="#c9a227"/><circle cx="24" cy="30" r="12.5" fill="var(--navy)"/><text x="24" y="35.5" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">${n}</text></svg>`;
+const examN=g=>byLv(g).length*2;
+function gradeCard(){const Gx=G();const t=topGrade();
+  return `<div class="card lvcard">${t>=0?`<div class="lvrow">${medal(GRADE_NUM[t],52)}<div><span class="s">${Gx.mine}</span><b>${Gx.have(t)}</b></div></div><button class="btn" id="cert" type="button">${Gx.cert}</button>`:`<div class="lvrow">${medal('?',52)}<div><span class="s">${Gx.mine}</span><b>${Gx.none}</b></div></div>`}<p class="disc">${Gx.disc}</p></div>`}
+function gradeHead(lv){return `${grades.has(lv)?medal(GRADE_NUM[lv],26):''}`}
+function gradeChip(lv){return grades.has(lv)?`<span class="chip free">✓ ${G().passedChip}</span>`:''}
+function examBtn(lv){if(isPaid(byLv(lv)[0]))return '';return gradeDone(lv)?`<button class="btn exam${grades.has(lv)?' ghost':''}" type="button" data-exam="${lv}">${grades.has(lv)?G().exDone:G().exam(lv,examN(lv))}</button>`:`<p class="exlock">🔒 ${G().exLock}</p>`}
+function bindGrades(){document.querySelectorAll('[data-exam]').forEach(b=>b.onclick=()=>startExam(+b.dataset.exam));const ce=$('#cert');if(ce)ce.onclick=openCert}
+function openCert(){const t=topGrade();if(t<0||!window.KasbCert)return;
+  const topics={ru:[],uz:[]};LESSONS.filter(x=>grades.has(x.lv)&&x.lv<=t).forEach(x=>{topics.ru.push(x.t.ru);topics.uz.push(x.t.uz)});
+  const o={prefix:pk('x').replace(/_x$/,''),lang,prof:GCFG.prof,grade:GRADE_NUM[t],topics,sources:GCFG.sources,url:GCFG.url,start:GCFG.start};
+  if(GCFG.level){o.unit={ru:'УРОВЕНЬ',uz:'DARAJA'};o.did={ru:`прошёл(ла) сокращённый курс «${GCFG.prof.ru}», уровень «${gname(t,'ru')}»`,uz:`«${GCFG.prof.uz}» qisqartirilgan kursini o'tdi, daraja: «${gname(t,'uz')}»`};
+    o.note={ru:'Неофициальный документ. Это короткий курс по уходу и первой помощи, а не медицинское образование и не допуск к работе медсестрой.',uz:'Norasmiy hujjat. Bu parvarish va birinchi yordam bo\'yicha qisqa kurs, tibbiy ta\'lim ham, hamshira bo\'lib ishlashga ruxsat ham emas.'};
+    o.shareText={ru:`Я прошёл(ла) курс «${GCFG.prof.ru}» (уровень «${gname(t,'ru')}») в Kasb Pro. Попробуй тоже:`,uz:`Men Kasb Pro'da «${GCFG.prof.uz}» kursini o'tdim («${gname(t,'uz')}» darajasi). Sen ham sinab ko'r:`}}
+  window.KasbCert.open(o)}
+
+/* grade exam: 2 random questions from every lesson of the grade, pass = 80% */
+const needEx=n=>Math.ceil(n*0.8);
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function startExam(g){const qs=[];byLv(g).forEach(x=>shuf(x.quiz.map((_,i)=>i)).slice(0,2).forEach(i=>qs.push({l:x.id,i})));
+  S.ex={g,qs:shuf(qs),qi:0,score:0,picked:null,miss:new Set()};go('exam')}
+function exam(){
+  const L=U(),Gx=G();const E=S.ex;const it=E.qs[E.qi];const x=LESSONS.find(y=>y.id===it.l);const item=x.quiz[it.i];const Q=tr(item);const p=E.picked;const N=E.qs.length;
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${Gx.exT(E.g)}</h1><p>${Gx.exSub(needEx(N),N)}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(E.qi+1,N)}</span><span>${L.ok(E.score)}</span></div><div class="meter"><i style="width:${(E.qi+(p!==null?1:0))/N*100}%"></i></div></div>
+   <p class="exfrom">${tr(x.t)}</p><p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${E.qi<N-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go('home');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{E.picked=+b.dataset.i;if(E.picked===item.a)E.score++;else E.miss.add(x.id);render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(E.qi<N-1){E.qi++;E.picked=null;go('exam')}else{if(E.score>=needEx(N)){grades.add(E.g);store.set('grades',[...grades])}go('examRes')}};
+}
+function examRes(){
+  const L=U(),Gx=G();const E=S.ex;const N=E.qs.length;const pass=E.score>=needEx(N);const num=GRADE_NUM[E.g];const ng=E.g+1<GRADE_NUM.length?E.g+1:null;
+  const miss=LESSONS.filter(x=>E.miss.has(x.id));
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${Gx.exT(E.g)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   ${pass?`<div class="bigmedal">${medal(num,96)}</div>`:''}<div class="score">${E.score} / ${N}</div><h3>${pass?Gx.exPass(E.g):L.failT}</h3>
+   ${pass?`<p class="expl">${Gx.disc}</p>`:`<p class="expl">${Gx.exFail(needEx(N),N)}</p>`}
+   ${miss.length?`<p class="expl"><b>${Gx.reread}</b></p><div class="list">${miss.map(x=>`<button class="item open" type="button" data-id="${x.id}"><span class="tx"><b>${tr(x.t)}</b></span><span class="go">›</span></button>`).join('')}</div>`:''}</div>
+   ${pass?`<button class="btn" id="cert" type="button">${Gx.getCert}</button>`:`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   ${pass&&ng!==null?`<button class="btn ghost" id="ng" type="button">${Gx.nextG(ng)}</button>`:''}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  const r=$('#retry');if(r)r.onclick=()=>startExam(E.g);
+  const c=$('#cert');if(c)c.onclick=openCert;
+  const g=$('#ng');if(g)g.onclick=()=>{S.id=byLv(ng)[0].id;go('lesson')};
+}
 document.documentElement.lang=lang;
 go('home');
 

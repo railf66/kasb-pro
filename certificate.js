@@ -1,6 +1,7 @@
 /* Kasb Pro — unofficial certificate («свидетельство») shared by all profession apps.
    Usage: KasbCert.open({prefix:'ep', lang:'ru'|'uz', prof:{ru,uz}, grade:'3',
      topics:{ru:[...],uz:[...]}, sources:{ru:[...],uz:[...]}, url:'kasbpro.uz/elektrik/'})
+   Optional for professions without разряды: did:{ru,uz} (main line), unit:{ru,uz} (word under the medal), shareText:{ru,uz}, note:{ru,uz} (disclaimer at the bottom).
    The name is asked once and kept in localStorage <prefix>_certname. */
 (function(){
 const T={
@@ -45,10 +46,10 @@ function draw(o,name){
   x.fillStyle=MUTED;x.font=`400 30px ${F}`;x.fillText(L.conf,W/2,430);
   let fs=64;x.font=`700 ${fs}px ${F}`;while(x.measureText(name).width>W-260&&fs>36){fs-=2;x.font=`700 ${fs}px ${F}`}
   x.fillStyle=INK;x.fillText(name,W/2,515);x.strokeStyle=GOLD;x.lineWidth=2;x.beginPath();x.moveTo(200,540);x.lineTo(W-200,540);x.stroke();
-  x.font=`500 32px ${F}`;let y=600;wrap(x,L.did(o.grade,prof),W-300).forEach(l=>{x.fillText(l,W/2,y);y+=44});
+  x.font=`500 32px ${F}`;let y=600;wrap(x,o.did?(o.did[lang]||o.did.ru):L.did(o.grade,prof),W-300).forEach(l=>{x.fillText(l,W/2,y);y+=44});
   // medal
   const my=y+70;x.fillStyle=GOLD;x.beginPath();x.arc(W/2,my,62,0,Math.PI*2);x.fill();x.fillStyle=NAVY;x.beginPath();x.arc(W/2,my,50,0,Math.PI*2);x.fill();
-  x.fillStyle='#fff';x.font=`800 50px ${F}`;x.textBaseline='middle';x.fillText(o.grade,W/2,my-4);x.font=`600 15px ${F}`;x.fillText(lang==='uz'?'RAZRYAD':'РАЗРЯД',W/2,my+30);x.textBaseline='alphabetic';
+  x.fillStyle='#fff';x.font=`800 50px ${F}`;x.textBaseline='middle';x.fillText(o.grade,W/2,my-4);x.font=`600 15px ${F}`;x.fillText(o.unit?(o.unit[lang]||o.unit.ru):(lang==='uz'?'RAZRYAD':'РАЗРЯД'),W/2,my+30);x.textBaseline='alphabetic';
   const fy=H-250;
   let tfs=topics.length>20?20:topics.length>14?22:topics.length>8?24:27,sfs=21,hfs=28;const colW=(W-240)/2;const half=Math.ceil(topics.length/2);
   function block(y0,paint){let y=y0;x.textAlign='left';
@@ -65,7 +66,7 @@ block(top+Math.max(0,(avail-bh)/2),true);
   x.fillStyle=INK;x.font=`500 24px ${F}`;x.fillText(`${L.date}: ${ds}`,110,fy);x.textAlign='right';
   x.fillText(`${L.num} KP-${(o.prefix||'kp').toUpperCase()}${o.grade}-${hash(name+o.grade+(o.prefix||''))}`,W-110,fy);
   x.textAlign='center';x.fillStyle='#f3efe0';x.fillRect(100,fy+30,W-200,120);x.fillStyle=MUTED;x.font=`400 21px ${F}`;
-  let ny=fy+68;wrap(x,L.note,W-260).forEach(l=>{x.fillText(l,W/2,ny);ny+=28});
+  let ny=fy+68;wrap(x,o.note?(o.note[lang]||o.note.ru):L.note,W-260).forEach(l=>{x.fillText(l,W/2,ny);ny+=28});
   x.fillStyle=MUTED;x.font=`500 20px ${F}`;x.fillText(o.url||'kasbpro.uz',W/2,H-80);
   return c;
 }
@@ -83,7 +84,7 @@ function open(o){
     box.innerHTML=`<img src="${url}" alt="${esc(L.title)}"><p class="kc-hint">${L.hold}</p><a class="kc-btn" id="kc-dl" href="${url}" download="kasbpro-${o.prefix||'kp'}-${o.grade}.png">${L.save}</a><button class="kc-btn" id="kc-sh" type="button">${L.share}</button><button class="kc-btn g" id="kc-ed" type="button">${L.edit}</button><button class="kc-btn g" id="kc-x" type="button">${L.close}</button>`;
     box.querySelector('#kc-x').onclick=close;box.querySelector('#kc-ed').onclick=ask;
     box.querySelector('#kc-sh').onclick=async()=>{
-      const text=L.shareText(o.grade,prof);const link='https://t.me/kasbpro_uz_bot?start='+(o.start||'site');
+      const text=o.shareText?(o.shareText[lang]||o.shareText.ru):L.shareText(o.grade,prof);const link='https://t.me/kasbpro_uz_bot?start='+(o.start||'site');
       try{const blob=await new Promise(r=>c.toBlob(r,'image/png'));const file=new File([blob],'kasbpro.png',{type:'image/png'});
         if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:text+' '+link});return}}catch(e){if(e&&e.name==='AbortError')return}
       const sh='https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(text);
