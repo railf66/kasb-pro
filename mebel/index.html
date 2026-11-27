@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>window.KASB_HUB="../"</script>
+<script src="../tg.js" defer></script>
+<script src="../feedback.js" defer></script>
+<script src="../certificate.js" defer></script>
+<title>Уроки для мебельщика: раскрой ЛДСП, кромка, сборка, монтаж кухни — Мебельщик Pro</title>
+<meta name="description" content="Бесплатный курс для мебельщика по разрядам (2–5, по образцу ЕТКС): инструмент и безопасность, ЛДСП, МДФ, ХДФ, чертёж и деталировка, раскрой на форматке, кромкование, присадка под конфирмат, сборка корпуса, мебельные петли, ящики и направляющие, установка кухни, шкаф-купе, замер, смета и цена. Экзамены, значки и свидетельство Kasb Pro. Калькуляторы раскроя ЛДСП, кромки, фурнитуры, дверей купе и цены. На русском и узбекском.">
+<link rel="canonical" href="https://kasbpro.uz/mebel/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kasb Pro">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Уроки для мебельщика: раскрой ЛДСП, кромка, сборка, монтаж кухни — Мебельщик Pro">
+<meta property="og:description" content="Бесплатный курс для мебельщика по разрядам (2–5, по образцу ЕТКС): инструмент и безопасность, ЛДСП, МДФ, ХДФ, чертёж и деталировка, раскрой на форматке, кромкование, присадка под конфирмат, сборка корпуса, мебельные петли, ящики и направляющие, установка кухни, шкаф-купе, замер, смета и цена. Экзамены, значки и свидетельство Kasb Pro. Калькуляторы раскроя ЛДСП, кромки, фурнитуры, дверей купе и цены. На русском и узбекском.">
+<meta property="og:url" content="https://kasbpro.uz/mebel/">
+<meta property="og:image" content="https://kasbpro.uz/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Course", "name": "Мебельщик Pro", "description": "Бесплатный курс для мебельщика по разрядам (2–5, по образцу ЕТКС): инструмент и безопасность, ЛДСП, МДФ, ХДФ, чертёж и деталировка, раскрой на форматке, кромкование, присадка под конфирмат, сборка корпуса, мебельные петли, ящики и направляющие, установка кухни, шкаф-купе, замер, смета и цена. Экзамены, значки и свидетельство Kasb Pro. Калькуляторы раскроя ЛДСП, кромки, фурнитуры, дверей купе и цены. На русском и узбекском.", "url": "https://kasbpro.uz/mebel/", "inLanguage": ["ru", "uz"], "isAccessibleForFree": true, "provider": {"@type": "EducationalOrganization", "name": "Kasb Pro", "url": "https://kasbpro.uz/"}, "hasCourseInstance": {"@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT4H"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "UZS", "category": "Free"}}</script>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+body{margin:0}
+
+/* Layout: one-column phone app, screens swapped in place; panel-blueprint feel with a warm oak accent */
+:root{
+  --bg:#f5f1ea; --surface:#ffffff; --fg:#14202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#d08a35; --accent-ink:#2a1606; --navy:#2e2118; --navy-fg:#f4f7fa;
+  --ok:#1f8a4c; --bad:#c4392f; --lock:#9aa5b1;
+  --wH:#d23b2f; --wC:#1e6fd0; --wS:#7d8790; --wF:#e07a1f; --wW:#9ed6f0;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14110e; --surface:#211b16; --fg:#e7edf3; --muted:#9aa8b6; --line:#3a3028;
+  --accent:#e3a24f; --accent-ink:#2a1606; --navy:#1d150f; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14110e; --surface:#211b16; --fg:#e7edf3; --muted:#9aa8b6; --line:#3a3028;
+  --accent:#e3a24f; --accent-ink:#2a1606; --navy:#1d150f; --navy-fg:#e7edf3;
+  --ok:#3dbb72; --bad:#ef6a5f; --lock:#5f6d7a; --wH:#ef5a4e; --wC:#4a90e8; --wS:#8f99a3; --wF:#f0913a; --wW:#2c6f8f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;min-height:100%}
+.bar{background:var(--navy);color:var(--navy-fg);padding-block:18px 22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar .row{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;flex:none}
+.bar h1{font-family:var(--display);font-size:20px;margin:0;letter-spacing:.01em}
+.bar p{margin:2px 0 0;font-size:13px;opacity:.75}
+.back{background:none;border:0;color:var(--navy-fg);font:inherit;font-size:15px;padding:6px 0;cursor:pointer;display:flex;gap:6px;align-items:center}
+.wrap{padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.progress{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.progress .t{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.progress b{color:var(--fg);font-variant-numeric:tabular-nums}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+.level h2{font-family:var(--display);font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font-family:var(--body);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.02em;text-transform:none}
+.chip.free{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.chip.pro{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--fg)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;font:inherit;text-align:left}
+.item:first-child{border-top:0}
+.item .n{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+.item .tx{flex:1;min-width:0}
+.item .tx b{display:block;font-weight:600;font-size:15px}
+.item .tx span{font-size:13px;color:var(--muted)}
+.item.open{cursor:pointer}
+.item.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.done .n{background:var(--ok);color:#fff}
+.item.locked{color:var(--muted)}
+.item.locked b{color:var(--muted)}
+.item:focus-visible,.btn:focus-visible,.opt:focus-visible,.back:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ic{flex:none;color:var(--lock)}
+.go{flex:none;color:var(--accent);font-weight:700}
+.note{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.diagram{padding:10px 6px 6px}
+.diagram svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;padding:10px 10px 4px;font-size:13px}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:22px;height:6px;border-radius:3px;display:inline-block}
+.warn{background:color-mix(in srgb,var(--bad) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px}
+.warn b{color:var(--bad)}
+h3{font-family:var(--display);font-size:16px;margin:0}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{display:flex;gap:12px;counter-increment:s}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tip{font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px;margin:0}
+.btn{appearance:none;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:16px;padding:15px;width:100%;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.q-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.q{font-size:18px;font-weight:600;margin:6px 0 0;text-wrap:balance}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{appearance:none;text-align:left;font:inherit;font-size:15px;padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,var(--surface))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--surface))}
+.expl{font-size:14px;color:var(--muted);margin:0}
+.result{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;padding-block:10px}
+.score{font-family:var(--display);font-size:44px;font-variant-numeric:tabular-nums}
+.badge{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+<style>
+.bar .row{justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ttl{margin-top:6px!important;text-wrap:balance}
+.lang{display:flex;border:1.5px solid color-mix(in srgb,var(--navy-fg) 35%,transparent);border-radius:10px;overflow:hidden;flex:none}
+.lang button{appearance:none;border:0;background:none;color:var(--navy-fg);font:inherit;font-size:13px;font-weight:700;padding:6px 10px;cursor:pointer;letter-spacing:.04em}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.tabs{display:flex;gap:4px;background:var(--navy);padding-block:0 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs button{flex:1;appearance:none;border:0;border-radius:10px;padding:10px;font:inherit;font-weight:600;font-size:14px;background:color-mix(in srgb,var(--navy-fg) 10%,transparent);color:var(--navy-fg);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--fg)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.sv{overflow-x:auto}
+.tbl{padding:0;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+td:first-child{font-weight:600;white-space:nowrap}
+.okc{color:var(--ok)}.badc{color:var(--bad)}
+.link{appearance:none;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.fld{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+.fld input{font:inherit;font-size:18px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%}
+.fld select:focus,.fld input:focus{outline:3px solid var(--accent);outline-offset:1px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;appearance:none;font:inherit;font-size:14px;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface));font-weight:700}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.out div{background:var(--navy);color:var(--navy-fg);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.out span{font-size:12px;opacity:.75}
+.out b{font-family:var(--display);font-size:18px;font-variant-numeric:tabular-nums}
+.out.two{grid-template-columns:repeat(2,1fr)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.out .wide{grid-column:1/-1;background:var(--surface);border:1px solid var(--line)}
+.tip b{color:var(--fg)}
+.hub{display:inline-block;color:var(--navy-fg);opacity:.8;font-size:13px;text-decoration:none;margin-bottom:10px}
+.hub:hover{opacity:1}
+.game{display:flex;align-items:center;gap:12px;background:var(--navy);color:var(--navy-fg);border-radius:14px;padding:14px 16px;text-decoration:none}.game .gi{width:40px;height:40px;border-radius:10px;background:var(--accent);display:grid;place-items:center;font-size:22px;flex:none}.game .tx{flex:1;min-width:0}.game b{display:block;font-size:15px}.game span.s{font-size:13px;opacity:.75}.game .go{color:var(--accent);font-weight:700;font-size:20px}
+</style>
+<style>
+.lvlcard{display:flex;flex-direction:column;gap:10px}
+.lvlcard b{display:block;font-family:var(--display);font-size:16px}
+.medals{display:flex;gap:8px}
+.gdesc{margin:-4px 0 8px;font-size:13px;color:var(--muted)}
+.item.exam .n{background:color-mix(in srgb,var(--accent) 25%,var(--surface));color:var(--fg)}
+.item.exam.open .n{background:var(--accent);color:var(--accent-ink)}
+.item.exam.done .n{background:var(--ok);color:#fff}
+.phead,.prow{display:grid;grid-template-columns:1fr 1fr .6fr 1.3fr 32px;gap:6px;align-items:center}
+.phead span{font-size:12px;color:var(--muted)}
+.prow{margin-bottom:6px}
+.prow input,.prow select{font:inherit;font-size:15px;padding:9px 6px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg);width:100%;min-width:0}
+.prow select{font-size:13px;padding:9px 2px}
+.pdel{appearance:none;border:0;background:none;color:var(--muted);font-size:22px;cursor:pointer;padding:0}
+.sheets{display:flex;flex-direction:column;gap:10px}
+.sheet{margin:0}.sheet figcaption{font-size:12px;color:var(--muted);margin-bottom:4px}.sheet svg{width:100%;height:auto;display:block}
+.out .wide.bad{background:color-mix(in srgb,var(--bad) 12%,var(--surface));color:var(--fg)}
+</style>
+<style>
+.out span{overflow-wrap:anywhere}
+.out.money{grid-template-columns:1fr}
+.out.money div{flex-direction:row;justify-content:space-between;align-items:baseline;gap:10px}
+.out.money span{font-size:14px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// Lesson content for Мебельщик Pro (furniture maker: cutting, edging, drilling, assembly, installation).
+// Each text is {ru, uz}. lv = grade index: 0 = 2nd grade, 1 = 3rd, 2 = 4th, 3 = 5th (ETKS-style). Quiz: a = index of the right option.
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--accent)"/></marker></defs>';
+const svg=(body,aria,h=250)=>`<svg viewBox="0 0 360 ${h}" role="img" aria-label="${aria}">${DEFS}${body}</svg>`;
+const tx=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||11}" font-weight="${o.w||400}" fill="${o.c||'var(--fg)'}">${s}</text>`;
+const line=(d,c,w=3,dash)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${dash?` stroke-dasharray="${dash}"`:''}/>`;
+const box=(x,y,w,h,f='var(--surface)')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="var(--fg)" stroke-width="1.5"/>`;
+const circ=(x,y,r,f,st='var(--fg)')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${st}" stroke-width="1.5"/>`;
+const R=(l,ru,uz)=>l=='ru'?ru:uz;
+const AC='var(--accent)',FG='var(--fg)',MU='var(--muted)',BLUE='var(--wC)',RED='var(--wH)',GR='var(--ok)';
+const WOOD='color-mix(in srgb,var(--accent) 28%,var(--surface))';
+const WOOD2='color-mix(in srgb,var(--accent) 50%,var(--surface))';
+const EDGE='var(--wC)';
+const rect=(x,y,w,h,f=WOOD,st='var(--fg)',sw=1.2)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" stroke="${st}" stroke-width="${sw}"/>`;
+const arr=(d,c=AC,w=2)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" marker-start="url(#ar2)" marker-end="url(#ar2)"/>`;
+const ar1=(d,c='var(--muted)',w=1.5)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" marker-end="url(#ar)"/>`;
+const tile6=(items)=>items.map(([x,y,ic,a,b])=>box(x,y,100,104)+tx(x+50,y+48,ic,{s:30,c:AC,w:700})+tx(x+50,y+74,a,{w:700,s:11})+tx(x+50,y+90,b,{s:9,c:MU})).join('');
+
+const LESSONS=[
+/* ---------- 2nd GRADE: helper, knows tools, materials, drawings ---------- */
+{id:'a1',lv:0,min:5,
+ t:{ru:"Инструмент и безопасность в цеху",uz:"Sexda asbob va xavfsizlik"},s:{ru:"Рулетка, угольник, шуруповёрт, СИЗ",uz:"Ruletka, burchaklik, shurupovyort, himoya vositalari"},
+ svg:l=>svg(tile6([[10,10,'⟷',R(l,'Рулетка 5 м','Ruletka 5 m'),R(l,'+ металл. линейка','+ metall chizg\'ich')],[130,10,'⌐',R(l,'Угольник 90°','Burchaklik 90°'),R(l,'проверка углов','burchak tekshirish')],[250,10,'⚙',R(l,'Шуруповёрт','Shurupovyort'),R(l,'2 аккумулятора','2 ta akkumulyator')],
+   [10,128,'⌀',R(l,'Сверло конфирмат','Konfirmat parmasi'),R(l,'ступенчатое 5/7','pog\'onali 5/7')],[130,128,'▭',R(l,'Уровень','Shovun'),R(l,'60 см + лазер','60 sm + lazer')],[250,128,'✋',R(l,'Очки, наушники','Ko\'zoynak, quloqchin'),R(l,'респиратор','respirator')]]),
+  R(l,"Основной инструмент сборщика мебели: рулетка, угольник, шуруповёрт, ступенчатое сверло под конфирмат, уровень и средства защиты","Mebel yig'uvchining asosiy asboblari: ruletka, burchaklik, shurupovyort, konfirmat uchun pog'onali parma, shovun va himoya vositalari"),245),
+ table:{head:{ru:["Инструмент","Зачем и совет"],uz:["Asbob","Nima uchun va maslahat"]},rows:{
+  ru:[["Рулетка 5 м, металлическая линейка 1 м","Все размеры в мебели пишут в миллиметрах. Мерить от одного края детали"],["Угольник 90° (столярный)","Проверка торцов после раскроя и углов корпуса"],["Шуруповёрт, лучше два","Один со сверлом, второй с битой — не нужно всё время перекручивать"],["Ступенчатое сверло под конфирмат","Одним проходом делает Ø5 в торец и Ø7 в пласть"],["Сверло Форстнера Ø35","Под чашку мебельной петли"],["Кромочный нож, напильник, утюг","Снять свесы кромки и наклеить кромку вручную"],["Уровень 60 см, лазерный нивелир","Установка кухонь и шкафов у клиента"]],
+  uz:[["Ruletka 5 m, metall chizg'ich 1 m","Mebelda barcha o'lchamlar millimetrda yoziladi. Detalning bitta chetidan o'lchang"],["Burchaklik 90° (duradgorlik)","Kesishdan keyin torets va korpus burchaklarini tekshirish"],["Shurupovyort, ikkitasi yaxshi","Biri parmali, ikkinchisi bitali — har doim almashtirib o'tirmaysiz"],["Konfirmat uchun pog'onali parma","Bir marta o'tishda torets uchun Ø5 va plast uchun Ø7 qiladi"],["Forstner parmasi Ø35","Mebel petlyasining kosachasi uchun"],["Kromka pichog'i, egov, dazmol","Kromka ortiqchasini olish va kromkani qo'lda yopishtirish"],["60 sm shovun, lazer nivelir","Mijozda oshxona va shkaf o'rnatish"]]}},
+ warnB:{ru:"Станки режут пальцы за секунду.",uz:"Stanoklar barmoqni bir soniyada kesadi."},warn:{ru:"Без очков и наушников к станку не подходить. Перчатки у вращающегося диска и сверла не надевать: их затягивает.",uz:"Ko'zoynak va quloqchinsiz stanokka yaqinlashmang. Aylanayotgan disk va parma yonida qo'lqop kiymang: uni tortib ketadi."},
+ steps:{ru:["Утром проверьте рабочее место: на полу нет обрезков и проводов, проход к станку свободен.","Наденьте очки, наушники, а при шлифовке и раскрое — респиратор: пыль ЛДСП и МДФ вредна для лёгких.","Длинные волосы уберите, рукава застегните, браслеты и кольца снимите.","Перед включением станка проверьте, что защитный кожух на месте и вытяжка работает.","Мелкие детали к пиле подавайте толкателем, а не рукой.","В конце смены выключите станки, уберите пыль и сложите детали по заказам с бирками."],
+       uz:["Ertalab ish joyini tekshiring: polda qoldiq va sim yo'q, stanokka yo'l ochiq.","Ko'zoynak, quloqchin, silliqlash va kesishda esa respirator taqing: LDSP va MDF changi o'pkaga zararli.","Uzun sochni yig'ing, yengni tugmalang, bilaguzuk va uzukni yeching.","Stanokni yoqishdan oldin himoya qopqog'i joyida va so'rg'ich ishlayotganini tekshiring.","Mayda detallarni arraga qo'l bilan emas, itargich bilan bering.","Smena oxirida stanoklarni o'chiring, changni tozalang va detallarni buyurtmalar bo'yicha yorliq bilan taxlang."]},
+ tip:{ru:"Все размеры в мебельном чертеже — в миллиметрах. «600» значит 60 см, а не 6 метров. Ошибка в один ноль стоит целого листа ЛДСП.",uz:"Mebel chizmasidagi barcha o'lchamlar millimetrda. «600» — bu 60 sm, 6 metr emas. Bitta nol xatosi butun LDSP listiga tushadi."},
+ quiz:[
+  {a:1,ru:{q:"В каких единицах пишут размеры в мебельном чертеже?",o:["В сантиметрах","В миллиметрах","В метрах"],e:"Мебельщики всегда работают в миллиметрах."},uz:{q:"Mebel chizmasida o'lchamlar qanday birlikda yoziladi?",o:["Santimetrda","Millimetrda","Metrda"],e:"Mebelchilar doim millimetrda ishlaydi."}},
+  {a:2,ru:{q:"Почему у пилы и сверлильного станка нельзя работать в перчатках?",o:["Перчатки быстро рвутся","Неудобно мерить","Перчатку затягивает вращающийся инструмент вместе с рукой"],e:"Ткань наматывается на диск или сверло за долю секунды."},uz:{q:"Nega arra va parmalash stanogida qo'lqopda ishlab bo'lmaydi?",o:["Qo'lqop tez yirtiladi","O'lchash noqulay","Aylanayotgan asbob qo'lqopni qo'l bilan birga tortib ketadi"],e:"Mato disk yoki parmaga soniyaning bir qismida o'raladi."}},
+  {a:0,ru:{q:"Зачем ступенчатое сверло под конфирмат?",o:["Делает Ø5 и Ø7 за один проход","Для петель","Для шлифовки"],e:"Узкая часть идёт в торец, широкая — в пласть для шейки конфирмата."},uz:{q:"Konfirmat uchun pog'onali parma nima uchun kerak?",o:["Bir o'tishda Ø5 va Ø7 qiladi","Petlyalar uchun","Silliqlash uchun"],e:"Ingichka qismi toretsga, keng qismi plastga konfirmat bo'yni uchun kiradi."}},
+  {a:1,ru:{q:"Чем подавать маленькую деталь к пиле?",o:["Пальцами, аккуратно","Толкателем","Ногой"],e:"Руки должны быть далеко от диска."},uz:{q:"Kichik detalni arraga nima bilan berish kerak?",o:["Barmoq bilan, ehtiyotkorlik bilan","Itargich bilan","Oyoq bilan"],e:"Qo'llar diskdan uzoqda bo'lishi kerak."}}]},
+
+{id:'a2',lv:0,min:6,nowarn:true,
+ t:{ru:"Материалы: ЛДСП, МДФ, ХДФ, фанера",uz:"Materiallar: LDSP, MDF, XDF, fanera"},s:{ru:"Толщины, размеры листов, где что применять",uz:"Qalinliklar, list o'lchamlari, qayerda nima ishlatiladi"},
+ svg:l=>svg(
+  [[14,'ЛДСП','LDSP','16 / 18 / 22',R(l,'корпуса','korpuslar'),WOOD],[100,'МДФ','MDF','16 / 19 / 22',R(l,'фасады','fasadlar'),'color-mix(in srgb,var(--wS) 40%,var(--surface))'],[186,'ХДФ','XDF','3 / 4',R(l,'задняя стенка, дно','orqa devor, tub'),'color-mix(in srgb,var(--accent) 15%,var(--surface))'],[272,R(l,'Фанера','Fanera'),R(l,'Fanera','Fanera'),'9–21',R(l,'каркас, дно ящика','karkas, quti tubi'),WOOD2]]
+  .map(([x,a,b,mm,use,f])=>box(x,20,76,150)+rect(x+10,40,56,70,f)+tx(x+38,132,l=='ru'?a:b,{w:700,s:12})+tx(x+38,148,mm+' '+R(l,'мм','mm'),{s:10,c:MU})+tx(x+38,162,use,{s:9,c:MU})).join('')+
+  tx(180,200,R(l,'Лист ЛДСП: 2800 × 2070 мм (Egger, Kronospan)','LDSP listi: 2800 × 2070 mm (Egger, Kronospan)'),{w:700,s:12})+
+  tx(180,220,R(l,'бывает 2750 × 1830 мм · текстура идёт вдоль 2800','2750 × 1830 mm ham bor · tekstura 2800 bo\'ylab ketadi'),{s:11,c:MU})+
+  tx(180,240,R(l,'Класс эмиссии E1 и ниже — для жилых комнат','E1 va undan past emissiya sinfi — yashash xonalari uchun'),{s:11,c:AC,w:700}),
+  R(l,"Четыре плитных материала: ЛДСП для корпусов, МДФ для фасадов, ХДФ для задних стенок, фанера для каркасов. Размер листа ЛДСП 2800 на 2070 мм","To'rtta plita material: korpus uchun LDSP, fasad uchun MDF, orqa devor uchun XDF, karkas uchun fanera. LDSP listi 2800 ga 2070 mm"),250),
+ table:{head:{ru:["Материал","Где применять","Особенности"],uz:["Material","Qayerda ishlatiladi","Xususiyatlari"]},rows:{
+  ru:[["ЛДСП 16 мм","Корпуса шкафов, кухонь, полки","Самый ходовой. Торцы закрывают кромкой, иначе набирает влагу"],["ЛДСП 18–22 мм","Длинные полки, столы, нагруженные детали","Меньше прогибается. Полка 16 мм длиннее 800 мм провисает"],["МДФ (плёнка, эмаль, шпон)","Фасады, фрезерованные двери","Плотная, хорошо фрезеруется, держит форму"],["ХДФ / ДВП 3–4 мм","Задние стенки, дно ящиков","Тонкая, только в паз или на гвозди/скобы"],["Фанера 9–21 мм","Дно тяжёлых ящиков, каркас дивана","Прочная, лучше держит шуруп в торце"],["Столешница 26–38 мм","Кухни, рабочие столы","Пластик (HPL) сверху, торцы и вырезы герметизировать"]],
+  uz:[["LDSP 16 mm","Shkaf, oshxona korpuslari, tokchalar","Eng ko'p ishlatiladigan. Toretsi kromka bilan yopiladi, aks holda nam tortadi"],["LDSP 18–22 mm","Uzun tokchalar, stollar, yuklangan detallar","Kamroq egiladi. 800 mm dan uzun 16 mm tokcha osilib qoladi"],["MDF (plyonka, emal, shpon)","Fasadlar, frezalangan eshiklar","Zich, yaxshi frezalanadi, shaklini ushlaydi"],["XDF / DVP 3–4 mm","Orqa devorlar, quti tubi","Yupqa, faqat pazga yoki mix/skobaga"],["Fanera 9–21 mm","Og'ir quti tubi, divan karkasi","Mustahkam, toretsda shurupni yaxshiroq ushlaydi"],["Stoleshnitsa 26–38 mm","Oshxona, ish stollari","Ustida plastik (HPL), torets va o'yiqlarni germetiklash kerak"]]}},
+ steps:{ru:["Узнайте у мастера декор (цвет и код, например Egger H1145), толщину и куда пойдут детали.","Проверьте лист: нет сколов на углах, царапин на ламинате, разнотона между листами одного декора.","Посмотрите направление текстуры: у «дерева» рисунок идёт вдоль длинной стороны листа (2800 мм).","Для кухни у мойки берите влагостойкую ЛДСП или хотя бы кромку 2 мм на все торцы.","Храните листы лёжа на ровном поддоне, а не боком у стены: лист выгнется.","Обрезки больше 300 × 300 мм подпишите и сохраните — пойдут на мелкие полки и вставки."],
+       uz:["Ustadan dekorni (rang va kod, masalan Egger H1145), qalinlikni va detallar qayerga ketishini bilib oling.","Listni tekshiring: burchaklarida o'yiq, laminatda tirnalish, bir dekordagi listlar orasida ton farqi yo'q.","Tekstura yo'nalishiga qarang: «yog'och»da rasm listning uzun tomoni (2800 mm) bo'ylab ketadi.","Oshxonada rakovina yonida namga chidamli LDSP yoki hech bo'lmaganda barcha toretsga 2 mm kromka oling.","Listlarni devor yonida yonboshlab emas, tekis poddonda yotqizib saqlang: list egilib qoladi.","300 × 300 mm dan katta qoldiqlarni yozib saqlang — mayda tokcha va qo'shimchalarga ketadi."]},
+ tip:{ru:"Полка из ЛДСП 16 мм без опоры не должна быть длиннее 800 мм, иначе через полгода прогнётся. Длиннее — берите 22 мм, ставьте среднюю стойку или металлический уголок снизу.",uz:"Tayanchsiz 16 mm LDSP tokcha 800 mm dan uzun bo'lmasligi kerak, aks holda yarim yilda egiladi. Uzunroq bo'lsa — 22 mm oling, o'rtaga tirgak yoki pastdan metall burchak qo'ying."},
+ quiz:[
+  {a:0,ru:{q:"Стандартный лист ЛДСП Egger или Kronospan?",o:["2800 × 2070 мм","2000 × 1000 мм","3000 × 3000 мм"],e:"Ещё бывает 2750 × 1830 мм — уточняйте у поставщика."},uz:{q:"Standart Egger yoki Kronospan LDSP listi?",o:["2800 × 2070 mm","2000 × 1000 mm","3000 × 3000 mm"],e:"2750 × 1830 mm ham bo'ladi — yetkazib beruvchidan aniqlang."}},
+  {a:2,ru:{q:"Из чего обычно делают заднюю стенку шкафа?",o:["ЛДСП 22 мм","Стекло","ХДФ / ДВП 3–4 мм"],e:"Тонкая плита в паз или на гвозди, она держит корпус от перекоса."},uz:{q:"Shkafning orqa devori odatda nimadan qilinadi?",o:["22 mm LDSP","Shisha","XDF / DVP 3–4 mm"],e:"Yupqa plita pazga yoki mixga, u korpusni qiyshayishdan ushlab turadi."}},
+  {a:1,ru:{q:"Полка 16 мм длиной 1000 мм без опоры — что будет?",o:["Ничего, нормально","Прогнётся со временем","Треснет сразу"],e:"До 800 мм для 16 мм, длиннее — 22 мм или опора."},uz:{q:"Tayanchsiz 1000 mm uzunlikdagi 16 mm tokcha — nima bo'ladi?",o:["Hech narsa, normal","Vaqt o'tib egiladi","Darhol yoriladi"],e:"16 mm uchun 800 mm gacha, uzunroq — 22 mm yoki tayanch."}},
+  {a:1,ru:{q:"Вдоль какой стороны листа идёт текстура «под дерево»?",o:["Вдоль короткой 2070","Вдоль длинной 2800","Как угодно"],e:"Поэтому в деталировке отмечают направление текстуры."},uz:{q:"«Yog'och» teksturasi listning qaysi tomoni bo'ylab ketadi?",o:["Qisqa 2070 bo'ylab","Uzun 2800 bo'ylab","Istalgancha"],e:"Shuning uchun detalirovkada tekstura yo'nalishi belgilanadi."}}]},
+
+{id:'a3',lv:0,min:6,nowarn:true,
+ t:{ru:"Чертёж и деталировка",uz:"Chizma va detalirovka"},s:{ru:"Как читать размеры, кромку и текстуру детали",uz:"Detal o'lchami, kromka va teksturasini qanday o'qish"},calc:true,
+ svg:l=>svg(
+  rect(40,40,180,120,WOOD)+line('M40 40 220 40',EDGE,5)+line('M40 160 220 160',EDGE,5)+
+  line('M60 70 200 70','var(--muted)',1,'4 4')+line('M60 100 200 100','var(--muted)',1,'4 4')+line('M60 130 200 130','var(--muted)',1,'4 4')+
+  arr('M40 185 220 185')+tx(130,202,'720',{w:700,s:13})+arr('M245 40 245 160')+tx(262,104,'560',{w:700,s:13,a:'start'})+
+  tx(130,30,R(l,'кромка 2 мм (синяя)','kromka 2 mm (ko\'k)'),{s:10,c:EDGE,w:700})+tx(130,105,R(l,'текстура ⟶','tekstura ⟶'),{s:11,c:MU})+
+  tx(180,232,R(l,'Боковина · 720 × 560 · 2 шт · ЛДСП 16','Yon devor · 720 × 560 · 2 dona · LDSP 16'),{w:700,s:12}),
+  R(l,"Деталь боковина 720 на 560 мм, кромка 2 мм на двух длинных сторонах, текстура вдоль длины","Yon devor detali 720 ga 560 mm, ikki uzun tomonida 2 mm kromka, tekstura uzunlik bo'ylab"),245),
+ table:{head:{ru:["Столбец деталировки","Что значит"],uz:["Detalirovka ustuni","Ma'nosi"]},rows:{
+  ru:[["Название","Боковина, крыша, дно, полка, фасад, задняя стенка"],["Длина × ширина","Первый размер — вдоль текстуры. Размеры — с кромкой или без, договоритесь в цеху"],["Кол-во","Сколько одинаковых деталей"],["Материал и декор","Например ЛДСП 16 Egger H3303"],["Кромка","Какие стороны и какой толщины: 2 мм видимые торцы, 0,4 мм скрытые"],["Присадка","Отверстия: конфирмат, петли, полкодержатели — по схеме"]],
+  uz:[["Nomi","Yon devor, tom, tub, tokcha, fasad, orqa devor"],["Uzunlik × en","Birinchi o'lcham — tekstura bo'ylab. O'lchamlar kromka bilan yoki kromkasiz — sexda kelishib oling"],["Soni","Bir xil detallar soni"],["Material va dekor","Masalan LDSP 16 Egger H3303"],["Kromka","Qaysi tomonlar va qanday qalinlikda: ko'rinadigan torets 2 mm, yashirin 0,4 mm"],["Prisadka","Teshiklar: konfirmat, petlya, tokcha ushlagich — sxema bo'yicha"]]}},
+ steps:{ru:["Найдите на чертеже габарит изделия: высота × ширина × глубина, например 2100 × 1200 × 600.","Разберите изделие на детали: 2 боковины, крыша, дно, полки, задняя стенка, фасады.","Для каждой детали запишите длину, ширину, количество, материал и кромку — это деталировка.","Помните: дно и крыша, стоящие между боковинами, короче габарита на 2 толщины ЛДСП (1200 − 32 = 1168).","Отметьте направление текстуры у видимых деталей, чтобы рисунок шёл одинаково.","Отдайте деталировку на раскрой и посчитайте листы в калькуляторе."],
+       uz:["Chizmada buyumning gabaritini toping: balandlik × en × chuqurlik, masalan 2100 × 1200 × 600.","Buyumni detallarga ajrating: 2 yon devor, tom, tub, tokchalar, orqa devor, fasadlar.","Har bir detal uchun uzunlik, en, son, material va kromkani yozing — bu detalirovka.","Esda tuting: yon devorlar orasida turgan tub va tom gabaritdan 2 ta LDSP qalinligiga qisqa (1200 − 32 = 1168).","Ko'rinadigan detallarda tekstura yo'nalishini belgilang, rasm bir xil ketishi uchun.","Detalirovkani kesishga bering va kalkulyatorda listlarni hisoblang."]},
+ tip:{ru:"Главная ошибка новичка — забыть вычесть толщину плиты. Шкаф шириной 600 из ЛДСП 16: дно и полки 600 − 2 × 16 = 568 мм.",uz:"Yangi boshlovchining asosiy xatosi — plita qalinligini ayirishni unutish. 16 mm LDSP dan 600 enli shkaf: tub va tokchalar 600 − 2 × 16 = 568 mm."},
+ quiz:[
+  {a:1,ru:{q:"Шкаф шириной 800 из ЛДСП 16, дно между боковинами. Длина дна?",o:["800 мм","768 мм","784 мм"],e:"800 − 2 × 16 = 768 мм."},uz:{q:"16 mm LDSP dan 800 enli shkaf, tub yon devorlar orasida. Tub uzunligi?",o:["800 mm","768 mm","784 mm"],e:"800 − 2 × 16 = 768 mm."}},
+  {a:0,ru:{q:"Что такое деталировка?",o:["Список всех деталей с размерами, количеством и кромкой","Фото готовой мебели","Договор с клиентом"],e:"По ней режут, кромят и сверлят."},uz:{q:"Detalirovka nima?",o:["Barcha detallar ro'yxati o'lchami, soni va kromkasi bilan","Tayyor mebel rasmi","Mijoz bilan shartnoma"],e:"Unga qarab kesiladi, kromkalanadi va parmalanadi."}},
+  {a:2,ru:{q:"Какую кромку обычно клеят на видимые торцы?",o:["0,4 мм","Без кромки","2 мм"],e:"2 мм прочнее и красивее, 0,4 мм — на скрытые торцы."},uz:{q:"Ko'rinadigan toretslarga odatda qanday kromka yopishtiriladi?",o:["0,4 mm","Kromkasiz","2 mm"],e:"2 mm mustahkamroq va chiroyliroq, 0,4 mm — yashirin toretslarga."}},
+  {a:0,ru:{q:"Габарит «2100 × 1200 × 600» — это…",o:["Высота × ширина × глубина","Длина листа","Цена"],e:"Общие размеры изделия."},uz:{q:"«2100 × 1200 × 600» gabariti — bu…",o:["Balandlik × en × chuqurlik","List uzunligi","Narx"],e:"Buyumning umumiy o'lchamlari."}}]},
+
+/* ---------- 3rd GRADE: cutting, edging, drilling, carcass assembly ---------- */
+{id:'b1',lv:1,min:7,calc:true,
+ t:{ru:"Раскрой ЛДСП на форматке",uz:"Formatkada LDSP kesish"},s:{ru:"Пропил, обрезка края, порядок резов",uz:"Arra izi, chetni kesish, kesish tartibi"},
+ svg:l=>svg(
+  rect(20,20,320,160,'color-mix(in srgb,var(--accent) 12%,var(--surface))')+rect(28,28,200,70)+rect(232,28,100,70)+rect(28,102,140,70)+rect(172,102,100,70)+
+  line('M20 24 340 24',RED,2,'5 4')+line('M24 20 24 180',RED,2,'5 4')+
+  tx(128,68,R(l,'боковина','yon devor'),{s:11,w:600})+tx(282,68,R(l,'полка','tokcha'),{s:11,w:600})+tx(98,142,R(l,'дно','tub'),{s:11,w:600})+tx(222,142,R(l,'крыша','tom'),{s:11,w:600})+tx(306,142,R(l,'обрезок','qoldiq'),{s:10,c:MU})+
+  tx(180,200,R(l,'Красным — обрезка заводского края 10–15 мм','Qizil — zavod chetini 10–15 mm kesish'),{s:11,c:RED,w:700})+
+  tx(180,220,R(l,'Между деталями — пропил пилы 4 мм','Detallar orasida — arra izi 4 mm'),{s:11,c:MU})+
+  tx(180,240,R(l,'Сначала продольные резы на полосы, потом поперёк','Avval bo\'ylama kesib polosaga, keyin ko\'ndalang'),{s:11,c:AC,w:700}),
+  R(l,"Карта раскроя листа: обрезка заводского края, детали с пропилом 4 мм, сначала продольные резы","List kesish xaritasi: zavod chetini kesish, 4 mm arra izi bilan detallar, avval bo'ylama kesish"),250),
+ table:{head:{ru:["Параметр","Значение"],uz:["Ko'rsatkich","Qiymati"]},rows:{
+  ru:[["Пропил основной пилы","3,2–4,4 мм (считайте 4 мм)"],["Обрезка края листа","10–15 мм с каждой стороны: заводской край со сколами"],["Подрезной диск","Против сколов ламината снизу, выставляют точно по основной пиле"],["Точность детали","±0,5 мм, диагонали равны (разница не больше 1 мм)"],["Минимальная деталь","Около 50 мм шириной — уже опасно, работать толкателем"],["Отход при раскрое","Хороший раскрой — 10–20 %"]],
+  uz:[["Asosiy arra izi","3,2–4,4 mm (4 mm deb hisoblang)"],["List chetini kesish","Har tomondan 10–15 mm: zavod cheti o'yiqli"],["Podrezka disk","Pastdagi laminat o'yilmasligi uchun, asosiy arraga aniq to'g'rilanadi"],["Detal aniqligi","±0,5 mm, diagonallar teng (farq 1 mm dan oshmasin)"],["Eng kichik detal","Taxminan 50 mm en — xavfli, itargich bilan ishlang"],["Kesishdagi chiqindi","Yaxshi kesish — 10–20 %"]]}},
+ steps:{ru:["Получите карту раскроя (из программы или калькулятора) и проверьте декор и толщину листа.","Обрежьте заводской край листа с двух сторон (10–15 мм), чтобы получить чистый прямой угол.","Сначала распустите лист продольными резами на полосы нужной ширины.","Каждую полосу режьте поперёк на детали. Первую деталь проверьте рулеткой и угольником.","Следите за сколами снизу: если есть — подрезной диск сбит или затупился.","Подпишите каждую деталь карандашом или наклейкой: заказ, название, где кромка."],
+       uz:["Kesish xaritasini (dasturdan yoki kalkulyatordan) oling va list dekori va qalinligini tekshiring.","To'g'ri burchak olish uchun list zavod chetini ikki tomondan (10–15 mm) kesing.","Avval listni bo'ylama kesib, kerakli enda polosalarga ajrating.","Har bir polosani ko'ndalang kesib detallarga bo'ling. Birinchi detalni ruletka va burchaklik bilan tekshiring.","Pastdagi o'yiqlarni kuzating: bo'lsa — podrezka disk siljigan yoki o'tmaslashgan.","Har bir detalga qalam yoki yorliq bilan yozing: buyurtma, nomi, kromka qayerda."]},
+ tip:{ru:"Режьте сначала самые большие детали, а мелочь (полки, царги) — из остатков полос. Так отход меньше. Текстуру не крутите у видимых деталей.",uz:"Avval eng katta detallarni kesing, maydalarini (tokcha, sarg'a) polosa qoldiqlaridan. Shunda chiqindi kam bo'ladi. Ko'rinadigan detallarda teksturani burmang."},
+ quiz:[
+  {a:1,ru:{q:"Зачем обрезать заводской край листа?",o:["Чтобы лист стал легче","Край со сколами и не всегда под 90°","Так быстрее"],e:"10–15 мм срезают, чтобы получить чистую базу."},uz:{q:"Nega list zavod chetini kesish kerak?",o:["List yengilroq bo'lishi uchun","Chet o'yiqli va doim ham 90° emas","Shunday tezroq"],e:"Toza baza olish uchun 10–15 mm kesiladi."}},
+  {a:0,ru:{q:"Сколько закладывать на пропил между деталями?",o:["Около 4 мм","0 мм","20 мм"],e:"Ширина основной пилы 3,2–4,4 мм."},uz:{q:"Detallar orasidagi arra iziga qancha qo'yish kerak?",o:["Taxminan 4 mm","0 mm","20 mm"],e:"Asosiy arra eni 3,2–4,4 mm."}},
+  {a:2,ru:{q:"Снизу у деталей сколы ламината. Причина?",o:["Плохая рулетка","Слишком толстый лист","Подрезной диск сбит или тупой"],e:"Подрезной диск надрезает ламинат снизу перед основной пилой."},uz:{q:"Detallar pastida laminat o'yilgan. Sababi?",o:["Yomon ruletka","List juda qalin","Podrezka disk siljigan yoki o'tmas"],e:"Podrezka disk asosiy arradan oldin pastki laminatni kesib qo'yadi."}},
+  {a:1,ru:{q:"Как проверить, что деталь прямоугольная?",o:["На глаз","Сравнить диагонали","Взвесить"],e:"У прямоугольника диагонали равны."},uz:{q:"Detal to'g'ri to'rtburchak ekanini qanday tekshirish mumkin?",o:["Ko'z bilan","Diagonallarni solishtirish","Tortib ko'rish"],e:"To'g'ri to'rtburchakda diagonallar teng."}}]},
+
+{id:'b2',lv:1,min:6,calc:true,
+ t:{ru:"Кромкование торцов",uz:"Toretslarni kromkalash"},s:{ru:"ПВХ 0,4 и 2 мм, клей, свесы",uz:"PVX 0,4 va 2 mm, yelim, ortiqchalar"},
+ svg:l=>svg(
+  rect(60,60,240,26)+rect(60,54,240,6,EDGE,EDGE)+rect(60,86,240,6,'color-mix(in srgb,var(--wC) 45%,var(--surface))',EDGE)+
+  tx(180,78,R(l,'ЛДСП 16 мм','LDSP 16 mm'),{s:11,w:600})+tx(320,60,R(l,'2 мм','2 mm'),{s:10,a:'start',c:EDGE,w:700})+tx(320,95,R(l,'0,4 мм','0,4 mm'),{s:10,a:'start',c:EDGE,w:700})+
+  box(30,130,140,80)+tx(100,155,R(l,'Свес 1–2 мм','Ortiqcha 1–2 mm'),{w:700,s:12})+tx(100,175,R(l,'с каждой стороны,','har tomondan,'),{s:10,c:MU})+tx(100,190,R(l,'снять фрезой/ножом','freza/pichoq bilan olinadi'),{s:10,c:MU})+
+  box(190,130,140,80)+tx(260,155,R(l,'Клей EVA','EVA yelim'),{w:700,s:12})+tx(260,175,R(l,'180–210 °C','180–210 °C'),{s:10,c:MU})+tx(260,190,R(l,'кромка + 3 см на торец','kromka + toretsga 3 sm'),{s:10,c:MU})+
+  tx(180,236,R(l,'Видимые торцы — 2 мм, скрытые — 0,4 мм','Ko\'rinadigan torets — 2 mm, yashirin — 0,4 mm'),{s:11,c:AC,w:700}),
+  R(l,"Кромка на торце ЛДСП: 2 мм на видимых, 0,4 мм на скрытых. Свес 1–2 мм снимают, клей разогревают до 180–210 градусов","LDSP toretsidagi kromka: ko'rinadiganida 2 mm, yashirinida 0,4 mm. 1–2 mm ortiqcha olinadi, yelim 180–210 darajagacha qizdiriladi"),250),
+ table:{head:{ru:["Кромка","Где","Как клеят"],uz:["Kromka","Qayerda","Qanday yopishtiriladi"]},rows:{
+  ru:[["ПВХ / ABS 2 мм","Передние торцы корпуса, полки, столешницы","Кромкооблицовочный станок или ручной кромочник с клеем"],["ПВХ / ABS 0,4–1 мм","Задние и скрытые торцы","Станок, ручной кромочник"],["Меламиновая с клеем","Дешёвая мебель, ремонт","Утюгом, держится хуже, боится воды и ударов"],["Без кромки","Только торцы, которые никогда не видно и не бывают во влаге","Лучше всё равно закрыть 0,4 мм"]],
+  uz:[["PVX / ABS 2 mm","Korpusning old toretslari, tokchalar, stoleshnitsalar","Kromka stanogi yoki yelimli qo'l kromkalagichi"],["PVX / ABS 0,4–1 mm","Orqa va yashirin toretslar","Stanok, qo'l kromkalagichi"],["Yelimli melamin","Arzon mebel, ta'mir","Dazmol bilan, yomonroq ushlaydi, suv va zarbadan qo'rqadi"],["Kromkasiz","Faqat hech qachon ko'rinmaydigan va namlanmaydigan toretslar","Baribir 0,4 mm bilan yopgan yaxshi"]]}},
+ warnB:{ru:"Горячий клей и нож.",uz:"Issiq yelim va pichoq."},warn:{ru:"Клей в станке 200 °C — обжигает сразу. Кромочный нож ведите от себя.",uz:"Stanokdagi yelim 200 °C — darhol kuydiradi. Kromka pichog'ini o'zingizdan uzoqqa yurgizing."},
+ steps:{ru:["Проверьте по деталировке, какие торцы и какой кромкой клеить. Отметьте их на детали.","Торец должен быть чистым и ровным, без сколов и пыли — иначе кромка отойдёт.","Разогрейте клей до рабочей температуры (180–210 °C, смотрите паспорт клея).","Отрежьте кромку с запасом 2–3 см на каждый торец и прикатайте с усилием.","Снимите свесы по длине и торцам, на кромке 2 мм сделайте радиус 2 мм.","Проверьте: нет щели, клея на ламинате и «волны» на кромке. Остатки клея снимите очистителем."],
+       uz:["Detalirovka bo'yicha qaysi toretslarga va qanday kromka yopishtirishni tekshiring. Detalda belgilang.","Torets toza va tekis, o'yiq va changsiz bo'lishi kerak — aks holda kromka ko'chadi.","Yelimni ish haroratigacha qizdiring (180–210 °C, yelim pasportiga qarang).","Kromkani har toretsga 2–3 sm zaxira bilan kesing va kuch bilan bosib yurgizing.","Uzunlik va toretslardagi ortiqchani oling, 2 mm kromkada 2 mm radius qiling.","Tekshiring: tirqish, laminatda yelim va kromkada «to'lqin» yo'q. Yelim qoldig'ini tozalagich bilan oling."]},
+ tip:{ru:"Кромку считают так: сумма длин всех кромкуемых торцов + 3 см на каждый торец + 10 % запаса. Калькулятор во вкладке «Калькулятор» считает это сам по деталировке.",uz:"Kromka shunday hisoblanadi: kromkalanadigan barcha toretslar uzunligi yig'indisi + har toretsga 3 sm + 10 % zaxira. «Kalkulyator» bo'limi buni detalirovka bo'yicha o'zi hisoblaydi."},
+ quiz:[
+  {a:2,ru:{q:"Какую кромку клеят на передний торец полки?",o:["Меламин","Никакую","ПВХ или ABS 2 мм"],e:"Передний торец видно и по нему бьют — нужна толстая кромка."},uz:{q:"Tokchaning old toretsiga qanday kromka yopishtiriladi?",o:["Melamin","Hech qanday","PVX yoki ABS 2 mm"],e:"Old torets ko'rinadi va unga uriladi — qalin kromka kerak."}},
+  {a:0,ru:{q:"Почему кромка отходит через неделю?",o:["Холодный клей, пыльный или кривой торец","Слишком толстая ЛДСП","Много света"],e:"Клей должен быть горячим, а торец чистым."},uz:{q:"Nega kromka bir haftada ko'chadi?",o:["Sovuq yelim, changli yoki qiyshiq torets","LDSP juda qalin","Yorug'lik ko'p"],e:"Yelim issiq, torets toza bo'lishi kerak."}},
+  {a:1,ru:{q:"Какой запас кромки на каждый торец?",o:["0 см","2–3 см","50 см"],e:"На свесы с двух концов."},uz:{q:"Har toretsga qancha kromka zaxirasi?",o:["0 sm","2–3 sm","50 sm"],e:"Ikki uchidagi ortiqcha uchun."}},
+  {a:1,ru:{q:"Нужно ли кромковать торцы у мойки?",o:["Нет, их не видно","Да, иначе ЛДСП набухнет от воды","Только краской"],e:"Влага через голый торец за месяц раздувает ДСП."},uz:{q:"Rakovina yonidagi toretslarni kromkalash kerakmi?",o:["Yo'q, ular ko'rinmaydi","Ha, aks holda LDSP suvdan shishadi","Faqat bo'yoq bilan"],e:"Ochiq toretsdan namlik bir oyda DSP ni shishiradi."}}]},
+
+{id:'b3',lv:1,min:7,
+ t:{ru:"Присадка: отверстия под крепёж",uz:"Prisadka: mahkamlagich uchun teshiklar"},s:{ru:"Конфирмат, шкант, эксцентрик, система 32",uz:"Konfirmat, shkant, ekssentrik, 32 tizimi"},
+ svg:l=>svg(
+  rect(40,30,26,170)+rect(66,174,220,26)+
+  `<rect x="44" y="181" width="22" height="12" fill="var(--surface)" stroke="var(--fg)" stroke-width="1"/>`+`<rect x="66" y="184" width="54" height="6" fill="var(--surface)" stroke="var(--fg)" stroke-width="1"/>`+
+  line('M40 187 120 187',RED,2)+tx(160,168,R(l,'конфирмат 7 × 50','konfirmat 7 × 50'),{s:11,w:700,c:RED})+
+  tx(50,222,'Ø7',{s:11,w:700})+tx(120,222,R(l,'Ø5 × 50–55','Ø5 × 50–55'),{s:11,w:700})+tx(176,222,R(l,'по центру торца: 8 мм','torets markazida: 8 mm'),{s:10,c:MU,a:'start'})+
+  [0,1,2,3,4].map(i=>circ(140+i*32,70,5,'var(--surface)')).join('')+arr('M140 52 172 52')+tx(156,44,'32',{s:11,w:700})+
+  tx(220,100,R(l,'полкодержатели Ø5, шаг 32 мм','tokcha ushlagich Ø5, qadam 32 mm'),{s:10,c:MU})+tx(220,116,R(l,'отступ 37 мм от переднего края','old chetdan 37 mm'),{s:10,c:MU}),
+  R(l,"Соединение боковины и дна конфирматом: Ø7 сквозное в пласти, Ø5 глубиной 50–55 мм в торце по центру. Полкодержатели Ø5 с шагом 32 мм","Yon devor va tubni konfirmat bilan ulash: plastda Ø7 teshik, toretsda markazda 50–55 mm chuqurlikda Ø5. Tokcha ushlagichlar Ø5, qadam 32 mm"),240),
+ table:{head:{ru:["Крепёж","Отверстия (ЛДСП 16)","Где"],uz:["Mahkamlagich","Teshiklar (LDSP 16)","Qayerda"]},rows:{
+  ru:[["Конфирмат 7 × 50","Пласть Ø7 сквозное, торец Ø5 × 50–55 мм, центр 8 мм от края","Корпус: боковины, дно, крыша. Отступ 50 мм от краёв, далее через 250–300 мм"],["Шкант Ø8 × 30","Пласть Ø8 × 12 мм, торец Ø8 × 20 мм","Направляет детали, вместе с клеем или эксцентриком"],["Эксцентрик (минификс)","Пласть Ø15 × 13 мм + шток в торец","Скрытое соединение без шляпок снаружи"],["Полкодержатель","Ø5 × 10–12 мм, шаг 32 мм","Съёмные полки, 4 шт на полку"],["Петля","Чашка Ø35 × 12–13 мм в фасад","Урок 4-го разряда"]],
+  uz:[["Konfirmat 7 × 50","Plast Ø7 teshik, torets Ø5 × 50–55 mm, markaz chetdan 8 mm","Korpus: yon devorlar, tub, tom. Chetlardan 50 mm, keyin har 250–300 mm"],["Shkant Ø8 × 30","Plast Ø8 × 12 mm, torets Ø8 × 20 mm","Detallarni yo'naltiradi, yelim yoki ekssentrik bilan"],["Ekssentrik (minifiks)","Plast Ø15 × 13 mm + toretsga shtok","Tashqarida qalpoqsiz yashirin ulanish"],["Tokcha ushlagich","Ø5 × 10–12 mm, qadam 32 mm","Olinadigan tokchalar, har tokchaga 4 dona"],["Petlya","Fasadga kosacha Ø35 × 12–13 mm","4-razryad darsi"]]}},
+ steps:{ru:["Разметьте отверстия от одной базы (переднего края и низа детали), а не от каждого края по-разному.","В пласти боковины сверлите Ø7 насквозь, подложив обрезок снизу — без него вылетит скол.","В торце дна сверлите Ø5 строго по центру толщины (8 мм для ЛДСП 16) и перпендикулярно. Помогает кондуктор.","Глубина торцевого отверстия на 5 мм больше длины резьбы, чтобы конфирмат не упёрся.","Под полки сверлите ряды Ø5 с шагом 32 мм на одинаковой высоте на обеих боковинах.","Проверьте одну пару деталей на стыковку, прежде чем сверлить всю партию."],
+       uz:["Teshiklarni har chetdan har xil emas, bitta bazadan (detalning old cheti va pastidan) belgilang.","Yon devor plastida Ø7 ni ostiga qoldiq qo'yib teshib o'ting — aks holda o'yiq chiqadi.","Tub toretsida Ø5 ni qat'iy qalinlik markazida (16 mm LDSP uchun 8 mm) va tik parmalang. Konduktor yordam beradi.","Torets teshigi chuqurligi rezba uzunligidan 5 mm ko'p, konfirmat tirab qolmasligi uchun.","Tokchalar uchun ikkala yon devorda bir xil balandlikda 32 mm qadam bilan Ø5 qatorlar parmalang.","Butun partiyani parmalashdan oldin bir juft detalni ulab tekshiring."]},
+ tip:{ru:"Кондуктор для конфирмата (металлический шаблон) стоит недорого и спасает от главного брака — отверстия «вбок», когда конфирмат выходит через ламинат.",uz:"Konfirmat uchun konduktor (metall shablon) arzon turadi va asosiy nuqsondan — konfirmat laminatdan chiqib ketadigan «qiyshiq» teshikdan saqlaydi."},
+ quiz:[
+  {a:0,ru:{q:"Какие отверстия под конфирмат 7 × 50?",o:["Ø7 в пласти, Ø5 в торце","Ø5 везде","Ø10 в торце"],e:"Шейка конфирмата 7 мм, резьба в ДСП держится в Ø5."},uz:{q:"Konfirmat 7 × 50 uchun qanday teshiklar?",o:["Plastda Ø7, toretsda Ø5","Hamma joyda Ø5","Toretsda Ø10"],e:"Konfirmat bo'yni 7 mm, rezba DSP da Ø5 da ushlaydi."}},
+  {a:1,ru:{q:"Шаг отверстий под полкодержатели в мебельной системе?",o:["50 мм","32 мм","100 мм"],e:"Система 32 мм — стандарт мебельной фурнитуры."},uz:{q:"Mebel tizimida tokcha ushlagich teshiklari qadami?",o:["50 mm","32 mm","100 mm"],e:"32 mm tizimi — mebel furniturasi standarti."}},
+  {a:2,ru:{q:"Конфирмат вышел через ламинат сбоку. Причина?",o:["Слабый шуруповёрт","Короткий конфирмат","Отверстие в торце не по центру или под углом"],e:"Сверлить строго по центру и перпендикулярно, лучше по кондуктору."},uz:{q:"Konfirmat yon tomondan laminatdan chiqib ketdi. Sababi?",o:["Kuchsiz shurupovyort","Qisqa konfirmat","Torets teshigi markazda emas yoki qiya"],e:"Qat'iy markazda va tik parmalash kerak, konduktor bilan yaxshi."}},
+  {a:1,ru:{q:"Зачем подкладывать обрезок под пласть при сквозном сверлении?",o:["Чтобы было тише","Чтобы не было скола на выходе сверла","Чтобы сверло не нагревалось"],e:"Сверло выбивает ламинат на выходе, подкладка держит его."},uz:{q:"Teshib o'tganda plast ostiga qoldiq nima uchun qo'yiladi?",o:["Shovqin kam bo'lishi uchun","Parma chiqishida o'yiq bo'lmasligi uchun","Parma qizimasligi uchun"],e:"Parma chiqishda laminatni urib chiqaradi, taglik uni ushlaydi."}}]},
+
+{id:'b4',lv:1,min:6,
+ t:{ru:"Сборка корпуса",uz:"Korpusni yig'ish"},s:{ru:"Порядок, диагонали, задняя стенка",uz:"Tartib, diagonallar, orqa devor"},
+ svg:l=>svg(
+  rect(90,20,180,14)+rect(90,186,180,14)+rect(90,34,14,152)+rect(256,34,14,152)+rect(104,110,152,10)+
+  line('M104 34 256 186',BLUE,1.5,'6 4')+line('M256 34 104 186',BLUE,1.5,'6 4')+
+  tx(180,70,'D1 = D2',{w:700,s:14,c:BLUE})+tx(180,88,R(l,'разница ≤ 2 мм','farq ≤ 2 mm'),{s:10,c:MU})+
+  tx(180,226,R(l,'Задняя стенка ХДФ на гвозди через 100–150 мм','Orqa devor XDF har 100–150 mm da mixga'),{s:11,c:AC,w:700})+
+  tx(180,244,R(l,'фиксирует корпус ровным','korpusni tekis qotiradi'),{s:10,c:MU}),
+  R(l,"Корпус шкафа: боковины, крыша, дно и полка. Диагонали должны быть равны, задняя стенка фиксирует прямой угол","Shkaf korpusi: yon devorlar, tom, tub va tokcha. Diagonallar teng bo'lishi kerak, orqa devor to'g'ri burchakni qotiradi"),250),
+ steps:{ru:["Разложите детали на чистом ровном полу или верстаке на картон, лицом вверх — чтобы не поцарапать.","Прикрутите дно и крышу к одной боковине, потом поставьте вторую боковину.","Конфирматы закручивайте шуруповёртом на малом усилии и дотягивайте шестигранником 4 мм. Перетянули — резьба в ДСП сорвана.","Измерьте две диагонали корпуса. Разница больше 2 мм — подбейте угол, пока не станут равны.","Не отпуская формы, прибейте заднюю стенку ХДФ гвоздями или скобами через 100–150 мм по периметру.","Поставьте полкодержатели, полки, проверьте, что корпус стоит без качания."],
+       uz:["Detallarni toza tekis polda yoki verstakda kartonga yuzini tepaga qilib qo'ying — tirnalmasligi uchun.","Tub va tomni bitta yon devorga burang, keyin ikkinchi yon devorni qo'ying.","Konfirmatlarni shurupovyortda kichik kuchda burang va 4 mm olti qirrali kalit bilan oxirigacha torting. Ortiqcha tortsangiz — DSP dagi rezba buziladi.","Korpusning ikkita diagonalini o'lchang. Farq 2 mm dan ko'p — teng bo'lguncha burchakni urib to'g'rilang.","Shaklni qo'yib yubormay, XDF orqa devorni perimetr bo'ylab har 100–150 mm da mix yoki skoba bilan qoqing.","Tokcha ushlagichlar, tokchalarni qo'ying, korpus chayqalmay turishini tekshiring."]},
+ tip:{ru:"Сорвали резьбу конфирмата — не крутите толще «на авось». Вставьте шкант Ø8 на клей, дайте высохнуть и сверлите заново, или перенесите отверстие на 15–20 мм.",uz:"Konfirmat rezbasi buzildi — «balki» deb yo'g'onini burmang. Yelimga Ø8 shkant qo'ying, qurisin va qayta parmalang yoki teshikni 15–20 mm ga ko'chiring."},
+ quiz:[
+  {a:1,ru:{q:"Как проверить, что корпус собран без перекоса?",o:["Покачать рукой","Сравнить диагонали","Посмотреть сбоку"],e:"Равные диагонали = прямые углы."},uz:{q:"Korpus qiyshaymasdan yig'ilganini qanday tekshirish mumkin?",o:["Qo'l bilan chayqatib","Diagonallarni solishtirib","Yon tomondan qarab"],e:"Teng diagonallar = to'g'ri burchaklar."}},
+  {a:0,ru:{q:"Что фиксирует корпус ровным после сборки?",o:["Задняя стенка, прибитая по периметру","Полки","Ручки"],e:"ХДФ работает как диагональная связь."},uz:{q:"Yig'ishdan keyin korpusni nima tekis qotiradi?",o:["Perimetr bo'ylab qoqilgan orqa devor","Tokchalar","Tutqichlar"],e:"XDF diagonal bog'lovchi bo'lib ishlaydi."}},
+  {a:2,ru:{q:"Почему конфирмат дотягивают шестигранником?",o:["Так красивее","Шуруповёрт сломается","Шуруповёртом легко перетянуть и сорвать резьбу в ДСП"],e:"ДСП держит резьбу, только если не перетянуть."},uz:{q:"Nega konfirmat olti qirrali kalit bilan oxirigacha tortiladi?",o:["Chiroyliroq","Shurupovyort buziladi","Shurupovyort bilan ortiqcha tortib, DSP dagi rezbani buzish oson"],e:"DSP rezbani faqat ortiqcha tortilmasa ushlaydi."}},
+  {a:1,ru:{q:"Резьба конфирмата сорвана. Что правильно?",o:["Закрутить конфирмат потолще","Шкант на клей и сверлить заново или сместить отверстие","Залить суперклеем и закрутить сразу"],e:"Новое отверстие в целом материале держит как новое."},uz:{q:"Konfirmat rezbasi buzildi. To'g'risi nima?",o:["Yo'g'onroq konfirmat burash","Yelimga shkant va qayta parmalash yoki teshikni siljitish","Superyelim quyib darhol burash"],e:"Butun materialdagi yangi teshik yangidek ushlaydi."}}]},
+
+/* ---------- 4th GRADE: fittings, drawers, kitchen installation ---------- */
+{id:'c1',lv:2,min:7,calc:true,
+ t:{ru:"Мебельные петли",uz:"Mebel petlyalari"},s:{ru:"Чашка Ø35, типы, сколько ставить, регулировка",uz:"Kosacha Ø35, turlari, nechta qo'yish, rostlash"},
+ svg:l=>svg(
+  rect(30,20,130,200,'color-mix(in srgb,var(--wS) 30%,var(--surface))')+circ(60,70,14,'var(--surface)')+circ(60,170,14,'var(--surface)')+
+  arr('M30 100 46 100')+tx(38,116,'4–6',{s:10,w:700})+arr('M170 20 170 70')+tx(176,50,'80–120',{s:10,w:700,a:'start'})+
+  tx(60,74,'Ø35',{s:9,w:700})+tx(95,238,R(l,'фасад, вид изнутри','fasad, ichkaridan'),{s:10,c:MU})+
+  [[230,R(l,'Накладная','Nakladnoy'),R(l,'фасад закрывает боковину','fasad yon devorni yopadi')],[290,R(l,'Полунакладная','Yarim nakladnoy'),R(l,'2 двери на 1 стойку','1 tirgakka 2 eshik')]].map(([y,a,b])=>'').join('')+
+  box(214,20,136,62)+tx(282,42,R(l,'Накладная','Nakladnoy'),{w:700,s:11})+tx(282,58,R(l,'фасад закрывает','fasad yon devorni'),{s:9,c:MU})+tx(282,70,R(l,'торец боковины','toretsini yopadi'),{s:9,c:MU})+
+  box(214,90,136,62)+tx(282,112,R(l,'Полунакладная','Yarim nakladnoy'),{w:700,s:11})+tx(282,128,R(l,'две двери','bitta tirgakda'),{s:9,c:MU})+tx(282,140,R(l,'на одной стойке','ikkita eshik'),{s:9,c:MU})+
+  box(214,160,136,62)+tx(282,182,R(l,'Вкладная','Ichki'),{w:700,s:11})+tx(282,198,R(l,'фасад внутри','fasad korpus'),{s:9,c:MU})+tx(282,210,R(l,'корпуса','ichida'),{s:9,c:MU}),
+  R(l,"Чашка петли Ø35 мм в фасаде, край чашки в 4–6 мм от края двери, петли в 80–120 мм от верха и низа. Три типа: накладная, полунакладная, вкладная","Fasaddagi petlya kosachasi Ø35 mm, kosacha cheti eshik chetidan 4–6 mm da, petlyalar yuqori va pastdan 80–120 mm da. Uch turi: nakladnoy, yarim nakladnoy, ichki"),250),
+ table:{head:{ru:["Высота двери","Петель","Если дверь тяжёлая (зеркало, массив)"],uz:["Eshik balandligi","Petlya","Eshik og'ir bo'lsa (oyna, massiv)"]},rows:{
+  ru:[["до 900 мм","2","3"],["900–1600 мм","3","4"],["1600–2000 мм","4","5"],["2000–2400 мм","5","6"]],
+  uz:[["900 mm gacha","2","3"],["900–1600 mm","3","4"],["1600–2000 mm","4","5"],["2000–2400 mm","5","6"]]}},
+ steps:{ru:["Выберите тип петли по двери: накладная, полунакладная (две двери на одну стойку) или вкладная; угол 110° обычно, 165° — для угловых шкафов.","Разметьте центры чашек: 80–120 мм от верха и низа, остальные — равномерно между ними, не напротив полки.","Сверлом Форстнера Ø35 сверлите чашку на глубину 12–13 мм (по паспорту петли), край чашки в 4–6 мм от края фасада.","Вставьте петлю, прикрутите чашку саморезами 3,5 × 16, приложите фасад к корпусу и разметьте монтажные планки.","Прикрутите планки к боковине (обычно 37 мм от переднего края, по системе 32), защёлкните петли.","Отрегулируйте три винта: зазор между дверями 2–3 мм, высота дверей в линию, прижим к корпусу."],
+       uz:["Eshikka qarab petlya turini tanlang: nakladnoy, yarim nakladnoy (bitta tirgakka ikki eshik) yoki ichki; odatda 110°, burchak shkaflar uchun 165°.","Kosacha markazlarini belgilang: yuqori va pastdan 80–120 mm, qolganlari — ular orasida teng, tokcha ro'parasida emas.","Ø35 Forstner parmasi bilan kosachani 12–13 mm chuqurlikda (petlya pasporti bo'yicha) parmalang, kosacha cheti fasad chetidan 4–6 mm da.","Petlyani qo'ying, kosachani 3,5 × 16 shurup bilan burang, fasadni korpusga qo'yib, montaj plankalarini belgilang.","Plankalarni yon devorga burang (odatda old chetdan 37 mm, 32 tizimi bo'yicha), petlyalarni ilib qo'ying.","Uchta vintni rostlang: eshiklar orasidagi tirqish 2–3 mm, eshiklar balandligi bir chiziqda, korpusga bosilishi."]},
+ tip:{ru:"Сверлите чашку медленно и с упором (глубиномер на сверле). Насквозь просверлённый фасад уже не спасти — только переделывать.",uz:"Kosachani sekin va tirak bilan parmalang (parmada chuqurlik cheklagich). Teshilib ketgan fasadni qutqarib bo'lmaydi — faqat qayta qilish."},
+ quiz:[
+  {a:1,ru:{q:"Сколько петель на дверь высотой 1800 мм?",o:["2","4","8"],e:"1600–2000 мм — 4 петли, тяжёлая дверь — 5."},uz:{q:"1800 mm balandlikdagi eshikka nechta petlya?",o:["2","4","8"],e:"1600–2000 mm — 4 petlya, og'ir eshik — 5."}},
+  {a:0,ru:{q:"Диаметр чашки стандартной мебельной петли?",o:["35 мм","20 мм","50 мм"],e:"Сверло Форстнера Ø35."},uz:{q:"Standart mebel petlyasi kosachasining diametri?",o:["35 mm","20 mm","50 mm"],e:"Forstner parmasi Ø35."}},
+  {a:2,ru:{q:"Две двери закрывают одну общую стойку. Какая петля?",o:["Накладная","Вкладная","Полунакладная"],e:"Каждая дверь закрывает половину торца стойки."},uz:{q:"Ikki eshik bitta umumiy tirgakni yopadi. Qaysi petlya?",o:["Nakladnoy","Ichki","Yarim nakladnoy"],e:"Har bir eshik tirgak toretsining yarmini yopadi."}},
+  {a:1,ru:{q:"Двери не в линию по высоте. Что делать?",o:["Перевесить двери","Отрегулировать винтами петель","Подпилить фасад"],e:"У петли три регулировки: вбок, по высоте, по глубине."},uz:{q:"Eshiklar balandligi bir chiziqda emas. Nima qilish kerak?",o:["Eshiklarni qayta osish","Petlya vintlari bilan rostlash","Fasadni egovlash"],e:"Petlyada uchta rostlash bor: yonga, balandlikka, chuqurlikka."}}]},
+
+{id:'c2',lv:2,min:6,
+ t:{ru:"Ящики и направляющие",uz:"Tortmalar va yo'naltiruvchilar"},s:{ru:"Роликовые, шариковые, скрытые; размеры ящика",uz:"Rolikli, sharikli, yashirin; tortma o'lchamlari"},
+ svg:l=>svg(
+  rect(40,40,14,150)+rect(306,40,14,150)+rect(67,90,226,90,WOOD2)+rect(54,120,13,8,'var(--wS)')+rect(293,120,13,8,'var(--wS)')+
+  arr('M54 60 306 60')+tx(180,52,R(l,'проём A','oraliq A'),{s:11,w:700})+arr('M67 205 293 205')+tx(180,222,R(l,'ящик = A − 26 мм (шариковые)','tortma = A − 26 mm (sharikli)'),{s:11,w:700,c:AC})+
+  tx(60,112,'13',{s:10,w:700})+tx(300,112,'13',{s:10,w:700})+tx(180,140,R(l,'ящик','tortma'),{s:12,w:600}),
+  R(l,"Ящик на шариковых направляющих: ширина ящика на 26 мм меньше проёма, по 13 мм на сторону","Sharikli yo'naltiruvchidagi tortma: tortma eni oraliqdan 26 mm kam, har tomonga 13 mm"),240),
+ table:{head:{ru:["Направляющие","Зазор (ориентир)","Особенности"],uz:["Yo'naltiruvchi","Tirqish (taxminan)","Xususiyatlari"]},rows:{
+  ru:[["Роликовые","Ящик = проём − 25 мм","Дешёвые, выдвигаются не полностью, до 15–20 кг"],["Шариковые (телескоп)","Ящик = проём − 26 мм (по 12,5–13 мм на сторону)","Полное выдвижение, 25–45 кг, бывают с доводчиком"],["Скрытые (тандем)","По таблице производителя, крепятся под дном","Не видно, доводчик, дорогие, дно ящика 16 мм"],["Метабоксы / тандембоксы","Готовые металлические борта","Быстро собирать, кухни"]],
+  uz:[["Rolikli","Tortma = oraliq − 25 mm","Arzon, to'liq chiqmaydi, 15–20 kg gacha"],["Sharikli (teleskop)","Tortma = oraliq − 26 mm (har tomonga 12,5–13 mm)","To'liq chiqadi, 25–45 kg, dovodchikli bo'ladi"],["Yashirin (tandem)","Ishlab chiqaruvchi jadvali bo'yicha, tub ostiga mahkamlanadi","Ko'rinmaydi, dovodchik, qimmat, tortma tubi 16 mm"],["Metaboks / tandemboks","Tayyor metall bortlar","Tez yig'iladi, oshxonalar"]]}},
+ steps:{ru:["Измерьте проём между боковинами в свету (внутри) и глубину корпуса.","Возьмите направляющие длиной кратно 50 мм, не длиннее глубины корпуса минус 10 мм (корпус 560 → направляющие 500 или 550).","Посчитайте ширину ящика по таблице: для шариковых — проём минус 26 мм. Всегда сверяйтесь с инструкцией конкретной фурнитуры.","Разметьте линии крепления на обеих боковинах на одной высоте от низа — лучше по шаблону.","Прикрутите корпусную часть к боковинам, ящичную — к бортам ящика, вставьте ящик.","Проверьте ход: ящик идёт легко, без перекоса, фасад ящика выставлен по зазорам 2–3 мм."],
+       uz:["Yon devorlar orasidagi ichki oraliqni va korpus chuqurligini o'lchang.","Uzunligi 50 mm ga karrali, korpus chuqurligi minus 10 mm dan uzun bo'lmagan yo'naltiruvchi oling (korpus 560 → 500 yoki 550).","Tortma enini jadval bo'yicha hisoblang: sharikli uchun — oraliq minus 26 mm. Doim aniq furnitura yo'riqnomasini tekshiring.","Ikkala yon devorda pastdan bir xil balandlikda mahkamlash chiziqlarini belgilang — shablon bilan yaxshi.","Korpus qismini yon devorlarga, tortma qismini tortma bortlariga burang, tortmani kiriting.","Yurishni tekshiring: tortma oson, qiyshaymasdan yuradi, tortma fasadi 2–3 mm tirqishlar bo'yicha to'g'rilangan."]},
+ tip:{ru:"Направляющие на разной высоте — главная причина, почему ящик «заедает». Ставьте их от одной базы (низа корпуса) или по деревянной планке-шаблону.",uz:"Har xil balandlikdagi yo'naltiruvchilar — tortma «tiqilib qolishi»ning asosiy sababi. Ularni bitta bazadan (korpus pastidan) yoki yog'och planka-shablon bo'yicha qo'ying."},
+ quiz:[
+  {a:1,ru:{q:"Проём 564 мм, шариковые направляющие. Ширина ящика?",o:["564 мм","538 мм","500 мм"],e:"564 − 26 = 538 мм."},uz:{q:"Oraliq 564 mm, sharikli yo'naltiruvchi. Tortma eni?",o:["564 mm","538 mm","500 mm"],e:"564 − 26 = 538 mm."}},
+  {a:0,ru:{q:"Корпус глубиной 560 мм. Какие направляющие подойдут?",o:["500 или 550 мм","600 мм","700 мм"],e:"Не длиннее глубины минус 10 мм."},uz:{q:"Korpus chuqurligi 560 mm. Qanday yo'naltiruvchi to'g'ri keladi?",o:["500 yoki 550 mm","600 mm","700 mm"],e:"Chuqurlik minus 10 mm dan uzun emas."}},
+  {a:2,ru:{q:"Какие направляющие дают полное выдвижение ящика?",o:["Роликовые","Никакие","Шариковые телескопические и скрытые"],e:"Роликовые выдвигаются примерно на 3/4."},uz:{q:"Qaysi yo'naltiruvchilar tortmani to'liq chiqaradi?",o:["Rolikli","Hech biri","Sharikli teleskop va yashirin"],e:"Rolikli taxminan 3/4 ga chiqadi."}},
+  {a:1,ru:{q:"Ящик заедает и идёт с перекосом. Частая причина?",o:["Тяжёлые вещи","Направляющие стоят на разной высоте","Цвет фасада"],e:"Размечайте от одной базы или по шаблону."},uz:{q:"Tortma tiqiladi va qiyshayib yuradi. Ko'p uchraydigan sabab?",o:["Og'ir narsalar","Yo'naltiruvchilar har xil balandlikda","Fasad rangi"],e:"Bitta bazadan yoki shablon bo'yicha belgilang."}}]},
+
+{id:'c3',lv:2,min:8,
+ t:{ru:"Сборка и установка кухни",uz:"Oshxonani yig'ish va o'rnatish"},s:{ru:"Высоты, уровень, навесные шкафы, столешница",uz:"Balandliklar, shovun, osma shkaflar, stoleshnitsa"},
+ svg:l=>svg(
+  line('M20 230 340 230',FG,2)+rect(40,140,120,90,WOOD)+rect(164,140,120,90,WOOD)+rect(34,128,256,12,'color-mix(in srgb,var(--wS) 45%,var(--surface))')+
+  rect(40,20,120,60,WOOD)+rect(164,20,120,60,WOOD)+
+  arr('M310 128 310 230')+tx(316,182,'850–910',{s:10,w:700,a:'start'})+arr('M300 80 300 128')+tx(306,108,'550–650',{s:10,w:700,a:'start'})+
+  tx(100,190,R(l,'база 720','baza 720'),{s:10,c:MU})+tx(100,210,R(l,'+ ножки 100–150','+ oyoqcha 100–150'),{s:10,c:MU})+tx(162,122,R(l,'столешница 38','stoleshnitsa 38'),{s:10,c:MU})+
+  tx(100,54,R(l,'навесной 300–350 гл.','osma, chuq. 300–350'),{s:9,c:MU})+line('M20 214 340 214',RED,1,'4 4')+tx(220,250,R(l,'красная линия — уровень от высшей точки пола','qizil chiziq — polning eng baland nuqtasidan shovun'),{s:10,c:RED}),
+  R(l,"Кухня: нижние базы 720 мм на ножках, столешница 38 мм, рабочая высота 850–910 мм, навесные шкафы на 550–650 мм выше столешницы","Oshxona: oyoqchadagi 720 mm pastki bazalar, 38 mm stoleshnitsa, ish balandligi 850–910 mm, osma shkaflar stoleshnitsadan 550–650 mm yuqorida"),260),
+ table:{head:{ru:["Размер","Ориентир"],uz:["O'lcham","Taxminan"]},rows:{
+  ru:[["Высота корпуса нижней базы","720 мм + ножки 100–150 мм"],["Рабочая высота (верх столешницы)","850–910 мм, по росту хозяйки"],["Глубина: база / столешница","560 мм / 600 мм"],["Навесные шкафы: глубина","300–350 мм"],["От столешницы до низа навесных","550–650 мм"],["Вытяжка над плитой","Газ — не ниже 750 мм, электро — не ниже 650 мм (смотрите паспорт вытяжки)"]],
+  uz:[["Pastki baza korpusi balandligi","720 mm + oyoqcha 100–150 mm"],["Ish balandligi (stoleshnitsa usti)","850–910 mm, uy bekasining bo'yiga qarab"],["Chuqurlik: baza / stoleshnitsa","560 mm / 600 mm"],["Osma shkaflar: chuqurligi","300–350 mm"],["Stoleshnitsadan osma shkaf pastigacha","550–650 mm"],["Plita ustidagi vityajka","Gaz — 750 mm dan past emas, elektr — 650 mm dan past emas (vityajka pasportiga qarang)"]]}},
+ warnB:{ru:"Газ, вода и электричество.",uz:"Gaz, suv va elektr."},warn:{ru:"Газовую плиту подключает только газовая служба. Перед сверлением стены найдите проводку и трубы детектором.",uz:"Gaz plitasini faqat gaz xizmati ulaydi. Devorni parmalashdan oldin detektor bilan simlar va quvurlarni toping."},
+ steps:{ru:["Найдите лазером самую высокую точку пола вдоль кухни — от неё выставляются все нижние базы.","Соберите корпуса, поставьте на ножки и выставьте их в один уровень по лазеру. Стяните соседние корпуса между собой стяжками.","Навесные шкафы вешайте на монтажную шину или регулируемые навесы. Дюбели — под материал стены (кирпич, бетон, газоблок).","Уложите столешницу. Вырез под мойку и варочную панель делайте лобзиком по шаблону, торцы выреза промажьте силиконовым герметиком.","Поставьте фасады, отрегулируйте петли и ящики, наклейте плинтус и цоколь.","Сдайте работу: все двери и ящики работают, зазоры ровные, нет мусора и пыли."],
+       uz:["Lazer bilan oshxona bo'ylab polning eng baland nuqtasini toping — barcha pastki bazalar shundan to'g'rilanadi.","Korpuslarni yig'ing, oyoqchaga qo'ying va lazer bo'yicha bir tekislikka to'g'rilang. Qo'shni korpuslarni styajka bilan bir-biriga torting.","Osma shkaflarni montaj shinasiga yoki rostlanadigan ilgaklarga iling. Dyubellar — devor materialiga qarab (g'isht, beton, gazoblok).","Stoleshnitsani qo'ying. Rakovina va varochniy panel uchun o'yiqni shablon bo'yicha lobzik bilan qiling, o'yiq toretslarini silikon germetik bilan surting.","Fasadlarni qo'ying, petlya va tortmalarni rostlang, plintus va tsokolni yopishtiring.","Ishni topshiring: barcha eshik va tortmalar ishlaydi, tirqishlar tekis, axlat va chang yo'q."]},
+ tip:{ru:"Не загерметизированный вырез под мойку — самая частая причина, почему через год столешница вздувается. Силикон на торцы выреза — обязательно.",uz:"Germetiklanmagan rakovina o'yig'i — bir yildan keyin stoleshnitsa shishishining eng ko'p sababi. O'yiq toretslariga silikon — majburiy."},
+ quiz:[
+  {a:2,ru:{q:"От какой точки пола выставляют нижние базы кухни?",o:["От самой низкой","От середины","От самой высокой"],e:"Иначе на высоком месте база не встанет под общий уровень."},uz:{q:"Oshxona pastki bazalari polning qaysi nuqtasidan to'g'rilanadi?",o:["Eng pastidan","O'rtasidan","Eng balandidan"],e:"Aks holda baland joyda baza umumiy tekislikka tushmaydi."}},
+  {a:0,ru:{q:"Обычное расстояние от столешницы до низа навесных шкафов?",o:["550–650 мм","200 мм","1000 мм"],e:"Удобно работать и не биться головой."},uz:{q:"Stoleshnitsadan osma shkaflar pastigacha odatiy masofa?",o:["550–650 mm","200 mm","1000 mm"],e:"Ishlash qulay va boshni urmaysiz."}},
+  {a:1,ru:{q:"Что сделать с торцами выреза под мойку?",o:["Ничего","Промазать силиконовым герметиком","Покрасить"],e:"Иначе вода попадёт в ДСП и столешница вздуется."},uz:{q:"Rakovina o'yig'i toretslari bilan nima qilish kerak?",o:["Hech narsa","Silikon germetik bilan surtish","Bo'yash"],e:"Aks holda suv DSP ga kiradi va stoleshnitsa shishadi."}},
+  {a:1,ru:{q:"Кто подключает газовую плиту?",o:["Мебельщик","Только газовая служба","Хозяин сам"],e:"Это не работа сборщика мебели."},uz:{q:"Gaz plitasini kim ulaydi?",o:["Mebelchi","Faqat gaz xizmati","Uy egasi o'zi"],e:"Bu mebel yig'uvchining ishi emas."}}]},
+
+/* ---------- 5th GRADE: complex products, measuring, design, pricing ---------- */
+{id:'d1',lv:3,min:7,calc:true,
+ t:{ru:"Шкаф-купе и гардеробная",uz:"Kupe shkaf va kiyim xonasi"},s:{ru:"Глубина, двери купе, наполнение",uz:"Chuqurlik, kupe eshiklari, ichki to'ldirish"},
+ svg:l=>svg(
+  rect(30,20,300,180,'color-mix(in srgb,var(--accent) 10%,var(--surface))')+rect(34,24,154,172,WOOD)+rect(172,28,154,168,WOOD2)+
+  line('M172 24 188 24',RED,4)+tx(180,16,R(l,'нахлёст','ustma-ust'),{s:10,c:RED,w:700})+
+  arr('M30 214 330 214')+tx(180,232,R(l,'ширина двери = (проём + нахлёст × (n − 1)) ÷ n','eshik eni = (oraliq + ustma-ust × (n − 1)) ÷ n'),{s:11,w:700,c:AC})+
+  tx(110,110,R(l,'дверь 1','eshik 1'),{s:12,w:600})+tx(250,110,R(l,'дверь 2','eshik 2'),{s:12,w:600}),
+  R(l,"Двери шкафа-купе заходят друг на друга на ширину профиля. Ширина двери равна проёму плюс нахлёст, умноженный на число стыков, делённому на число дверей","Kupe shkaf eshiklari bir-biriga profil enicha kiradi. Eshik eni = oraliq + ustma-ust × tutashuvlar soni, eshiklar soniga bo'linadi"),245),
+ table:{head:{ru:["Что","Ориентир"],uz:["Nima","Taxminan"]},rows:{
+  ru:[["Глубина шкафа-купе","600–650 мм (плечики ~450–500 мм + двери)"],["Нахлёст дверей","Ширина профиля-ручки, обычно 25–40 мм — по системе (Aristo, Raumplus и др.)"],["Штанга для одежды","Короткие вещи — 1000 мм высоты отделения, длинные — 1500–1700 мм"],["Длина штанги без опоры","До 1000 мм, длиннее — средняя опора"],["Полки для белья","Шаг 300–400 мм, глубина как у шкафа"],["Обувь","Наклонные полки или сетки, высота отделения 150–200 мм"]],
+  uz:[["Kupe shkaf chuqurligi","600–650 mm (ilgich ~450–500 mm + eshiklar)"],["Eshiklar ustma-ust kirishi","Profil-tutqich eni, odatda 25–40 mm — tizim bo'yicha (Aristo, Raumplus va b.)"],["Kiyim shtangasi","Qisqa kiyim — bo'lim balandligi 1000 mm, uzun — 1500–1700 mm"],["Tayanchsiz shtanga uzunligi","1000 mm gacha, uzunroq — o'rtada tayanch"],["Ich kiyim tokchalari","Qadam 300–400 mm, chuqurlik shkafnikidek"],["Poyabzal","Qiya tokcha yoki setka, bo'lim balandligi 150–200 mm"]]}},
+ steps:{ru:["Замерьте нишу: ширину и высоту в трёх местах, возьмите меньший размер. Пол и потолок проверьте уровнем.","Выберите систему дверей и возьмите её таблицу: высота двери = высота проёма минус зазор по системе.","Посчитайте ширину двери: (проём + нахлёст × (n − 1)) ÷ n. Калькулятор во вкладке «Калькулятор».","Спланируйте наполнение с клиентом: штанги, полки, ящики, обувь. Ящики ставьте так, чтобы их не задевала дверь купе.","Верхнюю направляющую крепите строго по уровню, нижнюю — точно под ней (отвесом или лазером).","Повесьте двери, отрегулируйте нижние ролики: двери идут легко и стоят без щели к боковинам."],
+       uz:["Joyni o'lchang: en va balandlikni uch joyda, eng kichigini oling. Pol va shiftni shovun bilan tekshiring.","Eshik tizimini tanlang va uning jadvalini oling: eshik balandligi = oraliq balandligi minus tizim bo'yicha tirqish.","Eshik enini hisoblang: (oraliq + ustma-ust × (n − 1)) ÷ n. «Kalkulyator» bo'limida.","Mijoz bilan ichki to'ldirishni rejalashtiring: shtangalar, tokchalar, tortmalar, poyabzal. Tortmalarni kupe eshigi tegmaydigan qilib qo'ying.","Yuqori yo'naltiruvchini qat'iy shovun bo'yicha, pastkisini aniq uning ostiga (shoqul yoki lazer bilan) mahkamlang.","Eshiklarni iling, pastki roliklarni rostlang: eshiklar oson yuradi va yon devorlarga tirqishsiz turadi."]},
+ tip:{ru:"Внутренние ящики в купе — частая ошибка: их ставят за дверью, и ящик упирается в профиль. Отступите от края проёма на ширину профиля + 10 мм или поставьте ящики в середину створки.",uz:"Kupe ichidagi tortmalar — ko'p uchraydigan xato: ularni eshik orqasiga qo'yishadi va tortma profilga tiralib qoladi. Oraliq chetidan profil eni + 10 mm chekining yoki tortmalarni tavaqa o'rtasiga qo'ying."},
+ quiz:[
+  {a:1,ru:{q:"Проём 1800 мм, 2 двери, нахлёст 30 мм. Ширина двери?",o:["900 мм","915 мм","885 мм"],e:"(1800 + 30) ÷ 2 = 915 мм."},uz:{q:"Oraliq 1800 mm, 2 eshik, ustma-ust 30 mm. Eshik eni?",o:["900 mm","915 mm","885 mm"],e:"(1800 + 30) ÷ 2 = 915 mm."}},
+  {a:0,ru:{q:"Минимальная удобная глубина шкафа-купе для плечиков?",o:["600 мм","350 мм","400 мм"],e:"Плечики 450–500 мм плюс место под двери."},uz:{q:"Ilgichlar uchun kupe shkafning qulay eng kam chuqurligi?",o:["600 mm","350 mm","400 mm"],e:"Ilgich 450–500 mm va eshiklar uchun joy."}},
+  {a:2,ru:{q:"Ниша шире вверху на 15 мм, чем внизу. Какой размер брать?",o:["Верхний","Средний","Меньший (нижний)"],e:"Изделие должно войти в самом узком месте."},uz:{q:"Joy yuqorida pastdan 15 mm kengroq. Qaysi o'lchamni olish kerak?",o:["Yuqorisini","O'rtasini","Kichigini (pastkisini)"],e:"Buyum eng tor joyga sig'ishi kerak."}},
+  {a:1,ru:{q:"Штанга 1400 мм без опоры — что будет?",o:["Ничего","Прогнётся под одеждой","Станет крепче"],e:"Без опоры — до 1000 мм."},uz:{q:"Tayanchsiz 1400 mm shtanga — nima bo'ladi?",o:["Hech narsa","Kiyim ostida egiladi","Mustahkamroq bo'ladi"],e:"Tayanchsiz — 1000 mm gacha."}}]},
+
+{id:'d2',lv:3,min:7,nowarn:true,
+ t:{ru:"Замер на объекте и проект",uz:"Obyektda o'lchash va loyiha"},s:{ru:"Три точки, кривые стены, коммуникации, программа",uz:"Uch nuqta, qiyshiq devorlar, kommunikatsiyalar, dastur"},
+ svg:l=>svg(
+  `<path d="M40 20 L320 26 L326 200 L36 196 Z" fill="color-mix(in srgb,var(--accent) 8%,var(--surface))" stroke="var(--fg)" stroke-width="2"/>`+
+  arr('M44 40 316 44')+tx(180,36,'2412',{s:11,w:700})+arr('M42 110 320 112')+tx(180,106,'2405',{s:11,w:700})+arr('M40 180 322 182')+tx(180,176,'2398',{s:11,w:700,c:RED})+
+  circ(80,150,7,'var(--surface)')+tx(80,154,'⚡',{s:9})+circ(280,160,7,'var(--surface)')+tx(280,164,'≈',{s:10,w:700,c:BLUE})+
+  tx(180,226,R(l,'Ширина в 3 точках → берём меньшую: 2398','Eni 3 nuqtada → eng kichigini olamiz: 2398'),{s:11,w:700,c:AC})+
+  tx(180,244,R(l,'и отмечаем розетки ⚡ и трубы ≈','va rozetka ⚡ va quvurlarni ≈ belgilaymiz'),{s:10,c:MU}),
+  R(l,"Ниша измерена в трёх точках по ширине: 2412, 2405 и 2398 мм. Берём меньшую. На плане отмечены розетка и труба","Joy en bo'yicha uch nuqtada o'lchangan: 2412, 2405 va 2398 mm. Eng kichigini olamiz. Rejada rozetka va quvur belgilangan"),250),
+ table:{head:{ru:["Что замерить","Зачем"],uz:["Nimani o'lchash","Nima uchun"]},rows:{
+  ru:[["Ширину и высоту в 3 местах, диагонали","Стены и пол почти всегда кривые"],["Розетки, выключатели, трубы, счётчики","Вырезы в задней стенке и боковинах"],["Плинтус, батарея, подоконник, наличники","Мешают поставить корпус вплотную"],["Открывание окон и дверей рядом","Чтобы дверь шкафа не билась о ручку окна"],["Материал стен","Какие дюбели и можно ли вешать тяжёлые шкафы"],["Пожелания клиента и фото помещения","Проект без переделок"]],
+  uz:[["En va balandlikni 3 joyda, diagonallar","Devor va pol deyarli doim qiyshiq"],["Rozetkalar, o'chirgichlar, quvurlar, hisoblagichlar","Orqa devor va yon devorlardagi o'yiqlar"],["Plintus, batareya, deraza tokchasi, nalichniklar","Korpusni zich qo'yishga xalaqit beradi"],["Yaqindagi deraza va eshiklar ochilishi","Shkaf eshigi deraza tutqichiga urilmasligi uchun"],["Devor materiali","Qanday dyubel va og'ir shkaf osish mumkinmi"],["Mijoz istaklari va xona rasmi","Qayta ishlashsiz loyiha"]]}},
+ steps:{ru:["Приезжайте вовремя с лазерным дальномером, рулеткой, уровнем, блокнотом и образцами декоров.","Нарисуйте план от руки и пишите размеры сразу на нём. Ширину, высоту — в трёх местах, плюс диагонали.","Отметьте всё, что мешает: розетки, трубы, батареи, плинтус, вентиляцию. Сфотографируйте каждую стену.","Обсудите с клиентом наполнение, декор, фурнитуру, бюджет и сроки.","Сделайте проект в программе (Базис-Мебельщик, PRO100, K3-Мебель или подобной): 3D-картинка для клиента и деталировка для цеха.","Согласуйте проект и смету письменно (подпись или сообщение в Telegram) до раскроя."],
+       uz:["Lazer o'lchagich, ruletka, shovun, bloknot va dekor namunalari bilan vaqtida keling.","Rejani qo'lda chizing va o'lchamlarni darhol unga yozing. En, balandlik — uch joyda, va diagonallar.","Xalaqit beradigan hamma narsani belgilang: rozetka, quvur, batareya, plintus, ventilyatsiya. Har bir devorni suratga oling.","Mijoz bilan ichki to'ldirish, dekor, furnitura, byudjet va muddatni muhokama qiling.","Dasturda loyiha qiling (Bazis-Mebelshik, PRO100, K3-Mebel yoki shunga o'xshash): mijoz uchun 3D rasm va sex uchun detalirovka.","Kesishdan oldin loyiha va smetani yozma kelishing (imzo yoki Telegramda xabar)."]},
+ tip:{ru:"Делайте изделие на 10–20 мм меньше ниши по ширине и высоте, а щель закрывайте планкой-доборником. Корпус «впритык» в кривую нишу не встанет.",uz:"Buyumni joydan en va balandlik bo'yicha 10–20 mm kichik qiling, tirqishni dobor-planka bilan yoping. «Zich» korpus qiyshiq joyga sig'maydi."},
+ quiz:[
+  {a:0,ru:{q:"Сколько раз мерить ширину ниши?",o:["В трёх местах: верх, середина, низ","Один раз посередине","Не мерить, взять из проекта дома"],e:"Стены почти всегда «гуляют»."},uz:{q:"Joy enini necha marta o'lchash kerak?",o:["Uch joyda: yuqori, o'rta, past","Bir marta o'rtada","O'lchamaslik, uy loyihasidan olish"],e:"Devorlar deyarli doim «yuradi»."}},
+  {a:1,ru:{q:"Зачем делать шкаф на 10–20 мм меньше ниши?",o:["Экономия ЛДСП","Чтобы встал в кривую нишу, щель закрыть доборником","Так красивее"],e:"Доборная планка подрезается по стене."},uz:{q:"Nega shkafni joydan 10–20 mm kichik qilish kerak?",o:["LDSP tejash","Qiyshiq joyga sig'ishi uchun, tirqishni dobor bilan yopish","Chiroyliroq"],e:"Dobor planka devorga qarab kesiladi."}},
+  {a:2,ru:{q:"Когда согласовывать проект с клиентом?",o:["После монтажа","Не нужно","До раскроя, письменно"],e:"Потом переделка — за ваш счёт."},uz:{q:"Loyihani mijoz bilan qachon kelishish kerak?",o:["Montajdan keyin","Kerak emas","Kesishdan oldin, yozma"],e:"Keyin qayta qilish — sizning hisobingizdan."}},
+  {a:1,ru:{q:"Что обязательно отметить на замере?",o:["Цвет обоев","Розетки, трубы, батареи, плинтус","Марку телевизора"],e:"Под них делают вырезы или меняют размеры."},uz:{q:"O'lchashda nimani albatta belgilash kerak?",o:["Gulqog'oz rangi","Rozetka, quvur, batareya, plintus","Televizor markasi"],e:"Ular uchun o'yiq qilinadi yoki o'lchamlar o'zgartiriladi."}}]},
+
+{id:'d3',lv:3,min:7,nowarn:true,calc:true,
+ t:{ru:"Смета, цена и сдача заказа",uz:"Smeta, narx va buyurtmani topshirish"},s:{ru:"Из чего цена, предоплата, гарантия",uz:"Narx nimadan iborat, avans, kafolat"},
+ svg:l=>svg(
+  [[20,R(l,'ЛДСП','LDSP'),'38%'],[90,R(l,'Фасады','Fasad'),'22%'],[160,R(l,'Фурнитура','Furnitura'),'18%'],[230,R(l,'Кромка, крепёж','Kromka'),'5%'],[300,R(l,'Работа','Ish'),'17%']]
+  .map(([x,a,p],i)=>{const h=[110,66,54,18,52][i];return rect(x,170-h,50,h,i==4?WOOD2:WOOD)+tx(x+25,186,a,{s:10,w:600})+tx(x+25,164-h,p,{s:11,w:700,c:AC})}).join('')+
+  tx(180,216,R(l,'Цена = материалы + работа + доставка/монтаж + прибыль','Narx = materiallar + ish + yetkazish/montaj + foyda'),{s:11,w:700})+
+  tx(180,236,R(l,'Предоплата 50–70 % — на материалы','Avans 50–70 % — materiallarga'),{s:11,c:AC,w:700}),
+  R(l,"Пример структуры себестоимости корпусной мебели: ЛДСП, фасады, фурнитура, кромка и работа. Предоплата 50–70 процентов","Korpus mebeli tannarxi tuzilishiga misol: LDSP, fasadlar, furnitura, kromka va ish. Avans 50–70 foiz"),250),
+ table:{head:{ru:["Статья","Как считать"],uz:["Modda","Qanday hisoblash"]},rows:{
+  ru:[["ЛДСП","Листы по карте раскроя × цена листа (не по м² детали!)"],["Распил и кромка","Если в цеху-партнёре — по их прайсу за метр реза и кромки"],["Фасады","МДФ/акрил/пластик — по м² у поставщика фасадов"],["Фурнитура","Петли, направляющие, ручки, ножки, подъёмники — по списку"],["Работа","Сборка, монтаж, доставка, подъём на этаж"],["Прибыль и риски","Обычно 15–30 % сверху: брак, переделки, налоги"]],
+  uz:[["LDSP","Kesish xaritasi bo'yicha listlar × list narxi (detal m² bo'yicha emas!)"],["Kesish va kromka","Hamkor sexda bo'lsa — ularning kesish va kromka metri narxi bo'yicha"],["Fasadlar","MDF/akril/plastik — fasad yetkazuvchisida m² bo'yicha"],["Furnitura","Petlya, yo'naltiruvchi, tutqich, oyoqcha, ko'targich — ro'yxat bo'yicha"],["Ish","Yig'ish, montaj, yetkazish, qavatga ko'tarish"],["Foyda va xatarlar","Odatda ustiga 15–30 %: nuqson, qayta qilish, soliqlar"]]}},
+ steps:{ru:["Посчитайте материалы по деталировке: сколько листов, метров кромки, какой фурнитуры. Калькулятор во вкладке «Калькулятор».","Добавьте фасады, работу, доставку, монтаж и вывоз мусора.","Заложите прибыль и запас на риски 15–30 %. Цену пишите одной суммой, а расшифровку держите у себя.","Возьмите предоплату 50–70 % на материалы и пропишите сроки и что входит в цену (договор или сообщение).","На сдаче проверьте с клиентом каждую дверь и ящик, уберите мусор, сфотографируйте работу для портфолио.","Дайте письменную гарантию (обычно 12–24 месяца) и правила ухода: не мочить торцы, регулировка петель."],
+       uz:["Detalirovka bo'yicha materiallarni hisoblang: nechta list, necha metr kromka, qanday furnitura. «Kalkulyator» bo'limida.","Fasadlar, ish, yetkazish, montaj va axlat olib ketishni qo'shing.","Foyda va xatarlar uchun 15–30 % qo'ying. Narxni bitta summa bilan yozing, tafsilotini o'zingizda saqlang.","Materiallar uchun 50–70 % avans oling, muddat va narxga nima kirishini yozing (shartnoma yoki xabar).","Topshirishda mijoz bilan har bir eshik va tortmani tekshiring, axlatni oling, ishni portfolio uchun suratga oling.","Yozma kafolat (odatda 12–24 oy) va parvarish qoidalarini bering: toretslarni ho'llamaslik, petlyalarni rostlash."]},
+ tip:{ru:"ЛДСП считайте целыми листами по карте раскроя, а не по площади деталей: обрезки остаются у вас. Ошибка «по м²» съедает всю прибыль с заказа.",uz:"LDSP ni detallar maydoni bo'yicha emas, kesish xaritasi bo'yicha butun listlarda hisoblang: qoldiqlar sizda qoladi. «m² bo'yicha» xato buyurtmaning butun foydasini yeb qo'yadi."},
+ quiz:[
+  {a:1,ru:{q:"Как правильно считать ЛДСП в смете?",o:["По м² деталей","Целыми листами по карте раскроя","На глаз"],e:"Обрезки тоже оплачены вами."},uz:{q:"Smetada LDSP ni qanday to'g'ri hisoblash kerak?",o:["Detallar m² bo'yicha","Kesish xaritasi bo'yicha butun listlarda","Ko'z bilan"],e:"Qoldiqlar uchun ham siz to'lagansiz."}},
+  {a:0,ru:{q:"Обычная предоплата за корпусную мебель?",o:["50–70 % на материалы","0 %","100 % после монтажа"],e:"Материалы покупаются под конкретный заказ."},uz:{q:"Korpus mebeli uchun odatiy avans?",o:["Materiallar uchun 50–70 %","0 %","Montajdan keyin 100 %"],e:"Materiallar aniq buyurtma uchun sotib olinadi."}},
+  {a:2,ru:{q:"Что сделать на сдаче заказа?",o:["Быстро уехать","Только взять деньги","Проверить с клиентом двери и ящики, убрать мусор, сфотографировать"],e:"Фото работ — лучшая реклама."},uz:{q:"Buyurtmani topshirishda nima qilish kerak?",o:["Tezda ketish","Faqat pulni olish","Mijoz bilan eshik va tortmalarni tekshirish, axlatni olish, suratga olish"],e:"Ish rasmlari — eng yaxshi reklama."}},
+  {a:1,ru:{q:"Зачем закладывать 15–30 % сверху?",o:["Чтобы было больше","На прибыль, брак, переделки и налоги","Не нужно"],e:"Без запаса один испорченный фасад обнуляет заработок."},uz:{q:"Nega ustiga 15–30 % qo'yiladi?",o:["Ko'proq bo'lishi uchun","Foyda, nuqson, qayta qilish va soliqlar uchun","Kerak emas"],e:"Zaxirasiz bitta buzilgan fasad daromadni nolga tushiradi."}}]}
+];
+
+// Grade titles, short descriptions and certificate topics/sources (Kasb Pro, unofficial, ETKS-style).
+const GRADES=[
+ {n:'2',d:{ru:"Помощник: инструмент, безопасность, материалы, чертёж",uz:"Yordamchi: asbob, xavfsizlik, materiallar, chizma"}},
+ {n:'3',d:{ru:"Раскрой, кромка, присадка и сборка корпуса по чертежу",uz:"Kesish, kromka, prisadka va chizma bo'yicha korpus yig'ish"}},
+ {n:'4',d:{ru:"Фурнитура, ящики, сборка и установка кухни у клиента",uz:"Furnitura, tortmalar, mijozda oshxona yig'ish va o'rnatish"}},
+ {n:'5',d:{ru:"Шкафы-купе, замер, проект и расчёт стоимости",uz:"Kupe shkaflar, o'lchash, loyiha va narx hisobi"}}];
+const SOURCES={
+ ru:["ЕТКС, вып. 40 «Деревообрабатывающие производства»: станочник деревообрабатывающих станков, сборщик изделий из древесины","ГОСТ 16371-2014 «Мебель. Общие технические условия»","ГОСТ 13025.1-71 «Мебель бытовая. Функциональные размеры отделений для хранения»","ГОСТ 32289-2013 «Плиты древесно-стружечные, облицованные плёнками»","ГОСТ 12.2.026.0-2015 «Оборудование деревообрабатывающее. Требования безопасности»"],
+ uz:["YaTMS (ETKS), 40-son «Yog'ochga ishlov berish ishlab chiqarishlari»: yog'ochga ishlov berish stanoklari stanokchisi, yog'och buyumlar yig'uvchisi","GOST 16371-2014 «Mebel. Umumiy texnik shartlar»","GOST 13025.1-71 «Maishiy mebel. Saqlash bo'limlarining funksional o'lchamlari»","GOST 32289-2013 «Plyonka bilan qoplangan yog'och-qirindi plitalari»","GOST 12.2.026.0-2015 «Yog'ochga ishlov berish uskunalari. Xavfsizlik talablari»"]};
+
+// UI for Мебельщик Pro (Mebelchi Pro). Needs LESSONS, GRADES, SOURCES from lessons.js.
+// Levels are ETKS-style grades (2nd..5th). After all lessons of a grade: exam (2 random questions per lesson, pass ceil(n*0.8)) -> medal.
+// Passed grades unlock the unofficial Kasb Pro certificate (shared ../certificate.js, window.KasbCert).
+const PAYWALL=false; // true = grades above the 2nd need payment
+const UI={
+ru:{brand:'Мебельщик Pro',tag:'Корпусная мебель: раскрой, кромка, сборка, монтаж · 13 уроков',prog:'Ваш прогресс',of:(d,t)=>`${d} из ${t} уроков`,
+ gr:n=>`${n}-й разряд`,free:'Бесплатно',pro:'Pro',locked:'Закрыто',done:'Пройдено',
+ tabs:['Уроки','Калькулятор'],all:'‹ Все уроки',lvl:(g,n,m)=>`${g} · урок ${n} · ~${m} мин`,
+ warnB:'Осторожно: станки и острый инструмент.',warn:'Работайте в очках, держите руки дальше от пилы и сверла.',
+ stepsT:'Пошагово',tipT:'Важно',start:n=>`Пройти тест · ${n} вопроса`,openCalc:'Открыть калькулятор',toL:'‹ К уроку',qt:'Тест',qsub:(k,n)=>`Ответьте верно на ${k} из ${n}, чтобы открыть следующий урок`,
+ qn:(i,n)=>`Вопрос ${i} из ${n}`,ok:s=>`Верно: ${s}`,right:'Верно.',wrong:'Неверно.',next:'Дальше',res:'Результат',
+ passT:'Урок пройден!',failT:'Почти получилось',passNext:t=>`Открыт следующий урок: «${t}».`,passLast:'Все уроки разряда пройдены — открыт экзамен.',fail:(k,n)=>`Нужно ${k} правильных ответов из ${n}. Перечитайте урок и попробуйте ещё раз.`,retry:'Пройти тест ещё раз',home:'К списку уроков',nextL:'Следующий урок',
+ exT:n=>`Экзамен: подготовка к ${n}-му разряду`,exS:(k,n)=>`${n} вопросов по всем урокам разряда, нужно ${k} верных`,exLock:'Пройдите все уроки разряда',exGo:'Сдать экзамен',exDone:'Сдан',
+ exPass:n=>`Экзамен сдан! Вы подготовлены к ${n}-му разряду.`,exFail:(k,n)=>`Нужно ${k} из ${n}. Повторите уроки разряда и попробуйте снова — вопросы будут другие.`,toExam:'К экзамену',
+ lvlT:'Ваш уровень',lvlNone:'Пройдите уроки и экзамен 2-го разряда',lvlHas:n=>`Подготовка к ${n}-му разряду`,cert:'Получить свидетельство',certSoon:'Свидетельство скоро появится здесь.',
+ certNote:'Неофициальное свидетельство Kasb Pro. Разряд присваивает квалификационная комиссия предприятия или учебный центр.',
+ mm:'мм',m:'м',pcs:'шт',sum:'сум',
+ pT:'Раскрой ЛДСП и кромка',pSub:'Впишите детали (длина × ширина в мм) — калькулятор разложит их по листам и посчитает кромку',pL:'Длина',pW:'Ширина',pQ:'Шт',pE:'Кромка',pEdges:['нет','1 длинная','2 длинные','2 дл. + 1 кор.','по кругу'],pAdd:'+ Добавить деталь',pDel:'Удалить',
+ sL:'Лист: длина, мм',sW:'Лист: ширина, мм',sK:'Пропил, мм',sT:'Обрезка края, мм',sRot:'Текстура',sRots:['Важна (не крутить)','Можно крутить'],
+ rSheets:'Листов',rUse:'Использование',rEdge:'Кромки, м',rParts:'Деталей',rArea:'Площадь деталей',rBig:'Деталь больше листа',sheet:i=>`Лист ${i}`,
+ pNote:'Раскладка простая (полосами), реальная программа раскроя часто экономит ещё 5–10 %. Кромка: длина торцов + 3 см на торец + 10 % запаса.',
+ hT:'Фурнитура',hSub:'Петли, конфирматы, полкодержатели, ящики',hH:'Высота двери, мм',hN:'Дверей',hHeavy:'Тяжёлые двери (зеркало, массив)',hHeavys:['Нет','Да'],
+ cN:'Корпусов',cF:'Неподвижных горизонталей в корпусе',cD:'Глубина корпуса, мм',cS:'Съёмных полок всего',dN:'Ящиков',dA:'Проём для ящика, мм',dT:'Направляющие',dTs:['Шариковые','Роликовые'],
+ rHinge:'Петель',rConf:'Конфирматов',rPolk:'Полкодерж.',rDw:'Ширина ящика',rGuide:'Направляющие',rPair:'пар',
+ hNote:'Петли: до 900 мм — 2, до 1600 — 3, до 2000 — 4, до 2400 — 5; тяжёлая дверь +1. Конфирматы: по 2 на стык при глубине до 400 мм, 3 до 600, 4 глубже; у горизонтали 2 стыка. Ящики: шариковые − 26 мм, роликовые − 25 мм, сверяйтесь с инструкцией фурнитуры.',
+ kT:'Двери шкафа-купе',kSub:'Ширина двери по проёму и нахлёсту профиля',kA:'Ширина проёма, мм',kN:'Дверей',kO:'Нахлёст, мм',rDoor:'Ширина двери',rOver:'Стыков',
+ kNote:'Нахлёст = ширина профиля-ручки вашей системы (обычно 25–40 мм). Высоту двери берите по таблице системы.',
+ cT:'Цена изделия',cSub:'Листы и кромка подставляются из раскроя. Цены примерные — впишите свои',cSheetP:'Цена листа ЛДСП',cEdgeP:'Кромка, за метр',cFit:'Фурнитура, всего',cFac:'Фасады, всего',cWork:'Работа, монтаж, доставка',cProf:'Прибыль и риски, %',
+ rCost:'Себестоимость',rPrice:'Цена клиенту',rPre:'Предоплата 60 %',
+ cNote:'ЛДСП считается целыми листами. Прибыль 15–30 % покрывает брак, переделки и налоги. Цену округляйте вверх до 10 000.',
+ reset:'Сбросить прогресс',paid:'Доступно в версии Pro'},
+uz:{brand:'Mebelchi Pro',tag:'Korpus mebel: kesish, kromka, yig\'ish, montaj · 13 ta dars',prog:'Sizning natijangiz',of:(d,t)=>`${t} tadan ${d} ta dars`,
+ gr:n=>`${n}-razryad`,free:'Bepul',pro:'Pro',locked:'Yopiq',done:'O\'tildi',
+ tabs:['Darslar','Kalkulyator'],all:'‹ Barcha darslar',lvl:(g,n,m)=>`${g} · ${n}-dars · ~${m} daq`,
+ warnB:'Ehtiyot bo\'ling: stanoklar va o\'tkir asbob.',warn:'Ko\'zoynakda ishlang, qo\'lni arra va parmadan uzoq tuting.',
+ stepsT:'Bosqichma-bosqich',tipT:'Muhim',start:n=>`Testdan o\'tish · ${n} ta savol`,openCalc:'Kalkulyatorni ochish',toL:'‹ Darsga qaytish',qt:'Test',qsub:(k,n)=>`Keyingi darsni ochish uchun ${n} tadan ${k} tasiga to\'g\'ri javob bering`,
+ qn:(i,n)=>`Savol ${i} / ${n}`,ok:s=>`To\'g\'ri: ${s}`,right:'To\'g\'ri.',wrong:'Noto\'g\'ri.',next:'Keyingisi',res:'Natija',
+ passT:'Dars o\'tildi!',failT:'Sal qoldi',passNext:t=>`Keyingi dars ochildi: «${t}».`,passLast:'Razryadning barcha darslari o\'tildi — imtihon ochildi.',fail:(k,n)=>`${n} tadan ${k} ta to\'g\'ri javob kerak. Darsni qayta o\'qing va yana urinib ko\'ring.`,retry:'Testni qayta topshirish',home:'Darslar ro\'yxatiga',nextL:'Keyingi dars',
+ exT:n=>`Imtihon: ${n}-razryadga tayyorgarlik`,exS:(k,n)=>`Razryadning barcha darslari bo\'yicha ${n} ta savol, ${k} ta to\'g\'ri kerak`,exLock:'Razryadning barcha darslarini o\'ting',exGo:'Imtihon topshirish',exDone:'Topshirildi',
+ exPass:n=>`Imtihon topshirildi! Siz ${n}-razryadga tayyorsiz.`,exFail:(k,n)=>`${n} tadan ${k} ta kerak. Razryad darslarini takrorlang va yana urinib ko\'ring — savollar boshqa bo\'ladi.`,toExam:'Imtihonga',
+ lvlT:'Sizning darajangiz',lvlNone:'2-razryad darslari va imtihonidan o\'ting',lvlHas:n=>`${n}-razryadga tayyorgarlik`,cert:'Guvohnoma olish',certSoon:'Guvohnoma tez orada shu yerda paydo bo\'ladi.',
+ certNote:'Kasb Pro norasmiy guvohnomasi. Razryadni korxona malaka komissiyasi yoki o\'quv markazi beradi.',
+ mm:'mm',m:'m',pcs:'dona',sum:'so\'m',
+ pT:'LDSP kesish va kromka',pSub:'Detallarni yozing (uzunlik × en, mm) — kalkulyator ularni listlarga joylaydi va kromkani hisoblaydi',pL:'Uzunlik',pW:'En',pQ:'Dona',pE:'Kromka',pEdges:['yo\'q','1 uzun','2 uzun','2 uzun + 1 qisqa','atrofi'],pAdd:'+ Detal qo\'shish',pDel:'O\'chirish',
+ sL:'List: uzunlik, mm',sW:'List: en, mm',sK:'Arra izi, mm',sT:'Chetni kesish, mm',sRot:'Tekstura',sRots:['Muhim (burmaslik)','Burish mumkin'],
+ rSheets:'List',rUse:'Foydalanish',rEdge:'Kromka, m',rParts:'Detal',rArea:'Detallar maydoni',rBig:'Detal listdan katta',sheet:i=>`${i}-list`,
+ pNote:'Joylash oddiy (polosalar bilan), haqiqiy kesish dasturi ko\'pincha yana 5–10 % tejaydi. Kromka: toretslar uzunligi + har toretsga 3 sm + 10 % zaxira.',
+ hT:'Furnitura',hSub:'Petlya, konfirmat, tokcha ushlagich, tortmalar',hH:'Eshik balandligi, mm',hN:'Eshiklar',hHeavy:'Og\'ir eshiklar (oyna, massiv)',hHeavys:['Yo\'q','Ha'],
+ cN:'Korpuslar',cF:'Korpusdagi qo\'zg\'almas gorizontallar',cD:'Korpus chuqurligi, mm',cS:'Jami olinadigan tokchalar',dN:'Tortmalar',dA:'Tortma oralig\'i, mm',dT:'Yo\'naltiruvchi',dTs:['Sharikli','Rolikli'],
+ rHinge:'Petlya',rConf:'Konfirmat',rPolk:'Tokcha ushl.',rDw:'Tortma eni',rGuide:'Yo\'naltiruvchi',rPair:'juft',
+ hNote:'Petlya: 900 mm gacha — 2, 1600 gacha — 3, 2000 gacha — 4, 2400 gacha — 5; og\'ir eshik +1. Konfirmat: chuqurlik 400 mm gacha tutashuvga 2 ta, 600 gacha 3, chuqurroq 4; gorizontalda 2 tutashuv. Tortma: sharikli − 26 mm, rolikli − 25 mm, furnitura yo\'riqnomasini tekshiring.',
+ kT:'Kupe shkaf eshiklari',kSub:'Oraliq va profil ustma-ustligi bo\'yicha eshik eni',kA:'Oraliq eni, mm',kN:'Eshiklar',kO:'Ustma-ust, mm',rDoor:'Eshik eni',rOver:'Tutashuv',
+ kNote:'Ustma-ust = tizimingizdagi profil-tutqich eni (odatda 25–40 mm). Eshik balandligini tizim jadvalidan oling.',
+ cT:'Buyum narxi',cSub:'List va kromka kesishdan olinadi. Narxlar taxminiy — o\'zingiznikini yozing',cSheetP:'LDSP list narxi',cEdgeP:'Kromka, metri',cFit:'Furnitura, jami',cFac:'Fasadlar, jami',cWork:'Ish, montaj, yetkazish',cProf:'Foyda va xatarlar, %',
+ rCost:'Tannarx',rPrice:'Mijozga narx',rPre:'Avans 60 %',
+ cNote:'LDSP butun listlarda hisoblanadi. 15–30 % foyda nuqson, qayta qilish va soliqlarni qoplaydi. Narxni 10 000 gacha yuqoriga yaxlitlang.',
+ reset:'Natijani tozalash',paid:'Pro versiyada mavjud'}};
+
+// language is shared with the Kasb Pro hub (ep_lang); progress is ours (mb_)
+const PFX='mb';
+const pk=k=>(k==='lang'?'ep_':PFX+'_')+k;
+const store={get(k,d){try{const v=localStorage.getItem(pk(k));return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(pk(k),JSON.stringify(v))}catch(e){}}};
+let lang=store.get('lang','ru');
+let done=new Set(store.get('done',[]));
+let grades=new Set(store.get('grades',[]));
+const DEF_PARTS=[[2000,560,2,1],[768,560,2,1],[768,540,3,1]];
+let S={screen:'home',tab:0,id:null,exam:null,qs:[],qi:0,score:0,picked:null,
+ parts:store.get('parts',DEF_PARTS),
+ calc:{sl:2800,sw:2070,sk:4,st:10,rot:0,hh:2000,hn:2,hv:0,cn:1,cf:3,cd:560,cs:3,dn:0,da:564,dt:0,ka:1800,kn:0,ko:30,psh:550000,ped:3000,pfit:350000,pfac:0,pwork:400000,pprof:25}};
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const U=()=>UI[lang];
+const tr=o=>o&&(o[lang]??o.ru);
+const tg=window.Telegram&&window.Telegram.WebApp;if(tg){try{tg.ready();tg.expand()}catch(e){}}
+
+const byLv=lv=>LESSONS.filter(x=>x.lv===lv);
+const isPaid=x=>PAYWALL&&x.lv>0;
+function isOpen(x){if(isPaid(x))return false;const list=byLv(x.lv);const i=list.indexOf(x);return i===0||done.has(list[i-1].id)}
+const need=n=>Math.ceil(n*0.75);
+const needEx=n=>Math.ceil(n*0.8);
+const lvDone=lv=>byLv(lv).every(x=>done.has(x.id));
+const topGrade=()=>{let g=-1;grades.forEach(v=>{if(v>g)g=v});return g};
+
+const logo='<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5" fill="none" stroke="var(--accent-ink)" stroke-width="2"/><path d="M12 3v18M3 12h9" stroke="var(--accent-ink)" stroke-width="2"/><circle cx="9.5" cy="16.5" r="1.2" fill="var(--accent-ink)"/><circle cx="14.5" cy="7.5" r="1.2" fill="var(--accent-ink)"/></svg>';
+const medal=(n,on,sz=30)=>`<svg class="medal${on?' on':''}" width="${sz}" height="${sz}" viewBox="0 0 32 32" aria-hidden="true"><path d="M10 2h5l-3 9H7zM17 2h5l3 9h-5z" fill="${on?'var(--wC)':'var(--line)'}"/><circle cx="16" cy="20" r="10" fill="${on?'var(--accent)':'var(--surface)'}" stroke="${on?'var(--accent-ink)':'var(--lock)'}" stroke-width="2"/><text x="16" y="24.5" text-anchor="middle" font-size="12" font-weight="700" fill="${on?'var(--accent-ink)':'var(--lock)'}">${n}</text></svg>`;
+const lockI=()=>`<svg class="ic" width="18" height="18" viewBox="0 0 24 24" aria-label="${U().locked}"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
+const langSw=()=>`<div class="lang" role="group" aria-label="Til / Язык"><button type="button" data-l="ru" aria-pressed="${lang==='ru'}">RU</button><button type="button" data-l="uz" aria-pressed="${lang==='uz'}">UZ</button></div>`;
+
+function header(inner){return `<header class="bar">${inner}</header>`}
+function tabs(){const L=U();return `<nav class="tabs" role="tablist">${L.tabs.map((t,i)=>`<button type="button" role="tab" aria-selected="${S.tab===i}" data-tab="${i}">${t}</button>`).join('')}</nav>`}
+
+function home(){
+  const L=U();const total=LESSONS.length;const d=LESSONS.filter(x=>done.has(x.id)).length;
+  let h=header(`${window.KASB_HUB?`<a class="hub" href="${window.KASB_HUB}">‹ Kasb Pro</a>`:''}<div class="row"><div class="brand"><div class="logo">${logo}</div><div><h1>${L.brand}</h1><p>${L.tag}</p></div></div>${langSw()}</div>`)+tabs();
+  if(S.tab===1){app.innerHTML=h+`<main class="wrap">${calcBlock()}</main>`;bindCalc();return}
+  const tg_=topGrade();
+  h+=`<main class="wrap"><div class="progress"><div class="t"><span>${L.prog}</span><b>${L.of(d,total)}</b></div><div class="meter"><i style="width:${d/total*100}%"></i></div></div>`;
+  h+=`<div class="card lvlcard"><div class="medals">${GRADES.map((g,i)=>medal(g.n,grades.has(i),34)).join('')}</div><div><span class="expl">${L.lvlT}</span><b>${tg_<0?L.lvlNone:L.lvlHas(GRADES[tg_].n)}</b></div>${tg_<0?'':`<button class="btn" id="cert" type="button">${L.cert}</button><p class="note" id="certmsg"></p>`}</div>`;
+  GRADES.forEach((g,lv)=>{
+    const chip=lv===0||!PAYWALL?'':`<span class="chip pro">${L.pro}</span>`;
+    h+=`<section class="level"><h2>${medal(g.n,grades.has(lv),24)} ${L.gr(g.n)} ${lv===0&&PAYWALL?`<span class="chip free">${L.free}</span>`:chip}</h2><p class="gdesc">${tr(g.d)}</p><div class="list">`;
+    byLv(lv).forEach((x,i)=>{
+      const open=isOpen(x),isDone=done.has(x.id);
+      const cls=isDone?'done open':open?'open':'locked';
+      const right=isDone?`<span class="go" aria-label="${L.done}">✓</span>`:open?'<span class="go">›</span>':lockI();
+      const sub=!open&&!isDone&&isPaid(x)?L.paid:tr(x.s);
+      h+=open||isDone?`<button class="item ${cls}" type="button" data-id="${x.id}">`:`<div class="item ${cls}">`;
+      h+=`<span class="n">${i+1}</span><span class="tx"><b>${tr(x.t)}</b><span>${sub}</span></span>${right}${open||isDone?'</button>':'</div>'}`;
+    });
+    const can=lvDone(lv),passed=grades.has(lv),n=byLv(lv).length*2;
+    h+=can?`<button class="item exam ${passed?'done':''} open" type="button" data-ex="${lv}">`:`<div class="item exam locked">`;
+    h+=`<span class="n">★</span><span class="tx"><b>${L.exT(g.n)}</b><span>${passed?L.exDone:can?L.exS(needEx(n),n):L.exLock}</span></span>${passed?'<span class="go">✓</span>':can?'<span class="go">›</span>':lockI()}${can?'</button>':'</div>'}`;
+    h+='</div></section>';
+  });
+  h+=`<button class="link" id="reset" type="button">${L.reset}</button></main>`;
+  app.innerHTML=h;
+  document.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{S.id=b.dataset.id;go('lesson')});
+  document.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>startExam(+b.dataset.ex));
+  const c=$('#cert');if(c)c.onclick=openCert;
+  const r=$('#reset');r.onclick=()=>{if(r.dataset.c){done=new Set();grades=new Set();store.set('done',[]);store.set('grades',[]);render()}else{r.dataset.c=1;r.textContent=lang==='ru'?'Нажмите ещё раз, чтобы сбросить':'Tozalash uchun yana bosing'}};
+}
+
+function openCert(){
+  const g=topGrade();if(g<0)return;
+  const topics={ru:[],uz:[]};
+  LESSONS.filter(x=>x.lv<=g).forEach(x=>{topics.ru.push(`${GRADES[x.lv].n} р. — ${x.t.ru}`);topics.uz.push(`${GRADES[x.lv].n}-r. — ${x.t.uz}`)});
+  if(window.KasbCert&&window.KasbCert.open){window.KasbCert.open({prefix:PFX,lang,prof:{ru:'Мебельщик (станочник, сборщик корпусной мебели)',uz:'Mebelchi (stanokchi, korpus mebel yig\'uvchisi)'},grade:GRADES[g].n,topics,sources:SOURCES,url:'kasbpro.uz/mebel/',start:'mebel'});return}
+  const m=$('#certmsg');if(m)m.textContent=U().certSoon;
+}
+
+function lesson(){
+  const L=U();const x=LESSONS.find(y=>y.id===S.id);const list=byLv(x.lv);const n=list.indexOf(x)+1;
+  let h=header(`<div class="row"><button class="back" id="back" type="button">${L.all}</button>${langSw()}</div><h1 class="ttl">${tr(x.t)}</h1><p>${L.lvl(L.gr(GRADES[x.lv].n),n,x.min)}</p>`)+'<main class="wrap">';
+  if(x.svg)h+=`<div class="card diagram"><div class="sv">${x.svg(lang)}</div></div>`;
+  if(!x.nowarn)h+=`<div class="warn"><span aria-hidden="true">⚠</span><div><b>${x.warnB?tr(x.warnB):L.warnB}</b> ${x.warn?tr(x.warn):L.warn}</div></div>`;
+  if(x.table){h+=`<div class="card tbl"><table><thead><tr>${tr(x.table.head).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${tr(x.table.rows).map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  h+=`<div class="card stack"><h3>${L.stepsT}</h3><ol class="steps">${tr(x.steps).map(s=>`<li><span>${s}</span></li>`).join('')}</ol><p class="tip"><b>${L.tipT}:</b> ${tr(x.tip)}</p></div>`;
+  if(x.calc)h+=`<button class="btn ghost" id="calc" type="button">${L.openCalc}</button>`;
+  h+=`<button class="btn" id="start" type="button">${L.start(x.quiz.length)}</button></main>`;
+  app.innerHTML=h;
+  $('#back').onclick=()=>go('home');
+  $('#start').onclick=()=>{S.exam=null;S.qs=x.quiz;S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const c=$('#calc');if(c)c.onclick=()=>{S.tab=1;go('home')};
+}
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function startExam(lv){S.exam=lv;S.qs=shuffle(byLv(lv).flatMap(x=>shuffle(x.quiz).slice(0,2)));S.qi=0;S.score=0;S.picked=null;go('quiz')}
+
+function quiz(){
+  const L=U();const ex=S.exam!==null;const x=ex?null:LESSONS.find(y=>y.id===S.id);const QZ=S.qs;const item=QZ[S.qi];const Q=tr(item);const p=S.picked;
+  const title=ex?L.exT(GRADES[S.exam].n):`${L.qt}: ${tr(x.t)}`;const sub=ex?L.exS(needEx(QZ.length),QZ.length):L.qsub(need(QZ.length),QZ.length);
+  const opts=Q.o.map((o,i)=>{let c='opt';if(p!==null){if(i===item.a)c+=' right';else if(i===p)c+=' wrong'}return `<button class="${c}" data-i="${i}" type="button" ${p!==null?'disabled':''}>${o}</button>`}).join('');
+  app.innerHTML=header(`<div class="row"><button class="back" id="back" type="button">${ex?L.all:L.toL}</button>${langSw()}</div><h1 class="ttl">${title}</h1><p>${sub}</p>`)+`<main class="wrap">
+   <div class="progress"><div class="q-top"><span>${L.qn(S.qi+1,QZ.length)}</span><span>${L.ok(S.score)}</span></div><div class="meter"><i style="width:${(S.qi+(p!==null?1:0))/QZ.length*100}%"></i></div></div>
+   <p class="q">${Q.q}</p><div class="opts">${opts}</div>
+   ${p!==null?`<p class="expl">${p===item.a?`<b class="okc">${L.right}</b> `:`<b class="badc">${L.wrong}</b> `}${Q.e}</p><button class="btn" id="next" type="button">${S.qi<QZ.length-1?L.next:L.res}</button>`:''}
+  </main>`;
+  $('#back').onclick=()=>go(ex?'home':'lesson');
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{S.picked=+b.dataset.i;if(S.picked===item.a)S.score++;render()});
+  const n=$('#next');if(n)n.onclick=()=>{if(S.qi<QZ.length-1){S.qi++;S.picked=null;go('quiz')}else{
+    if(ex){if(S.score>=needEx(QZ.length)){grades.add(S.exam);store.set('grades',[...grades])}}
+    else if(S.score>=need(QZ.length)){done.add(x.id);store.set('done',[...done])}
+    go('result')}};
+}
+
+function result(){
+  const L=U();const n=S.qs.length;
+  if(S.exam!==null){const g=GRADES[S.exam],pass=S.score>=needEx(n);
+    app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${L.exT(g.n)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+     ${pass?medal(g.n,true,72):''}<div class="score">${S.score} / ${n}</div><h3>${pass?L.exPass(g.n):L.failT}</h3>${pass?'':`<p class="expl">${L.exFail(needEx(n),n)}</p>`}</div>
+     ${pass?`<button class="btn" id="cert" type="button">${L.cert}</button><p class="note" id="certmsg">${L.certNote}</p>`:`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+     <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+    $('#home').onclick=()=>go('home');
+    const c=$('#cert');if(c)c.onclick=openCert;
+    const r=$('#retry');if(r)r.onclick=()=>startExam(S.exam);
+    return}
+  const x=LESSONS.find(y=>y.id===S.id);const pass=S.score>=need(n);
+  const list=byLv(x.lv);const nx=list[list.indexOf(x)+1];const exReady=pass&&!nx&&lvDone(x.lv)&&!grades.has(x.lv);
+  app.innerHTML=header(`<div class="row"><div><h1>${L.res}</h1><p>${tr(x.t)}</p></div>${langSw()}</div>`)+`<main class="wrap"><div class="card result">
+   <div class="score">${S.score} / ${n}</div><h3>${pass?L.passT:L.failT}</h3>
+   <p class="expl">${pass?(nx?L.passNext(tr(nx.t)):L.passLast):L.fail(need(n),n)}</p></div>
+   ${pass&&nx?`<button class="btn" id="nextL" type="button">${L.nextL}</button>`:''}
+   ${exReady?`<button class="btn" id="toEx" type="button">${L.toExam}</button>`:''}
+   ${pass?'':`<button class="btn" id="retry" type="button">${L.retry}</button>`}
+   <button class="btn ghost" id="home" type="button">${L.home}</button></main>`;
+  $('#home').onclick=()=>go('home');
+  const r=$('#retry');if(r)r.onclick=()=>{S.qi=0;S.score=0;S.picked=null;go('quiz')};
+  const nl=$('#nextL');if(nl)nl.onclick=()=>{S.id=nx.id;go('lesson')};
+  const te=$('#toEx');if(te)te.onclick=()=>startExam(x.lv);
+}
+
+/* calculators: sheet cutting + edging, fittings, sliding doors, price */
+const fmt=(n,d=0)=>n.toFixed(d).replace('.',',').replace('-','−');
+const money=n=>Math.round(n).toLocaleString('ru-RU').replace(/,/g,' ');
+const numv=v=>+String(v).replace(',','.')||0;
+const seg=(k,opts)=>`<div class="seg" role="group">${opts.map((o,i)=>`<button type="button" data-seg="${k}" data-v="${i}" aria-pressed="${S.calc[k]===i}">${o}</button>`).join('')}</div>`;
+const fld=(id,lab,v,step=1)=>`<label class="fld" for="${id}">${lab}<input id="${id}" type="number" inputmode="decimal" min="0" step="${step}" value="${v}"></label>`;
+const cell=(t,v)=>`<div><span>${t}</span><b>${v}</b></div>`;
+
+// shelf (strip) packing: strips run along the sheet length; parts placed left to right inside a strip
+function pack(parts,SL,SW,kerf,trim,rot){
+  const W0=SL-2*trim,H0=SW-2*trim;let items=[],big=0;
+  parts.forEach(([l,w,q])=>{l=numv(l);w=numv(w);q=Math.round(numv(q));if(!(l>0&&w>0&&q>0))return;for(let i=0;i<q;i++)items.push({l,w})});
+  items=items.filter(it=>{const fits=(it.l<=W0&&it.w<=H0)||(rot&&it.w<=W0&&it.l<=H0);if(!fits)big++;return fits});
+  items.sort((a,b)=>Math.max(b.l,b.w)-Math.max(a.l,a.w)||b.l*b.w-a.l*a.w);
+  const sheets=[];
+  const opts=it=>{const o=[{w:it.l,h:it.w}];if(rot&&it.l!==it.w)o.push({w:it.w,h:it.l});return o.filter(o=>o.w<=W0&&o.h<=H0)};
+  items.forEach(it=>{let placed=false;const os=opts(it);
+    for(const sh of sheets){for(const st of sh.strips){let best=null;for(const o of os){if(o.h<=st.h&&st.x+o.w<=W0+1e-6&&(!best||st.h-o.h<st.h-best.h))best=o}
+      if(best){sh.rects.push({x:st.x,y:st.y,w:best.w,h:best.h});st.x+=best.w+kerf;placed=true;break}}
+      if(placed)break;
+      // new strip on this sheet: choose orientation with the smaller height that fits
+      const o=os.filter(o=>sh.y+o.h<=H0+1e-6).sort((a,b)=>a.h-b.h)[0];
+      if(o){const st={y:sh.y,h:o.h,x:o.w+kerf};sh.strips.push(st);sh.rects.push({x:0,y:sh.y,w:o.w,h:o.h});sh.y+=o.h+kerf;placed=true;break}}
+    if(!placed){const o=os.sort((a,b)=>b.w-a.w)[0];const sh={strips:[{y:0,h:o.h,x:o.w+kerf}],rects:[{x:0,y:0,w:o.w,h:o.h}],y:o.h+kerf};sheets.push(sh)}});
+  return {sheets,big,W0,H0,count:items.length,area:items.reduce((s,it)=>s+it.l*it.w,0)};
+}
+const EDGE_N=[0,1,2,3,4];
+function edgeLen([l,w,q,e]){l=numv(l);w=numv(w);q=numv(q);const L=[0,l,2*l,2*l+w,2*l+2*w][e]||0;return q*(L+EDGE_N[e]*30)}
+function sheetSvg(sh,i,P,SL,SW,trim){
+  const k=320/SL,H=SW*k;let r=`<rect x="0" y="0" width="${SL*k}" height="${H}" fill="color-mix(in srgb,var(--accent) 10%,var(--surface))" stroke="var(--fg)" stroke-width="1"/>`;
+  sh.rects.forEach(p=>{r+=`<rect x="${(p.x+trim)*k}" y="${(p.y+trim)*k}" width="${p.w*k}" height="${p.h*k}" fill="${WOOD}" stroke="var(--fg)" stroke-width=".8"/>`;
+    if(p.w*k>34&&p.h*k>12)r+=`<text x="${(p.x+trim+p.w/2)*k}" y="${(p.y+trim+p.h/2)*k+3.5}" text-anchor="middle" font-size="9" fill="var(--fg)">${Math.round(p.w)}×${Math.round(p.h)}</text>`});
+  return `<figure class="sheet"><figcaption>${U().sheet(i+1)}</figcaption><svg viewBox="-1 -1 ${SL*k+2} ${H+2}" role="img" aria-label="${U().sheet(i+1)}">${r}</svg></figure>`}
+
+function partsRows(){const L=U();return S.parts.map((p,i)=>`<div class="prow" data-row="${i}">
+  <input aria-label="${L.pL}" data-p="0" type="number" inputmode="numeric" min="0" value="${p[0]}">
+  <input aria-label="${L.pW}" data-p="1" type="number" inputmode="numeric" min="0" value="${p[1]}">
+  <input aria-label="${L.pQ}" data-p="2" type="number" inputmode="numeric" min="0" value="${p[2]}">
+  <select aria-label="${L.pE}" data-p="3">${L.pEdges.map((t,j)=>`<option value="${j}"${p[3]==j?' selected':''}>${t}</option>`).join('')}</select>
+  <button type="button" class="pdel" data-del="${i}" aria-label="${L.pDel}">×</button></div>`).join('')}
+
+function calcBlock(){const L=U();const c=S.calc;
+  return `<div class="card stack"><div><h3>${L.pT}</h3><p class="expl">${L.pSub}</p></div>
+  <div class="phead"><span>${L.pL}</span><span>${L.pW}</span><span>${L.pQ}</span><span>${L.pE}</span><span></span></div>
+  <div id="prows">${partsRows()}</div><button class="btn ghost" id="padd" type="button">${L.pAdd}</button>
+  <div class="pair">${fld('sl',L.sL,c.sl)}${fld('sw',L.sW,c.sw)}</div>
+  <div class="pair">${fld('sk',L.sK,c.sk,0.1)}${fld('st',L.sT,c.st)}</div>
+  <div class="fld">${L.sRot}${seg('rot',L.sRots)}</div>
+  <div class="out" id="out1"></div><div id="sheets" class="sheets"></div><p class="expl">${L.pNote}</p></div>
+  <div class="card stack"><div><h3>${L.hT}</h3><p class="expl">${L.hSub}</p></div>
+  <div class="pair">${fld('hh',L.hH,c.hh)}${fld('hn',L.hN,c.hn)}</div>
+  <div class="fld">${L.hHeavy}${seg('hv',L.hHeavys)}</div>
+  <div class="pair">${fld('cn',L.cN,c.cn)}${fld('cf',L.cF,c.cf)}</div>
+  <div class="pair">${fld('cd',L.cD,c.cd)}${fld('cs',L.cS,c.cs)}</div>
+  <div class="pair">${fld('dn',L.dN,c.dn)}${fld('da',L.dA,c.da)}</div>
+  <div class="fld">${L.dT}${seg('dt',L.dTs)}</div>
+  <div class="out" id="out2"></div><p class="expl">${L.hNote}</p></div>
+  <div class="card stack"><div><h3>${L.kT}</h3><p class="expl">${L.kSub}</p></div>
+  <div class="pair">${fld('ka',L.kA,c.ka)}${fld('ko',L.kO,c.ko)}</div>
+  <div class="fld">${L.kN}${seg('kn',['2','3','4'])}</div>
+  <div class="out two" id="out3"></div><p class="expl">${L.kNote}</p></div>
+  <div class="card stack"><div><h3>${L.cT}</h3><p class="expl">${L.cSub}</p></div>
+  <div class="pair">${fld('psh',L.cSheetP+', '+L.sum,c.psh,1000)}${fld('ped',L.cEdgeP+', '+L.sum,c.ped,100)}</div>
+  <div class="pair">${fld('pfit',L.cFit+', '+L.sum,c.pfit,1000)}${fld('pfac',L.cFac+', '+L.sum,c.pfac,1000)}</div>
+  <div class="pair">${fld('pwork',L.cWork+', '+L.sum,c.pwork,1000)}${fld('pprof',L.cProf,c.pprof)}</div>
+  <div class="out money" id="out4"></div><p class="expl">${L.cNote}</p></div>`}
+
+let last={sheets:0,edge:0};
+function paintCalc(){const L=U();const c=S.calc;
+  // 1. cutting + edging
+  const SL=numv(c.sl),SW=numv(c.sw),kerf=numv(c.sk),trim=numv(c.st);
+  const r=SL>0&&SW>0?pack(S.parts,SL,SW,kerf,trim,c.rot===1):{sheets:[],big:0,count:0,area:0,W0:1,H0:1};
+  const ns=r.sheets.length,use=ns?r.area/(ns*r.W0*r.H0)*100:0;
+  const edge=S.parts.reduce((s,p)=>s+edgeLen(p),0)/1000*1.1;last={sheets:ns,edge};
+  $('#out1').innerHTML=cell(L.rSheets,ns||'—')+cell(L.rUse,ns?fmt(use)+' %':'—')+cell(L.rEdge,edge?fmt(edge,1):'—')+cell(L.rParts,r.count||'—')+cell(L.rArea,r.area?fmt(r.area/1e6,2)+' м²':'—')+(r.big?`<div class="wide bad"><span>${L.rBig}</span><b>${r.big}</b></div>`:'');
+  $('#sheets').innerHTML=r.sheets.slice(0,6).map((sh,i)=>sheetSvg(sh,i,null,SL,SW,trim)).join('');
+  // 2. fittings
+  const hh=numv(c.hh),hn=numv(c.hn);const per=hh<=0?0:hh<=900?2:hh<=1600?3:hh<=2000?4:hh<=2400?5:6;const hinges=hn*(per+(c.hv&&per?1:0));
+  const cd=numv(c.cd),pj=cd<=400?2:cd<=600?3:4;const conf=numv(c.cn)*numv(c.cf)*2*pj;const polk=numv(c.cs)*4;
+  const dn=numv(c.dn),dw=numv(c.da)-(c.dt?25:26);const glen=Math.floor((cd-10)/50)*50;
+  $('#out2').innerHTML=cell(L.rHinge,hinges||'—')+cell(L.rConf,conf||'—')+cell(L.rPolk,polk||'—')+cell(L.rDw,dn&&dw>0?dw+' '+L.mm:'—')+cell(L.rGuide,dn&&glen>=250?glen+' '+L.mm:'—')+cell(L.rPair,dn||'—');
+  // 3. sliding doors
+  const n=[2,3,4][c.kn],ka=numv(c.ka),ko=numv(c.ko);const dwd=ka>0?(ka+ko*(n-1))/n:0;
+  $('#out3').innerHTML=cell(L.rDoor,dwd?fmt(dwd,1)+' '+L.mm:'—')+cell(L.rOver,n-1);
+  // 4. price
+  const cost=ns*numv(c.psh)+edge*numv(c.ped)+numv(c.pfit)+numv(c.pfac)+numv(c.pwork);
+  const price=Math.ceil(cost*(1+numv(c.pprof)/100)/10000)*10000;
+  $('#out4').innerHTML=cell(L.rCost,cost?money(cost):'—')+cell(L.rPrice,price?money(price):'—')+cell(L.rPre,price?money(price*0.6):'—');
+}
+function saveParts(){store.set('parts',S.parts)}
+function bindParts(){
+  document.querySelectorAll('.prow [data-p]').forEach(inp=>{const ev=inp.tagName==='SELECT'?'onchange':'oninput';inp[ev]=e=>{const i=+inp.closest('.prow').dataset.row,k=+inp.dataset.p;S.parts[i][k]=k===3?+e.target.value:e.target.value;saveParts();paintCalc()}});
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{S.parts.splice(+b.dataset.del,1);saveParts();$('#prows').innerHTML=partsRows();bindParts();paintCalc()});
+}
+function bindCalc(){
+  const on=(id,k)=>{$(id).oninput=e=>{S.calc[k]=e.target.value;paintCalc()}};
+  ['sl','sw','sk','st','hh','hn','cn','cf','cd','cs','dn','da','ka','ko','psh','ped','pfit','pfac','pwork','pprof'].forEach(k=>on('#'+k,k));
+  document.querySelectorAll('[data-seg]').forEach(b=>b.onclick=()=>{const k=b.dataset.seg;S.calc[k]=+b.dataset.v;
+    document.querySelectorAll(`[data-seg="${k}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));paintCalc()});
+  $('#padd').onclick=()=>{S.parts.push([600,400,1,1]);saveParts();$('#prows').innerHTML=partsRows();bindParts();paintCalc();const rows=document.querySelectorAll('.prow');rows[rows.length-1].querySelector('input').focus()};
+  bindParts();paintCalc()}
+
+function bindCommon(){
+  document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set('lang',lang);document.documentElement.lang=lang;render()});
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.tab=+b.dataset.tab;render()});
+}
+function render(){({home,lesson,quiz,result})[S.screen]();bindCommon()}
+function go(s){S.screen=s;render();window.scrollTo(0,0)}
+document.documentElement.lang=lang;
+go('home');
+
+</script>
+</body>
+</html>
