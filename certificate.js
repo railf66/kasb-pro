@@ -50,14 +50,16 @@ function draw(o,name){
   const my=y+70;x.fillStyle=GOLD;x.beginPath();x.arc(W/2,my,62,0,Math.PI*2);x.fill();x.fillStyle=NAVY;x.beginPath();x.arc(W/2,my,50,0,Math.PI*2);x.fill();
   x.fillStyle='#fff';x.font=`800 50px ${F}`;x.textBaseline='middle';x.fillText(o.grade,W/2,my-4);x.font=`600 15px ${F}`;x.fillText(lang==='uz'?'RAZRYAD':'РАЗРЯД',W/2,my+30);x.textBaseline='alphabetic';
   const fy=H-250;
-  const tfs=topics.length>20?20:topics.length>14?22:topics.length>8?24:27;const colW=(W-240)/2;const half=Math.ceil(topics.length/2);
+  let tfs=topics.length>20?20:topics.length>14?22:topics.length>8?24:27,sfs=21,hfs=28;const colW=(W-240)/2;const half=Math.ceil(topics.length/2);
   function block(y0,paint){let y=y0;x.textAlign='left';
-    x.fillStyle=NAVY;x.font=`700 28px ${F}`;if(paint)x.fillText(L.topics,110,y);y+=16;
+    x.fillStyle=NAVY;x.font=`700 ${hfs}px ${F}`;if(paint)x.fillText(L.topics,110,y);y+=16;
     x.font=`400 ${tfs}px ${F}`;const cols=[topics.slice(0,half),topics.slice(half)];let maxY=y;
-    cols.forEach((col,ci)=>{let yy=y+tfs+14;col.forEach((t,i)=>{const n=ci*half+i+1;wrap(x,`${n}. ${t}`,colW-10).forEach((l,li)=>{x.fillStyle=INK;if(paint)x.fillText(li?'    '+l:l,110+ci*(colW+20),yy);yy+=tfs+8});yy+=2});maxY=Math.max(maxY,yy)});
-    y=maxY+34;x.fillStyle=NAVY;x.font=`700 26px ${F}`;if(paint)x.fillText(L.src+':',110,y);y+=36;x.font=`400 21px ${F}`;x.fillStyle=INK;
-    sources.forEach(s=>{wrap(x,'• '+s,W-220).forEach((l,li)=>{if(paint)x.fillText(li?'   '+l:l,110,y);y+=28})});return y-y0}
-  const top=my+110,avail=fy-60-top,bh=block(top,false);block(top+Math.max(0,(avail-bh)/2),true);
+    cols.forEach((col,ci)=>{let yy=y+tfs+14;col.forEach((t,i)=>{const n=ci*half+i+1;wrap(x,`${n}. ${t}`,colW-10).forEach((l,li)=>{x.fillStyle=INK;if(paint)x.fillText(li?'    '+l:l,110+ci*(colW+20),yy);yy+=Math.round(tfs*1.33)});yy+=2});maxY=Math.max(maxY,yy)});
+    y=maxY+Math.round(hfs*1.2);x.fillStyle=NAVY;x.font=`700 ${hfs-2}px ${F}`;if(paint)x.fillText(L.src+':',110,y);y+=Math.round(hfs*1.25);x.font=`400 ${sfs}px ${F}`;x.fillStyle=INK;
+    sources.forEach(s=>{wrap(x,'• '+s,W-220).forEach((l,li)=>{if(paint)x.fillText(li?'   '+l:l,110,y);y+=Math.round(sfs*1.33)})});return y-y0}
+  const top=my+110,avail=fy-50-top;let bh=block(top,false);
+  while(bh>avail&&tfs>12){tfs--;if(sfs>13)sfs-=0.6;if(hfs>20)hfs-=0.5;bh=block(top,false)}
+block(top+Math.max(0,(avail-bh)/2),true);
   // footer
   const d=new Date();const ds=`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`;
   x.fillStyle=INK;x.font=`500 24px ${F}`;x.fillText(`${L.date}: ${ds}`,110,fy);x.textAlign='right';
